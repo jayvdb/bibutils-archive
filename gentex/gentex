@@ -1,0 +1,42 @@
+#!/bin/csh -f
+
+if ( $#argv == 0 ) then
+  echo "Usage.  gentex bibfile [outputfile]"
+  exit
+endif
+
+if ( $#argv > 1 ) then
+  set TEXFILE = $2
+else
+  set TEXFILE = temp
+endif
+
+if (-e $TEXFILE.tex) then
+  echo "Error.  The file " $TEXFILE.tex "already exists."
+  exit
+endif
+
+echo "\documentstyle{article}"      >> $TEXFILE.tex
+echo "\begin{document}"             >> $TEXFILE.tex
+echo "\bibliographystyle{/home/cdputnam/bin/gentex/gentex.bst}">> $TEXFILE.tex
+echo "\setlength{\topmargin}{0in}"  >> $TEXFILE.tex
+echo "\begin{center}"               >> $TEXFILE.tex
+echo "{\Large Bibliography Key} \\" >> $TEXFILE.tex
+echo "{\Large for the File} \\ "    >> $TEXFILE.tex
+echo "{ \ } \\"                     >> $TEXFILE.tex
+echo "{\LARGE "$1"}"                >> $TEXFILE.tex
+echo "\end{center}"                 >> $TEXFILE.tex
+echo "\bigskip"                     >> $TEXFILE.tex
+echo "\nocite{*}"                   >> $TEXFILE.tex
+echo "\bibliography{"$1"}"          >> $TEXFILE.tex
+echo "\end{document}"               >> $TEXFILE.tex
+
+latex $TEXFILE
+bibtex $TEXFILE
+latex $TEXFILE
+latex $TEXFILE
+dvips $TEXFILE << EOF
+
+EOF
+
+
