@@ -4,7 +4,9 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "newstr.h"
 
 #define TRUE  1
@@ -17,7 +19,7 @@
 #define FIELD_ABSTRACT 5
 
 int abstractout = FALSE;
-char version[] = "version 1.2";
+char version[] = "version 1.4";
 
 int whitespace (char ch)
 {
@@ -49,7 +51,7 @@ void output_abbrev (newstring *lastnamesptr, int numauthors, newstring *sourcept
     if (abbrev.data!=NULL) printf("%s",abbrev.data);
     else printf("REF");
 
-  /** Output the last two digits of the year **/
+  /** Output the year **/
     if (sourceptr!=NULL && sourceptr->data!=NULL) {
       p=strchr(sourceptr->data,'.');
       if (p!=NULL) { 
@@ -57,7 +59,7 @@ void output_abbrev (newstring *lastnamesptr, int numauthors, newstring *sourcept
         while (*p && whitespace(*p)) p++;
         pos=1;
         while (*p && !whitespace(*p) && pos<5) {
-           if (pos>2) printf("%c",*p);
+           printf("%c",*p);
            p++;
            pos++;
         }
@@ -384,16 +386,19 @@ fprintf(stderr,"BUF: '%s'\n",buf);
  
         /* Keep parsing until we reach a number starting a line and then a ':' */
         if (field_id == FIELD_OTHER && buf[i]!='\0') {
-                while (buf[i] && ( buf[i]>='0' && buf[i]<='9')) ++i;
-                while (buf[i]!=':' && buf[i]!='\0') ++i;
-/*printf("BUF: '%s'\n",&(buf[i]));*/
-                if (buf[i]==':' &&
-                   ((i>0) && (buf[i-1]>='0' && buf[i-1]<='9')) ) {
+/*
+                while (buf[i] && (! ( buf[i]>='0' && buf[i]<='9'))) {
+printf("loop 1: %d '%c'\n",buf[i],buf[i]);
+++i;
+}
+*/
+                while (buf[i] && (! ( buf[i]==':' && (i>0) && 
+		    isdigit(buf[i-1]) ) ) )  ++i;
+                if (buf[i]==':') {
                         i++;
                         while (whitespace(buf[i])) ++i;
                         field_id = FIELD_AUTHORS;
                 }
-                else i++;
         }
 
         if (field_id == FIELD_AUTHORS && buf[i]!='\0') {
@@ -414,7 +419,7 @@ fprintf(stderr,"BUF: '%s'\n",buf);
 			}
                         newstr_strcat(&authors,&(buf[startfield]));
 /*
-fprintf(stderr,"buf: '%s'\n",&(buf[startfield]));
+fprintf(stderr,"buf[startfield]: '%s'\n",&(buf[startfield]));
 fprintf(stderr,"Authors: '%s'\n",authors.data);
 */
                         i++;
@@ -524,7 +529,7 @@ process_args( int *argc_ptr, char *argv[] )
 			for (j=i+1; j<*argc_ptr; j++) 
 				argv[j-1]=argv[j];
 			i--;
-			*argc_ptr--;
+			*argc_ptr = (*argc_ptr) - 1;
 		}
 		i++;
 	}

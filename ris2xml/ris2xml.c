@@ -6,7 +6,7 @@
 #define TRUE (1)
 #define FALSE (0)
 
-char version[] = "1.0";
+char version[] = "1.1";
 
 void
 outputtype( newstring *tags, newstring *values, int numtags )
@@ -102,6 +102,31 @@ outputyear( newstring *tags, newstring *values, int numtags )
 }
 
 void
+outputrefnum( newstring *tags, newstring *values, int numtags )
+{
+	int i, year=-1,name=-1;
+	char *p;
+	for (i=0; i<numtags && (year==-1 || name==-1); ++i ) {
+		if (year==-1 && strncmp(tags[i].data,"PY  - ",6)==0) 
+			year = i;
+		else if (name==-1 && (
+			strncmp(tags[i].data,"AU  - ",6)==0 ||
+			strncmp(tags[i].data,"A1  - ",6)==0)) 
+			name = i;
+	}
+	if (year!=-1 && name!=-1) {
+		printf("      <REFNUM>");
+		p = values[name].data;
+		while ( p && *p && *p!=',' && *p!='\t' && *p!='\r'
+			&& *p!='\n') printf("%c",*p++);
+		p = values[year].data;
+		while ( p && *p && *p!=',' && *p!='\t' && *p!='\r'
+			&& *p!='\n') printf("%c",*p++);
+		printf("</REFNUM>\n");
+	}
+}
+
+void
 outputeasy( newstring *tags, newstring *values, int numtags, 
 	char *ristag, char *xmltag)
 {
@@ -131,7 +156,8 @@ outputref( newstring *tags, newstring *values, int numtags )
 	outputeditors( tags, values, numtags );
 	outputeasy( tags, values, numtags, "PB  - ","PUBLISHER");
 	outputeasy( tags, values, numtags, "CT  - ","ADDRESS");
-	outputeasy( tags, values, numtags, "KW  - ","REFNUM");
+	outputrefnum( tags, values, numtags );
+/*	outputeasy( tags, values, numtags, "KW  - ","REFNUM"); */
 
 #ifdef DONTCOMPILE
 { 
