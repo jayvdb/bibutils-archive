@@ -1,0 +1,111 @@
+:III.:{III.}
+:III:{III}
+:IV.:{IV.}
+:II.:{II.}
+:I.:{I.}
+:HIV:{HIV}
+:UV:{UV}
+:NTP:{NTP}
+:ATP:{ATP}
+:ADP:{ADP}
+:AMP:{AMP}
+:GTP:{GTP}
+:GDP:{GDP}
+:GMP:{GMP}
+:CTP:{CTP}
+:CDP:{CDP}
+:CMP:{CMP}
+:TTP:{TTP}
+:TDP:{TDP}
+:TMP:{TMP}
+:UTP:{UTP}
+:UDP:{UDP}
+:UMP:{UMP}
+:DNA:{DNA}
+:RNA:{RNA}
+:F0:{F}$_0$
+:F1:{F}$_1$
+:alpha:$\alpha$
+:beta:$\beta$
+:gamma:$\gamma$
+:delta:$\Delta$
+:Fab:{Fab}
+:Cu,Zn:{Cu,Zn}
+:Ile:{Ile}
+:Thr:{Thr}
+:S-transferase:{S-transferase}
+:HAP1:{HAP1}
+:SOD1:{SOD1}
+:CksHs1:{CksHs1}
+:N-lobe:{N-lobe}
+:4Fe-4S:{4Fe-4S}
+:Escherichia coli:{{\it Escherichia coli}}
+:escherichia coli:{{\it Escherichia coli}}
+:Salmonella typhimurium:{{\it Samonella typhimurium}}
+:Streptococcus pneumoniae:{{\it Streptococcus pneumoniae}}
+:Arabidopsis thaliana:{{\it Arabidopsis thaliana}}
+:Schistosoma japonica:{{\it Schistosoma japonica}}
+:Drosophila:{{\it Drosophila}}
+:Neisseria gonorrhoeae:{{\it Neisseria gonorrhoeae}}
+:E. coli:{{\it E. coli}}
+:E.coli:{{\it E. coli}}
+:in vitro:{\it in vitro}
+:in vivo:{\it in vivo}
+:[Review]::
+:[Letter]::
+:[see comments]::
+:Angstrom:{{\AA}ngstrom}
+:Holliday:{Holliday}
+:Mu:{Mu}
+:R391:{R391}
+:T4:{T4}
+:T7:{T7}
+:K-12:{K-12}
+:K12:{K12}
+:RuvAB:{RuvAB}
+:RuvA:{RuvA}
+:RuvB:{RuvB}
+:RuvC:{RuvC}
+:RecA:{RecA}
+:RecF:{RecF}
+:RecG:{RecG}
+:LexA:{LexA}
+:NusG:{NusG}
+:DnaA:{DnaA}
+:DnaB:{DnaB}
+:DnaC:{DnaC}
+:Rho:{Rho}
+:Rep:{Rep}
+:SSB:{SSB}
+:SOS:{SOS}
+:Tus:{Tus}
+:RNase H:{RNase H}
+:mutX:{{\it mutX}}
+:mutT:{{\it mutT}}
+:rnhA:{{\it rnhA}}
+:uvrA:{{\it uvrA}}
+:uvrB:{{\it uvrB}}
+:uvrC:{{\it uvrC}}
+:uvrD:{{\it uvrD}}
+:helD:{{\it helD}}
+: lon : {\it lon }
+:(dam): ({\it dam})
+:tif-1:{\it tif}-1
+: sfi : {\it sfi }
+:ruvAB:{{\it ruvAB}}
+:ruvA:{{\it ruvA}}
+:ruvB:{{\it ruvB}}
+:ruvC:{{\it ruvC}}
+:ruv:{\it ruv}
+:recA:{{\it recA}}
+:recO:{{\it recO}}
+:recR:{{\it recR}}
+:recF:{{\it recF}}
+:recG:{{\it recG}}
+:rusA:{{\it rusA}}
+:rho:{\it rho}
+:rep :{\it rep }
+:nusD:{{\it nusD}}
+:dnaA:{{\it dnaA}}
+:dnaB:{{\it dnaB}}
+:dnaC:{{\it dnaC}}
