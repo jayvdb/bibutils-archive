@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "newstr.h"
-#include "findrepl.h"
 
 #define TRUE  1
 #define FALSE 0
@@ -68,19 +67,20 @@ void output_authors (newstring* lastnames, newstring* initials, int numauthors)
 {
    int i;
    unsigned long pos;
-   printf("AUTHOR=\"");
+   printf("  <AUTHORS>\n");
    for (i=0; i<numauthors; ++i) {
-      if (i>0) printf("and ");
-      if (initials[i].data!=NULL && initials[i].dim!=0) {
+	printf("    <AUTHOR>");
+	printf("<LAST>");
+	if (lastnames[i].data!=NULL && lastnames[i].dim!=0) 
+		printf("%s",lastnames[i].data);
+	printf("</LAST>");
+	if (initials[i].data!=NULL && initials[i].dim!=0) {
          for (pos=0; pos < strlen(initials[i].data); pos++)
-            printf("%c. ",initials[i].data[pos]);
-      }
-      if (lastnames[i].data!=NULL && lastnames[i].dim!=0) {
-         printf("%s",lastnames[i].data);
-      }
-      if (i!=numauthors-1) printf("\n");
+            printf("<PREF>%c.</PREF>",initials[i].data[pos]);
+	}
+	printf("</AUTHOR>\n");
    }
-   printf("\"");
+   printf("  </AUTHORS>\n");
 }
 
 
@@ -214,8 +214,7 @@ void free_authors( newstring **lastnamesptr, newstring **firstnamesptr, int numa
 
 void output_title (newstring *titleptr)
 {
-  process_title(titleptr);
-  printf("TITLE=\"%s\"",titleptr->data);
+  printf("  <TITLE>%s</TITLE>\n",titleptr->data);
 }
 
 void output_source (newstring *sourceptr)
@@ -228,7 +227,7 @@ void output_source (newstring *sourceptr)
   if ( sourceptr!=NULL && sourceptr->data!=NULL) {
 
     /** Output Journal **/
-     printf("JOURNAL=\"");
+     printf("  <JOURNAL>");
      newstr_init(&journal);
      p = sourceptr->data;
      while (*p && whitespace(*p)) p++;
@@ -242,15 +241,15 @@ void output_source (newstring *sourceptr)
            while (whitespace(*p)) p++;
          }
      }
-     process_journal(&journal);
+/*     process_journal(&journal); */
      if (journal.data!=NULL) printf("%s",journal.data);
-     printf("\",\n");
+     printf("</JOURNAL>\n");
      newstr_clear(&journal);
      savep=p;
 
     /** Output Year **/
      if (savep!=NULL) {
-       printf("YEAR=\"");
+       printf("  <YEAR>");
        p = strchr(savep,'.');
        if (p!=NULL) {
          p++;
@@ -260,13 +259,13 @@ void output_source (newstring *sourceptr)
            p++;
          } 
        }
-      printf("\",\n");
+      printf("</YEAR>\n");
       savep=p;
      }
 
     /** Output Volume **/
     if (savep!=NULL) {
-     printf("VOLUME=");
+     printf("  <VOLUME>");
      p = strchr(savep,';');
      if (p!=NULL) {
        p++;
@@ -276,12 +275,12 @@ void output_source (newstring *sourceptr)
          p++;
        }
      }
-     printf(",\n");
+     printf("</VOLUME>\n");
    }
 
     /** Output Pages **/
 if (savep!=NULL) {
-     printf("PAGES=\"");
+     printf("  <PAGES>");
      newstr_init(&pgbegin);
      newstr_init(&pgend);
      p = strchr(savep,':');
@@ -291,23 +290,24 @@ if (savep!=NULL) {
          newstr_addchar(&pgbegin,*p);
          p++;
        }
-       if (pgbegin.data!=NULL && pgbegin.dim!=0) printf("%s",pgbegin.data);
+       if (pgbegin.data!=NULL && pgbegin.dim!=0) printf("<START>%s</START>",pgbegin.data);
        while (*p=='-' || whitespace(*p)) p++;
        while (*p && !whitespace(*p) && *p!=',' && *p!='.' && *p!=':') {
          newstr_addchar(&pgend,*p);
          p++;
        }
        if (pgend.data!=NULL && pgend.dim!=0) {
-          printf("--");
-          if (strlen(pgend.data)>=strlen(pgbegin.data)) printf("%s",pgend.data);
+          if (strlen(pgend.data)>=strlen(pgbegin.data)) printf("<END>%s</END>",pgend.data);
           else {
+	  printf("<START>");
           for (pos=0; pos<(long)strlen(pgbegin.data)-(long)strlen(pgend.data); pos++)
              printf("%c",pgbegin.data[pos]);
-            printf("%s",pgend.data);
+	  printf("</START>");
+            printf("<END>%s</END>",pgend.data);
           }
        }
      }
-     printf("\"");
+     printf("</PAGES>\n");
      newstr_clear (&pgbegin);
      newstr_clear (&pgend);
 }
@@ -326,30 +326,37 @@ void output_abstract(newstring *abstractptr)
   printf("\"");
 }
 
-void output_fields (newstring *authorsptr, newstring *titleptr, 
-                    newstring *sourceptr, newstring *abstractptr)
+void 
+output_fields (newstring *authorsptr, newstring *titleptr, 
+               newstring *sourceptr, newstring *abstractptr)
 {
-  newstring *lastnames, *initials;
-  int numauthors;
-  numauthors = generate_authors(authorsptr,&lastnames,&initials);
-  printf("@ARTICLE(");
-  output_abbrev(lastnames,numauthors,sourceptr);
-  printf(",\n");
-  output_authors(lastnames,initials,numauthors);
-  printf(",\n");
-  output_title(titleptr); 
-  printf(",\n");
-  output_source(sourceptr); 
-  printf(")\n\n");
-  free_authors(&lastnames,&initials,numauthors); 
+	newstring *lastnames, *initials;
+	int numauthors;
+
+	printf("<REF>\n");
+	printf("  <TYPE>ARTICLE</TYPE>\n");
+	numauthors = generate_authors(authorsptr,&lastnames,&initials);
+	output_authors(lastnames,initials,numauthors);
+	output_title(titleptr); 
+	output_source(sourceptr); 
+	printf("  <REFNUM>");
+	output_abbrev(lastnames,numauthors,sourceptr);
+	printf("</REFNUM>\n");
+	printf("</REF>\n");
+	free_authors(&lastnames,&initials,numauthors); 
 }
 
-void get_fields (FILE *fp)
+long
+get_fields (FILE *fp)
 {
-  int field_id;
-  int i, startfield;
-  newstring authors,title,source,abstract;
-  char buf[512];
+	int field_id;
+	int i, startfield;
+	long numref = 0L;
+	newstring authors,title,source,abstract;
+	char buf[512];
+
+	printf("<XML>\n");
+	printf("<REFERENCES>\n");
 
   field_id = FIELD_OTHER;
   newstr_init(&authors);
@@ -359,147 +366,153 @@ void get_fields (FILE *fp)
   while (!feof(fp)) {
     if (fgets(buf,sizeof(buf),fp)) {
       i = 0;
-	while (i<sizeof(buf) && buf[i]!='\0') {
-
-/*
-printf("field_id= %d i=%d\n",field_id,i);
-printf("BUF: '%s'\n",buf);
-*/
-
-	/* Keep parsing until we reach a number starting a line and then a ':' */
-	if (field_id == FIELD_OTHER && buf[i]!='\0') {
-		while (buf[i] && ( buf[i]>='0' && buf[i]<='9')) ++i;
+      /* Keep parsing until we reach a number starting a line and then a ':' */
+      if (field_id == FIELD_OTHER && (buf[0]>='0' && buf[0]<='9')) {
 		while (buf[i]!=':' && buf[i]!='\0') ++i;
-/*printf("BUF: '%s'\n",&(buf[i]));*/
-		if (buf[i]==':' && 
-		   ((i>0) && (buf[i-1]>='0' && buf[i-1]<='9')) ) {
-			i++;
-			while (whitespace(buf[i])) ++i;
-			field_id = FIELD_AUTHORS;
-		}
-		else i++;
-	}
+		if (buf[i]==':' && ((i>0) && (buf[i-1]>='0' && buf[i-1]<='9')) ) {
+           i++;
+           while (whitespace(buf[i])) ++i;
+           field_id = FIELD_AUTHORS;
+        }
+        else i++;
+      }
+      if (field_id == FIELD_AUTHORS) {
+        while (whitespace(buf[i])) ++i;
+        startfield = i;
+        while ((buf[i]!='\r' && buf[i]!='\n') && buf[i]!='\0') ++i;
+        if (buf[i]=='\0') newstr_strcat(&authors,&(buf[startfield]));
+        if (buf[i]=='\r' || buf[i]=='\n') {
+           /* remove the newline and paste */
+           buf[i] = ' ';
+           if (buf[i+1]=='\r' || buf[i+1]=='\n') buf[i+1]=' ';
+           /* if we've reached ".\n", we need to go on to next field */
+           if ((i>0 && buf[i-1]=='.') || (i>0 && buf[i-1]=='?')) {
+                buf[i-1]='\0';
+                field_id=FIELD_TITLE;
+           } 
+           newstr_strcat(&authors,&(buf[startfield]));
+           /* Display */
+/* 
+           if (field_id==FIELD_TITLE) {
+				printf("Authors: `");
+                newstr_fprintf(stdout,&authors);
+                printf("'\n");
+           }
+ */
+        }
+      }
+      while (buf[i]!='\0' && whitespace(buf[i])) ++i;
 
-	if (field_id == FIELD_AUTHORS && buf[i]!='\0') {
-		/* while (whitespace(buf[i])) ++i; */
-		startfield = i;
-		while (buf[i]!='\r' && buf[i]!='\n' && buf[i]!='\0') ++i;
-		if (buf[i]=='\0') newstr_strcat(&authors,&(buf[startfield]));
-		else {
-			/* remove the newline and paste */
-			buf[i] = '\0';
-			if (buf[i+1]=='\r' || buf[i+1]=='\n') buf[i+1]=' ';
-			/* if we've reached ".\n", we need to go on to next field */
-			if (i>0 && buf[i-1]=='.') {
-				buf[i-1]='\0';
-				field_id=FIELD_TITLE;
-		} 
-			newstr_strcat(&authors,&(buf[startfield]));
-/*
-printf("buf: '%s'\n",&(buf[startfield]));
-printf("Authors: '%s'\n",authors.data);
-*/
-			i++;
-			if (field_id==FIELD_AUTHORS) newstr_addchar(&authors,' ');
-			else while (whitespace(buf[i])) i++;
-		}
-	}
-
-	if (field_id == FIELD_TITLE && buf[i]!='\0') {
-		/* while (whitespace(buf[i])) ++i; */
-		startfield = i;
-		while ((buf[i]!='\r' && buf[i]!='\n') && buf[i]!='\0') ++i;
-		if (buf[i]=='\0')  newstr_strcat(&title,&(buf[startfield]));
-		else {
-			/* remove the newline and paste */
-			buf[i] = '\0'; 
-			if (buf[i+1]=='\r' || buf[i+1]=='\n') buf[i+1]=' ';
-			/* if we've reached ".\n", we need to go to the next field */
-			if (i>0 && buf[i-1]=='.') {
-				buf[i-1]='\0';
-				field_id=FIELD_SOURCE;
-			}
-			newstr_strcat(&title,&(buf[startfield]));
-/*
-printf("buf: '%s'\n",&(buf[startfield]));
-printf("Title: '%s'\n",title.data);
-*/
-			i++;
-			if (field_id==FIELD_TITLE) newstr_addchar(&title,' ');
-			else while (whitespace(buf[i])) ++i;
-		}
-	}
+      if (field_id == FIELD_TITLE && buf[i]!='\0') {
+        startfield = i;
+        while ((buf[i]!='\r' && buf[i]!='\n') && buf[i]!='\0') ++i;
+        if (buf[i]=='\0') newstr_strcat(&title,&(buf[startfield]));
+        else {
+           /* remove the newline and paste */
+           buf[i] = ' ';
+           if (buf[i+1]=='\r' || buf[i+1]=='\n') buf[i+1]=' ';
+           /* if we've reached ".\n", we need to go to the next field */
+           if ((i>0 && buf[i-1]=='.') || (i>0 && buf[i-1]=='?') || (i>0 && buf[i-1]=='!')) {
+              buf[i-1]='\0';
+              field_id=FIELD_SOURCE;
+           }
+           newstr_strcat(&title,&(buf[startfield]));
+           /* Display */
+/* 
+           if (field_id==FIELD_SOURCE) {
+                printf("Title: `");
+                newstr_fprintf(stdout,&title);
+                printf("'\n");
+           }
+ */
+        }
+      }
+      while (buf[i]!='\0' && whitespace(buf[i])) ++i;
 
 
-	if (field_id == FIELD_SOURCE && buf[i]!='\0') {
-		/* while (whitespace(buf[i])) ++i; */
-		startfield = i;
-		while (buf[i]!='\r' && buf[i]!='\n' && buf[i]!='\0') ++i;
-		if (buf[i]=='\0') newstr_strcat(&source,&(buf[startfield]));
-		else {
-			/* remove the newline and paste */
-			buf[i] = '\0';
-			if (buf[i+1]=='\r' || buf[i+1]=='\n') buf[i+1]=' ';
-			/* if we've reached ".\n", we need to go to the next field */
-			if (i>0 && buf[i-1]=='.') {
-				buf[i-1]='\0';
-				field_id=FIELD_OTHER;
-			}
-			newstr_strcat(&source,&(buf[startfield]));
-			i++;
-			if (field_id==FIELD_SOURCE) newstr_addchar(&title,' ');
-			else while (whitespace(buf[i])) ++i;
-			/* Now process this reference and reset all */
-			if (field_id==FIELD_OTHER){
-				output_fields(&authors,&title,&source,&abstract);
-				fflush(stdout);
-				newstr_clear(&authors);
-				newstr_clear(&title);
-				newstr_clear(&source);
-				newstr_clear(&abstract);
-			}
-		}
-	}
-	}
+      if (field_id == FIELD_SOURCE && buf[i]!='\0') {
+        startfield = i;
+        while ((buf[i]!='\r' && buf[i]!='\n') && buf[i]!='\0') ++i;
+        if (buf[i]=='\0') newstr_strcat(&source,&(buf[startfield]));
+        if (buf[i]=='\r' || buf[i]=='\n') {
+           /* remove the newline and paste */
+           buf[i] = ' ';
+           if (buf[i+1]=='\r' || buf[i+1]=='\n') buf[i+1]=' ';
+           /* if we've reached ".\n", we need to go to the next field */
+           if (i>0 && buf[i-1]=='.') {
+                buf[i-1]='\0';
+                field_id=FIELD_OTHER;
+           }
+           newstr_strcat(&source,&(buf[startfield]));
+           /* Now process this reference and reset all */
+           if (field_id==FIELD_OTHER){
+                /* Display */
+/* 
+                printf("Source: `");
+                newstr_fprintf(stdout,&source);
+                printf("'\n");
+ */
+                output_fields(&authors,&title,&source,&abstract);
+		numref++;
+                fflush(stdout);
+                newstr_clear(&authors);
+                newstr_clear(&title);
+                newstr_clear(&source);
+                newstr_clear(&abstract);
+           }
+        }
+      }
+      while (buf[i]!='\0' && whitespace(buf[i])) ++i;
+
     }
   }
+  printf("</REFERENCES>\n</XML>\n");
+  return numref;
 }
 
-int main(int argc, char *argv[])
+void
+process_args( int *argc_ptr, char *argv[] )
 {
-  FILE *fp;
-  int arg,argtemp,found;
-  initialize_subs();
+	int found = FALSE;
+	int i = 1,j;
+	while ( i < *argc_ptr && !found ) {
+		if (strncmp(argv[i],"-a",2)==0) {
+			found = TRUE;
+			abstractout = TRUE;
+			for (j=i+1; j<*argc_ptr; j++) 
+				argv[j-1]=argv[j];
+			i--;
+			*argc_ptr--;
+		}
+		i++;
+	}
+}
 
-  /* Check to see if abstract should be displayed */
-  arg=1;
-  found=FALSE;
-  while (arg<argc && !found) {
-    if (strcmp(argv[arg],"-a")==0) {
-     found=TRUE;
-     abstractout=TRUE;
-     for (argtemp=arg+1; argtemp<argc; argtemp++) argv[argtemp-1]=argv[argtemp];
-     argc--;
-    }
-    arg++;
-  } 
+int 
+main(int argc, char *argv[])
+{
+	int 	i;
+	FILE 	*fp;
+	long 	numref = 0L;
 
-  if (argc==1) {
-    get_fields(stdin);
-  }
-  else {
-    for (arg=1; arg<argc; arg++) {
-      fp=fopen(argv[arg],"r");
-      if (fp==NULL) {
-        fprintf(stderr,"Error.  Cannot open %s for reading.\n",argv[arg]);
-      }
-      else {
-        get_fields(fp);
-        fclose(fp);
-      }
-    }
-  }
-  return 0;
+	process_args( &argc, argv );
+
+	if (argc==1) 
+		numref=get_fields(stdin);
+	else {
+		for (i=1; i<argc; i++) {
+			fp=fopen(argv[i],"r");
+			if (fp==NULL) {
+				fprintf(stderr,"med2xml: cannot open %s\n",
+					argv[i]);
+			} else { 
+				numref+=get_fields(fp);
+				fclose(fp);
+			}
+		}
+	}
+	fprintf(stderr,"med2xml:  Processed %ld references.\n",numref);
+	return EXIT_SUCCESS;
 }
  
 

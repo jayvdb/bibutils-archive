@@ -1,0 +1,89 @@
+
+1: Hosfield DJ, Daniels DS, Mol CD, Putnam CD, Parikh SS, Tainer JA.
+DNA damage recognition and repair pathway coordination revealed by the
+structural biochemistry of DNA repair enzymes.
+Prog Nucleic Acid Res Mol Biol. 2001;68:315-47. Review.
+PMID: 11554309 [PubMed - indexed for MEDLINE]
+
+
+2: Putnam CD, Clancy SB, Tsuruta H, Gonzalez S, Wetmur JG, Tainer JA.
+Structure and mechanism of the RuvB Holliday junction branch migration motor.
+J Mol Biol. 2001 Aug 10;311(2):297-310.
+PMID: 11478862 [PubMed - indexed for MEDLINE]
+
+
+3: Parikh SS, Putnam CD, Tainer JA.
+Lessons learned from structural results on uracil-DNA glycosylase.
+Mutat Res. 2000 Aug 30;460(3-4):183-99. Review.
+PMID: 10946228 [PubMed - indexed for MEDLINE]
+
+
+4: Putnam CD, Arvai AS, Bourne Y, Tainer JA.
+Active and inhibited human catalase structures: ligand and NADPH binding and
+catalytic mechanism.
+J Mol Biol. 2000 Feb 11;296(1):295-309.
+PMID: 10656833 [PubMed - indexed for MEDLINE]
+
+
+5: Putnam CD, Tainer JA.
+The food of sweet and bitter fancy.
+Nat Struct Biol. 2000 Jan;7(1):17-8.
+PMID: 10625418 [PubMed - indexed for MEDLINE]
+
+
+6: Han S, Craig JA, Putnam CD, Carozzi NB, Tainer JA.
+Evolution and mechanism from structures of an ADP-ribosylating toxin and NAD
+complex.
+Nat Struct Biol. 1999 Oct;6(10):932-6.
+PMID: 10504727 [PubMed - indexed for MEDLINE]
+
+
+7: Mol CD, Parikh SS, Putnam CD, Lo TP, Tainer JA.
+DNA repair mechanisms for the recognition and removal of damaged DNA bases.
+Annu Rev Biophys Biomol Struct. 1999;28:101-28. Review.
+PMID: 10410797 [PubMed - indexed for MEDLINE]
+
+
+8: Shroyer MJ, Bennett SE, Putnam CD, Tainer JA, Mosbaugh DW.
+Mutation of an active site residue in Escherichia coli uracil-DNA glycosylase:
+effect on DNA binding, uracil inhibition and catalysis.
+Biochemistry. 1999 Apr 13;38(15):4834-45.
+PMID: 10200172 [PubMed - indexed for MEDLINE]
+
+
+9: Putnam CD, Shroyer MJ, Lundquist AJ, Mol CD, Arvai AS, Mosbaugh DW, Tainer
+JA.
+Protein mimicry of DNA from crystal structures of the uracil-DNA glycosylase
+inhibitor protein and its complex with Escherichia coli uracil-DNA glycosylase.
+J Mol Biol. 1999 Mar 26;287(2):331-46.
+PMID: 10080896 [PubMed - indexed for MEDLINE]
+
+
+10: Wilcox SK, Putnam CD, Sastry M, Blankenship J, Chazin WJ, McRee DE, Goodin
+DB.
+Rational design of a functional metalloenzyme: introduction of a site for
+manganese binding and oxidation into a heme peroxidase.
+Biochemistry. 1998 Dec 1;37(48):16853-62.
+PMID: 9836578 [PubMed - indexed for MEDLINE]
+
+
+11: Putnam CD, Copenhaver GP, Denton ML, Pikaard CS.
+The RNA polymerase I transactivator upstream binding factor requires its
+dimerization domain and high-mobility-group (HMG) box 1 to bend, wrap, and
+positively supercoil enhancer DNA.
+Mol Cell Biol. 1994 Oct;14(10):6476-88.
+PMID: 7935371 [PubMed - indexed for MEDLINE]
+
+
+12: Copenhaver GP, Putnam CD, Denton ML, Pikaard CS.
+The RNA polymerase I transcription factor UBF is a sequence-tolerant HMG-box
+protein that can recognize structured nucleic acids.
+Nucleic Acids Res. 1994 Jul 11;22(13):2651-7.
+PMID: 8041627 [PubMed - indexed for MEDLINE]
+
+
+13: Putnam CD, Pikaard CS.
+Cooperative binding of the Xenopus RNA polymerase I transcription factor xUBF to
+repetitive ribosomal gene enhancers.
+Mol Cell Biol. 1992 Nov;12(11):4970-80.
+PMID: 1406673 [PubMed - indexed for MEDLINE]
