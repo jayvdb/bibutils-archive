@@ -1,7 +1,16 @@
 
 BIBUTILS
 
+changes 2.4->2.5
+5/22/03
+
+UNIQBIB
++  fix bug introduced by newstring library changes in 2.3
++  clean coode a bit
++  bump version number none->1.1
+
 changes 2.3->2.4
+4/02/03
 
 NEWSTR
 +  add newstr_empty() prototype

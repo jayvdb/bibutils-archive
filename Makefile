@@ -27,10 +27,11 @@
 
 # Linux mine
 MTYPE=Linux
-#POSTFIX=_i386
+POSTFIX=_i386
 CC= CC="cc -Wall"
 RANLIB= RANLIB="ranlib"
-INSTALLDIR=bibutils_2.4
+#INSTALLDIR=bibutils_2.4
+INSTALLDIR=/home/cdputnam/bin
 
 
 all : libdir uniqbibdir ris2xmldir med2xmldir bib2xmldir \
@@ -102,5 +103,27 @@ install: FORCE
 	cp xml2en/xml2en   $(INSTALLDIR)/xml2en$(POSTFIX)
 	cp xmlreplace/xmlreplace $(INSTALLDIR)/xmlreplace$(POSTFIX)
 	cp uniqbib/uniqbib $(INSTALLDIR)/uniqbib$(POSTFIX)
+
+package: FORCE
+	mkdir update
+	cp med2xml/med2xml update/med2xml$(POSTFIX)
+	cp bib2xml/bib2xml update/bib2xml$(POSTFIX)
+	cp ris2xml/ris2xml update/ris2xml$(POSTFIX)
+	cp xml2ris/xml2ris update/xml2ris$(POSTFIX)
+	cp xml2bib/xml2bib update/xml2bib$(POSTFIX)
+	cp xml2en/xml2en   update/xml2en$(POSTFIX)
+	cp xmlreplace/xmlreplace update/xmlreplace$(POSTFIX)
+	cp uniqbib/uniqbib update/uniqbib$(POSTFIX)
+	mkdir update/bibutils_2.5
+	cp med2xml/med2xml update/bibutils_2.5/med2xml
+	cp bib2xml/bib2xml update/bibutils_2.5/bib2xml
+	cp ris2xml/ris2xml update/bibutils_2.5/ris2xml
+	cp xml2ris/xml2ris update/bibutils_2.5/xml2ris
+	cp xml2bib/xml2bib update/bibutils_2.5/xml2bib
+	cp xml2en/xml2en   update/bibutils_2.5/xml2en
+	cp xmlreplace/xmlreplace update/bibutils_2.5/xmlreplace
+	cp uniqbib/uniqbib update/bibutils_2.5/uniqbib
+	cd update; tar cvf - bibutils_2.5 | gzip - > bibutils_2.5$(POSTFIX).tgz; cd ..
+	rm -r update/bibutils_2.5
 
 FORCE:
