@@ -8,6 +8,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "newstr.h"
+#include "strsearch.h"
 
 #define TRUE  1
 #define FALSE 0
@@ -19,7 +20,8 @@
 #define FIELD_ABSTRACT 5
 
 int abstractout = FALSE;
-char version[] = "version 1.4";
+char progname[] = "med2xml";
+char version[] = "version 1.4 02/10/03";
 
 int whitespace (char ch)
 {
@@ -65,7 +67,7 @@ void output_abbrev (newstring *lastnamesptr, int numauthors, newstring *sourcept
         }
      }
   }
-  newstr_clear(&abbrev);
+  newstr_free(&abbrev);
 }
 
 void output_authors (newstring* lastnames, newstring* initials, int numauthors)
@@ -153,7 +155,7 @@ fprintf(stderr,"AUTHORLIST: '%s'\n",authorsptr->data);
             }
        }
 
-       for (i=0; i<nblocks; ++i) newstr_clear(&(blocks[i]));
+       for (i=0; i<nblocks; ++i) newstr_free(&(blocks[i]));
        nblocks=0;
        q = wholename.data;
        while (*q) {
@@ -189,12 +191,12 @@ fprintf(stderr,"AUTHORLIST: '%s'\n",authorsptr->data);
        if (nblocks>1) {
           newstr_strcat(&(firstnames[nauthor]),blocks[nblocks-1].data);
        }
-      newstr_clear(&wholename);
+      newstr_free(&wholename);
       nauthor++;
       if (*p) p++;
   }
 
-  for ( i=0; i<dimblocks; ++i ) newstr_clear(&(blocks[i]));
+  for ( i=0; i<dimblocks; ++i ) newstr_free(&(blocks[i]));
   free(blocks);
 
   *lastnamesptr = lastnames;
@@ -212,8 +214,8 @@ void free_authors( newstring **lastnamesptr, newstring **firstnamesptr, int numa
    lastnames  = *lastnamesptr;
 
    for ( i=0; i<numauthors; ++i ) {
-      newstr_clear(&(lastnames[i]));
-      newstr_clear(&(firstnames[i]));
+      newstr_free(&(lastnames[i]));
+      newstr_free(&(firstnames[i]));
    }
    free(*lastnamesptr);
    free(*firstnamesptr);
@@ -252,24 +254,42 @@ void output_source (newstring *sourceptr)
 /*     process_journal(&journal); */
      if (journal.data!=NULL) printf("%s",journal.data);
      printf("</JOURNAL>\n");
-     newstr_clear(&journal);
+     newstr_free(&journal);
      savep=p;
 
-    /** Output Year **/
-     if (savep!=NULL) {
-       printf("  <YEAR>");
-       p = strchr(savep,'.');
-       if (p!=NULL) {
-         p++;
-         while (*p && whitespace(*p)) p++;
-         while (*p && !whitespace(*p) && *p!='(' && *p!=':' && *p!='.' && *p!=',' && *p!=';') {
-           printf("%c",*p);
-           p++;
-         } 
-       }
-      printf("</YEAR>\n");
-      savep=p;
-     }
+	/** Output Year **/
+	if (savep!=NULL) {
+		printf("  <DATE>");
+		p = strchr(savep,'.');
+		if (p!=NULL) {
+			printf("<YEAR>");
+			p++;
+			while (*p && whitespace(*p)) p++;
+			while (*p && !whitespace(*p) && *p!='(' && *p!=':' && *p!='.' && *p!=',' && *p!=';') {
+				printf("%c",*p++);
+			} 
+			printf("</YEAR>");
+			while (*p && whitespace(*p)) p++;
+			if ( *p && *p!=';' && *p!=':' && *p!=',' && *p!='(' && *p!='.'){
+				char *months[12]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct", "Nov", "Dec"};
+				int i;
+				for (i=0; i<12; ++i)
+					if (strsearch(p,months[i])==p) 
+						printf("<MONTH>%d</MONTH>",i+1);
+				while (*p && *p!=';' &&  *p!=':' && *p!=',' && *p!='(' && *p!='.' && !whitespace(*p)) p++;
+				while (*p && whitespace(*p)) p++;
+
+			}
+			if ( *p && *p!=';' && *p!=':' && *p!=',' && *p!='(' && *p!='.'){
+				printf("<DAY>");
+				while (*p && *p!=';' && *p!=':' && *p!=','  && *p!='(' && *p!='.') printf("%c",*p++);
+				printf("</DAY>");
+			}
+
+		}
+		printf("</DATE>\n");
+		savep=p;
+	}
 
     /** Output Volume **/
     if (savep!=NULL) {
@@ -316,8 +336,8 @@ if (savep!=NULL) {
        }
      }
      printf("</PAGES>\n");
-     newstr_clear (&pgbegin);
-     newstr_clear (&pgend);
+     newstr_free (&pgbegin);
+     newstr_free (&pgend);
 }
 }
 }
@@ -499,12 +519,12 @@ fprintf(stderr,"Title: '%s'\n",title.data);
                                 output_fields(&authors,&title,&source,&abstract);
 				numref++;
                                 fflush(stdout);
-                                newstr_clear(&authors);
-                                newstr_clear(&title);
-				newstr_clear(&journal);
-				newstr_clear(&date);
-                                newstr_clear(&source);
-                                newstr_clear(&abstract);
+                                newstr_free(&authors);
+                                newstr_free(&title);
+				newstr_free(&journal);
+				newstr_free(&date);
+                                newstr_free(&source);
+                                newstr_free(&abstract);
                         }
                 }
         }
@@ -515,6 +535,35 @@ fprintf(stderr,"Title: '%s'\n",title.data);
 
   printf("</REFERENCES>\n</XML>\n");
   return numref;
+}
+
+
+void
+help( void )
+{
+	extern char bibutils_version[];
+	fprintf(stderr,"\n%s version %s, ",progname,version);
+	fprintf(stderr,"bibutils suite version %s\n",bibutils_version);
+	fprintf(stderr,"Converts a medline text file into XMLx\n\n");
+
+	fprintf(stderr,"usage: %s med_file > xml_file\n\n",progname);
+        fprintf(stderr,"  med_file can be replaced with file list or omitted to use as a filter\n\n");
+
+/*	fprintf(stderr,"  -a             include abstracts\n"); */
+	fprintf(stderr,"  -h, --help     display this help\n");
+	fprintf(stderr,"  -v, --version  display version\n\n");
+
+	fprintf(stderr,"http://www.scripps.edu/~cdputnam/bibutils.html for more details\n\n");
+	exit( EXIT_SUCCESS );
+}
+
+void
+tellversion( void )
+{
+	extern char bibutils_version[];
+	fprintf(stderr,"%s version %s, ",progname,version);
+	fprintf(stderr,"bibutils suite version %s\n",bibutils_version);
+	exit( EXIT_SUCCESS );
 }
 
 void
@@ -530,6 +579,14 @@ process_args( int *argc_ptr, char *argv[] )
 				argv[j-1]=argv[j];
 			i--;
 			*argc_ptr = (*argc_ptr) - 1;
+		}
+		else if (strcmp(argv[i],"-h")==0||strcmp(argv[i],"--help")==0){
+			help();
+			/* if help didn't terminate, we'd remove */
+		}
+		else if (strcmp(argv[i],"-v")==0||strcmp(argv[i],"--version")==0){
+			tellversion();
+			/* if version didn't terminate, we'd remove */
 		}
 		i++;
 	}
@@ -550,16 +607,15 @@ main(int argc, char *argv[])
 		for (i=1; i<argc; i++) {
 			fp=fopen(argv[i],"r");
 			if (fp==NULL) {
-				fprintf(stderr,"med2xml %s: cannot open %s\n",
-					version, argv[i]);
+				fprintf(stderr,"%s: cannot open %s\n",
+					progname, argv[i]);
 			} else { 
 				numref+=get_fields(fp);
 				fclose(fp);
 			}
 		}
 	}
-	fprintf(stderr,"med2xml %s:  Processed %ld references.\n",
-		version, numref);
+	fprintf(stderr,"%s:  Processed %ld references.\n", progname, numref);
 	return EXIT_SUCCESS;
 }
  

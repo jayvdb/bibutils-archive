@@ -7,43 +7,34 @@
 #include <stdlib.h>
 #include "refs.h"
 
-refs *refs_new(void)
+REFS *
+refs_new( void )
 {
-  refs *CurrPtr;
-  newstring *CurrStr;
-  CurrPtr = (refs *)malloc (sizeof(refs));
-  if (CurrPtr==NULL) {
-    fprintf(stderr,"Error.  Cannot allocate memory.\n");
-    exit(1);
-  }
-  CurrStr = (newstring *) malloc (sizeof(newstring));
-  if (CurrStr==NULL) {
-    fprintf(stderr,"Error.  Cannot allocate memory.\n");
-    exit(1);
-  }
-  CurrPtr->refname=CurrStr;
-  CurrStr = (newstring *) malloc (sizeof(newstring));
-  if (CurrStr==NULL) {
-    fprintf(stderr,"Error.  Cannot allocate memory.\n");
-    exit(1);
-  }
-  CurrPtr->source=CurrStr; 
-  CurrPtr->startpos=0;
-  CurrPtr->endpos=0;
-  CurrPtr->Next=NULL;
-  newstr_init(CurrPtr->refname);
-  newstr_init(CurrPtr->source);
-  return CurrPtr;
+	REFS *curr;
+
+	curr = (REFS *) calloc ( 1, sizeof(REFS) );
+	if ( !curr ) {
+		fprintf(stderr,"Error.  Cannot allocate memory.\n");
+		exit(1);
+	}
+	curr->refname = newstr_new();
+	curr->source = newstr_new();
+	if ( !curr->refname || !curr->source ) {
+		fprintf(stderr,"Error.  Cannot allocate memory.\n");
+		exit(1);
+	}
+	return curr;
 }
 
-void refs_dispose(refs *CurrPtr)
+void 
+refs_dispose( REFS *curr )
 {
-  refs *NextPtr;
-  while (CurrPtr!=NULL) {
-    NextPtr=CurrPtr->Next;
-    newstr_clear(CurrPtr->refname);
-    newstr_clear(CurrPtr->source);
-    free(CurrPtr);
-    CurrPtr=NextPtr;
-  }
+	REFS *next;
+	while ( curr ) {
+		next = curr->next;
+		newstr_free( curr->refname );
+		newstr_free( curr->source );
+		free( curr );
+		curr = next;
+	}
 }

@@ -14,7 +14,8 @@ xml.c
 
 #define XML_BUFSIZE (512)
 
-char *find_xmlstartdata(char *buffer, char *tag)
+char *
+xml_findstartdata(char *buffer, char *tag)
 {
 	int i=0,length;
 	char *p;
@@ -36,7 +37,8 @@ char *find_xmlstartdata(char *buffer, char *tag)
 	return p;
 }
 
-char *find_xmlenddata(char *buffer, char *tag)
+char *
+xml_findenddata(char *buffer, char *tag)
 {
 	int length;
 	char *p;
@@ -54,38 +56,99 @@ char *find_xmlenddata(char *buffer, char *tag)
 	}
 	return p;
 }
+
+#undef XML_BUFSIZE
 	
-
-char *extract_xmldata(char *buffer, char *tag, newstring **s_ptr)
+/* xml_extractdata()
+ *
+ * Put everything between an XML start and end tag into a
+ * newstring.  If no end, tag, copy everything to the string
+ * end.
+ *
+ * Return pointer that points _after_ the end tag.
+ */
+char *
+xml_extractdata(char *buffer, char *tag, newstring *s)
 {
-	newstring *s;
-	char *start,*end,*p;
 	unsigned int i;
+	char         *start,*end,*p;
 
-	s = *s_ptr;
-	if (s==NULL) {
-		s = (newstring *) malloc(sizeof(newstring));
-		if (s==NULL) return NULL;
-		newstr_init(s);
-		*s_ptr = s;
-	} else newstr_strcpy(s,"");
-	*s_ptr = s;
-	if (buffer==NULL) return NULL;
-	start = find_xmlstartdata(buffer,tag);
-	if (start==NULL) return NULL;
-	end   = find_xmlenddata(start,tag);
+	if ( buffer==NULL || tag==NULL || s==NULL ) return NULL;
+
+	newstr_strcpy(s,"");
+
+	start = xml_findstartdata(buffer,tag);
+	if ( start==NULL ) return buffer+strlen(buffer); /* point to \0 */
+
+	end   = xml_findenddata(start,tag);
 	if (end==NULL) {
 		newstr_strcpy(s,start);
 		p = buffer + strlen(buffer);  /* point to \0 */
-	}
-	p = start;
-	while ( p != end ) {
-		newstr_addchar(s,*p);
-		p++;
-	}
+	} else newstr_segcpy(s,start,end);
+
+	p = end;
 	i = 0;
 	while ( (*p) && (i<strlen(tag)+3) ) { p++; i++; }
+
 	return p;
 }
 
-#undef XML_BUFSIZE
+
+/*
+ *   xml_readrefs()
+ *
+ *         Reads references one at a time into buffer and sends each to
+ *         process_article( FILE *outptr, newstring *ref, long numref)
+ */
+long 
+xml_readrefs(FILE *inptr, FILE *outptr)
+{
+	extern void process_article( FILE *, newstring *, long );
+	newstring buffer, ref;
+	char *p;
+	char line[256],*errorptr,*startptr,*endptr;
+	int haveref = FALSE, processref = FALSE;
+	long numrefs =0L;
+
+	newstr_init(&buffer);
+	newstr_init(&ref);
+
+	while (!feof(inptr)) {
+
+		if (processref) {
+			process_article(outptr,&ref,numrefs+1);
+			newstr_empty( &buffer );
+			processref = FALSE;
+			numrefs++;
+			if (endptr!=NULL) newstr_strcpy(&buffer,endptr+6);
+		}
+
+		errorptr = fgets (line, sizeof(line), inptr);
+		if (errorptr == NULL) continue;
+
+		startptr = strsearch(line,"<REF>");
+		if (startptr != NULL || haveref ) {
+			if ( haveref ) newstr_strcat(&buffer,line);
+			else {
+				newstr_strcat(&buffer,startptr);
+				haveref = TRUE;
+			}
+			endptr = xml_findenddata(buffer.data,"REF"); 
+			if (endptr!=NULL) {
+				processref=TRUE;
+				p = xml_extractdata(buffer.data,"REF",&ref);
+				newstr_empty( &buffer );
+				if ( p!=NULL ) newstr_strcpy( &buffer, p );
+				startptr = strsearch(buffer.data,"<REF>"); 
+				if (startptr!=NULL) haveref=TRUE;
+				else haveref=FALSE;
+			}
+		}
+  	}
+	newstr_free (&buffer);
+	newstr_free (&ref);
+	return numrefs;
+}
+
+
+

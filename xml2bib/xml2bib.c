@@ -12,229 +12,292 @@ xml2bib --   Bibliography XML to RIS format Pre-Reference Manager
 #include "strsearch.h"
 #include "xml.h"
 
-#define TRUE (1==1)
-#define FALSE (!TRUE)
+char   progname[] = "xml2bib";
+char   version[]  = "1.3 02/18/03";
 
-void notify (char *message)
+void 
+process_people(newstring *people, FILE *outptr, char *xmltag, char *bibtextag)
 {
-  fprintf(stderr,"%s",message);
-}
-
-void strip_spaces(char *str)
- {
-   char *p,*q;
-   p=str;
-   q=str;
-   while (*(p-1)) {
-     if (*p!=' ') *q++=*p;
-     p++;
-   }
- }
-
-int iswhitespace (char ch)
-{
-  if (ch==' ' || ch=='\t') return TRUE;
-  else return FALSE;
-}
-
-void process_authors(newstring *authors, FILE *outptr)
-{
-	long numauthor=0;
-	newstring *author = NULL, *part = NULL;
+	newstring person, part, part2;
 	char      *pos1, *pos2;
+	long      numpeople=0;
 
-	if (authors==NULL || authors->data==NULL || authors->data[0]=='\0') return;
+	if (people==NULL || people->data==NULL || people->data[0]=='\0') return;
+	newstr_init( &person );
+	newstr_init( &part );
+	newstr_init( &part2 );
 
-	fprintf(outptr,"\nAUTHOR=\"");
-	/* extract each author */
-	pos1 = authors->data;
+	fprintf(outptr,"\n%s=\"",bibtextag);
+	/* extract each person */
+	pos1 = people->data;
 	while (pos1!=NULL && *pos1!='\0') {
-		pos1 = extract_xmldata(pos1,"AUTHOR",&author);
-		if (author==NULL || author->data==NULL || author->data[0]=='\0')
-			continue;
-		if (numauthor>0) fprintf(outptr,"\nand ");
-		pos2 = author->data;
+		pos1 = xml_extractdata(pos1,xmltag,&person);
+		if (person.data==NULL || person.data[0]=='\0') continue;
+		if (numpeople>0) fprintf(outptr,"\nand ");
+		pos2 = person.data;
 		while (pos2!=NULL && *pos2!='\0') {
-			pos2 = extract_xmldata(pos2,"PREF",&part);
-			if (part!=NULL && part->data!=NULL && part->data[0]!='\0')
-				fprintf(outptr,"%s ",part->data);
+			pos2 = xml_extractdata(pos2,"PREF",&part);
+			if (part.data!=NULL && part.data[0]!='\0')
+				fprintf(outptr,"%s ",part.data);
 		}
-		(void) extract_xmldata(author->data,"LAST",&part);
-		if (part==NULL || part->data==NULL || part->data[0]=='\0') 
+		(void) xml_extractdata(person.data,"LAST",&part);
+		if (part.data==NULL || part.data[0]=='\0') 
 			continue;
-		fprintf(outptr,"%s",part->data);
-		numauthor++;
+		(void) xml_extractdata(person.data,"SUFF",&part2);
+		if (part2.data==NULL || part2.data[0]=='\0')
+			fprintf(outptr,"%s",part.data);
+		else    fprintf(outptr,"{%s %s}",part.data,part2.data);
+		numpeople++;
 	}
 	fprintf(outptr,"\"");
 
-	if (author!=NULL) {
-		newstr_clear(author);
-		free(author);
-	}
+	newstr_free(&person);
+	newstr_free(&part);
+	newstr_free(&part2);
 }
 
-void process_pages( newstring *pages, FILE *outptr )
+void
+process_date( newstring *date, FILE *outptr )
 {
-	newstring 	*sp=NULL;
-	newstring 	*ep=NULL;
+	char *months[12]={ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+		"Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+	int year=0, month=0, day=0, whichmonth;
+	newstring part;
+	newstr_init( &part );
+
+	(void) xml_extractdata(date->data,"YEAR",&part);
+	if (part.data!=NULL && part.data[0]!='\0') {
+		year = 1;
+		fprintf(outptr,"\nYEAR=\"%s\"",part.data);
+	}
+
+	(void) xml_extractdata(date->data,"MONTH",&part);
+	if (part.data!=NULL && part.data[0]!='\0') {
+		if (year) fprintf(outptr,",");
+		month = 1;
+		whichmonth = atoi(part.data)-1;
+		if (whichmonth<0) whichmonth=0;
+		else if (whichmonth>11) whichmonth=11;
+		fprintf(outptr,"\nMONTH=\"%s\"",months[whichmonth]);
+	}
+
+	(void) xml_extractdata(date->data,"DAY",&part);
+	if (part.data!=NULL && part.data[0]!='\0') {
+		if ((year && !month) || month ) fprintf(outptr,",");
+		day = 1;
+		fprintf(outptr,"\nDAY=\"%s\"",part.data);
+	}
+
+	(void) xml_extractdata(date->data,"OTHER",&part);
+	if (part.data!=NULL && part.data[0]!='\0') {
+		if ((year && !month && !day) || (month &&!day) || day )
+			fprintf(outptr,",");
+		fprintf(outptr,"\nDATEOTHER=\"%s\"",part.data);
+	}
+
+	newstr_free( &part );
+}
+
+void 
+process_pages( newstring *pages, FILE *outptr )
+{
+	newstring sp, ep;
+	int       npages=0;
+
+	newstr_init( &sp );
+	newstr_init( &ep );
 
 	fprintf(outptr,"\nPAGES=\"");
-	(void) extract_xmldata(pages->data,"START",&sp);
-	(void) extract_xmldata(pages->data,"END",&ep);
-	if (sp!=NULL && sp->data!=NULL && sp->data[0]!='\0') {
-		fprintf(outptr,"%s",sp->data);
-		newstr_clear(sp);
+	(void) xml_extractdata(pages->data,"START",&sp);
+	if (sp.data!=NULL && sp.data[0]!='\0') {
+		fprintf(outptr,"%s",sp.data);
+		npages++;
 	}
-	if (ep!=NULL && ep->data!=NULL && ep->data[0]!='\0') {
-		if (sp!=NULL) fprintf(outptr,"--");
-		fprintf(outptr,"%s",ep->data);
-		newstr_clear(ep);
+	(void) xml_extractdata(pages->data,"END",&ep);
+	if (ep.data!=NULL && ep.data[0]!='\0') {
+		if (npages) fprintf(outptr,"--");
+		fprintf(outptr,"%s",ep.data);
 	}
 	fprintf(outptr,"\"");
-	if (sp!=NULL) free(sp);
-	if (ep!=NULL) free(ep);
+
+	newstr_free( &sp );
+	newstr_free( &ep );
 }
 
-/*#define NUMFIELDS (14) */
-
-void process_article (FILE *outptr, char *buffer, long refnum)
+void
+process_keywords( newstring *keywords, FILE *outptr )
 {
-	char *tags[]={"REFNUM","AUTHORS","YEAR","TITLE","JOURNAL",
-		"VOLUME", "PAGES", "EDITOR", "PUBLISHER",
-		"ADDRESS", "CHAPTER", "BOOKTITLE", "EDITOR", "ABSTRACT"};
-	int  NUMFIELDS;
+	newstring keyword;
+	char      *p = keywords->data;
+	int       nkeywords=0;
+
+	newstr_init( &keyword );
+	fprintf(outptr,"\nKEYWORDS=\"");
+	while ( *p ) {
+		p = xml_extractdata(p,"KEYWORD",&keyword);
+		if (keyword.data!=NULL && keyword.data[0]!='\0') {
+			if (nkeywords++) fprintf(outptr,", ");
+			fprintf(outptr,"%s",keyword.data);
+		}
+	}
+	fprintf(outptr,"\"");
+	newstr_free( &keyword );
+}
+
+void 
+process_article (FILE *outptr, newstring *ref, long refnum)
+{
+	char	*xmltags[]={ "REFNUM","AUTHORS","DATE",
+			"TITLE","JOURNAL",
+			"VOLUME", "PAGES", "EDITOR", "PUBLISHER",
+			"ADDRESS", "CHAPTER", "BOOKTITLE",  
+			"ABSTRACT", "URL", "KEYWORDS", "SERIALNUM", "ISSUE",
+       			"NOTES", "SECONDARYTITLE", "SERIESTITLE",
+			"REPRINTSTATUS", "NOTES2"	};
+	char	*bibtextags[]={ "REFNUM","AUTHORS","", 
+			"TITLE","JOURNAL",
+			"VOLUME", "PAGES", "EDITOR", "PUBLISHER",
+			"ADDRESS", "CHAPTER", "BOOKTITLE",  
+			"ABSTRACT", "URL", "KEYWORDS", "ISBN", "NUMBER",
+       			"NOTE", "SECONDARYTITLE", "SERIESTITLE",
+			"REPRINTSTATUS", "NOTES2"	};
+	int 	numfields = sizeof(xmltags) / sizeof(char*);
 	int 	i,numelem=0;
-	char 	*p;
-	newstring *s = NULL;
+	char 	*p,*buffer;
+	newstring s;
 
-	NUMFIELDS = sizeof(tags)/sizeof(char*);
+	if ( ref == NULL ) return;
+	buffer = ref->data;
+	newstr_init( &s );
 
-	(void) extract_xmldata(buffer,"TYPE",&s);
-	if (s!=NULL) {
-		p = s->data;
-		if (p!=NULL && strsearch(p,"ARTICLE")==p)  
-			fprintf(outptr,"@ARTICLE(");
-		else if (p!=NULL && strsearch(p,"INBOOK")==p) 
-			fprintf(outptr,"@INBOOK(");
-		else if (p!=NULL && strsearch(p,"INPROCEEDINGS")==p) 
-			fprintf(outptr,"@INPROCEEDINGS(");
-		else if (p!=NULL && strsearch(p,"BOOK")==p) 
-			fprintf(outptr,"@BOOK(");
-		else if (p!=NULL && strsearch(p,"PHDTHESIS")==p)  
-			fprintf(outptr,"@PHDTHESIS");
+	(void) xml_extractdata(buffer,"TYPE",&s);
+	if ((p=s.data)!=NULL) {
+		if (strsearch(p,"ARTICLE")==p)  
+			fprintf(outptr,"@ARTICLE{");
+		else if (strsearch(p,"INBOOK")==p) 
+			fprintf(outptr,"@INBOOK{");
+		else if (strsearch(p,"INPROCEEDINGS")==p) 
+			fprintf(outptr,"@INPROCEEDINGS{");
+		else if (strsearch(p,"BOOK")==p) 
+			fprintf(outptr,"@BOOK{");
+		else if (strsearch(p,"PHDTHESIS")==p)  
+			fprintf(outptr,"@PHDTHESIS{");
 		else {
 			fprintf(stderr,"xml2bib: cannot identify TYPE");
 			if (p!=NULL) fprintf(stderr," %s\n",p);
 			else fprintf(stderr," in reference %ld\n",refnum+1);
-			fprintf(outptr,"@ARTICLE(");  /* default */
+			fprintf(outptr,"@ARTICLE{");  /* default */
 		}
 	} else {
-		fprintf(stderr,"xml2bib: cannot find type in reference %ld\n",refnum+1);
+		fprintf(stderr,"xml2bib: cannot find type in reference %ld\n",
+				refnum+1);
 		fprintf(outptr,"@ARTICLE(");
 	}
 
-	for (i=0; s!=NULL && i<NUMFIELDS; ++i) {
+	for (i=0; i<numfields; ++i) {
 		if (i==0) {  /* Refnum */
-			(void) extract_xmldata(buffer,"REFNUM",&s);
-			if (s!=NULL && s->data!=NULL && s->data[0]!='\0') {
-				fprintf(outptr,"%s",s->data);
+			(void) xml_extractdata(buffer,"REFNUM",&s);
+			if (s.data!=NULL && s.data[0]!='\0') {
+				fprintf(outptr,"%s",s.data);
 			} else fprintf(outptr,"%ld",refnum);
 			numelem++;
 		} else if (i==1) {  /* Name */
-			(void) extract_xmldata(buffer,"AUTHORS",&s);
-			if (s!=NULL && s->data!=NULL && s->data[0]!='\0') {
+			(void) xml_extractdata(buffer,"AUTHORS",&s);
+			if (s.data!=NULL && s.data[0]!='\0') {
 				if (numelem>0) fprintf(outptr,",");
-				process_authors(s,outptr);
+				process_people(&s,outptr,"AUTHOR","AUTHOR");
+				numelem++;
+			}
+		} else if (i==2) {  /* DATE */
+			(void) xml_extractdata(buffer,"DATE",&s);
+			if (s.data!=NULL && s.data[0]!='\0') {
+				if (numelem>0) fprintf(outptr,",");
+				process_date(&s,outptr);
+				numelem++;
+			}
+		} else if (i==7) {  /* Editors */
+			(void) xml_extractdata(buffer,"EDITORS",&s);
+			if (s.data!=NULL && s.data[0]!='\0') {
+				if (numelem>0) fprintf(outptr,",");
+				process_people(&s,outptr,"EDITOR","EDITOR");
 				numelem++;
 			}
          	} else if (i==6) { /* Pages */
-			(void) extract_xmldata(buffer,"PAGES",&s);
-			if (s!=NULL && s->data!=NULL && s->data[0]!='\0') {
+			(void) xml_extractdata(buffer,"PAGES",&s);
+			if (s.data!=NULL && s.data[0]!='\0') {
 				if (numelem>0) fprintf(outptr,",");
-				process_pages(s,outptr);
+				process_pages(&s,outptr);
 				numelem++;
 			}
-         	} else {  /* Not Name or Pages*/
-			(void) extract_xmldata(buffer,tags[i],&s);
-			if (s!=NULL && s->data!=NULL && s->data[0]!='\0') {
+		} else if (i==14) { /*keywords */
+			(void) xml_extractdata(buffer,"KEYWORDS",&s);
+			if (s.data!=NULL && s.data[0]!='\0') {
 				if (numelem>0) fprintf(outptr,",");
-				fprintf(outptr,"\n%s=\"%s\"",tags[i],
-					s->data); 
+				process_keywords(&s,outptr);
+				numelem++;
+			}
+         	} else {  /* default */
+			(void) xml_extractdata(buffer,xmltags[i],&s);
+			if (s.data!=NULL && s.data[0]!='\0') {
+				if (numelem>0) fprintf(outptr,",");
+				fprintf(outptr,"\n%s=\"%s\"",bibtextags[i],
+					s.data); 
 				numelem++;
 			}
 		}
 	}
 
-	fprintf(outptr,")\n\n");
+	fprintf(outptr,"}\n\n");
 	fflush(outptr);
    
-	if (s!=NULL) {
-		newstr_clear(s);
-		free(s);
-	}
+	newstr_free(&s);
 }
 
-/*
- *   read_refs()
- *
- *         Reads references one at a time into buffer
- *         and send to process.
- */
-long 
-read_refs(FILE *inptr, FILE *outptr)
+void
+help( void )
 {
-	newstring buffer,*ref;
-	char line[256],*errorptr,*startptr,*endptr;
-	int haveref = FALSE, processref = FALSE;
-	long numrefs =0L;
+	extern char bibutils_version[];
+	fprintf(stderr,"\n%s version %s, ",progname,version);
+	fprintf(stderr,"bibutils suite version %s\n",bibutils_version);
+	fprintf(stderr,"Converts an XML intermediate reference file into Bibtex\n\n");
 
-	newstr_init(&buffer);
-	ref = (newstring *) malloc( sizeof(newstring) );
-	if (ref==NULL) {
-		fprintf(stderr,"xml2bib: cannot allocate memory\n");
-		exit(EXIT_FAILURE);
-	}
-	newstr_init(ref);
+	fprintf(stderr,"usage: %s xml_file > bibtex_file\n\n",progname);
+        fprintf(stderr,"  xml_file can be replaced with file list or omitted to use as a filter\n\n");
 
-	while (!feof(inptr)) {
+	fprintf(stderr,"  -h, --help     display this help\n");
+	fprintf(stderr,"  -v, --version  display version\n\n");
 
-		errorptr = fgets (line, sizeof(line), inptr);
-		if (errorptr != NULL) {
-			startptr = strsearch(line,"<REF>");
-			if (startptr != NULL || haveref ) {
-				haveref = TRUE;
-				if (startptr!=NULL) newstr_strcat(&buffer,startptr);
-				else newstr_strcat(&buffer,line);
-				endptr = find_xmlenddata(buffer.data,"REF"); 
-				if (endptr!=NULL) {
-					char *p;
-					processref=TRUE;
-					p = extract_xmldata(buffer.data,"REF",&ref);
-					buffer.data[0]='\0';
-					while (p!=NULL && *p!='\0') {
-						newstr_addchar(&buffer,*p);
-						p++;
-					}
-					startptr = strsearch(buffer.data,"<REF>"); 
-					if (startptr!=NULL) haveref=TRUE;
-					else haveref=FALSE;
-				}
-			}
-			if (processref) {
-				process_article(outptr,ref->data,numrefs+1);
-				buffer.data[0]='\0';
-				processref = FALSE;
-				numrefs++;
-				if (endptr!=NULL) newstr_strcpy(&buffer,endptr+6);
-
-			}
-		}
-
-  	}
-
-   newstr_clear (&buffer);
-   return numrefs;
+	fprintf(stderr,"Citation codes generated from <REFNUM> tag.   See \n");
+	fprintf(stderr,"http://www.scripps.edu/~cdputnam/bibutils.html for more details\n\n");
+	exit( EXIT_SUCCESS );
 }
+
+void
+tellversion( void )
+{
+	extern char bibutils_version[];
+	fprintf(stderr,"%s version %s, ",progname,version);
+	fprintf(stderr,"bibutils suite version %s\n",bibutils_version);
+	exit( EXIT_SUCCESS );
+}
+
+void
+process_args( int *argc, char *argv[] )
+{
+	int i;
+	for ( i=0; i<*argc; ++i ) {
+		if ( strcmp(argv[i],"-h")==0 || strcmp(argv[i],"--help")==0 ) {
+			help();
+			/* help terminates or we'd remove from argv */
+		}
+		if ( strcmp(argv[i],"-v")==0 || strcmp(argv[i],"--version")==0){
+			tellversion();
+			/* tellversion terminates or we'd remove from argv*/
+		}
+	}
+}
+
+
 
 
 int 
@@ -244,14 +307,16 @@ main(int argc, char *argv[])
 	long 	numrefs=0L;
 	int	i;
 
+	process_args( &argc, argv );
+
 	if (argc==1) {
-		numrefs = read_refs(inptr,outptr);
+		numrefs = xml_readrefs(inptr,outptr);
 	}
 	else {
 		for (i=1; i<argc; ++i) {
 			inptr = fopen(argv[i],"r");
 			if (inptr!=NULL) {
-				numrefs += read_refs(inptr,outptr);
+				numrefs += xml_readrefs(inptr,outptr);
 				fclose( inptr );
 			} else {
 				fprintf(stderr,"xml2bib: cannot open %s\n",

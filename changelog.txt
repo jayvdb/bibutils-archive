@@ -1,0 +1,202 @@
+
+BIBUTILS
+
+changes 2.3->2.4
+
+NEWSTR
++  add newstr_empty() prototype
+
+RIS2XML
++  fix core dump due to uninitialized variables (thanks Lukasz Helcyznski)
++  bump version numer 1.4->1.5
+
+changes 2.2->2.3
+3/27/03
+
+NEWSTR
++  dramatically increase the speed of the string library by tracking
+   string length and eliminate a number of N-squared algorithms that
+   looked for string terminators
+
+RIS2XML
++  ensure that null strings are not written out (from IEEE "RIS" format)
++  if ABSTRACT is output, do NOTES2 as well
++  don't add spaces or tabs that lead data after tag
++  fix REFNUM naming from name/year with multiauthor names
++  fix incorrect appending of line to values in scidirect ris output
++  change "error" about bad tags to "warning"
++  move all tags/values allocation/reallocation into addtag()
++  fix bug that wouldn't initialize tags/values added after reallocation
++  bump version number 1.3->1.4
+
+XML2BIB
++  ensure NOTES2 gets passed through
++  bump version number 1.2->1.3
+
+changes 2.1->2.2
+2/16/03
+
+NEWSTR
++  change name from newstr_clear() to newstr_free()
++  fix int/unsigned long issues in newstr_realloc() so that truncation
+   in string length does not occur by stuffing sizes down to ints
++  fix incorrect fprintf() format for unsigned long value
++  similar int/unsigned long and unsigned int/unsigned long fixes
+   everywhere in the internal core of newstr.c
++  create newstr_empty() to blank strings
+
+XML
++  fix xml_extractdata() to return the end of the string if the tagged
+   information cannot be found rather than NULL
++  switch to newstr_empty() in xml_readrefs()
+
+RIS2XML
++  fix potential infinite loop in SUFF recognition for names
++  handle multiple keywords separated by semi-colons
++  handle multiple authors separated by semi-colons
++  handle items like abstracts that can go multi-line
++  bump version 1.2->1.3
+
+XML2BIB
++  month now uses three letter month abbreviation, not number
++  add KEYWORDS, SERIALNUM (ISBN), ISSUE (NUMBER), NOTES (NOTE),
+   REPRINTSTATUS, SECONDARYTITLE
++  bump version 1.1->1.2
+
+XML2RIS
++  generalize author output to person output
++  handle suffix output
++  add proper editor output
++  remove process_authors()
++  add seriesauthors output
++  bump version 1.1->1.2
+
+XMLREPLACE
++  remove redefined TRUE/FALSE macros
+
+
+changes 2.0->2.1
+2/10/03
+
+GENERAL
++  fix build process so easier on MacOSX's
++  add bibutils suite version stamp
+
+XML
++  change name space:  find_xmlstartdata()->xml_findstartdata(),
+   find_xmlenddata() -> xml_findenddata(),
+   extract_xmldata() -> xml_extractdata()
++  xml_extractdata() no longer takes pointers to newstrings and
+   does not allocate them
++  make sure xml_extractdata() clears the output string so that an
+   empty output indicates no tag
++  clean-up xml_readrefs() and move to library xml.c--it's getting
+   replicated in xml2bib, xml2ris, xml2en anyway
+
+NEWSTR 
++  add newstring_segcat() and newstring_segcpy() to ease copying sections
+   out of other strings
+
+XML2BIB
++  fix xml2bib's usage of xml_extractdata()
++  xml2bib now passes a newstring of the extracted reference rather than a
+   bare string
++  change bibtex output to use braces around each reference rather than
+   parentheses (bibtex takes both, but WinEdt v5.3 is far more useful
+   to the user if braces are used).
++  remove dead code, switch to xml_readref()
++  in process_article() tags were used for both xml and bibtex, which worked
+   due to the way I set up the xml stuff, but is very difficult to ensure,
+   so setup xmltags[] and bibtextags[] so they can be different
++  handle URL items
++  handle editors like authors and generalize process_authors() to 
+   process_people()
++  handle name suffixes in process_people()
++  add -h/--help -v/--version flags
++  add month/day support to bibtex
+
+XML2RIS
++  fix xml2ris's usage of xml_extractdata()
++  legal tags can have uppercase letter _or_ digit at second position, a
+   change from the older (circa 1996) documentation
++  process_article() gets newstring rather than a bare string
++  remove #define for number of fields in process_article()
++  every tagged line must end in carrige return/line feed combination
+   (ASCII 13 10), another change from the circa 1996 docs -- fix
++  REFNUM in the XML should map to the ID tag, not the KW (keyword) tag
++  add NOTES/N1, SERIALNUM/SN, ISSUE/IS, URL/UR
++  remove dead code, switch to xml_readref()
++  fix year output to handle year/month/day/other format
++  add -h/--help -v/--version flags
+
+XML2EN
++  fix xml2en's usage of xml_extractdata()
++  process_article() gets newstring rather than a bare string
++  remove #define for number of fields in process_article()
++  remove dead code, migrate to central xml_readref()
++  add -h/--help -v/--version flags
++  switch from the tab-deliminated format to the "Tagged EndNote Import"
+   format
+
+RIS2XML
++  update tag definition so that second character can be either
+   uppercase letter or digit
++  handle all journal tags: JO/JA/JF, picking the abbreviated forms
+  (user-defined J1/J2 then standard JO/JA) over the full form (JF) if present
++  handle all primary title tags T1/TI/CT, secondary title T2, series title
+   T3, and booktitle BT
++  take REFNUM from ID first, or build from author/year if ID absent
++  handle N1 - notes, N2/AB -abstract, UR - URL
++  handle AU/A1 - primary authors, A2/ED - editors, A3 - series authors
++  handle KW - keywords
++  add suffix support to name format
++  handle date format year/month/day/other fields
++  add -h/--help -v/--version flags
+
+MED2XML
++  add -h/--help -v/--version flags
++  add month and day parsing
+
+BIB2XML
++  remove dead code
++  add -h/--help -v/--version flags
++  add month and day support
+
+XMLREPLACE
++  create program
+
+
+RIS2XML's XML output:
+	TYPE (BOOK/INBOOK/PHDTHESIS/ARTICLE)
+	AUTHORS
+		AUTHOR:  LAST, PREF, SUFF
+	SERIESAUTHORS
+		AUTHOR:  LAST, PREF, SUFF
+	EDITORS
+		EDITOR:  LAST, PREF, SUFF
+	TITLE
+	JOURNAL
+	DATE
+		YEAR
+		MONTH
+		DAY
+		OTHER
+	VOLUME
+	ISSUE
+	PAGES
+		START
+		END
+	SECONDARYTITLE
+	SERIESTITLE
+	BOOKTITLE
+	VOLUME
+	PUBLISHER
+	ADDRESS
+	SERIALNUM
+	REPRINTSTATUS
+	URL
+	NOTES
+	ABSTRACT
+	KEYWORDS
+		KEYWORD
+	REFNUM

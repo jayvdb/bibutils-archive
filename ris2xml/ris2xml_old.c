@@ -7,7 +7,7 @@
 #define FALSE (0)
 
 char progname[] = "ris2xml";
-char version[] = "1.5 4/02/03";
+char version[] = "1.3 2/15/03";
 
 void
 outputtype( newstring *tags, newstring *values, int numtags )
@@ -453,55 +453,14 @@ for (i=0; i<numtags; ++i) {
 }
 
 void
-addtag( newstring **ptags, newstring **pvalues, int *maxtags, int n, char *buf )
+addtag( newstring *tag, newstring *value, char *buf )
 {
-	newstring *tags = *ptags, *values = *pvalues;
-	int ntags = 64, i;
-	if ( tags==NULL || values==NULL ) {
-		tags   = (newstring *) malloc( sizeof (newstring) * ntags );
-		values = (newstring *) malloc( sizeof (newstring) * ntags );
-		if ( tags==NULL || values==NULL ) {
-			fprintf(stderr,"ris2xml:  cannot allocate memory\n");
-			if (tags)   free(tags);
-			if (values) free(values);
-			*ptags = *pvalues = NULL;
-			*maxtags = 0;
-			return;
-		}
-		*maxtags = ntags;
-		*ptags = tags;
-		*pvalues = values;
-		for (i=0; i<*maxtags; ++i) {
-			newstr_init( &(tags[i]) );
-			newstr_init( &(values[i]) );
-		}
-	} else if ( n == *maxtags ) {
-		newstring *newtags, *newvalues;
-		ntags = *maxtags  * 2;
-		newtags   = (newstring *) realloc(tags, 
-				sizeof (newstring) * ntags );
-		newvalues = (newstring *) realloc(values, 
-				sizeof (newstring) * ntags );
-		if ( newtags==NULL || newvalues==NULL ) {
-			fprintf(stderr,"ris2xml:  cannot allocate memory\n");
-			if (newtags)   free(newtags);   else free(tags);
-			if (newvalues) free(newvalues); else free(values);
-			*ptags = *pvalues = NULL;
-			*maxtags = 0;
-			return;
-		}
-		tags = *ptags = newtags;
-		values = *pvalues = newvalues;
-		for (i=*maxtags; i<ntags; ++i) {
-			newstr_init( &(tags[i]) );
-			newstr_init( &(values[i]) );
-		}
-		*maxtags = ntags;
-	}
-	for (i=0; i<6; ++i) newstr_addchar( &(tags[n]), buf[i] );
+	int i;
+	/* since we've already seen a tag, we know this is safe */
+	for (i=0; i<6; ++i) newstr_addchar( tag, buf[i] );
 	while ( buf[i]==' ' || buf[i]=='\t' ) i++;
 	while ( buf[i]!='\0' && buf[i]!='\t' && buf[i]!='\r' && buf[i]!='\n'){
-		newstr_addchar( &(values[n]), buf[i] );
+		newstr_addchar( value, buf[i] );
 		i++;
 	}
 }
@@ -530,13 +489,27 @@ long
 get_refs( FILE *fp )
 {
 	char buf[1024];
-	newstring *tags = NULL;
-	newstring *values = NULL;
+	newstring *tags;
+	newstring *values;
 	int i;
 	long numrefs = 0;
 	int numtags = 0;
 	int maxtags = 64;
 	int inref = FALSE;
+
+	/* prepare memory usage */
+	tags   = (newstring *) malloc( sizeof (newstring) * maxtags );
+	values = (newstring *) malloc( sizeof (newstring) * maxtags );
+	if ( tags==NULL || values==NULL ) {
+		fprintf(stderr,"ris2xml:  cannot allocate memory\n");
+		if (tags)   free(tags);
+		if (values) free(values);
+		return 0;
+	}
+	for (i=0; i<maxtags; ++i) {
+		newstr_init( &(tags[i]) );
+		newstr_init( &(values[i]) );
+	}
 
 	printf("<XML>\n");
 	printf("<REFERENCES>\n");
@@ -550,23 +523,39 @@ get_refs( FILE *fp )
 			if (is_tag(&(buf[i]))) {
 				if (strncmp(&(buf[i]),"TY  - ",6)==0) {
 					if (inref==TRUE) {
-						fprintf(stderr,"Warning.  Reference %ld not properly terminated.\n",numrefs+1);
+						fprintf(stderr,"Error.  Reference %ld not properly terminated.\n",numrefs+1);
 						outputref( tags, values, numtags);
 						numrefs ++;
 					}
 					inref = TRUE;
 					numtags = 0;
-					addtag(&tags,&values,&maxtags,
-						numtags++,&(buf[i]));
+					addtag(&(tags[numtags]),
+					       &(values[numtags]),
+					       &(buf[i]) );
+					numtags++;
 				} else if (strncmp(&(buf[i]),"ER  - ",6)==0) {
 					inref = FALSE;
 					numrefs ++;
 					outputref( tags, values, numtags );
 				} else if (inref==TRUE) {
-					addtag(&tags,&values,&maxtags,
-							numtags++,&(buf[i]));
+					addtag(&(tags[numtags]),
+					       &(values[numtags]),
+					       &(buf[i]) );
+					numtags++;
+					if ( numtags == maxtags ) {
+	newstring *newtags, *newvalues;
+	maxtags *= 2;
+	newtags   = (newstring *) realloc(tags, sizeof (newstring) * maxtags );
+	newvalues = (newstring *) realloc(tags, sizeof (newstring) * maxtags );
+	if ( newtags==NULL || newvalues==NULL ) {
+		fprintf(stderr,"ris2xml:  cannot allocate memory\n");
+		if (newtags)   free(newtags); else free(tags);
+		if (newvalues) free(newvalues); else free(values);
+		return 0;
+	}
+					}
 				} else {
-					fprintf(stderr,"Warning.  Tagged line not in properly started reference.\n");
+					fprintf(stderr,"Error.  Tagged line not in properly started reference.\n");
 					fprintf(stderr,"Ignored: '%s'\n",&(buf[i]));
 				}
 			}

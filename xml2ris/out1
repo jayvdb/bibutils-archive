@@ -1,0 +1,1956 @@
+
+TY  - CHAP
+AU  - Johnson, S. T. 
+AU  - Michael, P. O. 
+PY  - 2000
+TI  - The mechanisms of pure stochastic machines
+SP  - 322
+EP  - 333
+ED  - Samulseon, T. O.
+PB  - MIT Press
+CT  - Cambridge, MA
+BT  - Problems in Machine Mechanics
+ED  - Samulseon, T. O.
+KW  - jj20
+N2  - The abstract goes here.
+ER  - 
+
+TY  - BOOK
+AU  - Dordevic, D. P. 
+PY  - 1993
+TI  - Impedance Control
+PB  - Wiley
+CT  - London, UK
+KW  - dordevic-93
+N2  - A review of impedance control
+ER  - 
+
+TY  - CHAP
+AU  - Dudei, P. 
+AU  - Monroe, P. S. 
+PY  - 1999
+TI  - Force field learning in robotics
+VL  - 22
+SP  - 333
+EP  - 343
+BT  - Proc. IEEE Machine Learning
+KW  - dudei-99
+N2  - Robot learning and force field mechanisms.
+ER  - 
+
+TY  - BOOK
+AU  - Smith, M. A. 
+PY  - 2000
+TI  - Cerebellum and basal ganglia: role in motor control
+N2  - Findings in cerebellar control.
+ER  - 
+
+TY  - JOUR
+AU  - Schieber, M. H. 
+PY  - 2001
+TI  - Constraints on somatotopic organization in the primary motor cortex
+JO  - J Neurophysiol
+VL  - 86
+SP  - 2125
+EP  - 2143
+KW  - schieber-01
+N2  - In: motor-control-motorcortex    
+ER  - 
+
+TY  - JOUR
+AU  - Nezafat, R. 
+AU  - Shadmehr, R. 
+AU  - Holcomb, H. H. 
+PY  - 2001
+TI  - Long-term adaptation to dynamics of reaching movements: a PET study
+JO  - Exp Brain Res
+VL  - 140
+SP  - 66
+EP  - 76
+KW  - reza-ebr01
+N2  - In:     
+ER  - 
+
+TY  - JOUR
+AU  - Kakei, S. 
+AU  - Hoffman, D. S. 
+AU  - Strick, P. L. 
+PY  - 2001
+TI  - Direction of action is represented in the ventral premotor cortex
+JO  - Nature Neurosci
+VL  - 4
+SP  - 1020
+EP  - 1025
+KW  - strick-nn01
+N2  - In: motor-control-premotor, motor-control-motorcortex    
+ER  - 
+
+TY  - JOUR
+AU  - Haist, F. 
+AU  - Gore, J. B. 
+AU  - Mao, H. 
+PY  - 2001
+TI  - Consolidation of human memory over decades revealed by functional magnetic resonance imaging
+JO  - Nature Neurosci
+VL  - 4
+SP  - 1139
+EP  - 1145
+KW  - haist-01
+N2  - In:     
+ER  - 
+
+TY  - JOUR
+AU  - Grodd, W. 
+AU  - Hulsmann, E. 
+AU  - Lotze, M. 
+AU  - Wildgruber, D. 
+AU  - Erb, M. 
+PY  - 2001
+TI  - Sensorimotor mapping of the human cerebellum: FMRI evidence of somatotopic organization
+JO  - Human Brain Mapping
+VL  - 13
+SP  - 55
+EP  - 73
+KW  - grodd-01
+N2  - In: motor-control-cerebellum    
+ER  - 
+
+TY  - JOUR
+AU  - Boyd, L. A. 
+AU  - Winstein, C. J. 
+PY  - 2001
+TI  - Implicit motor-sequence learning in humans following unilateral stroke: the impact of practice and explicit knowledge
+JO  - Neurosci Letters
+VL  - 298
+SP  - 65
+EP  - 69
+KW  - winstein-01
+N2  - In: motor-learning-postparietal, motor-learning-pscychology    
+ER  - 
+
+TY  - JOUR
+AU  - Tillery, S. I. Helms 
+AU  - Soechting, J. F. 
+AU  - Ebner, T. J. 
+PY  - 1996
+TI  - Somatosensory cortical activity in relation to arm posture: nonuniform spatial tuning
+JO  - J Neurophysiol
+VL  - 7x
+SP  - 2423
+EP  - 2438
+KW  - ebner-jnp96
+N2  - In: motor-control-somatosensoryctx    
+ER  - 
+
+TY  - JOUR
+AU  - Knecht, S. 
+AU  - Drager, B. 
+AU  - Deppe, M. 
+AU  - Bobe, L. 
+AU  - Lohmann, H. 
+AU  - Floel, A. 
+AU  - B., Ringelsein E. 
+AU  - Henningsen, H. 
+PY  - 2000
+TI  - Handedness and hemispheric language dominance in healthy humans
+JO  - Brain
+VL  - 123
+SP  - 2512
+EP  - 2518
+KW  - knecht-00
+N2  - In: motor-control-bimanual    
+ER  - 
+
+TY  - JOUR
+AU  - Cabel, D. W. 
+AU  - Cisek, P. 
+AU  - Scott, S. H. 
+PY  - 2001
+TI  - Neural activity in primary motor cortex related to mechanical loads applied to the shoulder and elbow during a postural task
+JO  - J Neurophysiol
+VL  - 86
+SP  - 2102
+EP  - 2108
+KW  - scott-jnp01
+N2  - In: motor-control-motorcortex    
+ER  - 
+
+TY  - JOUR
+AU  - Mechsner, F. 
+AU  - Kerzel, D. 
+AU  - Knoblich, G. 
+AU  - Prinz, W. 
+PY  - 2001
+TI  - Perceptual basis of bimanual coordination
+JO  - Nature
+VL  - 414
+SP  - 69
+EP  - 73
+KW  - prinz-01
+N2  - In: motor-control-bimanual    
+ER  - 
+
+TY  - JOUR
+AU  - Scott, S. H. 
+AU  - Gribble, P. L. 
+AU  - Graham, K. M. 
+AU  - Cabel, D. W. 
+PY  - 2001
+TI  - Dissociation between hand motion and population vectors from neural activity in motor cortex
+JO  - Nature
+VL  - 413
+SP  - 161
+EP  - 165
+KW  - scott-nat01
+N2  - In: motor-control-motorcortex    
+ER  - 
+
+TY  - JOUR
+AU  - Viviani, P. 
+AU  - Perani, D. 
+AU  - Grassi, F. 
+AU  - Bettinardi, V. 
+AU  - Fazio, F. 
+PY  - 1998
+TI  - Hemispheric asymmetries and bimanual asynchrony in left and right handers
+JO  - Exp Brain Res
+VL  - Exp Brain Res
+SP  - 531
+EP  - 536
+KW  - viviani-98
+N2  - In: motor-control-bimanual    
+ER  - 
+
+TY  - JOUR
+AU  - Shoham, S. 
+AU  - Halgren, E. 
+AU  - Maynard, E. M. 
+AU  - Normann, R. A. 
+PY  - 2001
+TI  - Motor-cortical activity in tetraplegics
+JO  - Nature
+VL  - 413
+SP  - 793
+KW  - shoham-nat01
+N2  - In: m1&premotor.ppt    
+ER  - 
+
+TY  - JOUR
+AU  - Jouffrais, C. 
+AU  - Boussaoud, D. 
+PY  - 1999
+TI  - Neuronal activity related to eye-hand coordination in the primate premotor cortex
+JO  - Exp Brain Res
+VL  - 128
+SP  - 205
+EP  - 209
+KW  - boussaoud-ebr99
+N2  - In: motor-control-premotor    
+ER  - 
+
+TY  - JOUR
+AU  - Winstein, C. J. 
+AU  - Merians, A. S. 
+AU  - Sullivan, K. J. 
+PY  - 1999
+TI  - Motor learning after unilateral brain damage
+JO  - Neuropsycholgia
+VL  - 37
+SP  - 975
+EP  - 987
+KW  - winstein-99
+N2  - In: motor-learning-motorcortex    
+ER  - 
+
+TY  - JOUR
+AU  - Ramnani, N. 
+AU  - Toni, I. 
+AU  - Josephs, O. 
+AU  - Ashburner, J. 
+AU  - Passingham, R. E. 
+PY  - 2000
+TI  - Learning- and expectation-related changes in the human brain during motor learning
+JO  - J Neurophysiol
+VL  - 84
+SP  - 3026
+EP  - 3035
+KW  - passingham-jnp00
+N2  - In: motor-learning-imaging    
+ER  - 
+
+TY  - JOUR
+AU  - Raz, A. 
+AU  - Frechter-Mazar, V. 
+AU  - Feingold, A. 
+AU  - Abeles, M. 
+AU  - Vaadia, E. 
+AU  - Bergman, H. 
+PY  - 2001
+TI  - Activity of pallidal and striatal tonically active neurons is correlated in MPTP-treated monkeys but not in normal monkeys
+JO  - J Neurosci
+VL  - 21
+EP  - 128
+KW  - vaadia-jns01
+N2  - In: motor-control-parkinson, motor-control-basalganglia    
+ER  - 
+
+TY  - JOUR
+AU  - Saltiel, P. 
+AU  - Wyler-Duda, K. 
+AU  - D'Avella, A. 
+AU  - Tresch, M. C. 
+AU  - Bizzi, E. 
+PY  - 2001
+TI  - Muscle synergies encoded within the spinal cord: evidence from focal intraspinal NMDA iontophoresis in the frog
+JO  - J Neurophysiol
+VL  - 85
+SP  - 605
+EP  - 619
+KW  - bizzi-jnp01
+N2  - In:     
+ER  - 
+
+TY  - JOUR
+AU  - D'Avella, A. 
+AU  - Bizzi, E. 
+PY  - 1998
+TI  - Low dimensionality of supraspinally induced force fields
+JO  - Proc Natl Acad Sci USA
+VL  - 95
+SP  - 7711
+EP  - 7714
+KW  - bizzi-pnas98
+N2  - In: papers/model/reviews.txt    
+ER  - 
+
+TY  - JOUR
+AU  - Sanger, T. D. 
+PY  - 2000
+TI  - Human arm movements described by a low-dimensional superposition of principal components
+JO  - J Neurosci
+VL  - 20
+SP  - 1066
+EP  - 1072
+KW  - sanger-jns00
+N2  - In: papers/model/reviews.txt    
+ER  - 
+
+TY  - JOUR
+AU  - Aldridge, J. W. 
+AU  - Berridge, K. C. 
+PY  - 1998
+TI  - Coding of serial order by neostriatal neurons: a natural action approach to movement sequence
+JO  - J Neurosci
+VL  - 18
+SP  - 2777
+EP  - 2787
+KW  - aldridge-jn98
+N2  - In: motor-control-basalganglia    
+ER  - 
+
+TY  - JOUR
+AU  - Willingham, D. B. 
+AU  - Koroshetz, W. J. 
+PY  - 1993
+TI  - Evidence for dissociable motor skills in Huntington's disease patients
+JO  - Psychobiology
+VL  - 21
+SP  - 173
+EP  - 182
+KW  - willingham-93
+N2  - In: motor-learning-huntington    
+ER  - 
+
+TY  - JOUR
+AU  - Muellbacher, W. 
+AU  - Ziemann, U. 
+AU  - Boroojerdi, B. 
+AU  - Cohen, L. 
+AU  - Hallett, M. 
+PY  - 2001
+TI  - Role of the human motor cortex in rapid motor learning
+JO  - Exp Brain Res
+VL  - 136
+SP  - 431
+EP  - 438
+KW  - cohen-ebr01
+N2  - In: motor-learning-magstim    
+ER  - 
+
+TY  - JOUR
+AU  - Dai, T. H. 
+AU  - Liu, J. Z. 
+AU  - Saghal, V. 
+AU  - Brown, R. W. 
+AU  - Yue, G. H. 
+PY  - 2001
+TI  - Relationship between muscle output and functional MRI-measured brain activation
+JO  - Exp Brain Res
+VL  - 140
+SP  - 290
+EP  - 300
+KW  - yue-01
+N2  - In: motor-control-imaging    
+ER  - 
+
+TY  - JOUR
+AU  - Zee DS, Lasker AG, Folstein SE Tian JR 
+PY  - 1991
+TI  - Saccades in Huntington's disease: predictive tracking and interaction between release of fixation and initiation of saccades
+JO  - Neurology
+VL  - 41
+SP  - 875
+EP  - 881
+KW  - zee-91
+N2  - In: motor-control-huntington    
+ER  - 
+
+TY  - JOUR
+AU  - Lange HW, Boecker H, Titz H, Herzog H, Aulich A, Wang BC, Nayak U, Feinendegen LE Kuwert T 
+PY  - 1993
+TI  - Striatal glucose consumption in chorea-free subjects at risk of Huntington's disease
+JO  - J Neurol
+VL  - 241
+SP  - 31
+EP  - 36
+KW  - kuwert-93
+N2  - In: motor-control-huntington    
+ER  - 
+
+TY  - JOUR
+AU  - Schwarz, M. 
+AU  - Block, F. 
+AU  - Topper, R. 
+AU  - Sontag, K. H. 
+AU  - Noth, J. 
+PY  - 1992
+TI  - Abnormalities of somatosensory evoked potentials in the quinolinic acid model of Huntington's disease: evidence that basal ganglia modulate sensory cortical input
+JO  - Annals Neurology
+VL  - 32
+SP  - 358
+EP  - 364
+KW  - schwarz-92
+N2  - In: motor-control-huntington    
+ER  - 
+
+TY  - JOUR
+AU  - Goodwin, G. M. 
+AU  - McCloskey, D. I. 
+AU  - Matthews, P. B. C. 
+PY  - 1972
+TI  - The contribution of muscle afferents to kinaesthesia shown by vibration induced illusions of movement and by the effects of paralysing joint afferents
+JO  - Brain
+VL  - 95
+SP  - 705
+EP  - 748
+KW  - matthews-72
+N2  - In: motor-control-reflexes    
+ER  - 
+
+TY  - JOUR
+AU  - Wolpert, D. M. 
+AU  - Ghahramani, Z. 
+PY  - 2000
+TI  - Computational principles of movement neuroscience
+JO  - Nature Neurosci
+VL  - 3
+SP  - 1212
+EP  - 1217
+KW  - wolpert-nn00
+N2  - In: not reviewed    
+ER  - 
+
+TY  - JOUR
+AU  - Takahasi, C. D. 
+AU  - Scheidt, R. A. 
+AU  - Reinkensmeyer, D. J. 
+PY  - 2001
+TI  - Impedance control and internal model formation when reaching in a randomly varying dynamical environment
+JO  - J Neurophysiol
+VL  - 86
+SP  - 1047
+EP  - 1051
+KW  - scheidt-jnp01
+N2  - In: motor-learning-psychology    
+ER  - 
+
+TY  - JOUR
+AU  - Fairhall, A. L. 
+AU  - Lewen, G. D. 
+AU  - Bialek, W. 
+AU  - Steveninck, R. R. de Ruyter van 
+PY  - 2001
+TI  - Efficiency and ambiguity in an adaptive neural code
+JO  - Nature
+VL  - 412
+SP  - 787
+EP  - 792
+KW  - bialek-nature01
+N2  - In: learning-models    
+ER  - 
+
+TY  - JOUR
+AU  - Bosco, G. 
+AU  - Poppele, R. E. 
+AU  - Eian, J. 
+PY  - 2001
+TI  - Reference frames for spinal proprioception: limb endpoint based or jointlevel based?
+JO  - J Neurophysiol
+VL  - 83
+SP  - 2931
+EP  - 2945
+KW  - poppele-jnp00
+N2  - In: motor-control-cerebellum    
+ER  - 
+
+TY  - JOUR
+AU  - Logothetis, L. K. 
+AU  - Pauls, J. 
+AU  - Augath, M. 
+AU  - Trinath, T. 
+AU  - Oxeltermann, A. 
+PY  - 2001
+TI  - Neurophysiological investigation of the basis of the fMRI signal
+JO  - Nature
+VL  - 412
+SP  - 150
+EP  - 157
+KW  - logothetis-nature01
+N2  - In: imaging-methods    
+ER  - 
+
+TY  - JOUR
+AU  - Rammsayer, T. H. 
+AU  - Rodewald, S. 
+AU  - Groh, G. 
+PY  - 2000
+TI  - Dopamine-antagonistic, anticholinergic, and GABAergic effects on declarative and procedural memory functions
+JO  - Cognitive Brain Res
+VL  - 9
+SP  - 61
+EP  - 71
+KW  - rammsayer-00
+N2  - In: motor-learning-drugs    
+ER  - 
+
+TY  - JOUR
+AU  - Waelti, P. 
+AU  - Dickinson, A. 
+AU  - Schultz, Wolfram 
+PY  - 2001
+TI  - Dopamine responses comply with basic assumptions of formal learning theory
+JO  - Nature
+VL  - 412
+SP  - 43
+EP  - 48
+KW  - schultz-nat01
+N2  - In: learning-basalganglia    
+ER  - 
+
+TY  - JOUR
+AU  - Reina, G. A. 
+AU  - Moran, D. W. 
+AU  - Schwartz, A. B. 
+PY  - 2001
+TI  - On the relationship between joint angular velocity and motor cortical discharge during reaching
+JO  - J Neurophysiol
+VL  - 85
+SP  - 2576
+EP  - 2589
+KW  - schwartz-01
+N2  - In: motor-control-motorcortex    
+ER  - 
+
+TY  - JOUR
+AU  - Kirkwood, S. C. 
+AU  - Su, J. L. 
+AU  - Conneally, P. M. 
+AU  - Foroud, T. 
+PY  - 2001
+TI  - Progression of symptoms in the early and middle stages of Huntington's disease
+JO  - Arc Neurol
+VL  - 58
+SP  - 273
+EP  - 278
+KW  - kirkwood-01
+N2  - In: motor-control-huntington    
+ER  - 
+
+TY  - JOUR
+AU  - Siedenberg, R. 
+AU  - Goodin, D. S. 
+AU  - Aminoff, M. J. 
+PY  - 1999
+TI  - Changes of forearm EMG and cerebral evoked potentials following sudden muscle stretch in patients with Huntington's disease
+JO  - Muscle Nerve
+VL  - 22
+SP  - 1557
+EP  - 1563
+KW  - siedenberg-99
+N2  - In: motor-control-huntington    
+ER  - 
+
+TY  - JOUR
+AU  - Harrington, D. L. 
+AU  - Haaland, K. Y. 
+AU  - Yeo, R. A. 
+AU  - Marder, E. 
+PY  - 1990
+TI  - Procedural memory in Parkinson's disease: impaired motor but not visuoperceptual learning
+JO  - J Clinical Exp Neuropsychol
+VL  - 12
+SP  - 323
+EP  - 339
+KW  - harrington-90
+N2  - In: motor-learning-parkinsons    
+ER  - 
+
+TY  - JOUR
+AU  - Dragoi, V. 
+AU  - Rivadulla, C. 
+AU  - Sur, M. 
+PY  - 2001
+TI  - Foci of orientation plasticity in visual cortex
+JO  - Nature
+VL  - 411
+SP  - 80
+EP  - 86
+KW  - sur-nat01
+N2  - In: learning-vision    
+ER  - 
+
+TY  - JOUR
+AU  - Robertson, E. M. 
+AU  - Tormos, J. M. 
+AU  - Maeda, F. 
+AU  - Pascual-Leone, A. 
+PY  - 2001
+TI  - The role of the dorsolateral prefrontal cortex during sequence learning is specific for spatial information
+JO  - Cereb Cortex
+VL  - 11
+SP  - 628
+EP  - 635
+KW  - pascual-leone-cc01
+N2  - In: motor-learning-magstim    
+ER  - 
+
+TY  - JOUR
+AU  - Knopman, D. 
+AU  - Nissen, M. J. 
+PY  - 1991
+TI  - Procedural learning is impaired in Huntington's disease: evidence from the serial reaction time task
+JO  - Neuropsychologia
+VL  - 29
+SP  - 245
+EP  - 254
+KW  - knopman-91
+N2  - In: motor-learning-huntington    
+ER  - 
+
+TY  - JOUR
+AU  - Sanes, J. N. 
+AU  - Dimitrov, B. 
+AU  - Hallett, M. 
+PY  - 1990
+TI  - Motor learning in patients with cerebellar dysfunction
+JO  - Brain
+VL  - 113
+SP  - 103
+EP  - 120
+KW  - sanes-br90
+N2  - In: motor-learning-cerebellum    
+ER  - 
+
+TY  - JOUR
+AU  - Agostino, R. 
+AU  - Sanes, J. N. 
+AU  - Hallett, M. 
+PY  - 1996
+TI  - Motor skill learning in Parkinson's disease
+JO  - J Neurol Sci
+VL  - 139
+SP  - 218
+EP  - 226
+KW  - sanes-jns96
+N2  - In: motor-learning-parkinson    
+ER  - 
+
+TY  - JOUR
+AU  - Leiguarda, R. C. 
+AU  - Marsden, C. D. 
+PY  - 2000
+TI  - Limb apraxia: higher-order disorders of sensorimotor integration
+JO  - Brain
+VL  - 123
+SP  - 860
+EP  - 879
+KW  - marsden-br00
+N2  - In: motor-learning-apraxia    
+ER  - 
+
+TY  - JOUR
+AU  - Miall, R. C. 
+AU  - Reckess, G. Z. 
+AU  - Imamizu, H. 
+PY  - 2001
+TI  - The cerebellum coordinates eye and hand tracking movements
+JO  - Nature Neurosci
+VL  - 4
+SP  - 638
+EP  - 644
+KW  - miall-nn01
+N2  - In:     
+ER  - 
+
+TY  - JOUR
+AU  - Hoshi, E. 
+AU  - Tanji, J. 
+PY  - 2000
+TI  - Integration of target and body-part information in the premotor cortex when planning action
+JO  - Nature
+VL  - 408
+SP  - 466
+EP  - 470
+KW  - tanji-nat00
+N2  - In: motor-control-premotor    
+ER  - 
+
+TY  - JOUR
+AU  - Paus, T. 
+PY  - 2001
+TI  - Primate anterior cingulate cortex: where motor control, drive and cognition interface
+JO  - Nature Rev Neurosci
+VL  - 2
+SP  - 417
+EP  - 424
+KW  - paus-nrn01
+N2  - In: motor-control-cingulate    
+ER  - 
+
+TY  - JOUR
+AU  - D. J. Serrien, 
+AU  - J.-M., Burgunder 
+AU  - Wiesendanger, M. 
+PY  - 2001
+TI  - Grip force scaling and sequencing of events during a manipulative task in Huntington's disease
+JO  - Neuropsychologia
+VL  - 39
+SP  - 734
+EP  - 741
+KW  - wiesendanger-np01
+N2  - In: motor-control-huntington    
+ER  - 
+
+TY  - JOUR
+AU  - Davidson, P. R. 
+AU  - Jones, R. D. 
+AU  - Sirisena, H. R. 
+AU  - Andreae, J. H. 
+PY  - 2000
+TI  - Detection of adaptive inverse models in the human motor system
+JO  - Human Movement Sci
+VL  - 19
+SP  - 761
+EP  - 795
+KW  - davidson-hms00
+N2  - In: motor-learning-psychology    
+ER  - 
+
+TY  - JOUR
+AU  - Tipper, S. P. 
+AU  - Howard, L. A. 
+AU  - Paul, M. A. 
+PY  - 2001
+TI  - Reaching affects saccade trajectories
+JO  - Exp Brain Res
+VL  - 136
+SP  - 241
+EP  - 249
+KW  - tipper-ebr01
+N2  - In: eye-arm-psychophysics    
+ER  - 
+
+TY  - JOUR
+AU  - Shima, K. 
+AU  - Tanji, J. 
+PY  - 2000
+TI  - Neuronal activity in the supplmentary and presupplementary motor areas for temporal organization of multiple movements
+JO  - J Neurophysiol
+VL  - 84
+SP  - 2148
+EP  - 2160
+KW  - tanji-jnp00
+N2  - In: motor-control-sma    
+ER  - 
+
+TY  - JOUR
+AU  - Joyal, C. C. 
+AU  - Strazielle, C. 
+AU  - Lalonde, R. 
+PY  - 2001
+TI  - Effects of dentate nucleus lesions on spatial and postural sensorimotor learning in rats
+JO  - Behav Brain Res
+VL  - 122
+SP  - 131
+EP  - 137
+KW  - lalonde-bbr01
+N2  - In: motor-learning-cerebellum    
+ER  - 
+
+TY  - JOUR
+AU  - Horan, G. 
+AU  - Nicol, A. U. 
+AU  - Brown, M. W. 
+PY  - 2001
+TI  - Tracking memory's trace
+JO  - Proc Natl Acad Sci USA
+VL  - 98
+SP  - 5282
+EP  - 5287
+KW  - horn-pnas01
+N2  - In: consolidation-animals    
+ER  - 
+
+TY  - JOUR
+AU  - Bosco, G. 
+AU  - Poppele, R. E. 
+PY  - 1993
+TI  - Broad directional tuning in spinal projections to the cerebellum
+JO  - J Neurophysiol
+VL  - 70
+SP  - 863
+EP  - 6
+KW  - poppele-93
+N2  - In: motor-control-cerebellum    
+ER  - 
+
+TY  - JOUR
+AU  - Grafton, S. T. 
+AU  - Fagg, A. H. 
+AU  - Arbib, M. A. 
+PY  - 1998
+TI  - Dorsal premotor cortex and conditional movement  selection: a PET functional mapping study
+JO  - J Neurophysiol
+VL  - 79
+SP  - 1092
+EP  - 7
+KW  - grafton-98
+N2  - In: premotor-cortex    
+ER  - 
+
+TY  - JOUR
+AU  - Miall, R. C. 
+AU  - Keating, J. G. 
+AU  - Malkmus, M. 
+AU  - Thach, W. T. 
+PY  - 1998
+TI  - Simple spike activity predicts occurrence of complex  spikes in cerebellar Purkinje cells
+JO  - Nature Neurosci
+VL  - 1
+SP  - 13
+EP  - 5
+KW  - miall-98
+N2  - In: motor-learning-cerebellum    
+ER  - 
+
+TY  - JOUR
+AU  - Dominey, P. F. 
+PY  - 1998
+TI  - Influences of temporal organization on sequence  learning and transfer: comments on Stadler (1995)  and Curran and Keele (1993)
+JO  - J Exp Psychol: Learning, Memory, Cognition
+VL  - 24
+SP  - 234
+EP  - 48
+KW  - dominey-jep98
+N2  - In: motor-learning-models    
+ER  - 
+
+TY  - JOUR
+AU  - Curran, T. 
+AU  - Keele, S. W. 
+PY  - 1993
+TI  - Attentional and nonattentional forms of sequence learning
+JO  - J Exp Psychol: Learning, Memory, Cognition
+VL  - 19
+SP  - 189
+EP  - 202
+KW  - keele-93
+N2  - In: motor-learning-attention    
+ER  - 
+
+TY  - JOUR
+AU  - Stadler, M. A. 
+PY  - 1995
+TI  - Role of attention in implicit learning
+JO  - J Exp Psychol: Learning, Memory, Cognition
+VL  - 21
+SP  - 674
+EP  - 85
+KW  - stadler-95
+N2  - In: motor-learning-attention    
+ER  - 
+
+TY  - JOUR
+AU  - Karniel, A. 
+AU  - Inbar, G. F. 
+PY  - 1997
+TI  - A model for learning human reaching movements
+JO  - Biol Cybern
+VL  - 77
+SP  - 173
+EP  - 83
+KW  - inbar-97
+N2  - In: motor-learning-models    
+ER  - 
+
+TY  - JOUR
+AU  - Lu, X. 
+AU  - Hikosaka, O. 
+AU  - Miyachi, S. 
+PY  - 1998
+TI  - Role of monkey cerebellar nuclei in skill for  sequential movements
+JO  - J Neurophysiol
+VL  - 79
+SP  - 2245
+EP  - 54
+KW  - hikosaka-jn98
+N2  - In: motor-learning-cerebellum    
+ER  - 
+
+TY  - JOUR
+AU  - Wang, J. J. 
+AU  - Shimansky, Y. 
+AU  - Bracha, V. 
+AU  - Bloedel, J. R. 
+PY  - 1998
+TI  - Effects of cerebellar nulclear inactivation on the  learning of a complex forelimb movement in cats
+JO  - J Neurophysiol
+VL  - 79
+SP  - 2447
+EP  - 59
+KW  - bloedel-98
+N2  - In: motor-learning-cerebellum    
+ER  - 
+
+TY  - JOUR
+AU  - Rolls, E. T. 
+AU  - Hornak, J. 
+AU  - Wade, D. 
+AU  - McGrath, J. 
+PY  - 1994
+TI  - Emotion-related learning in patients with social and  emotional changes associated with frontal lobe damage
+JO  - J Neurology, Neurosurgery, Psychiatry
+VL  - 57
+SP  - 1518
+EP  - 24
+KW  - rolls-94
+N2  - In: learning-prefrontal    
+ER  - 
+
+TY  - JOUR
+AU  - Nissen, M. J. 
+AU  - Bullemer, P. 
+PY  - 1987
+TI  - Attentional requirements of learning: Evidence from  performance measures
+JO  - Cognitive Psychology
+VL  - 19
+SP  - 1
+EP  - 32
+KW  - nissen-87
+N2  - in: motor-learning-attention    
+ER  - 
+
+TY  - JOUR
+AU  - Carter, C. S. 
+AU  - Braver, T. S. 
+AU  - Barch, D. M. 
+AU  - Botvinick, M. M. 
+AU  - Noll, D. 
+AU  - Cohen, J. D. 
+PY  - 1998
+TI  - Anterior cingulate cortex, error detection, and the  online monitoring of performance
+JO  - Science
+VL  - 280
+SP  - 747
+EP  - 9
+KW  - carter-98
+N2  - In: motor-control-cingulate    
+ER  - 
+
+TY  - JOUR
+PY  - 1989
+TI  - Neuropsychological evidence for multiple implicit  memory  systems: a comparison of Alzheimer's, Huntington's, and Parkinson's disease patients
+JO  - J Neurosci
+VL  - 9
+SP  - 582
+EP  - 7
+KW  - heindel-89
+N2  - In: motor-learning-huntington    
+ER  - 
+
+TY  - JOUR
+AU  - ., Caligiuri MP. Heindel WC. Lohr JB 
+PY  - 1992
+TI  - Sensorimotor disinhibition in Parkinson's disease: effects of levodopa
+JO  - Annals Neurology
+VL  - 31
+SP  - 53
+EP  - 8
+KW  - heindel-92
+N2  - In: motor-learning-interference    
+ER  - 
+
+TY  - JOUR
+AU  - Partiot, A. 
+AU  - Verin, M. 
+AU  - Pillon, B. 
+AU  - Teixeira-Ferreira, C. 
+AU  - Agid, Y. 
+AU  - Dubois, B. 
+PY  - 1996
+TI  - Delayed response tasks in basal ganglia lesions in man:  further evidence for a striato-frontal cooperation  in behavioural adaptation
+JO  - Neuropsychologia
+VL  - 34
+SP  - 709
+EP  - 21
+KW  - verin-96
+N2  - learning-prefrontal-lobe    
+ER  - 
+
+TY  - JOUR
+AU  - Hazeltine, E. 
+AU  - Grafton, S. T. 
+AU  - Ivry, R. 
+PY  - 1997
+TI  - Attention and stimulus characteristics determine the locus of  motor-sequence encoding: A PET study
+JO  - Brain
+VL  - 120
+SP  - 123
+EP  - 40
+KW  - grafton-97a
+N2  - In: motor-learning-imaging    
+ER  - 
+
+TY  - JOUR
+AU  - Gordon, A. M. 
+AU  - Forssberg, H. 
+AU  - Johansson, R. S. 
+AU  - Westling, G. 
+PY  - 1991
+TI  - Visual size cues in the programming of manipulative forces   during precision  grip
+JO  - Exp Brain Res
+VL  - 83
+SP  - 477
+EP  - 82
+KW  - johansson-91
+N2  - In: motor-learning-psychology    
+ER  - 
+
+TY  - JOUR
+AU  - Kawato, M. 
+PY  - 1989
+TI  - Adaptation and learning in control of voluntary  movement by the central nervous system
+JO  - Advanced Robotics
+VL  - 3
+SP  - 229
+EP  - 49
+KW  - kawato-89
+N2  - In: motor-learning-models    
+ER  - 
+
+TY  - CHAP
+AU  - Mishkin, M. 
+PY  - 1964
+TI  - Perseveration of central sets after frontal lesions in monkeys
+SP  - 219
+EP  - 41
+ED  - Warren, J. M. and Akert, K.
+PB  - McGraw-Hill
+CT  - New York
+BT  - The Frontal Granular Cortex and Behavior
+ED  - Warren, J. M. and Akert, K.
+KW  - mishkin-64
+N2  - learning-prefrontal-lobe
+ER  - 
+
+TY  - JOUR
+AU  - Hoesen, G. W. Van 
+AU  - Yeterian, E. H. 
+AU  - Lavizzo-Mourey, R. 
+PY  - 1981
+TI  - Widespread corticostriate projections from temporal cortex of the rhesus monkey
+JO  - J Comp Neurology
+VL  - 199
+SP  - 205
+EP  - 19
+KW  - vanhoesen-81
+N2  - motor-control-basalganglia    
+ER  - 
+
+TY  - JOUR
+AU  - Selemon, L. D. 
+AU  - Goldman-Rakic, P. S. 
+PY  - 1985
+TI  - Longitudinal topography and interdigitation of corticostriatal projections in the rhesus monkey
+JO  - J Neurosci
+VL  - 5
+SP  - 776
+EP  - 94
+KW  - goldman-rakic-85
+N2  - In: motor-control-basalganglia    
+ER  - 
+
+TY  - JOUR
+AU  - Takada, M. 
+AU  - Tokuno, H. 
+AU  - Nambu, A. 
+AU  - Inase, M. 
+PY  - 1998
+TI  - Corticostriatal projections from the somatic motor  areas of the frontal cortex in the macaque monkey:  segregation versus overlap of input zones from the  primary motor cortex, the supplementary motor area,  and the premotor cortex
+JO  - Exp Brain Res
+VL  - 120
+SP  - 114
+EP  - 28
+KW  - inase-98
+N2  - In: motor-control-basalganglia    
+ER  - 
+
+TY  - JOUR
+AU  - Haber, S. N. 
+AU  - Kunishio, K. 
+AU  - Mizobuchi, M. 
+AU  - Lynd-Balta, E. 
+PY  - 1995
+TI  - The orbital and medial prefrontal circuit through the  primate basal ganglia
+JO  - J Neurosci
+VL  - 15
+SP  - 4851
+EP  - 67
+KW  - haber-95
+N2  - In: motor-control-basalganglia    
+ER  - 
+
+TY  - CHAP
+AU  - Evans, A. C. 
+AU  - Collins, D. L. 
+AU  - Mills, S. R. 
+AU  - Brown, E. D. 
+AU  - Kelly, R. L. 
+AU  - Peters, T. M. 
+PY  - 1993
+TI  - 3D statistical neuroanatomical models from 305 MRI volumes
+VL  - Proc.\ IEEE Nuclear Sci.\ Symp.\ Medical  Imaging Conf.
+SP  - 1813
+EP  - 17
+BT  - Proc.\ IEEE Nuclear Sci.\ Symp.\ Medical  Imaging Conf.
+KW  - spm96-mritemplate
+ER  - 
+
+TY  - JOUR
+AU  - McIntosh, A. R. 
+AU  - Bookstein, F. L. 
+AU  - Haxby, J. V. 
+AU  - Grady, C. L. 
+PY  - 1996
+TI  - Spatial pattern analysis of functional brain images  using partial least squares
+JO  - Neuroimage
+VL  - 3
+SP  - 143
+EP  - 57
+KW  - mcintosh-96
+N2  - In: imaging-methods    
+ER  - 
+
+TY  - JOUR
+AU  - McIntosh, A. R. 
+AU  - Gonzalez-Lima, F. 
+PY  - 1994
+TI  - Structural equation modeling and its application to network analysis in functional brain imaging
+JO  - Human Brain Mapping
+VL  - 2
+SP  - 2
+EP  - 22
+KW  - mcintosh-94
+N2  - In: imaging-methods    
+ER  - 
+
+TY  - JOUR
+AU  - Gomez-Beldarrain, M. 
+AU  - Garcia-Monco, J. C. 
+AU  - Rubio, B. 
+AU  - Pascual-Leone, A. 
+PY  - 1998
+TI  - Effect of focal cerebellar lesions on procedural  learning in the serial reaction time task
+JO  - Exp Brain Res
+VL  - 120
+SP  - 25
+EP  - 30
+KW  - pascual-leone-98
+N2  - In: motor-learning-cerebellum    
+ER  - 
+
+TY  - JOUR
+AU  - Clark, R. E. 
+AU  - Squire, L. R. 
+PY  - 1998
+TI  - Classical conditioning and brain systems: the role of awareness
+JO  - Science
+VL  - 280
+SP  - 77
+EP  - 81
+KW  - squire-sci98
+N2  - In: learning-amnesia    
+ER  - 
+
+TY  - JOUR
+AU  - Kitazawa, S. 
+AU  - Kimura, T. 
+AU  - Yin, P. B. 
+PY  - 1998
+TI  - Cerebellar complex spikes encode both destinations and  errors in arm movements
+JO  - Nature
+VL  - 392
+SP  - 494
+KW  - kitazawa-98
+N2  - In: motor-control-cerebellum    
+ER  - 
+
+TY  - JOUR
+AU  - Marzi, C. A. 
+AU  - Miniussi, C. 
+AU  - Maravita, A. 
+AU  - Bertolasi, L. 
+AU  - Zanette, G. 
+AU  - Rothwell, J. C. 
+AU  - Sanes, J. N. 
+PY  - 1998
+TI  - Transcranial magnetic stimulation selectively impairs  interhemispheric transfer of visuo-motor information  in humans
+JO  - Exp Brain Res
+VL  - 118
+SP  - 435
+EP  - 8
+KW  - rothwell-tms98
+N2  - In: motor-learning-magstim    
+ER  - 
+
+TY  - JOUR
+AU  - Prud'Homme, M. J. L. 
+AU  - Kalaska, J. F. 
+PY  - 1994
+TI  - Proprioceptive activity in primate primary  somatosensory cortex during active arm reaching movements
+JO  - J Neurophysiol
+VL  - 72
+SP  - 2280
+EP  - 2301
+KW  - kalaska-94
+N2  - In: motor-contol-cortex    
+ER  - 
+
+TY  - JOUR
+AU  - Mattingley, J. B. 
+AU  - Husain, M. 
+AU  - Rorden, C. 
+AU  - Kennard, C. 
+AU  - Driver, J. 
+PY  - 1998
+TI  - Motor role of human inferior parietal lobe revealed in  unilateral neglect patients
+JO  - Nature
+VL  - 392
+SP  - 179
+EP  - 82
+KW  - mattingley-98
+N2  - In: motor-control-parietal    
+ER  - 
+
+TY  - JOUR
+AU  - Knudsen, E. I. 
+PY  - 1998
+TI  - Capacity for plasticity in the adult owl auditory system expanded  by juvenile experience
+JO  - Science
+VL  - 279
+SP  - 1531
+EP  - 3
+KW  - knudsen-98
+N2  - In: motor-learning-psychology    
+ER  - 
+
+TY  - JOUR
+AU  - Shidara, M. 
+AU  - Aigner, T. G. 
+AU  - Richmond, B. J. 
+PY  - 1998
+TI  - Neuronal signals in the monkey ventral striatum related to  progress through a predictable series of trials
+JO  - J Neurosci
+VL  - 18
+SP  - 2613
+EP  - 25
+KW  - shidara-98
+N2  - motor-control-basalganglia    
+ER  - 
+
+TY  - JOUR
+AU  - Mason, C. R. 
+AU  - Miller, L. E. 
+AU  - Baker, J. F. 
+AU  - Houk, J. C. 
+PY  - 1998
+TI  - Organization of reaching and grasping movements in the primate cerebellar nuclei as revealed by focal musciomol inactivations
+JO  - J Neurophysiol
+VL  - 79
+SP  - 537
+EP  - 54
+KW  - houk-98
+N2  - In: motor-control-cerebellum    
+ER  - 
+
+TY  - JOUR
+AU  - Krebs, H. I. 
+AU  - Brashers-Krug, T. 
+AU  - Rauch, S. L. 
+AU  - Savage, C. R. 
+AU  - Hogan, N. 
+AU  - Rubin, R. H. 
+AU  - Fischman, A. J. 
+AU  - Alpert, N. M. 
+PY  - 1998
+TI  - Robot-aided functional imaging: application to a motor  learning study
+JO  - Human Brain Mapping
+VL  - 6
+SP  - 69
+EP  - 72
+KW  - krebs-98
+N2  - In: motor-learning-imaging    
+ER  - 
+
+TY  - JOUR
+AU  - space, Pointing to kinesthetic targets in 
+PY  - 1998
+TI  - Baud-Bovy, G. and Viviani, P.
+JO  - J Neurosci
+VL  - 18
+SP  - 1528
+EP  - 45
+KW  - viviani-98
+N2  - motor-control-models    
+ER  - 
+
+TY  - JOUR
+AU  - Hanneton, S. 
+AU  - Berthoz, A. 
+AU  - Droulez, J. 
+AU  - Slotine, J. J. E. 
+PY  - 1997
+TI  - Does the brain use sliding variables for the control of movements?
+JO  - Biol Cybern
+VL  - 77
+SP  - 381
+EP  - 93
+KW  - slotine-97
+N2  - motor-control-models    
+ER  - 
+
+TY  - JOUR
+AU  - Dassonville, P. 
+AU  - Zhu, X.-H. 
+AU  - Ugurbil, K. 
+AU  - Kim, S.-G. 
+AU  - Ashe, J. 
+PY  - 1997
+TI  - Functional activation in motor cortex reflects the direction and the   degree of handedness
+JO  - Proc Natl Acad Sci USA
+VL  - 94
+SP  - 14015
+EP  - 18
+KW  - ashe-97
+N2  - In: motor-control-imaging    
+ER  - 
+
+TY  - JOUR
+AU  - Moody, S. L. 
+AU  - Wise, S. P. 
+AU  - Pellegrino, G. di 
+AU  - Zipser, D. 
+PY  - 1998
+TI  - A model that accounts for activity in the primate frontal cortex  during a delayed matching-to-sampled task
+JO  - J Neurosci
+VL  - 18
+SP  - 399
+EP  - 410
+KW  - zipser-98
+N2  - In: learning-models    
+ER  - 
+
+TY  - JOUR
+AU  - Inoue, K. 
+AU  - Kawashima, R. 
+AU  - Satoh, K. 
+AU  - Kinomura, S. 
+AU  - Goto, R. 
+AU  - Koyama, M. 
+AU  - Sugiura, M. 
+AU  - Ito, M. 
+AU  - Fukuda, H. 
+PY  - 1998
+TI  - PET study of pointing with visual feedback of moving hands
+JO  - J Neurophysiol
+VL  - 79
+SP  - 117
+EP  - 25
+KW  - kawashima-98
+N2  - In: motor-control-imaging    
+ER  - 
+
+TY  - JOUR
+AU  - Paus, T. 
+AU  - Jech, R. 
+AU  - Thompson, C. J. 
+AU  - Comeau, R. 
+AU  - Peters, T. 
+AU  - Evans, A. C. 
+PY  - 1998
+TI  - Dose-dependent reduction of cerebral blood flow during rapid-rate  transcranial magnetic stimulation of the human sensorimotor cortex
+JO  - J Neurophysiol
+VL  - 79
+SP  - 1102
+EP  - 7
+KW  - paus-98
+N2  - In: learning-magstim    
+ER  - 
+
+TY  - JOUR
+AU  - Gribble, P. L. 
+AU  - Ostry, D. J. 
+AU  - Sanguineti, V. 
+AU  - LaBoissiere, R. 
+PY  - 1998
+TI  - Are complex control signals required for human arm movement?
+JO  - J Neurophysiol
+VL  - 79
+SP  - 1409
+EP  - 24
+KW  - ostry-98
+N2  - In: motor-control-models    
+ER  - 
+
+TY  - JOUR
+AU  - Rushworth, M. F. S. 
+AU  - Johansen-Berg, H. 
+AU  - Young, S. A. 
+PY  - 1998
+TI  - Prietal cortex and spatial-postural transformation  during arm movements
+JO  - J Neurophysiol
+VL  - 79
+SP  - 478
+EP  - 82
+KW  - rushworth-98
+N2  - In: motor-control-parietal    
+ER  - 
+
+TY  - JOUR
+AU  - karni, A. 
+AU  - Meyer, G. 
+AU  - Rey-Hipolito, C. 
+AU  - Jezzard, P. 
+AU  - Adams, M. M. 
+AU  - Turner, R. 
+AU  - Ungerleider, L. G. 
+PY  - 1998
+TI  - The acquisition of skilled motor performance: fast and  slow experience-driven changes in primary motor cortex
+JO  - Proc Nat Acad Sci (USA)
+VL  - 95
+SP  - 861
+EP  - 68
+KW  - karni-pnas98
+N2  - In: motor-learning-psychology    
+ER  - 
+
+TY  - CHAP
+AU  - Duncan, J. 
+PY  - 1995
+TI  - Attention, intelligence, and the frontal lobes
+SP  - 721
+EP  - 33
+ED  - Gazzaniga, M. S.
+PB  - MIT Press
+CT  - Cambridge, MA
+BT  - The Cognitive Neurosciences
+ED  - Gazzaniga, M. S.
+KW  - duncan-95
+ER  - 
+
+TY  - JOUR
+AU  - Freedman, M. 
+AU  - Black, S. 
+AU  - Ebert, P. 
+AU  - Binns, M. 
+PY  - 1998
+TI  - Orbitofrontal function, object alternation and perseveration
+JO  - Cerebral Cortex
+VL  - 8
+SP  - 18
+EP  - 27
+KW  - freedman-98
+N2  - In: learning-prefrontal-lobe    
+ER  - 
+
+TY  - JOUR
+AU  - Raichle, M. E. 
+AU  - Fiez, J. A. 
+AU  - Videen, T. O. et al. 
+PY  - 1994
+TI  - Practice-related changes in human brain functional  anatomy during non-motor learning
+JO  - Cerebral Cortex
+VL  - 4
+SP  - 8
+EP  - 26
+KW  - raichle-94
+N2  - verb generation involves activation of the PFC.    
+ER  - 
+
+TY  - JOUR
+AU  - Nadel, L. 
+AU  - Moscovitch, M. 
+PY  - 1997
+TI  - Memory consolidation, retrograde amnesia and the  hippocampal complex
+JO  - Curr Opinion Neurobiol
+VL  - 7
+SP  - 217
+EP  - 27
+KW  - nadel-97
+N2  - In: consolidation-models    
+ER  - 
+
+TY  - JOUR
+AU  - Harris, G. J. 
+AU  - Aylward, E. H. 
+AU  - Peyser, C. E. 
+AU  - Pearlson, G. D. 
+AU  - Brandt, J. 
+AU  - Roberts-Twillie, J. V. 
+AU  - Barta, P. E. 
+AU  - Folstein, S. E. 
+PY  - 1996
+TI  - Single photon emission computed tomographic blood flow  and magnetic resonance volume imaging of basal  ganglia in Huntington's disease
+JO  - Arch Neurology
+VL  - Arch Neurology
+SP  - 316
+EP  - 24
+KW  - brandt-96b
+N2  - In: motor-control-huntington    
+ER  - 
+
+TY  - JOUR
+AU  - Sakai, K. 
+AU  - Hikosaka, O. 
+AU  - Miyauchi, S. 
+AU  - Takino, R. 
+AU  - Sasaki, Y. 
+AU  - Putz, B. 
+PY  - 1998
+TI  - Transition of Brain Activation from Frontal to Parietal Areas in  Visuomotor Sequence Learning
+JO  - J Neurosci
+VL  - 18
+SP  - 1827
+EP  - 40
+KW  - hikosaka-98
+N2  - In: motor-learning-imaging    
+ER  - 
+
+TY  - JOUR
+AU  - Dornay, M. 
+AU  - Mussa-Ivaldi, F. A. 
+AU  - McIntyre, J. 
+AU  - Bizzi, E. 
+PY  - 1993
+TI  - Stability constraints for the distributed control of  motor behavior
+JO  - Neural Networks
+VL  - 6
+SP  - 1045
+EP  - 59
+KW  - menashe-93
+N2  - motor-control-models    
+ER  - 
+
+TY  - JOUR
+AU  - Dornay, M. 
+AU  - Uno, Y. 
+AU  - Kawato, M. 
+AU  - Suzuki, R. 
+PY  - 1996
+TI  - Minimum muscle-tension change trajectories predicted by  using a 17-muscle model of the monkey's arm
+JO  - J Motor Behav
+VL  - 28
+SP  - 83
+EP  - 100
+KW  - menashe-96
+N2  - In: motor-control-models    
+ER  - 
+
+TY  - JOUR
+AU  - Fu, Q.-G. 
+AU  - Mason, C. R. 
+AU  - Flament, D. 
+AU  - Coltz, J. D. 
+AU  - Ebner, T. J. 
+PY  - 1997
+TI  - Movement kinematics encoded in complex spike discharge  of primate cerebellar Purkinje cells
+JO  - Neuroreport
+VL  - 8
+SP  - 523
+EP  - 29
+KW  - ebner-nr97
+N2  - In: motor-control-cerebellum    
+ER  - 
+
+TY  - JOUR
+AU  - Smith, M. 
+AU  - Shadmehr, R. 
+AU  - Brandt, J. 
+PY  - 1997
+TI  - Motor learning disorders in gene-positive but  pre-symptomatic Huntington's disease
+JO  - Soc Neurosci Abs
+VL  - 23
+SP  - 203
+KW  - maurice:HDabstract
+N2  - M. Smith and R. Shadmehr and J. Brandt
+ER  - 
+
+TY  - JOUR
+AU  - McGaugh, J. L. 
+PY  - 1966
+TI  - Time-dependent processes in memory storage
+JO  - Science
+VL  - 153
+SP  - 1351
+EP  - 8
+KW  - mcgaugh-nat66
+N2  - In: consolidation-animals    
+ER  - 
+
+TY  - JOUR
+AU  - Braun, A. R. 
+AU  - Stoetter, B. 
+AU  - Randolph, C. 
+AU  - Hsiao, J. K. 
+AU  - Vladar, K. 
+AU  - Gernert, J. 
+AU  - Carson, R. E. 
+AU  - Herscovitch, P. 
+AU  - Chase, T. N. 
+PY  - 1993
+TI  - The functional neuroanatomy of Tourette's syndrome:  an  FDG-PET study. I. Regional changes in cerebral  glucose metabolism  differentiating patients and controls
+JO  - Neuropsychopharmacology
+VL  - 9
+SP  - 277
+EP  - 91
+KW  - braun-93
+N2  -     
+ER  - 
+
+TY  - JOUR
+AU  - Nudo, R. J. 
+AU  - Plautz, E. J. 
+AU  - Milliken, G. W. 
+PY  - 1997
+TI  - Adaptive plasticity in primate motor cortex as a  consequence of behavioral experience and neuronal injury
+JO  - Seminars Neurosci
+VL  - 9
+SP  - 13
+EP  - 23
+KW  - nudo-97
+N2  - In: motor-learning-motorcortex    
+ER  - 
+
+TY  - JOUR
+AU  - Kim, J. J. 
+AU  - Krupa, D. J. 
+AU  - Thompson, R. F. 
+PY  - 1998
+TI  - Inhibitory cerebello-olivary projections and blocking  effect in classical conditioning
+JO  - Science
+VL  - 279
+SP  - 570
+EP  - 73
+KW  - thompson-sci98
+N2  - In: motor-learning-cerebellum    
+ER  - 
+
+TY  - JOUR
+AU  - Kagerer, F. A. 
+AU  - Contreras-Vidal, J. L. 
+AU  - Stelmach, G. E. 
+PY  - 1997
+TI  - Adaptation to gradual as compared with sudden  visuo-motor distortions
+JO  - Exp Brain Res
+VL  - 115
+SP  - 557
+EP  - 61
+KW  - stelmach-97
+N2  - In: motor-learning-psychology    Articleunderwood-68
+ER  - 
+
+TY  - JOUR
+AU  - Reynolds, T. J. 
+AU  - Medin, D. L. 
+PY  - 1981
+TI  - Stimulus interaction and between-trials proactive interference in monkeys
+JO  - J Exp Psychol: Animal Behav Processes
+VL  - 7
+SP  - 334
+EP  - 47
+KW  - reynolds-81
+N2  - In: learning-interference    
+ER  - 
+
+TY  - JOUR
+AU  - Worsham, R. W. 
+PY  - 1975
+TI  - Temporal discrimination factors in the delayed matching-to-sample task in monkeys
+JO  - Animal Learning & Behavior
+VL  - 3
+SP  - 93
+EP  - 7
+KW  - worsham-75
+N2  - In: learning-interference    
+ER  - 
+
+TY  - JOUR
+AU  - Archer, E. J. 
+AU  - Underwood, B. J. 
+PY  - 1951
+TI  - Retroactive inhibition of verbal association as a  multiple function of temporal point of interpolation  and degree of interpolated learning
+JO  - J Exp Psychol
+VL  - 42
+SP  - 283
+EP  - 90
+KW  - underwood-51
+N2  - In: learning-interference    
+ER  - 
+
+TY  - JOUR
+AU  - Uhl, F. 
+AU  - Franzen, P. 
+AU  - Serles, W. 
+AU  - Lang, W. et al. 
+PY  - 1990
+TI  - Anterior frontal cortex and the effect of proactive  interference in paired associate learning: A DC  potential study
+JO  - J Cognitive Neurosci
+VL  - 2
+SP  - 373
+EP  - 382
+KW  - uhl-90
+N2  - In: learning-interference    
+ER  - 
+
+TY  - JOUR
+AU  - Blais, C. 
+AU  - Kerr, R. 
+PY  - 1990
+TI  - Components of proactive transfer in motor performance
+JO  - Percep Motor Skills
+VL  - 71
+SP  - 187
+EP  - 193
+KW  - blais-90
+N2  - In: motor-learning-interference    
+ER  - 
+
+TY  - JOUR
+AU  - Rich, J. B. 
+AU  - Campodonico, J. R. 
+AU  - Rothlind, J. 
+AU  - Bylsma, F. W. 
+AU  - Brandt, J 
+PY  - 1997
+TI  - Perseverations during paired-associate learning in Huntington's disease
+JO  - J Clin Exp Neuropsychol
+VL  - 19
+SP  - 191
+EP  - 203
+KW  - brandt-hd97
+N2  - In: motor-learning-huntington and learning-interference    
+ER  - 
+
+TY  - JOUR
+AU  - Bunch, M. E. 
+AU  - McGraven, V. G. 
+PY  - 1938
+TI  - The temporal course of transfer in the learning of  memory material
+JO  - J Comp Psychol
+VL  - 25
+SP  - 481
+EP  - 96
+KW  - bunch-38
+N2  - In: learning-interference    
+ER  - 
+
+TY  - JOUR
+AU  - Bunch, M. E. 
+PY  - 1939
+TI  - Transfer of training in the mastery of an antagonistic  habit after varying intervals of time
+JO  - J Comp Psychol
+VL  - 28
+SP  - 189
+EP  - 200
+KW  - bunch-39
+N2  - In: motor-learning-interference and learning-interference    
+ER  - 
+
+TY  - JOUR
+AU  - Shadmehr, R. 
+AU  - Holcomb, H. H. 
+PY  - 1999
+TI  - Inhibitory control of motor memories: a PET study
+JO  - Exp Brain Res
+VL  - 126
+SP  - 235
+EP  - 251
+KW  - reza:ebr99
+N2  -     
+ER  - 
+
+TY  - JOUR
+AU  - Grafton, S. T. 
+AU  - Fadiga, L. 
+AU  - Arbib, M. A. 
+AU  - Rizzolatti, G. 
+PY  - 1997
+TI  - Premotor Cortex Activation during Observation and Naming of Familiar Tools
+JO  - Neuroimage
+VL  - 6
+SP  - 231
+EP  - 6
+KW  - grafton-97
+N2  - In: premotor-cortex, motor-control-imaging    
+ER  - 
+
+TY  - JOUR
+AU  - Passingham, R. E. 
+PY  - 1972
+TI  - Visual discrimination learning after prefrontal  ablations in monkeys (macaca mulatta)
+JO  - Neuropsychologia
+VL  - 10
+SP  - 27
+EP  - 39
+KW  - passingham-72
+N2  - In: learning-prefrontal-lobe    
+ER  - 
+
+TY  - JOUR
+AU  - Passingham, R. E. 
+PY  - 1972
+TI  - Non-reversal shifts after selective prefrontal  ablations in monkeys (macaca mulatta)
+JO  - Neuropsychologia
+VL  - 10
+SP  - 41
+EP  - 6
+KW  - passingham-72a
+N2  - In: learning-prefrontal-lobe    
+ER  - 
+
+TY  - JOUR
+AU  - Doyon, J. 
+AU  - Owen, A. M. 
+AU  - Petrides, M. 
+AU  - Sziklas, V. 
+AU  - Evans, A. C. 
+PY  - 1996
+TI  - Functional anatomy of visuomotor skill learning in human subjects examined with positron emission tomography
+JO  - Eur J Neurosci
+VL  - 8
+SP  - 637
+EP  - 48
+KW  - petrides-ejn96
+N2  - In: motor-learning-imaging    
+ER  - 
+
+TY  - JOUR
+AU  - Schultz, W. 
+AU  - Apicella, P. 
+AU  - Ljungberg, T. 
+PY  - 1993
+TI  - Responses of monkey dopamine neurons to reward and  conditioned stimuli during successive steps of  learning a delayed response task
+JO  - J Neurosci
+VL  - 13
+SP  - 900
+EP  - 13
+KW  - schultz-jn93
+N2  - In: motor-control-basalganglia    
+ER  - 
+
+TY  - JOUR
+AU  - Aosaki, T. 
+AU  - Tsubokawa, H. 
+AU  - Ishida, A. 
+AU  - Watanabe, K. 
+AU  - Graybiel, A. M. 
+AU  - Kimura, M. 
+PY  - 1994
+TI  - Responses of tonically active neurons in the primate's  striatum undergo systematic changes during  behavioral sensorimotor conditioning
+JO  - J Neurosci
+VL  - 14
+SP  - 3969
+EP  - 84
+KW  - graybiel-jn94a
+N2  - In: motor-control-basalganglia    
+ER  - 
+
+TY  - JOUR
+AU  - Verin, M. 
+AU  - Partiot, A. 
+AU  - Pillon, B. 
+AU  - Malapani, C. 
+AU  - Agid, Y. 
+AU  - Dubois, B. 
+PY  - 1993
+TI  - Delayed response tasks and prefrontal lesions in man--evidence for self generated patterns of behaviour with poor environmental modulation
+JO  - Neuropsychologia
+VL  - 31
+SP  - 1379
+EP  - 96
+KW  - verin-93
+N2  - In: learning-prefrontal-lobe    
+ER  - 
+
+TY  - JOUR
+AU  - Butter, C. M. 
+PY  - 1969
+TI  - Perseveration in extinction and in discrimination  reversal tasks following selective frontal ablations  in macaca mulatta
+JO  - Physiol Behav
+VL  - 4
+SP  - 163
+EP  - 71
+KW  - butter-69
+N2  - In: learning-interference    
+ER  - 
+
+TY  - JOUR
+AU  - Owen, A. M. 
+AU  - Roberts, A. C. 
+AU  - Hodges, J. R. 
+AU  - Summers, B. A. 
+AU  - Polkey, C. E. 
+AU  - Robbins, T. W. 
+PY  - 1993
+TI  - Contrasting mechanisms of impaired attentional set-shifting in patients with frontal lobe damage or Parkinson's disease
+JO  - Brain
+VL  - 116
+SP  - 1159
+EP  - 75
+KW  - owen-93
+N2  - In: learning-interference    
+ER  - 
+
+TY  - JOUR
+AU  - Wise, S. P. 
+AU  - Murray, E. A. 
+AU  - Gerfen, C. R. 
+PY  - 1996
+TI  - The frontal cortex-basal ganglia system in primates
+JO  - Critical Reviews Neurobiol
+VL  - 10
+SP  - 317
+EP  - 56
+KW  - wise-crn96
+N2  - In: learning-prefrontal-lobe    
+ER  - 

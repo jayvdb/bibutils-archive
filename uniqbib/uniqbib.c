@@ -22,95 +22,100 @@
 #define SEEK_SET 0
 #endif
 
-char *search (char *, char *);
-
-int whitespace (char ch)
+int 
+whitespace (char ch)
 {
-  if (ch==' ' || ch=='\t' || ch=='\n' || ch=='\r') return TRUE;
-  else return FALSE;
+	if (ch==' ' || ch=='\t' || ch=='\n' || ch=='\r') return TRUE;
+	else return FALSE;
 }
 
-int endofline (char ch)
+int 
+endofline (char ch)
 {
-  if (ch=='\n' || ch=='\r') return TRUE;
-  else return FALSE;
-}
-
-
-void get_citename(newstring *string, char *p)
-{
-  p++;
-  while (*p && *p!=',') {
-    if (!whitespace(*p)) newstr_addchar(string,*p);
-    p++;
-  }
-}
-
-char *search (buffer,target)
-  char* buffer;
-  char* target;
-{
-  char *pbuf,*ptar,*returnptr=NULL;
-  int found=FALSE;
-  int pos=0;
-  pbuf=buffer;
-  ptar=target;
-  while (*ptar && *pbuf && !found) {
-
-    while ((*pbuf) && (*(pbuf+pos)) && (*(ptar+pos)) && (!found)) {
-      if (toupper(*(pbuf+pos))==toupper(*(ptar+pos))) {
-        pos++;
-        if (*(ptar+pos)=='\0') {
-          found=TRUE;
-          returnptr=pbuf;
-        }
-        else if (*(pbuf+pos)=='\0') {
-          return NULL;
-        }
-      }
-      else {
-        pos=0;
-        pbuf++;
-      }
-    }
-
-  }
-  return returnptr;
-}
-
-void extract_quotes(newstring *string, char *newdata)
-{
-   char *p;
-   int endwithquotes=FALSE;
-
-   p=strchr(newdata,'=');
-   if (p==NULL) return;
-   p++;
-   while (whitespace(*p)) p++;
-   if (*p=='\"') {
-     endwithquotes=TRUE; 
-     p++;
-   }
-   while (*p && *p!=',' && *p!=')') {
-     if (endwithquotes && *p=='\"' && *(p-1)!='\\') break; 
-     newstr_addchar(string,*p);
-     p++;
-   }
-   newstr_strcat(string,"  ");
+	if (ch=='\n' || ch=='\r') return TRUE;
+	else return FALSE;
 }
 
 
-void find_duplicates(refs *FirstPtr)
+void 
+get_citename(newstring *string, char *p)
 {
-  refs *ComparePtr;
-  refs *CurrPtr;
-  int nummatch,tempmatch,i;
+	p++;
+	while (*p && *p!=',') {
+		if (!whitespace(*p)) newstr_addchar(string,*p);
+		p++;
+	}
+}
+
+char *
+search (char *buffer,char *target)
+{
+	char *pbuf = buffer;
+	char *ptar = target;
+	char *returnptr=NULL;
+	int found=FALSE;
+	int pos=0;
+
+
+	while (*ptar && *pbuf && !found) {
+
+		while ((*pbuf) && (*(pbuf+pos)) && (*(ptar+pos)) && (!found)) {
+			if (toupper(*(pbuf+pos))==toupper(*(ptar+pos))) {
+				pos++;
+				if (*(ptar+pos)=='\0') {
+					found=TRUE;
+					returnptr=pbuf;
+				}
+				else if (*(pbuf+pos)=='\0') {
+					return NULL;
+				}
+			}
+			else {
+				pos=0;
+				pbuf++;
+			}
+		}
+
+	}
+
+	return returnptr;
+}
+
+void 
+extract_quotes(newstring *string, char *newdata)
+{
+	char *p;
+	int endwithquotes=FALSE;
+
+	p=strchr(newdata,'=');
+	if (p==NULL) return;
+	p++;
+	while (whitespace(*p)) p++;
+	if (*p=='\"') {
+		endwithquotes=TRUE; 
+		p++;
+	}
+	while (*p && *p!=',' && *p!=')') {
+		if (endwithquotes && *p=='\"' && *(p-1)!='\\') break; 
+		newstr_addchar(string,*p);
+		p++;
+	}
+	newstr_strcat(string,"  ");
+}
+
+
+void 
+find_duplicates(REFS *FirstPtr)
+{
+  REFS *ComparePtr, *CurrPtr;
+  int  nummatch,tempmatch,i;
   char ch;
-  ComparePtr=FirstPtr;
-  while (ComparePtr!=NULL) {
+
+  for ( ComparePtr=FirstPtr; ComparePtr!=NULL; ComparePtr=ComparePtr->next) {
+/* fprintf(stderr,"ComparePtrloop\n"); fflush(stderr); */
     nummatch=0;
-    CurrPtr=ComparePtr->Next;
-    while (CurrPtr!=NULL) {
+	for ( CurrPtr=ComparePtr->next; CurrPtr!=NULL; CurrPtr=CurrPtr->next ) {
+/* fprintf(stderr,"CurrPtrloop\n"); fflush(stderr); */
       if (strcmp(ComparePtr->refname->data,CurrPtr->refname->data)==0) {
         nummatch++;
         fprintf(stderr,"\nDuplicate identifiers:  Modifying\n");
@@ -127,27 +132,25 @@ void find_duplicates(refs *FirstPtr)
         fprintf(stderr," (%ld - %ld) == %s\n",CurrPtr->startpos,CurrPtr->endpos,CurrPtr->refname->data);
         fprintf(stderr,"       %s\n",CurrPtr->source->data); 
       }
-      CurrPtr=CurrPtr->Next;
     }
-    if (nummatch>0) newstr_strcat(ComparePtr->refname,"a");
-    ComparePtr=ComparePtr->Next;
+    if (nummatch>0) newstr_addchar(ComparePtr->refname,'a');
   }
 } 
 
-     /*
-      * scanfor_refs()
-      *
-      * This function scans for a Bibtex reference
-      * starting with the '@' character as the first
-      * non-space character in a line.
-      *
-      */
-
-refs *scanfor_refs(FILE *inptr)
+/*
+ * scanfor_refs()
+ *
+ * This function scans for a Bibtex reference
+ * starting with the '@' character as the first
+ * non-space character in a line.
+ *
+ */
+REFS *
+scanfor_refs(FILE *inptr)
 {
   long pos;
   char line[512],*p,*startat;
-  refs *CurrPtr=NULL,*FirstPtr=NULL,*PrevPtr=NULL;
+  REFS *CurrPtr=NULL,*FirstPtr=NULL,*PrevPtr=NULL;
   int quotations=0;
 
   while (!feof(inptr)) {
@@ -188,10 +191,11 @@ refs *scanfor_refs(FILE *inptr)
       else if (*p=='@') {
         if (CurrPtr!=NULL) PrevPtr=CurrPtr;
         CurrPtr = refs_new();
-        if (PrevPtr!=NULL) PrevPtr->Next=CurrPtr;
+        if (PrevPtr!=NULL) PrevPtr->next=CurrPtr;
         if (FirstPtr==NULL) FirstPtr=CurrPtr;
         startat=strchr(p,'(');
-        if (startat!=NULL) get_citename(CurrPtr->refname,startat);
+        if (startat==NULL) startat=strchr(p,'{');
+		if (startat!=NULL) get_citename(CurrPtr->refname,startat);
         CurrPtr->startpos=pos;
         if (PrevPtr!=NULL) PrevPtr->endpos=pos-1; 
 
@@ -206,34 +210,34 @@ refs *scanfor_refs(FILE *inptr)
  return FirstPtr;
 }
 
-refs *get_prev (refs *FirstPtr, refs *SearchPtr)
+REFS *
+get_prev( REFS *first, REFS *search )
 {
-  refs *CurrPtr;
-  if (FirstPtr==SearchPtr) return NULL;
-  CurrPtr=FirstPtr;
-  while (CurrPtr!=NULL && CurrPtr->Next!=SearchPtr) CurrPtr=CurrPtr->Next;
-  return CurrPtr;
+	REFS *curr;
+	if (first==search) return NULL;
+	curr=first;
+	while (curr!=NULL && curr->next!=search) curr=curr->next;
+	return curr;
 }
 
-refs *do_swap (refs **CurrPtrPtr, refs **NextPtrPtr, refs **FirstPtrPtr,
-               int *swap) 
+REFS *
+do_swap( REFS **CurrPtrPtr, REFS **NextPtrPtr, REFS **FirstPtrPtr ) 
 {
-  refs *HolderPtr,*BeforeCurr,*BeforeNext;
-  *swap=TRUE;
-  HolderPtr=(*NextPtrPtr)->Next;
+  REFS *HolderPtr,*BeforeCurr,*BeforeNext;
+  HolderPtr=(*NextPtrPtr)->next;
 
   BeforeCurr=get_prev(*FirstPtrPtr,*CurrPtrPtr);
   BeforeNext=get_prev(*FirstPtrPtr,*NextPtrPtr);
   if (BeforeNext==*CurrPtrPtr) {
-    (*NextPtrPtr)->Next=*CurrPtrPtr;
-    (*CurrPtrPtr)->Next=HolderPtr;
-    if (BeforeCurr!=NULL) BeforeCurr->Next=*NextPtrPtr;
+    (*NextPtrPtr)->next=*CurrPtrPtr;
+    (*CurrPtrPtr)->next=HolderPtr;
+    if (BeforeCurr!=NULL) BeforeCurr->next=*NextPtrPtr;
   }
   else {
-    (*NextPtrPtr)->Next=(*CurrPtrPtr)->Next;
-    (*CurrPtrPtr)->Next=HolderPtr;
-    if (BeforeCurr!=NULL) BeforeCurr->Next=*NextPtrPtr;
-    if (BeforeNext!=NULL) BeforeNext->Next=*CurrPtrPtr;
+    (*NextPtrPtr)->next=(*CurrPtrPtr)->next;
+    (*CurrPtrPtr)->next=HolderPtr;
+    if (BeforeCurr!=NULL) BeforeCurr->next=*NextPtrPtr;
+    if (BeforeNext!=NULL) BeforeNext->next=*CurrPtrPtr;
   }
 
   if (*FirstPtrPtr==*CurrPtrPtr) {
@@ -244,99 +248,112 @@ fprintf(stderr,"Changed FirstPtr!\n");
   return HolderPtr;
 }
 
-void display_list (refs *FirstPtr)
+void 
+display_list(REFS *first)
 {
-  refs *CurrPtr;
-  CurrPtr=FirstPtr;
-  while (CurrPtr!=NULL) {
-    fprintf(stderr,"  %s\n",CurrPtr->refname->data);
-    CurrPtr=CurrPtr->Next;
-  }
+	REFS *curr;
+	for ( curr=first; curr; curr=curr->next ) {
+		fprintf(stderr,"  %s\n",curr->refname->data);
+	}
 }
 
-refs *sort_refs (refs *FirstPtr, char code)
+REFS *
+sort_refs( REFS *first, char code )
 {
-  refs *CurrPtr,*NextPtr,*HolderPtr;
-  int swap,done;
+	REFS *curr,*next;
+	int swap=FALSE,done;
 
-  swap=FALSE;
-  CurrPtr=FirstPtr;
-  while (CurrPtr!=NULL) {
-/*    if (swap) CurrPtr=FirstPtr;
- */   NextPtr=CurrPtr->Next;
-    done=FALSE;
-    swap=FALSE;
-    do {
-      if (NextPtr==NULL) done=TRUE;
-      else {
-        if (code=='r') { /* sort by refnum */
-fprintf(stderr,"%s and %s",CurrPtr->refname->data,NextPtr->refname->data);
-          if (strcmp(CurrPtr->refname->data,NextPtr->refname->data)<=0){
-fprintf(stderr,"\n"); 
-            NextPtr=NextPtr->Next;
-}
-          else {
-fprintf(stderr," Swapping\n");
-HolderPtr=do_swap(&CurrPtr,&NextPtr,&FirstPtr,&swap);
-}
-/*display_list(FirstPtr);*/
-        }
-      }
-    } while (!done && !swap);
-    if (!swap) CurrPtr=CurrPtr->Next;
-  }
-  return FirstPtr;
+	curr=first;
+	while (curr!=NULL) {
+
+		/* if (swap) curr=first; */
+
+		next=curr->next;
+		done=FALSE;
+		swap=FALSE;
+		do {
+			if (next==NULL) done=TRUE;
+			else {
+				if (code=='r') { /* sort by refnum */
+					fprintf(stderr,"%s and %s",
+						curr->refname->data,
+						next->refname->data);
+					if (strcmp(curr->refname->data,
+						next->refname->data)<=0){
+							fprintf(stderr,"\n"); 
+							next=next->next;
+					} else {
+						fprintf(stderr," Swapping\n");
+						do_swap(&curr,&next,&first);
+						swap = TRUE;
+					}
+				/*display_list(first);*/
+				}
+			}
+		} while (!done && !swap);
+		if (!swap) curr=curr->next;
+	}
+	return first;
 }
 
-void write_file (FILE *outptr, refs *firstref, char *filename)
+void 
+write_file (FILE *outptr, REFS *firstref, char *filename)
 {
-  FILE *inptr;
-  newstring line;
-  refs *CurrPtr;
-  char *p,ch;
+	FILE *inptr;
+	newstring line;
+	REFS *CurrPtr;
+	char *p,*q,ch;
 
-  newstr_init(&line);
-  CurrPtr=firstref;
-  while (CurrPtr!=NULL) {
-    inptr=fopen(filename,"r");
-    if (inptr==NULL) {
-      fprintf(stderr,"Error opening %s.\n",filename);
-      exit(1);
-    }
-    if (fseek(inptr,CurrPtr->startpos,SEEK_SET)!=0) {
-      fprintf(stderr,"Error positining in %s.\n",filename);
-      exit(1);
-    }
-    while (!feof(inptr) && ftell(inptr)<=CurrPtr->endpos) {
-      ch='\0';
-      while (!feof(inptr) && ftell(inptr)<=CurrPtr->endpos && ch!='\n') {
-        ch = fgetc(inptr);
-        newstr_addchar(&line,ch);
-      }
-      p=line.data;
-      while (whitespace(*p)) p++;
-      if (*p!='@') fprintf(outptr,"%s",line.data);
-      else {
-        p=strchr(p,'(');
-        if (p==NULL) fprintf(outptr,"%s",line.data);
-        else {
-          p=line.data;
-          while (*p && *(p-1)!='(') fprintf(outptr,"%c",*p++);
-          fprintf(outptr,"%s",CurrPtr->refname->data);
-          p=strchr(p,',');
-          while (*p) fprintf(outptr,"%c",*p++);
-        }
-      }
-      newstr_clear(&line);
-    }
-    fclose(inptr);
-    CurrPtr=CurrPtr->Next;
-  }
+	inptr = fopen( filename, "rb" );
+	if ( inptr==NULL ) {
+		fprintf(stderr,"Error opening %s.\n",filename);
+		return;
+	}
+
+	newstr_init(&line);
+
+
+	for ( CurrPtr=firstref; CurrPtr!=NULL; CurrPtr=CurrPtr->next ) {
+
+		if (fseek(inptr,CurrPtr->startpos,SEEK_SET)!=0) {
+			fprintf(stderr,"Error positining in %s.\n",filename);
+			exit(1);
+		}
+
+		while (!feof(inptr) && ftell(inptr)<=CurrPtr->endpos) {
+			ch='\0';
+			while (!feof(inptr) && ftell(inptr)<=CurrPtr->endpos && ch!='\n' && ch!='\r') {
+				ch = fgetc(inptr);
+				if ( ch!='\n' && ch!='\r' ) newstr_addchar(&line,ch);
+			}
+			p=line.data;
+			while (whitespace(*p)) p++;
+			if (*p=='\0') continue;
+			if (*p!='@') fprintf(outptr,"%s\n",line.data);
+			else {
+				q=strchr(p,'(');
+				if (q==NULL) q=strchr(p,'{');
+				if (q==NULL) fprintf(outptr,"%s",line.data);
+				else {
+					p=line.data;
+					fprintf(outptr,"\n");
+					while (*p && !(*(p-1)=='(' || *(p-1)=='{')) fprintf(outptr,"%c",*p++);
+					fprintf(outptr,"%s",CurrPtr->refname->data);
+					p=strchr(p,',');
+					while (*p) fprintf(outptr,"%c",*p++);
+					fprintf(outptr,"\n");
+				}
+			}
+			line.data[0]='\0';
+		}
+	}
+	newstr_free( &line );
+	fclose(inptr);
 } 
 
 int main(int argc,char *argv[])
 {
-  refs *firstref=NULL; 
+  REFS *firstref=NULL; 
   FILE *inptr,*outptr;
   int i,remove=0;
   char code='\0';
@@ -366,11 +383,22 @@ int main(int argc,char *argv[])
   else {
     firstref=scanfor_refs(inptr);
     fclose(inptr);
+/****
+fprintf(stderr,"about to count references\n"); fflush(stderr);
+{
+	REFS *tmp = firstref;
+	int i=0;
+	while ( tmp ) { i++; tmp=tmp->next; }
+	fprintf(stderr,"%d references\n",i);
+}
+*****/
+/* fprintf(stderr,"about to find_duplicates\n"); fflush(stderr); */
     find_duplicates(firstref);
+/* fprintf(stderr,"did find_duplicates\n"); fflush(stderr); */
    }
 
   /* If an output file is specified, send the data! */
-  if (argc==3) {
+  if (argc>2) {
     if ((outptr = fopen (argv[2],"w"))==NULL) {
       fprintf(stderr,"Cannot open %s.\n\n",argv[2]);
       exit(1);

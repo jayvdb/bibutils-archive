@@ -19,10 +19,8 @@ Author:  Chris Putnam (cdputnam@scripps.edu, http://www.scripps.edu/~cdputnam/)
 #define TRUE (1==1)
 #define FALSE (!TRUE)
 
-void notify (char *message)
-{
-  fprintf(stderr,"%s",message);
-}
+char progname[] = "bib2xml";
+char version[] = "1.1 02/10/03";
 
 void strip_spaces(char *str)
  {
@@ -130,7 +128,7 @@ int extract_name1(char **buffer, newstring **s)
  
        }
    }
-   newstr_clear(prename);
+   newstr_free(prename);
    free(prename);
    *s = postname;
    *buffer = p;
@@ -183,7 +181,7 @@ int extract_name2(char **buffer, newstring **s)
        }
        if (*p=='|') p++;
    }
-   newstr_clear(prename);
+   newstr_free(prename);
    free(prename);
    *s = postname;
    *buffer = p;
@@ -223,20 +221,17 @@ newstring* extract_field (char *buffer)
    return s;
 }
 
-/*#define NUMFIELDS (13)*/
-
-void process_article (FILE *outptr, char *buffer)
+void 
+process_article (FILE *outptr, char *buffer)
 {
-	char *field[]={"AUTHOR", "YEAR",   "TITLE",    "JOURNAL",
+	char *field[]={"AUTHOR", "DATE**",   "TITLE",    "JOURNAL",
 		"VOLUME", "PAGES",  "EDITOR",   "PUBLISHER",
 		"ADDRESS","CHAPTER","BOOKTITLE","EDITOR", "ABSTRACT"
 		};
-	int NUMFIELDS;
+	int numfields = sizeof(field)/sizeof(char*);
 	int i;
 	char *p;
 	newstring *s;
-
-	NUMFIELDS = sizeof(field)/sizeof(char*);
 
 	fprintf(outptr,"<REF>\n");
 
@@ -258,7 +253,41 @@ void process_article (FILE *outptr, char *buffer)
 		fprintf(outptr,"  <TYPE>ARTICLE</TYPE>\n");
 	}
 
-	for (i=0; i<NUMFIELDS; ++i) {
+	for (i=0; i<numfields; ++i) {
+		if ( i==1 ) {  /* date needs special processing */
+			p=strsearch(buffer,"YEAR");
+			if (!p) p=strsearch(buffer,"MONTH");
+			if (!p) p=strsearch(buffer,"DAY");
+			if (p) {
+				fprintf(outptr,"  <DATE>");
+				p = strsearch(buffer,"YEAR");
+				if (p) {
+					s = extract_field(p);
+					if (s->data!=NULL && s->data[0]!='\0')
+						fprintf(outptr,
+							"<YEAR>%s</YEAR>",
+							s->data);
+				}
+				p = strsearch(buffer,"MONTH");
+				if (p) {
+					s = extract_field(p);
+					if (s->data!=NULL && s->data[0]!='\0')
+						fprintf(outptr,
+							"<MONTH>%s</MONTH>",
+							s->data);
+				}
+				p = strsearch(buffer,"DAY");
+				if (p) {
+					s = extract_field(p);
+					if (s->data!=NULL && s->data[0]!='\0')
+						fprintf(outptr,
+							"<DAY>%s</DAY>",
+							s->data);
+				}
+				fprintf(outptr,"</DATE>\n");
+
+			}
+		} else 
 		if ( (p=strsearch(buffer,field[i])) != NULL ) {
 
 			s = extract_field(p);
@@ -290,8 +319,8 @@ void process_article (FILE *outptr, char *buffer)
 				       "<START>%s</START>",sp->data);
 				    if (ep->data!=NULL) fprintf(outptr,
 				       "<END>%s</END>",ep->data);
-				    newstr_clear(sp);
-				    newstr_clear(ep);
+				    newstr_free(sp);
+				    newstr_free(ep);
 				    free(sp);
 				    free(ep);
 				    fprintf(outptr,"</PAGES>\n");
@@ -301,7 +330,7 @@ void process_article (FILE *outptr, char *buffer)
 				}
        			}
 
-         newstr_clear(s);
+         newstr_free(s);
 
          free(s);
       }
@@ -313,7 +342,7 @@ void process_article (FILE *outptr, char *buffer)
    if ( (p=strsearch(buffer,"@")) != NULL ) {
      s = extract_refnum(p);
      if (s->data!=NULL) fprintf(outptr,"  <REFNUM>%s</REFNUM>\n",s->data);
-     newstr_clear(s);
+     newstr_free(s);
      free(s); /* Calling function must free s as well */
    }
 
@@ -356,7 +385,7 @@ long read_refs(FILE *inptr, FILE *outptr)
 
       if (processref) {
           process_article(outptr,buffer.data);
-          newstr_clear(&buffer);
+          newstr_free(&buffer);
           processref = FALSE;
           numrefs++;
       }
@@ -370,20 +399,61 @@ long read_refs(FILE *inptr, FILE *outptr)
   fprintf(outptr,"</REFERENCES>\n");
   fprintf(outptr,"</XML>\n");
 
-  newstr_clear (&buffer);
+  newstr_free (&buffer);
   return numrefs;
 }
 
+void
+help( void )
+{
+	extern char bibutils_version[];
+	fprintf(stderr,"\n%s version %s, ",progname,version);
+	fprintf(stderr,"bibutils suite version %s\n",bibutils_version);
+	fprintf(stderr,"Converts a Bibtex reference file into XML\n\n");
+
+	fprintf(stderr,"usage: %s bibtex_file > xml_file\n\n",progname);
+        fprintf(stderr,"  bibtex_file can be replaced with file list or omitted to use as a filter\n\n");
+
+	fprintf(stderr,"  -h, --help     display this help\n");
+	fprintf(stderr,"  -v, --version  display version\n\n");
+
+	fprintf(stderr,"http://www.scripps.edu/~cdputnam/bibutils.html for more details\n\n");
+	exit( EXIT_SUCCESS );
+}
+
+void
+tellversion( void )
+{
+	extern char bibutils_version[];
+	fprintf(stderr,"%s version %s, ",progname,version);
+	fprintf(stderr,"bibutils suite version %s\n",bibutils_version);
+	exit( EXIT_SUCCESS );
+}
+
+void
+process_args( int *argc, char *argv[] )
+{
+	int i;
+	for ( i=0; i<*argc; ++i ) {
+		if ( strcmp(argv[i],"-h")==0 || strcmp(argv[i],"--help")==0 ) {
+			help();
+			/* help terminates or we'd remove from argv */
+		}
+		if ( strcmp(argv[i],"-v")==0 || strcmp(argv[i],"--version")==0){
+			tellversion();
+			/* tellversion terminates or we'd remove from argv*/
+		}
+	}
+}
 
 int 
 main(int argc, char *argv[])
 {
-	FILE *outptr,*inptr;
+	FILE *outptr=stdout,*inptr=stdin;
 	long numrefs;
 	int i;
 
-	inptr = stdin;
-	outptr = stdout;
+	process_args( &argc, argv );
 
 	if (argc==1) {
 		numrefs = read_refs(inptr,outptr);

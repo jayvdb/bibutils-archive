@@ -7,9 +7,13 @@ xml.h
 #define XML_H
 #include "newstr.h"
 
-char *find_xmlstartdata(char *buffer, char *tag);
-char *find_xmlenddata(char *buffer, char *tag);
-char *extract_xmldata(char *buffer, char *tag, newstring **s_ptr);
+#define TRUE (1)
+#define FALSE (0)
+
+extern char *xml_findstartdata(char *buffer, char *tag);
+extern char *xml_findenddata(char *buffer, char *tag);
+extern char *xml_extractdata(char *buffer, char *tag, newstring *s);
+extern long  xml_readrefs(FILE *inptr, FILE *outptr);
 
 #endif
 

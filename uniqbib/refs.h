@@ -10,15 +10,15 @@
 #include "newstr.h"
 
 typedef struct refs { 
-  newstring* refname; 
-  newstring* source;
+  newstring *refname; 
+  newstring *source;
   long startpos; 
   long endpos; 
-  struct refs *Next; 
-} refs;
+  struct refs *next; 
+} REFS;
 
-refs *refs_new(void);
-void refs_dispose(refs *CurrPtr);
+REFS *refs_new     ( void );
+void  refs_dispose ( REFS *curr );
 
 #endif
 

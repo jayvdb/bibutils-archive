@@ -1,9 +1,10 @@
 #CC = cc -Wall
 INCLUDEDIR = -I../include
-OBJS = newstr.o xml.o strsearch.o
+OBJS = newstr.o xml.o strsearch.o compiledate.o
 
 libnewstr.a: $(OBJS)
 	ar -cr libnewstr.a $(OBJS)
+	$(RANLIB) libnewstr.a
 
 newstr.o : newstr.h newstr.c
 	$(CC) $(INCLUDEDIR) -c -o newstr.o newstr.c
@@ -13,6 +14,9 @@ xml.o : xml.h xml.c
 
 strsearch.o : strsearch.h strsearch.c
 	$(CC) $(INCLUDEDIR) -c -o strsearch.o strsearch.c
+
+compiledate.o : compiledate.c
+	$(CC) $(INCLUDEDIR) -c -o compiledate.o compiledate.c
 
 clean: 
 	/bin/rm -f *.o core
