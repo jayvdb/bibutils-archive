@@ -10,12 +10,17 @@
 #include <ctype.h>
 #include <string.h>
 #include <malloc.h>
+#include "newstr.h"
 
 #define TRUE (1==1)
 #define FALSE (!TRUE)
 
- void strip_spaces(str)
-   char *str;
+void notify (char *message)
+{
+  fprintf(stderr,"%s",message);
+}
+
+void strip_spaces(char *str)
  {
    char *p,*q;
    p=str;
@@ -26,15 +31,19 @@
    }
  }
 
+int iswhitespace (char ch)
+{
+  if (ch==' ' || ch=='\t') return TRUE;
+  else return FALSE;
+}
+
 /*
  * Search is a case-independent version of strstr()
  * it returns NULL on not finding target in buffer,
  * otherwise it returns the pointer to the position
  * in buffer.
  */
-char *search (buffer,target)
-  char* buffer;
-  char* target;
+char *search (char *buffer, char *target)
 {
   char *pbuf,*ptar,*returnptr=NULL;
   int found=FALSE;
@@ -64,61 +73,22 @@ char *search (buffer,target)
   return returnptr;
 }
 
-char *extract_quotes(str)
-   char *str;
+void extract_quotes(char *buf,newstring *inquotes)
 {
-   char *inquotes;
-   char *newptr;
-   char *p;
    int quotes;
-   long counter;
-   long arraysize=256;
-
-   /* Allocate a 256 byte buffer for the string to be stored in the
-    * inquotes buffer.  Keep track of how big the string is getting.
-    */
-
-   inquotes = (char *) malloc (arraysize * sizeof(char));
-   if (inquotes==NULL) {
-     fprintf(stderr,"Cannot allocate memory in extract_quotes.\n");
-     exit(1);
-   }
-
-   /* Copy everything within the quotes in str into the inquotes array.
-    * Keep track of how big the information's getting.  We'll reallocate
-    * memory as needed.
-    */
-   
+fprintf(stderr,"begin extract_quotes\n");
+   newstr_init(inquotes);
    quotes=0;
-   counter=0;
-   p=str;
-   while (quotes<2 && *p)
+   while (quotes<2 && *buf)
      {
-     if (*p=='\"' && *(p-1)!='\\') quotes++;
-     else if (quotes==1) 
-       {
-       inquotes[counter] = *p;
-       counter++;
-       if (counter==arraysize) 
-         {
-         newptr = (char *) realloc (inquotes, arraysize*2*sizeof(char));
-         if (newptr==NULL) 
-           {
-           fprintf(stderr,"Cannot reallocate memory in extract_name.\n");
-           exit(1);
-           }
-         inquotes=newptr;
-         arraysize*=2;
-         }
-       } 
-     p++;
+     if (*buf=='\"' && *(buf-1)!='\\') quotes++;
+     else if (quotes==1) newstr_addchar(inquotes,*buf);
+     buf++;
      } 
-   inquotes[counter]='\0';
-   return inquotes;
+fprintf(stderr,"end extract_quotes\n");
 }
 
-void sort_name(str)
-   char *str;
+void sort_name(char *str)
  {
    char *name, *newname, **piece, **newpiece, *q;
    int name_arraysize=256;
@@ -256,140 +226,88 @@ void sort_name(str)
    free (piece);
  }
 
- void extract_name(outptr,buffer,code)
-   FILE *outptr;
-   char *buffer,*code;
+ void extract_name(FILE *outptr,char *buffer,char *code)
  {
-   char *namefield;
-   char *name;
+   newstring namefield;
+   newstring name;
    char *newptr;
    char *p,*q,*end;
    int quotes;
    long counter;
    int arraysize=256;
 
-   namefield = extract_quotes(buffer);
+   extract_quotes(buffer,&namefield);
+   newstr_init(&name);
 
-  /*   Separate the individual elements of the namefield into
-   *   the name space.  Keep reallocating memory as required.
-   *
-   */
-
-   arraysize=256;
-   name = (char *) malloc ( arraysize * sizeof(char));
-   if (name==NULL) {
-     fprintf(stderr,"Cannot allocate memory in extract_name.\n");
-     exit(1);
-   }
-   p=namefield;
+   p=namefield.data;
    do 
      {
      counter=0;
      end=search(p," and ");
      while (p!=end && *p!=0) 
-       {
-       name[counter++]=*p++;
-       if (counter==arraysize) 
-         {
-         newptr = realloc (name, arraysize * 2 * sizeof(char));
-         if (newptr==NULL)
-           {
-           fprintf(stderr,"Cannot reallocate memory in extract_name.\n");
-           exit(1); 
-           }
-         name=newptr;
-         arraysize*=2;
-         }
-       }
-     name[counter]='\0';
-     sort_name(name);
-     fprintf(outptr,"%s  - %s\r",code,name);
+       newstr_addchar(&name,*p++);
+     sort_name(name.data);
+     fprintf(outptr,"%s  - %s\r",code,name.data);
      if (*p) p+=4;
      } 
    while (*p);
 
-   free (name);
-   free (namefield);
+   newstr_clear(&name);
+   newstr_clear(&namefield);
  }
 
- void extract_easy(outptr,buffer,code)
-   FILE *outptr;
-   char *buffer,*code;
+ void extract_easy(FILE *outptr,char *buffer,char *code)
  {
-   char *data;
-   data = extract_quotes(buffer);
-   fprintf(outptr,"%s  - %s\r",code,data);
-   free (data);
+   newstring data;
+   extract_quotes(buffer,&data);
+   fprintf(outptr,"%s  - %s\r",code,data.data);
+   newstr_clear (&data);
 }
 
- void extract_num(outptr,buffer,code)
-   FILE *outptr;
-   char *buffer,*code;
- {
-   char *number;
+void extract_num(FILE *outptr,char *buffer,char *code)
+{
+   newstring number;
    char *newptr;
    char *p;
    int i,quotes;
-   long counter=0;
-   long arraysize=256;
    
-   /*  Allocate a block of memory to store the numbers in.
-    */
- 
-   number = (char *) malloc ( arraysize * sizeof(char));
-   if (number==NULL) {
-     fprintf(stderr,"Cannot allocate memory in extract_num.\n");
-     exit(1);
-   }
+
+fprintf(stderr,"Started extract_num\n");
+   newstr_init(&number);
 
    /* Now put everything after the '=', but before the ',' into
     * our string.
     */
-
+fprintf(stderr,"Got the string start: %s\n",buffer);
    p=buffer;
-   counter=0;
    quotes=0;
    while (quotes<2 && *p) 
      {
      if (*p=='=' || *p==',') quotes++;
-     else if (quotes==1) 
-       {
-       number[counter++]=*p;
-       if (counter==arraysize) 
-         {
-         newptr = (char *) realloc (number, sizeof(char)*2*arraysize);
-         if (newptr==NULL)
-           {
-        fprintf(stderr,"Error.  Cannot reallocate memory in extract_number.\n");
-           exit(1);
-           }
-         number=newptr;
-         arraysize*=2;
-         }
-       }
-     p++;
+     else if (quotes==1) newstr_addchar(&number,*p);
+     p++; 
      } 
-   number[counter]='\0';
-   
-   for (i=0; i<strlen(number); i++)
-     if ((number[i]<'0' || number[i]>'9') &&
-     (toupper(number[i])<'A' || toupper(number[i])>'Z')) number[i]=' ';
-   strip_spaces(number);
-   fprintf(outptr,"%s  - %s\r",code,number);
-   free(number);
- }
 
- void extract_pages(outptr,ptr)
-   FILE *outptr;
-   char *ptr;
+fprintf(stderr,"extracted bit between = and ,\n");
+   
+   for (i=0; i<strlen(number.data); i++)
+     if ((number.data[i]<'0' || number.data[i]>'9') &&
+     (toupper(number.data[i])<'A' || toupper(number.data[i])>'Z')) 
+         number.data[i]=' ';
+   strip_spaces(number.data);
+   fprintf(outptr,"%s  - %s\r",code,number.data);
+   newstr_clear(&number); 
+}
+
+ void extract_pages(FILE *outptr,char *ptr)
  {
    char num1[20],num2[20],*p,*q;
-   char *pagesfield;
+   newstring pagesfield;
 
-   pagesfield=extract_quotes(ptr);
-   if (pagesfield!=NULL) {
+   extract_quotes(ptr,&pagesfield);
+   if (pagesfield.data!=NULL) {
      q=num1;
-     p=strpbrk(pagesfield,"0123456789");
+     p=strpbrk(pagesfield.data,"0123456789");
      if (p==NULL) return; 
      while (*p>='0' && *p<='9') *q++=*p++;
      *q=0;
@@ -408,48 +326,18 @@ void sort_name(str)
       fprintf(outptr,"EP - %s\r",num2);
     }
   }
+  newstr_clear(&pagesfield);
 }
 
-void refnum2keyword(outptr,ptr)
-  FILE *outptr;
-  char *ptr;
+void refnum2keyword(FILE *outptr, char *buf)
 {
-  char *p,*keyword,*newptr; 
-  int counter;
-  int arraysize=256;
+  newstring keyword;
 
-  /*  First dynamically allocate the memory for the keyword[]
-   *  array.  We'll probably never have to worry about it, but it
-   *  will increase as needed.
-   */
-
-  keyword = (char *) malloc ( arraysize * sizeof(char));
-  if (keyword==NULL) {
-    fprintf(stderr,"Error.  Cannot allocate memory in refnum2keyword.\n");
-    exit(1);
-  }
-
-
-  p=ptr+1;
-  counter=0;
-  while (*p && *p!=',')
-    {
-    keyword[counter++]=*p++;
-    if (counter==arraysize)
-      {
-      newptr = (char *) realloc (keyword, arraysize * sizeof(char) * 2 );
-      if (newptr==NULL)
-        {
-        fprintf(stderr,"Error.  Cannot reallocate memory in refnum2keyword.\n");
-        exit(1);
-        }
-      keyword=newptr;
-      arraysize*=2;
-      } 
-    }
-  keyword[counter]='\0';
-  fprintf(outptr,"KW  - %s\r",keyword);
-  free(keyword);
+  newstr_init(&keyword);
+  buf++;
+  while (*buf && *buf!=',') newstr_addchar(&keyword,*buf++);
+  fprintf(outptr,"KW  - %s\r",keyword.data);
+  newstr_clear(&keyword);
 }
 
     /*
@@ -462,51 +350,10 @@ void refnum2keyword(outptr,ptr)
      *
      */
 
-
- void read_ref (inptr,outptr,pos,num_lines)
-   FILE *inptr,*outptr;
-   long pos;
-   int num_lines;
- {
-   char *buffer,*p,*q,*errorptr,
-        *begin,*end,line[81];
-   int mod,found,i,ok,error,j;
-
-   buffer=(char *)malloc(80*num_lines*sizeof(char));
-   if (buffer==NULL) {
-     fprintf(stderr,"Cannot allocate memory for reference!\n\n");
-     fclose(inptr);
-     fclose(outptr);
-     exit(-1);
-   }
-   buffer[0]=0;
-
-	error=fseek(inptr,pos,0);
-	if (error) {
-	  fprintf(stderr,"Error!  Cannot set pointer in data file.\n");
-          fclose(outptr);
-	  fclose(inptr);
-	  exit (-1);
-	}
-
-   for (i=0; i<num_lines; i++) {
-     errorptr=fgets(line,80,inptr);
-     if (errorptr==NULL && !feof(inptr)) {
-       fprintf(stderr,"Error!  Cannot read from data file in read_ref.\n");
-       fclose(outptr);
-       fclose(inptr);
-       exit(-1);
-     }
-     ok=0;
-     for (j=0; j<80; j++) {
-       if (line[j]=='%') line[j]=0;
-       if (line[j]=='\r' || line[j]=='\n') line[j]=' ';
-       if (line[j]==0) ok=1;
-     }
-     if (!ok) line[80]=0;
-     strcat(buffer,line);
-   }
-
+void repl_brackets (char *buffer)
+{
+   char *p,*q,*begin,*end;
+   int found=FALSE,mod;
     /*
      * Strip out unnecessary TeX brackets!
      */
@@ -537,7 +384,11 @@ void refnum2keyword(outptr,ptr)
 	p=end+1;
       }
     } while (begin!=NULL && end!=NULL & end > begin);
+}
 
+void repl_ampers (char *buffer)
+{
+  char *p,*begin;
     /*
      * Replace \& codes with &
      */
@@ -551,16 +402,35 @@ void refnum2keyword(outptr,ptr)
       }
       p=begin+1;
     }
+}
 
-     /*
+void process_ref (FILE *outptr, char *buffer)
+{
+   char *p;
+
+fprintf(stderr,"Recieved this buffer: %s\n ",buffer);
+/*
+fprintf(stderr,"Started process_ref\n");
+   repl_brackets(buffer);
+fprintf(stderr,"Replaced brackets\n");
+   repl_ampers(buffer);
+fprintf(stderr,"Replaced ampers\n");
+fprintf(stderr,"Ended Replacements\n");
+*/     /*
       * Determine the type of reference.
       */
+fprintf(stderr,"About to search \n");
+if (search(buffer,"ARTICLE")) fprintf(stderr,"found ARTICLE \n");
+else fprintf(stderr,"couldn't find ARTICLE\n");
 
    if (search(buffer,"ARTICLE")!=NULL){
      fprintf(outptr,"\nTY  - JOUR\n");
      if ((p=search(buffer,"TITLE="))!=NULL) extract_easy(outptr,p,"TI");
+fprintf(stderr,"done with Title\n");
      if ((p=search(buffer,"JOURNAL="))!=NULL) extract_easy(outptr,p,"JO");
+fprintf(stderr,"done with Journal\n");
      if ((p=search(buffer,"VOLUME="))!=NULL) extract_num(outptr,p,"VL");
+fprintf(stderr,"done with ARTICLE\n");
    }
    else if (search(buffer,"INBOOK")!=NULL){
      fprintf(outptr,"\nTY  - CHAP\n");
@@ -591,92 +461,47 @@ void refnum2keyword(outptr,ptr)
     /*
      * End it.
      */
-   free(buffer); 
    fprintf(outptr,"ER  - \n");
    fflush(outptr);
+fprintf(stderr,"Ended process_ref\n");
  }
 
-     /*
-      * scanfor_refs()
-      *
-      * This function scans for a Bibtex reference
-      * starting with the '@' character as the first
-      * non-space character in a line.
-      *
-      */
+void read_refs(FILE *inptr, FILE *outptr)
+{
+  newstring buffer;
+  char line[81],*errorptr,*ptr;
+  int haveref = FALSE;
 
- void scanfor_refs(inptr,outptr)
-   FILE *inptr,*outptr;
- {
-    long pos;
-    char line[81],*ptr,*errorptr;
-    int num_lines,quotations,done,error;
-    while (!feof(inptr)) {
-
-	/*
-	 * Put a file pointer to the beginning of the article.
-	 */
-      pos=ftell(inptr);
-
-	/*
-	 * Get one line of the file and put ptr to the first non-space
-	 * character.
-	 */
-
-      errorptr=fgets (line,80,inptr);
-      if (errorptr==NULL) {
-        if (feof(inptr)) exit(0);
-        else {
-        fprintf(stderr,"Error.  Cannot read input file in scan_for_refs.\n");
-        fclose(outptr);
-        fclose(inptr);
-        exit(-1);
-        }
+fprintf(stderr,"Started read_refs\n");
+  newstr_init(&buffer);
+  while (!feof(inptr)) {
+    errorptr = fgets (line, sizeof(line), inptr);
+fprintf(stderr,"Line = %s\n",line);
+if (buffer.data!=NULL) fprintf(stderr,"Buffer = %s\n",buffer.data);
+else
+fprintf(stderr,"buffer.data = NULL \n");
+    if (errorptr == NULL && haveref) process_ref (outptr, buffer.data);
+    if (errorptr == NULL) {
+      newstr_clear(&buffer);
+      return;
+    }
+    ptr = line;
+    while (iswhitespace(*ptr)) ptr++;
+    if (*ptr=='@') {
+      if (haveref) {
+        process_ref(outptr,buffer.data);
+        newstr_strcpy(&buffer,ptr);
       }
-      ptr=line;
-      while (*ptr==' ') ptr++;
-
-	/*
-	 * If the character is a '@', take it to be the
-	 * beginning of a new reference.  Read the number of
-	 * lines between the '@' and the terminal ')'.  Make
-	 * sure that the program ignores all ')' within
-	 * quotation marks.  Send the output to read_ref() for
-	 * conversion.
-	 */
-
-      if (*ptr=='@') {
-	error=fseek(inptr,pos,0);
-	if (error) {
-	  fclose(outptr);
-	  fclose(inptr);
-	  fprintf(stderr,"Error!  Cannot set pointer in data file.\n");
-	  exit (-1);
-	}
-	done=0;
-	quotations=0;
-	num_lines=0;
-	while (!feof(inptr) && !done) {
-	  errorptr=fgets(line,80,inptr);
-	  if (errorptr==NULL) {
-            fprintf(stderr,"Error.  Cannot read from input file in scan_for_refs #2.\n");
-            fprintf(stderr,(feof(inptr))?"At end of file!":"not at end");
-            fclose(outptr);
-            fclose(inptr);
-            exit(-1);
-          }
-          ptr=line;
-	  while (*ptr) {
-	    if (*ptr=='\"' && *(ptr-1)!='\\') quotations++;
-	    if (*ptr==')' && (quotations%2==0)) done=1;
-	    ptr++;
-	  }
-	  num_lines++;
-	}
-	read_ref(inptr,outptr,pos,num_lines);
+      else {
+        haveref = TRUE;
+        newstr_strcat(&buffer,ptr);   
       }
     }
- }
+    else if (haveref) newstr_strcat (&buffer,line);
+  }
+  newstr_clear(&buffer);
+}
+  
 
  int main(argc,argv)
    int argc;
@@ -685,11 +510,15 @@ void refnum2keyword(outptr,ptr)
    char infile[255],outfile[255];
    FILE *outptr,*inptr;
    if (argc!=3) {
-   fprintf(stderr,"bib2ris\nChristopher D. Putnam\nVersion 1.1  July 1996\n");
-
-   fprintf(stderr,"\n\nUsage:  bib2ris <bibtex file> <output file>\n");
-   fprintf(stderr,"\nbib2ris converts a bibtex-formatted reference file to an RIS formatted\nreference file for ease in document conversion.  The bibtex citation codes are\nsaved in the keyword (KW) field.  Note that conversion of names including a \nsuffix like Jr. or II may not be formatted correctly.");
-   fprintf(stderr,"\n\nNote that the RIS standard requires a \\r character between the lines,\nunlike the standard UNIX \n character.  Hence, simply displaying the file via\nmore won't make the file look good on the screen, but it should be ok.\n\n");
+     notify("bib2ris\nChristopher D. Putnam\nVersion 1.1  July 1996\n\n");
+     notify("Usage:  bib2ris <bibtex file> <output file>\n\n");
+     notify("bib2ris converts a bibtex-formatted reference file to an RIS formatted\n");
+     notify("reference file for ease in document conversion.  The bibtex citation codes are\n");
+     notify("saved in the keyword (KW) field.  Note that conversion of names including a\n");
+     notify("suffix like Jr. or II may not be formatted correctly.\n\n");
+     notify("Note that the RIS standard requires a \\r character between the lines,\n");
+     notify("unlike the standard UNIX \\n charactere  Hence, simply displaying the file via\n");
+     notify("more won't make the file look good on the screen, but it should be ok.\n\n");
    }
    if (argc<2) {
      fprintf(stderr,"Enter bibtex filename:  ");
@@ -710,8 +539,10 @@ void refnum2keyword(outptr,ptr)
      fprintf(stderr,"Cannot open %s.\n\n",outfile);
      exit (-1);
    }
+
    else {
-     scanfor_refs(inptr,outptr);
+printf("Opened in file and outfile.\n");
+     read_refs(inptr,outptr);
      fclose(inptr);
      fclose(outptr);
    }

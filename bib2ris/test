@@ -1,0 +1,5571 @@
+bib2ris
+Christopher D. Putnam
+Version 1.1  July 1996
+
+Usage:  bib2ris <bibtex file> <output file>
+
+bib2ris converts a bibtex-formatted reference file to an RIS formatted
+reference file for ease in document conversion.  The bibtex citation codes are
+saved in the keyword (KW) field.  Note that conversion of names including a
+suffix like Jr. or II may not be formatted correctly.
+
+Note that the RIS standard requires a \r character between the lines,
+unlike the standard UNIX \n charactere  Hence, simply displaying the file via
+more won't make the file look good on the screen, but it should be ok.
+
+Started read_refs
+Line = @ARTICLE(C001, 
+
+buffer.data = NULL 
+Line = AUTHOR="T. Kunkel",  
+
+Buffer = @ARTICLE(C001, 
+
+Line = JOURNAL="Proc. Natl. Acad. Sci. USA",
+
+Buffer = @ARTICLE(C001, 
+AUTHOR="T. Kunkel",  
+
+Line = TITLE="Rapid and efficient site-specific mutagenesis without
+
+Buffer = @ARTICLE(C001, 
+AUTHOR="T. Kunkel",  
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+
+Line = phenotypic selection",
+
+Buffer = @ARTICLE(C001, 
+AUTHOR="T. Kunkel",  
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+TITLE="Rapid and efficient site-specific mutagenesis without
+
+Line = VOLUME=82,
+
+Buffer = @ARTICLE(C001, 
+AUTHOR="T. Kunkel",  
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+TITLE="Rapid and efficient site-specific mutagenesis without
+phenotypic selection",
+
+Line = YEAR=1985,
+
+Buffer = @ARTICLE(C001, 
+AUTHOR="T. Kunkel",  
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+TITLE="Rapid and efficient site-specific mutagenesis without
+phenotypic selection",
+VOLUME=82,
+
+Line = PAGES="488--492")
+
+Buffer = @ARTICLE(C001, 
+AUTHOR="T. Kunkel",  
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+TITLE="Rapid and efficient site-specific mutagenesis without
+phenotypic selection",
+VOLUME=82,
+YEAR=1985,
+
+Line = 
+
+Buffer = @ARTICLE(C001, 
+AUTHOR="T. Kunkel",  
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+TITLE="Rapid and efficient site-specific mutagenesis without
+phenotypic selection",
+VOLUME=82,
+YEAR=1985,
+PAGES="488--492")
+
+Line = @ARTICLE(C002, 
+
+Buffer = @ARTICLE(C001, 
+AUTHOR="T. Kunkel",  
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+TITLE="Rapid and efficient site-specific mutagenesis without
+phenotypic selection",
+VOLUME=82,
+YEAR=1985,
+PAGES="488--492")
+
+
+Recieved this buffer: @ARTICLE(C001, 
+AUTHOR="T. Kunkel",  
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+TITLE="Rapid and efficient site-specific mutagenesis without
+phenotypic selection",
+VOLUME=82,
+YEAR=1985,
+PAGES="488--492")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=82,
+YEAR=1985,
+PAGES="488--492")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1985,
+PAGES="488--492")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="U. Varshney 
+
+Buffer = @ARTICLE(C002, 
+
+Line = and J. H. van de Sande",
+
+Buffer = @ARTICLE(C002, 
+AUTHOR="U. Varshney 
+
+Line = TITLE="Characterization of the ung1 mutation of {\it Escherichia coli}",
+
+Buffer = @ARTICLE(C002, 
+AUTHOR="U. Varshney 
+and J. H. van de Sande",
+
+Line = JOURNAL="Nucleic Acids Res.",
+
+Buffer = @ARTICLE(C002, 
+AUTHOR="U. Varshney 
+and J. H. van de Sande",
+TITLE="Characterization of the ung1 mutation of {\it Escherichia coli}",
+
+Line = VOLUME=17, 
+
+Buffer = @ARTICLE(C002, 
+AUTHOR="U. Varshney 
+and J. H. van de Sande",
+TITLE="Characterization of the ung1 mutation of {\it Escherichia coli}",
+JOURNAL="Nucleic Acids Res.",
+
+Line = YEAR=1989,
+
+Buffer = @ARTICLE(C002, 
+AUTHOR="U. Varshney 
+and J. H. van de Sande",
+TITLE="Characterization of the ung1 mutation of {\it Escherichia coli}",
+JOURNAL="Nucleic Acids Res.",
+VOLUME=17, 
+
+Line = PAGES="813")
+
+Buffer = @ARTICLE(C002, 
+AUTHOR="U. Varshney 
+and J. H. van de Sande",
+TITLE="Characterization of the ung1 mutation of {\it Escherichia coli}",
+JOURNAL="Nucleic Acids Res.",
+VOLUME=17, 
+YEAR=1989,
+
+Line = 
+
+Buffer = @ARTICLE(C002, 
+AUTHOR="U. Varshney 
+and J. H. van de Sande",
+TITLE="Characterization of the ung1 mutation of {\it Escherichia coli}",
+JOURNAL="Nucleic Acids Res.",
+VOLUME=17, 
+YEAR=1989,
+PAGES="813")
+
+Line = @ARTICLE(C003,
+
+Buffer = @ARTICLE(C002, 
+AUTHOR="U. Varshney 
+and J. H. van de Sande",
+TITLE="Characterization of the ung1 mutation of {\it Escherichia coli}",
+JOURNAL="Nucleic Acids Res.",
+VOLUME=17, 
+YEAR=1989,
+PAGES="813")
+
+
+Recieved this buffer: @ARTICLE(C002, 
+AUTHOR="U. Varshney 
+and J. H. van de Sande",
+TITLE="Characterization of the ung1 mutation of {\it Escherichia coli}",
+JOURNAL="Nucleic Acids Res.",
+VOLUME=17, 
+YEAR=1989,
+PAGES="813")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=17, 
+YEAR=1989,
+PAGES="813")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1989,
+PAGES="813")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="B. Kramer
+
+Buffer = @ARTICLE(C003,
+
+Line = and W. Kramer
+
+Buffer = @ARTICLE(C003,
+AUTHOR="B. Kramer
+
+Line = and H. J. Fritz",
+
+Buffer = @ARTICLE(C003,
+AUTHOR="B. Kramer
+and W. Kramer
+
+Line = TITLE="Different base/base mismatches are corrected with
+
+Buffer = @ARTICLE(C003,
+AUTHOR="B. Kramer
+and W. Kramer
+and H. J. Fritz",
+
+Line = different efficiencies by the methyl-directed {DNA} mismatch-repair
+
+Buffer = @ARTICLE(C003,
+AUTHOR="B. Kramer
+and W. Kramer
+and H. J. Fritz",
+TITLE="Different base/base mismatches are corrected with
+
+Line = system of {{\it E. coli}}",
+
+Buffer = @ARTICLE(C003,
+AUTHOR="B. Kramer
+and W. Kramer
+and H. J. Fritz",
+TITLE="Different base/base mismatches are corrected with
+different efficiencies by the methyl-directed {DNA} mismatch-repair
+
+Line = JOURNAL="Cell",
+
+Buffer = @ARTICLE(C003,
+AUTHOR="B. Kramer
+and W. Kramer
+and H. J. Fritz",
+TITLE="Different base/base mismatches are corrected with
+different efficiencies by the methyl-directed {DNA} mismatch-repair
+system of {{\it E. coli}}",
+
+Line = VOLUME=38,
+
+Buffer = @ARTICLE(C003,
+AUTHOR="B. Kramer
+and W. Kramer
+and H. J. Fritz",
+TITLE="Different base/base mismatches are corrected with
+different efficiencies by the methyl-directed {DNA} mismatch-repair
+system of {{\it E. coli}}",
+JOURNAL="Cell",
+
+Line = YEAR=1984,
+
+Buffer = @ARTICLE(C003,
+AUTHOR="B. Kramer
+and W. Kramer
+and H. J. Fritz",
+TITLE="Different base/base mismatches are corrected with
+different efficiencies by the methyl-directed {DNA} mismatch-repair
+system of {{\it E. coli}}",
+JOURNAL="Cell",
+VOLUME=38,
+
+Line = PAGES="879--887")
+
+Buffer = @ARTICLE(C003,
+AUTHOR="B. Kramer
+and W. Kramer
+and H. J. Fritz",
+TITLE="Different base/base mismatches are corrected with
+different efficiencies by the methyl-directed {DNA} mismatch-repair
+system of {{\it E. coli}}",
+JOURNAL="Cell",
+VOLUME=38,
+YEAR=1984,
+
+Line = 
+
+Buffer = @ARTICLE(C003,
+AUTHOR="B. Kramer
+and W. Kramer
+and H. J. Fritz",
+TITLE="Different base/base mismatches are corrected with
+different efficiencies by the methyl-directed {DNA} mismatch-repair
+system of {{\it E. coli}}",
+JOURNAL="Cell",
+VOLUME=38,
+YEAR=1984,
+PAGES="879--887")
+
+Line = @ARTICLE(chen89,
+
+Buffer = @ARTICLE(C003,
+AUTHOR="B. Kramer
+and W. Kramer
+and H. J. Fritz",
+TITLE="Different base/base mismatches are corrected with
+different efficiencies by the methyl-directed {DNA} mismatch-repair
+system of {{\it E. coli}}",
+JOURNAL="Cell",
+VOLUME=38,
+YEAR=1984,
+PAGES="879--887")
+
+
+Recieved this buffer: @ARTICLE(C003,
+AUTHOR="B. Kramer
+and W. Kramer
+and H. J. Fritz",
+TITLE="Different base/base mismatches are corrected with
+different efficiencies by the methyl-directed {DNA} mismatch-repair
+system of {{\it E. coli}}",
+JOURNAL="Cell",
+VOLUME=38,
+YEAR=1984,
+PAGES="879--887")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=38,
+YEAR=1984,
+PAGES="879--887")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1984,
+PAGES="879--887")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="Z. Chen
+
+Buffer = @ARTICLE(chen89,
+
+Line = and C. Stauffacher
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+
+Line = and Y. Li
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+
+Line = and T. Schmidt
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+
+Line = and W. Bomu
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+and T. Schmidt
+
+Line = and G. Kamer
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+and T. Schmidt
+and W. Bomu
+
+Line = and M. Shanks
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+and T. Schmidt
+and W. Bomu
+and G. Kamer
+
+Line = and G. Lomonossoff
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+and T. Schmidt
+and W. Bomu
+and G. Kamer
+and M. Shanks
+
+Line = and J. E. Johnson",
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+and T. Schmidt
+and W. Bomu
+and G. Kamer
+and M. Shanks
+and G. Lomonossoff
+
+Line = TITLE="Protein-{RNA} {I}nteractions in an {I}cosahedral {V}irus
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+and T. Schmidt
+and W. Bomu
+and G. Kamer
+and M. Shanks
+and G. Lomonossoff
+and J. E. Johnson",
+
+Line = at 3.0 {{\AA}} {R}esolution",
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+and T. Schmidt
+and W. Bomu
+and G. Kamer
+and M. Shanks
+and G. Lomonossoff
+and J. E. Johnson",
+TITLE="Protein-{RNA} {I}nteractions in an {I}cosahedral {V}irus
+
+Line = JOURNAL="Science",
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+and T. Schmidt
+and W. Bomu
+and G. Kamer
+and M. Shanks
+and G. Lomonossoff
+and J. E. Johnson",
+TITLE="Protein-{RNA} {I}nteractions in an {I}cosahedral {V}irus
+at 3.0 {{\AA}} {R}esolution",
+
+Line = VOLUME="245",
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+and T. Schmidt
+and W. Bomu
+and G. Kamer
+and M. Shanks
+and G. Lomonossoff
+and J. E. Johnson",
+TITLE="Protein-{RNA} {I}nteractions in an {I}cosahedral {V}irus
+at 3.0 {{\AA}} {R}esolution",
+JOURNAL="Science",
+
+Line = YEAR="1989",
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+and T. Schmidt
+and W. Bomu
+and G. Kamer
+and M. Shanks
+and G. Lomonossoff
+and J. E. Johnson",
+TITLE="Protein-{RNA} {I}nteractions in an {I}cosahedral {V}irus
+at 3.0 {{\AA}} {R}esolution",
+JOURNAL="Science",
+VOLUME="245",
+
+Line = PAGES="154--159")
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+and T. Schmidt
+and W. Bomu
+and G. Kamer
+and M. Shanks
+and G. Lomonossoff
+and J. E. Johnson",
+TITLE="Protein-{RNA} {I}nteractions in an {I}cosahedral {V}irus
+at 3.0 {{\AA}} {R}esolution",
+JOURNAL="Science",
+VOLUME="245",
+YEAR="1989",
+
+Line = 
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+and T. Schmidt
+and W. Bomu
+and G. Kamer
+and M. Shanks
+and G. Lomonossoff
+and J. E. Johnson",
+TITLE="Protein-{RNA} {I}nteractions in an {I}cosahedral {V}irus
+at 3.0 {{\AA}} {R}esolution",
+JOURNAL="Science",
+VOLUME="245",
+YEAR="1989",
+PAGES="154--159")
+
+Line = @ARTICLE(richardson78,
+
+Buffer = @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+and T. Schmidt
+and W. Bomu
+and G. Kamer
+and M. Shanks
+and G. Lomonossoff
+and J. E. Johnson",
+TITLE="Protein-{RNA} {I}nteractions in an {I}cosahedral {V}irus
+at 3.0 {{\AA}} {R}esolution",
+JOURNAL="Science",
+VOLUME="245",
+YEAR="1989",
+PAGES="154--159")
+
+
+Recieved this buffer: @ARTICLE(chen89,
+AUTHOR="Z. Chen
+and C. Stauffacher
+and Y. Li
+and T. Schmidt
+and W. Bomu
+and G. Kamer
+and M. Shanks
+and G. Lomonossoff
+and J. E. Johnson",
+TITLE="Protein-{RNA} {I}nteractions in an {I}cosahedral {V}irus
+at 3.0 {{\AA}} {R}esolution",
+JOURNAL="Science",
+VOLUME="245",
+YEAR="1989",
+PAGES="154--159")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME="245",
+YEAR="1989",
+PAGES="154--159")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR="1989",
+PAGES="154--159")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="J. S. Richardson
+
+Buffer = @ARTICLE(richardson78,
+
+Line = and E. D. Getzoff
+
+Buffer = @ARTICLE(richardson78,
+AUTHOR="J. S. Richardson
+
+Line = and D. C. Richardson",
+
+Buffer = @ARTICLE(richardson78,
+AUTHOR="J. S. Richardson
+and E. D. Getzoff
+
+Line = TITLE="The beta bulge: {A} common small unit of non-repetitive 
+
+Buffer = @ARTICLE(richardson78,
+AUTHOR="J. S. Richardson
+and E. D. Getzoff
+and D. C. Richardson",
+
+Line = protein structure",
+
+Buffer = @ARTICLE(richardson78,
+AUTHOR="J. S. Richardson
+and E. D. Getzoff
+and D. C. Richardson",
+TITLE="The beta bulge: {A} common small unit of non-repetitive 
+
+Line = JOURNAL="Proc. Natl. Acad. Sci. USA",
+
+Buffer = @ARTICLE(richardson78,
+AUTHOR="J. S. Richardson
+and E. D. Getzoff
+and D. C. Richardson",
+TITLE="The beta bulge: {A} common small unit of non-repetitive 
+protein structure",
+
+Line = VOLUME="75",
+
+Buffer = @ARTICLE(richardson78,
+AUTHOR="J. S. Richardson
+and E. D. Getzoff
+and D. C. Richardson",
+TITLE="The beta bulge: {A} common small unit of non-repetitive 
+protein structure",
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+
+Line = YEAR="1978",
+
+Buffer = @ARTICLE(richardson78,
+AUTHOR="J. S. Richardson
+and E. D. Getzoff
+and D. C. Richardson",
+TITLE="The beta bulge: {A} common small unit of non-repetitive 
+protein structure",
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME="75",
+
+Line = PAGES="2574--2578")
+
+Buffer = @ARTICLE(richardson78,
+AUTHOR="J. S. Richardson
+and E. D. Getzoff
+and D. C. Richardson",
+TITLE="The beta bulge: {A} common small unit of non-repetitive 
+protein structure",
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME="75",
+YEAR="1978",
+
+Line = 
+
+Buffer = @ARTICLE(richardson78,
+AUTHOR="J. S. Richardson
+and E. D. Getzoff
+and D. C. Richardson",
+TITLE="The beta bulge: {A} common small unit of non-repetitive 
+protein structure",
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME="75",
+YEAR="1978",
+PAGES="2574--2578")
+
+Line = @ARTICLE(C004,
+
+Buffer = @ARTICLE(richardson78,
+AUTHOR="J. S. Richardson
+and E. D. Getzoff
+and D. C. Richardson",
+TITLE="The beta bulge: {A} common small unit of non-repetitive 
+protein structure",
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME="75",
+YEAR="1978",
+PAGES="2574--2578")
+
+
+Recieved this buffer: @ARTICLE(richardson78,
+AUTHOR="J. S. Richardson
+and E. D. Getzoff
+and D. C. Richardson",
+TITLE="The beta bulge: {A} common small unit of non-repetitive 
+protein structure",
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME="75",
+YEAR="1978",
+PAGES="2574--2578")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME="75",
+YEAR="1978",
+PAGES="2574--2578")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR="1978",
+PAGES="2574--2578")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="R. Zell 
+
+Buffer = @ARTICLE(C004,
+
+Line = and H. J. Fritz",
+
+Buffer = @ARTICLE(C004,
+AUTHOR="R. Zell 
+
+Line = TITLE="{DNA} mismatch-repair in {E}scherichia coli
+
+Buffer = @ARTICLE(C004,
+AUTHOR="R. Zell 
+and H. J. Fritz",
+
+Line = counteracting the hydrolytic deamination of 5-methyl-cytosine residues",
+
+Buffer = @ARTICLE(C004,
+AUTHOR="R. Zell 
+and H. J. Fritz",
+TITLE="{DNA} mismatch-repair in {E}scherichia coli
+
+Line = JOURNAL="EMBO J.", 
+
+Buffer = @ARTICLE(C004,
+AUTHOR="R. Zell 
+and H. J. Fritz",
+TITLE="{DNA} mismatch-repair in {E}scherichia coli
+counteracting the hydrolytic deamination of 5-methyl-cytosine residues",
+
+Line = VOLUME=6, 
+
+Buffer = @ARTICLE(C004,
+AUTHOR="R. Zell 
+and H. J. Fritz",
+TITLE="{DNA} mismatch-repair in {E}scherichia coli
+counteracting the hydrolytic deamination of 5-methyl-cytosine residues",
+JOURNAL="EMBO J.", 
+
+Line = YEAR=1987, 
+
+Buffer = @ARTICLE(C004,
+AUTHOR="R. Zell 
+and H. J. Fritz",
+TITLE="{DNA} mismatch-repair in {E}scherichia coli
+counteracting the hydrolytic deamination of 5-methyl-cytosine residues",
+JOURNAL="EMBO J.", 
+VOLUME=6, 
+
+Line = PAGES="1809--1815") 
+
+Buffer = @ARTICLE(C004,
+AUTHOR="R. Zell 
+and H. J. Fritz",
+TITLE="{DNA} mismatch-repair in {E}scherichia coli
+counteracting the hydrolytic deamination of 5-methyl-cytosine residues",
+JOURNAL="EMBO J.", 
+VOLUME=6, 
+YEAR=1987, 
+
+Line = 
+
+Buffer = @ARTICLE(C004,
+AUTHOR="R. Zell 
+and H. J. Fritz",
+TITLE="{DNA} mismatch-repair in {E}scherichia coli
+counteracting the hydrolytic deamination of 5-methyl-cytosine residues",
+JOURNAL="EMBO J.", 
+VOLUME=6, 
+YEAR=1987, 
+PAGES="1809--1815") 
+
+Line = @ARTICLE(C005,
+
+Buffer = @ARTICLE(C004,
+AUTHOR="R. Zell 
+and H. J. Fritz",
+TITLE="{DNA} mismatch-repair in {E}scherichia coli
+counteracting the hydrolytic deamination of 5-methyl-cytosine residues",
+JOURNAL="EMBO J.", 
+VOLUME=6, 
+YEAR=1987, 
+PAGES="1809--1815") 
+
+
+Recieved this buffer: @ARTICLE(C004,
+AUTHOR="R. Zell 
+and H. J. Fritz",
+TITLE="{DNA} mismatch-repair in {E}scherichia coli
+counteracting the hydrolytic deamination of 5-methyl-cytosine residues",
+JOURNAL="EMBO J.", 
+VOLUME=6, 
+YEAR=1987, 
+PAGES="1809--1815") 
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=6, 
+YEAR=1987, 
+PAGES="1809--1815") 
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1987, 
+PAGES="1809--1815") 
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="L. C. Olsen 
+
+Buffer = @ARTICLE(C005,
+
+Line = and R. Aasland 
+
+Buffer = @ARTICLE(C005,
+AUTHOR="L. C. Olsen 
+
+Line = and H. E. Krokan 
+
+Buffer = @ARTICLE(C005,
+AUTHOR="L. C. Olsen 
+and R. Aasland 
+
+Line = and D. E. Helland",
+
+Buffer = @ARTICLE(C005,
+AUTHOR="L. C. Olsen 
+and R. Aasland 
+and H. E. Krokan 
+
+Line = TITLE="Molecular cloning of human uracil-{DNA} glycosylase",
+
+Buffer = @ARTICLE(C005,
+AUTHOR="L. C. Olsen 
+and R. Aasland 
+and H. E. Krokan 
+and D. E. Helland",
+
+Line = JOURNAL="EMBO J.",  
+
+Buffer = @ARTICLE(C005,
+AUTHOR="L. C. Olsen 
+and R. Aasland 
+and H. E. Krokan 
+and D. E. Helland",
+TITLE="Molecular cloning of human uracil-{DNA} glycosylase",
+
+Line = VOLUME=8,  
+
+Buffer = @ARTICLE(C005,
+AUTHOR="L. C. Olsen 
+and R. Aasland 
+and H. E. Krokan 
+and D. E. Helland",
+TITLE="Molecular cloning of human uracil-{DNA} glycosylase",
+JOURNAL="EMBO J.",  
+
+Line = YEAR=1989,  
+
+Buffer = @ARTICLE(C005,
+AUTHOR="L. C. Olsen 
+and R. Aasland 
+and H. E. Krokan 
+and D. E. Helland",
+TITLE="Molecular cloning of human uracil-{DNA} glycosylase",
+JOURNAL="EMBO J.",  
+VOLUME=8,  
+
+Line = PAGES="3121--3125")
+
+Buffer = @ARTICLE(C005,
+AUTHOR="L. C. Olsen 
+and R. Aasland 
+and H. E. Krokan 
+and D. E. Helland",
+TITLE="Molecular cloning of human uracil-{DNA} glycosylase",
+JOURNAL="EMBO J.",  
+VOLUME=8,  
+YEAR=1989,  
+
+Line = 
+
+Buffer = @ARTICLE(C005,
+AUTHOR="L. C. Olsen 
+and R. Aasland 
+and H. E. Krokan 
+and D. E. Helland",
+TITLE="Molecular cloning of human uracil-{DNA} glycosylase",
+JOURNAL="EMBO J.",  
+VOLUME=8,  
+YEAR=1989,  
+PAGES="3121--3125")
+
+Line = @ARTICLE(C006,
+
+Buffer = @ARTICLE(C005,
+AUTHOR="L. C. Olsen 
+and R. Aasland 
+and H. E. Krokan 
+and D. E. Helland",
+TITLE="Molecular cloning of human uracil-{DNA} glycosylase",
+JOURNAL="EMBO J.",  
+VOLUME=8,  
+YEAR=1989,  
+PAGES="3121--3125")
+
+
+Recieved this buffer: @ARTICLE(C005,
+AUTHOR="L. C. Olsen 
+and R. Aasland 
+and H. E. Krokan 
+and D. E. Helland",
+TITLE="Molecular cloning of human uracil-{DNA} glycosylase",
+JOURNAL="EMBO J.",  
+VOLUME=8,  
+YEAR=1989,  
+PAGES="3121--3125")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=8,  
+YEAR=1989,  
+PAGES="3121--3125")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1989,  
+PAGES="3121--3125")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR=" H. E. Krokan 
+
+Buffer = @ARTICLE(C006,
+
+Line = and A. Haugen 
+
+Buffer = @ARTICLE(C006,
+AUTHOR=" H. E. Krokan 
+
+Line = and B. Myrnes 
+
+Buffer = @ARTICLE(C006,
+AUTHOR=" H. E. Krokan 
+and A. Haugen 
+
+Line = and P. H. Guddal",
+
+Buffer = @ARTICLE(C006,
+AUTHOR=" H. E. Krokan 
+and A. Haugen 
+and B. Myrnes 
+
+Line = TITLE="Repair of premutagenic {DNA} lesions in human fetal tissues:
+
+Buffer = @ARTICLE(C006,
+AUTHOR=" H. E. Krokan 
+and A. Haugen 
+and B. Myrnes 
+and P. H. Guddal",
+
+Line = evidence for low levels of {O}6-methylguanine-{DNA} methyltransferase
+
+Buffer = @ARTICLE(C006,
+AUTHOR=" H. E. Krokan 
+and A. Haugen 
+and B. Myrnes 
+and P. H. Guddal",
+TITLE="Repair of premutagenic {DNA} lesions in human fetal tissues:
+
+Line = and uracil-{DNA} glycosylase activity in some tissues",
+
+Buffer = @ARTICLE(C006,
+AUTHOR=" H. E. Krokan 
+and A. Haugen 
+and B. Myrnes 
+and P. H. Guddal",
+TITLE="Repair of premutagenic {DNA} lesions in human fetal tissues:
+evidence for low levels of {O}6-methylguanine-{DNA} methyltransferase
+
+Line = JOURNAL="Carcinogenesis",  
+
+Buffer = @ARTICLE(C006,
+AUTHOR=" H. E. Krokan 
+and A. Haugen 
+and B. Myrnes 
+and P. H. Guddal",
+TITLE="Repair of premutagenic {DNA} lesions in human fetal tissues:
+evidence for low levels of {O}6-methylguanine-{DNA} methyltransferase
+and uracil-{DNA} glycosylase activity in some tissues",
+
+Line = VOLUME=4,  
+
+Buffer = @ARTICLE(C006,
+AUTHOR=" H. E. Krokan 
+and A. Haugen 
+and B. Myrnes 
+and P. H. Guddal",
+TITLE="Repair of premutagenic {DNA} lesions in human fetal tissues:
+evidence for low levels of {O}6-methylguanine-{DNA} methyltransferase
+and uracil-{DNA} glycosylase activity in some tissues",
+JOURNAL="Carcinogenesis",  
+
+Line = YEAR=1983,  
+
+Buffer = @ARTICLE(C006,
+AUTHOR=" H. E. Krokan 
+and A. Haugen 
+and B. Myrnes 
+and P. H. Guddal",
+TITLE="Repair of premutagenic {DNA} lesions in human fetal tissues:
+evidence for low levels of {O}6-methylguanine-{DNA} methyltransferase
+and uracil-{DNA} glycosylase activity in some tissues",
+JOURNAL="Carcinogenesis",  
+VOLUME=4,  
+
+Line = PAGES="1559--1564")
+
+Buffer = @ARTICLE(C006,
+AUTHOR=" H. E. Krokan 
+and A. Haugen 
+and B. Myrnes 
+and P. H. Guddal",
+TITLE="Repair of premutagenic {DNA} lesions in human fetal tissues:
+evidence for low levels of {O}6-methylguanine-{DNA} methyltransferase
+and uracil-{DNA} glycosylase activity in some tissues",
+JOURNAL="Carcinogenesis",  
+VOLUME=4,  
+YEAR=1983,  
+
+Line = 
+
+Buffer = @ARTICLE(C006,
+AUTHOR=" H. E. Krokan 
+and A. Haugen 
+and B. Myrnes 
+and P. H. Guddal",
+TITLE="Repair of premutagenic {DNA} lesions in human fetal tissues:
+evidence for low levels of {O}6-methylguanine-{DNA} methyltransferase
+and uracil-{DNA} glycosylase activity in some tissues",
+JOURNAL="Carcinogenesis",  
+VOLUME=4,  
+YEAR=1983,  
+PAGES="1559--1564")
+
+Line = @ARTICLE(C007,
+
+Buffer = @ARTICLE(C006,
+AUTHOR=" H. E. Krokan 
+and A. Haugen 
+and B. Myrnes 
+and P. H. Guddal",
+TITLE="Repair of premutagenic {DNA} lesions in human fetal tissues:
+evidence for low levels of {O}6-methylguanine-{DNA} methyltransferase
+and uracil-{DNA} glycosylase activity in some tissues",
+JOURNAL="Carcinogenesis",  
+VOLUME=4,  
+YEAR=1983,  
+PAGES="1559--1564")
+
+
+Recieved this buffer: @ARTICLE(C006,
+AUTHOR=" H. E. Krokan 
+and A. Haugen 
+and B. Myrnes 
+and P. H. Guddal",
+TITLE="Repair of premutagenic {DNA} lesions in human fetal tissues:
+evidence for low levels of {O}6-methylguanine-{DNA} methyltransferase
+and uracil-{DNA} glycosylase activity in some tissues",
+JOURNAL="Carcinogenesis",  
+VOLUME=4,  
+YEAR=1983,  
+PAGES="1559--1564")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=4,  
+YEAR=1983,  
+PAGES="1559--1564")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1983,  
+PAGES="1559--1564")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR=" G. Slupphaug 
+
+Buffer = @ARTICLE(C007,
+
+Line = and I. Eftedal 
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+
+Line = and B. Kavli 
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+
+Line = and S. Bharati 
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+
+Line = and N. M. Helle 
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+and S. Bharati 
+
+Line = and T. Haug 
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+and S. Bharati 
+and N. M. Helle 
+
+Line = and D. W. Levine 
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+and S. Bharati 
+and N. M. Helle 
+and T. Haug 
+
+Line = and H. E. Krokan",
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+and S. Bharati 
+and N. M. Helle 
+and T. Haug 
+and D. W. Levine 
+
+Line = title="Properties of a recombinant human uracil-{DNA} glycosylase
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+and S. Bharati 
+and N. M. Helle 
+and T. Haug 
+and D. W. Levine 
+and H. E. Krokan",
+
+Line = from the {{\it UNG}}-gene and evidence that the {{\it UNG}}-gene
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+and S. Bharati 
+and N. M. Helle 
+and T. Haug 
+and D. W. Levine 
+and H. E. Krokan",
+title="Properties of a recombinant human uracil-{DNA} glycosylase
+
+Line = encodes the major uracil-{DNA} glycosylase",
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+and S. Bharati 
+and N. M. Helle 
+and T. Haug 
+and D. W. Levine 
+and H. E. Krokan",
+title="Properties of a recombinant human uracil-{DNA} glycosylase
+from the {{\it UNG}}-gene and evidence that the {{\it UNG}}-gene
+
+Line = JOURNAL="Biochemistry",  
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+and S. Bharati 
+and N. M. Helle 
+and T. Haug 
+and D. W. Levine 
+and H. E. Krokan",
+title="Properties of a recombinant human uracil-{DNA} glycosylase
+from the {{\it UNG}}-gene and evidence that the {{\it UNG}}-gene
+encodes the major uracil-{DNA} glycosylase",
+
+Line = VOLUME="34",
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+and S. Bharati 
+and N. M. Helle 
+and T. Haug 
+and D. W. Levine 
+and H. E. Krokan",
+title="Properties of a recombinant human uracil-{DNA} glycosylase
+from the {{\it UNG}}-gene and evidence that the {{\it UNG}}-gene
+encodes the major uracil-{DNA} glycosylase",
+JOURNAL="Biochemistry",  
+
+Line = YEAR=1995,  
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+and S. Bharati 
+and N. M. Helle 
+and T. Haug 
+and D. W. Levine 
+and H. E. Krokan",
+title="Properties of a recombinant human uracil-{DNA} glycosylase
+from the {{\it UNG}}-gene and evidence that the {{\it UNG}}-gene
+encodes the major uracil-{DNA} glycosylase",
+JOURNAL="Biochemistry",  
+VOLUME="34",
+
+Line = PAGES="128--138")
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+and S. Bharati 
+and N. M. Helle 
+and T. Haug 
+and D. W. Levine 
+and H. E. Krokan",
+title="Properties of a recombinant human uracil-{DNA} glycosylase
+from the {{\it UNG}}-gene and evidence that the {{\it UNG}}-gene
+encodes the major uracil-{DNA} glycosylase",
+JOURNAL="Biochemistry",  
+VOLUME="34",
+YEAR=1995,  
+
+Line = 
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+and S. Bharati 
+and N. M. Helle 
+and T. Haug 
+and D. W. Levine 
+and H. E. Krokan",
+title="Properties of a recombinant human uracil-{DNA} glycosylase
+from the {{\it UNG}}-gene and evidence that the {{\it UNG}}-gene
+encodes the major uracil-{DNA} glycosylase",
+JOURNAL="Biochemistry",  
+VOLUME="34",
+YEAR=1995,  
+PAGES="128--138")
+
+Line = @ARTICLE(C008,
+
+Buffer = @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+and S. Bharati 
+and N. M. Helle 
+and T. Haug 
+and D. W. Levine 
+and H. E. Krokan",
+title="Properties of a recombinant human uracil-{DNA} glycosylase
+from the {{\it UNG}}-gene and evidence that the {{\it UNG}}-gene
+encodes the major uracil-{DNA} glycosylase",
+JOURNAL="Biochemistry",  
+VOLUME="34",
+YEAR=1995,  
+PAGES="128--138")
+
+
+Recieved this buffer: @ARTICLE(C007,
+AUTHOR=" G. Slupphaug 
+and I. Eftedal 
+and B. Kavli 
+and S. Bharati 
+and N. M. Helle 
+and T. Haug 
+and D. W. Levine 
+and H. E. Krokan",
+title="Properties of a recombinant human uracil-{DNA} glycosylase
+from the {{\it UNG}}-gene and evidence that the {{\it UNG}}-gene
+encodes the major uracil-{DNA} glycosylase",
+JOURNAL="Biochemistry",  
+VOLUME="34",
+YEAR=1995,  
+PAGES="128--138")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME="34",
+YEAR=1995,  
+PAGES="128--138")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1995,  
+PAGES="128--138")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR=" W. J. Kabsch",
+
+Buffer = @ARTICLE(C008,
+
+Line = TITLE="Automatic indexing of rotation diffraction patterns",
+
+Buffer = @ARTICLE(C008,
+AUTHOR=" W. J. Kabsch",
+
+Line = JOURNAL="J. Appl. Crystallogr.",  
+
+Buffer = @ARTICLE(C008,
+AUTHOR=" W. J. Kabsch",
+TITLE="Automatic indexing of rotation diffraction patterns",
+
+Line = VOLUME=21,  
+
+Buffer = @ARTICLE(C008,
+AUTHOR=" W. J. Kabsch",
+TITLE="Automatic indexing of rotation diffraction patterns",
+JOURNAL="J. Appl. Crystallogr.",  
+
+Line = YEAR=1988,  
+
+Buffer = @ARTICLE(C008,
+AUTHOR=" W. J. Kabsch",
+TITLE="Automatic indexing of rotation diffraction patterns",
+JOURNAL="J. Appl. Crystallogr.",  
+VOLUME=21,  
+
+Line = PAGES="67--71")
+
+Buffer = @ARTICLE(C008,
+AUTHOR=" W. J. Kabsch",
+TITLE="Automatic indexing of rotation diffraction patterns",
+JOURNAL="J. Appl. Crystallogr.",  
+VOLUME=21,  
+YEAR=1988,  
+
+Line = 
+
+Buffer = @ARTICLE(C008,
+AUTHOR=" W. J. Kabsch",
+TITLE="Automatic indexing of rotation diffraction patterns",
+JOURNAL="J. Appl. Crystallogr.",  
+VOLUME=21,  
+YEAR=1988,  
+PAGES="67--71")
+
+Line = @ARTICLE(C009, 
+
+Buffer = @ARTICLE(C008,
+AUTHOR=" W. J. Kabsch",
+TITLE="Automatic indexing of rotation diffraction patterns",
+JOURNAL="J. Appl. Crystallogr.",  
+VOLUME=21,  
+YEAR=1988,  
+PAGES="67--71")
+
+
+Recieved this buffer: @ARTICLE(C008,
+AUTHOR=" W. J. Kabsch",
+TITLE="Automatic indexing of rotation diffraction patterns",
+JOURNAL="J. Appl. Crystallogr.",  
+VOLUME=21,  
+YEAR=1988,  
+PAGES="67--71")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=21,  
+YEAR=1988,  
+PAGES="67--71")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1988,  
+PAGES="67--71")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR=" W. J. Kabsch", 
+
+Buffer = @ARTICLE(C009, 
+
+Line = TITLE="Evaluation of single crystal {X}-ray diffraction data
+
+Buffer = @ARTICLE(C009, 
+AUTHOR=" W. J. Kabsch", 
+
+Line = from a position sensitive detector", 
+
+Buffer = @ARTICLE(C009, 
+AUTHOR=" W. J. Kabsch", 
+TITLE="Evaluation of single crystal {X}-ray diffraction data
+
+Line = JOURNAL="J. Appl. Crystallogr.",   
+
+Buffer = @ARTICLE(C009, 
+AUTHOR=" W. J. Kabsch", 
+TITLE="Evaluation of single crystal {X}-ray diffraction data
+from a position sensitive detector", 
+
+Line = VOLUME=21,   
+
+Buffer = @ARTICLE(C009, 
+AUTHOR=" W. J. Kabsch", 
+TITLE="Evaluation of single crystal {X}-ray diffraction data
+from a position sensitive detector", 
+JOURNAL="J. Appl. Crystallogr.",   
+
+Line = YEAR=1988,   
+
+Buffer = @ARTICLE(C009, 
+AUTHOR=" W. J. Kabsch", 
+TITLE="Evaluation of single crystal {X}-ray diffraction data
+from a position sensitive detector", 
+JOURNAL="J. Appl. Crystallogr.",   
+VOLUME=21,   
+
+Line = PAGES="916--924")
+
+Buffer = @ARTICLE(C009, 
+AUTHOR=" W. J. Kabsch", 
+TITLE="Evaluation of single crystal {X}-ray diffraction data
+from a position sensitive detector", 
+JOURNAL="J. Appl. Crystallogr.",   
+VOLUME=21,   
+YEAR=1988,   
+
+Line = 
+
+Buffer = @ARTICLE(C009, 
+AUTHOR=" W. J. Kabsch", 
+TITLE="Evaluation of single crystal {X}-ray diffraction data
+from a position sensitive detector", 
+JOURNAL="J. Appl. Crystallogr.",   
+VOLUME=21,   
+YEAR=1988,   
+PAGES="916--924")
+
+Line = @ARTICLE(C013,
+
+Buffer = @ARTICLE(C009, 
+AUTHOR=" W. J. Kabsch", 
+TITLE="Evaluation of single crystal {X}-ray diffraction data
+from a position sensitive detector", 
+JOURNAL="J. Appl. Crystallogr.",   
+VOLUME=21,   
+YEAR=1988,   
+PAGES="916--924")
+
+
+Recieved this buffer: @ARTICLE(C009, 
+AUTHOR=" W. J. Kabsch", 
+TITLE="Evaluation of single crystal {X}-ray diffraction data
+from a position sensitive detector", 
+JOURNAL="J. Appl. Crystallogr.",   
+VOLUME=21,   
+YEAR=1988,   
+PAGES="916--924")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=21,   
+YEAR=1988,   
+PAGES="916--924")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1988,   
+PAGES="916--924")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="D. E. McRee",
+
+Buffer = @ARTICLE(C013,
+
+Line = TITLE="Xtal{V}iew: A Visual Protein Crystallographic Software System
+
+Buffer = @ARTICLE(C013,
+AUTHOR="D. E. McRee",
+
+Line = for {X}11/ {XV}iew",
+
+Buffer = @ARTICLE(C013,
+AUTHOR="D. E. McRee",
+TITLE="Xtal{V}iew: A Visual Protein Crystallographic Software System
+
+Line = JOURNAL="J. Mol. Graphics",
+
+Buffer = @ARTICLE(C013,
+AUTHOR="D. E. McRee",
+TITLE="Xtal{V}iew: A Visual Protein Crystallographic Software System
+for {X}11/ {XV}iew",
+
+Line = VOLUME=10,
+
+Buffer = @ARTICLE(C013,
+AUTHOR="D. E. McRee",
+TITLE="Xtal{V}iew: A Visual Protein Crystallographic Software System
+for {X}11/ {XV}iew",
+JOURNAL="J. Mol. Graphics",
+
+Line = PAGES="44--47",
+
+Buffer = @ARTICLE(C013,
+AUTHOR="D. E. McRee",
+TITLE="Xtal{V}iew: A Visual Protein Crystallographic Software System
+for {X}11/ {XV}iew",
+JOURNAL="J. Mol. Graphics",
+VOLUME=10,
+
+Line = YEAR=1992)
+
+Buffer = @ARTICLE(C013,
+AUTHOR="D. E. McRee",
+TITLE="Xtal{V}iew: A Visual Protein Crystallographic Software System
+for {X}11/ {XV}iew",
+JOURNAL="J. Mol. Graphics",
+VOLUME=10,
+PAGES="44--47",
+
+Line = 
+
+Buffer = @ARTICLE(C013,
+AUTHOR="D. E. McRee",
+TITLE="Xtal{V}iew: A Visual Protein Crystallographic Software System
+for {X}11/ {XV}iew",
+JOURNAL="J. Mol. Graphics",
+VOLUME=10,
+PAGES="44--47",
+YEAR=1992)
+
+Line = @INPROCEEDINGS(C011,
+
+Buffer = @ARTICLE(C013,
+AUTHOR="D. E. McRee",
+TITLE="Xtal{V}iew: A Visual Protein Crystallographic Software System
+for {X}11/ {XV}iew",
+JOURNAL="J. Mol. Graphics",
+VOLUME=10,
+PAGES="44--47",
+YEAR=1992)
+
+
+Recieved this buffer: @ARTICLE(C013,
+AUTHOR="D. E. McRee",
+TITLE="Xtal{V}iew: A Visual Protein Crystallographic Software System
+for {X}11/ {XV}iew",
+JOURNAL="J. Mol. Graphics",
+VOLUME=10,
+PAGES="44--47",
+YEAR=1992)
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=10,
+PAGES="44--47",
+YEAR=1992)
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1992)
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="W. Furey
+
+Buffer = @INPROCEEDINGS(C011,
+
+Line = and S. Swaminathan",
+
+Buffer = @INPROCEEDINGS(C011,
+AUTHOR="W. Furey
+
+Line = TITLE="{PHASES}: A Program Package for the Processing and
+
+Buffer = @INPROCEEDINGS(C011,
+AUTHOR="W. Furey
+and S. Swaminathan",
+
+Line = Analysis of Diffraction Data from Macromolecules",
+
+Buffer = @INPROCEEDINGS(C011,
+AUTHOR="W. Furey
+and S. Swaminathan",
+TITLE="{PHASES}: A Program Package for the Processing and
+
+Line = BOOKTITLE="ACA meeting Abstracts",
+
+Buffer = @INPROCEEDINGS(C011,
+AUTHOR="W. Furey
+and S. Swaminathan",
+TITLE="{PHASES}: A Program Package for the Processing and
+Analysis of Diffraction Data from Macromolecules",
+
+Line = PUBLISHER="American Crystallographic Association",
+
+Buffer = @INPROCEEDINGS(C011,
+AUTHOR="W. Furey
+and S. Swaminathan",
+TITLE="{PHASES}: A Program Package for the Processing and
+Analysis of Diffraction Data from Macromolecules",
+BOOKTITLE="ACA meeting Abstracts",
+
+Line = ADDRESS="New York",
+
+Buffer = @INPROCEEDINGS(C011,
+AUTHOR="W. Furey
+and S. Swaminathan",
+TITLE="{PHASES}: A Program Package for the Processing and
+Analysis of Diffraction Data from Macromolecules",
+BOOKTITLE="ACA meeting Abstracts",
+PUBLISHER="American Crystallographic Association",
+
+Line = YEAR=1990,
+
+Buffer = @INPROCEEDINGS(C011,
+AUTHOR="W. Furey
+and S. Swaminathan",
+TITLE="{PHASES}: A Program Package for the Processing and
+Analysis of Diffraction Data from Macromolecules",
+BOOKTITLE="ACA meeting Abstracts",
+PUBLISHER="American Crystallographic Association",
+ADDRESS="New York",
+
+Line = PAGES="73")
+
+Buffer = @INPROCEEDINGS(C011,
+AUTHOR="W. Furey
+and S. Swaminathan",
+TITLE="{PHASES}: A Program Package for the Processing and
+Analysis of Diffraction Data from Macromolecules",
+BOOKTITLE="ACA meeting Abstracts",
+PUBLISHER="American Crystallographic Association",
+ADDRESS="New York",
+YEAR=1990,
+
+Line = 
+
+Buffer = @INPROCEEDINGS(C011,
+AUTHOR="W. Furey
+and S. Swaminathan",
+TITLE="{PHASES}: A Program Package for the Processing and
+Analysis of Diffraction Data from Macromolecules",
+BOOKTITLE="ACA meeting Abstracts",
+PUBLISHER="American Crystallographic Association",
+ADDRESS="New York",
+YEAR=1990,
+PAGES="73")
+
+Line = @INPROCEEDINGS(EN20,
+
+Buffer = @INPROCEEDINGS(C011,
+AUTHOR="W. Furey
+and S. Swaminathan",
+TITLE="{PHASES}: A Program Package for the Processing and
+Analysis of Diffraction Data from Macromolecules",
+BOOKTITLE="ACA meeting Abstracts",
+PUBLISHER="American Crystallographic Association",
+ADDRESS="New York",
+YEAR=1990,
+PAGES="73")
+
+
+Recieved this buffer: @INPROCEEDINGS(C011,
+AUTHOR="W. Furey
+and S. Swaminathan",
+TITLE="{PHASES}: A Program Package for the Processing and
+Analysis of Diffraction Data from Macromolecules",
+BOOKTITLE="ACA meeting Abstracts",
+PUBLISHER="American Crystallographic Association",
+ADDRESS="New York",
+YEAR=1990,
+PAGES="73")
+
+
+ About to search 
+couldn't find ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1990,
+PAGES="73")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="J. S. Richardson
+
+Buffer = @INPROCEEDINGS(EN20,
+
+Line = and D. C. Richardson",
+
+Buffer = @INPROCEEDINGS(EN20,
+AUTHOR="J. S. Richardson
+
+Line = TITLE="Principles and Patterns of Protein Conformation",
+
+Buffer = @INPROCEEDINGS(EN20,
+AUTHOR="J. S. Richardson
+and D. C. Richardson",
+
+Line = BOOKTITLE="Prediction of Protein Structure and the Principles of Protein
+
+Buffer = @INPROCEEDINGS(EN20,
+AUTHOR="J. S. Richardson
+and D. C. Richardson",
+TITLE="Principles and Patterns of Protein Conformation",
+
+Line = Conformation, Ed. G. D. Fasman",
+
+Buffer = @INPROCEEDINGS(EN20,
+AUTHOR="J. S. Richardson
+and D. C. Richardson",
+TITLE="Principles and Patterns of Protein Conformation",
+BOOKTITLE="Prediction of Protein Structure and the Principles of Protein
+
+Line = PUBLISHER="Plenum",
+
+Buffer = @INPROCEEDINGS(EN20,
+AUTHOR="J. S. Richardson
+and D. C. Richardson",
+TITLE="Principles and Patterns of Protein Conformation",
+BOOKTITLE="Prediction of Protein Structure and the Principles of Protein
+Conformation, Ed. G. D. Fasman",
+
+Line = ADDRESS="New York",
+
+Buffer = @INPROCEEDINGS(EN20,
+AUTHOR="J. S. Richardson
+and D. C. Richardson",
+TITLE="Principles and Patterns of Protein Conformation",
+BOOKTITLE="Prediction of Protein Structure and the Principles of Protein
+Conformation, Ed. G. D. Fasman",
+PUBLISHER="Plenum",
+
+Line = PAGES="2--98",
+
+Buffer = @INPROCEEDINGS(EN20,
+AUTHOR="J. S. Richardson
+and D. C. Richardson",
+TITLE="Principles and Patterns of Protein Conformation",
+BOOKTITLE="Prediction of Protein Structure and the Principles of Protein
+Conformation, Ed. G. D. Fasman",
+PUBLISHER="Plenum",
+ADDRESS="New York",
+
+Line = YEAR=1990)
+
+Buffer = @INPROCEEDINGS(EN20,
+AUTHOR="J. S. Richardson
+and D. C. Richardson",
+TITLE="Principles and Patterns of Protein Conformation",
+BOOKTITLE="Prediction of Protein Structure and the Principles of Protein
+Conformation, Ed. G. D. Fasman",
+PUBLISHER="Plenum",
+ADDRESS="New York",
+PAGES="2--98",
+
+Line = 
+
+Buffer = @INPROCEEDINGS(EN20,
+AUTHOR="J. S. Richardson
+and D. C. Richardson",
+TITLE="Principles and Patterns of Protein Conformation",
+BOOKTITLE="Prediction of Protein Structure and the Principles of Protein
+Conformation, Ed. G. D. Fasman",
+PUBLISHER="Plenum",
+ADDRESS="New York",
+PAGES="2--98",
+YEAR=1990)
+
+Line = 
+
+Buffer = @INPROCEEDINGS(EN20,
+AUTHOR="J. S. Richardson
+and D. C. Richardson",
+TITLE="Principles and Patterns of Protein Conformation",
+BOOKTITLE="Prediction of Protein Structure and the Principles of Protein
+Conformation, Ed. G. D. Fasman",
+PUBLISHER="Plenum",
+ADDRESS="New York",
+PAGES="2--98",
+YEAR=1990)
+
+
+Line = @book(C010,
+
+Buffer = @INPROCEEDINGS(EN20,
+AUTHOR="J. S. Richardson
+and D. C. Richardson",
+TITLE="Principles and Patterns of Protein Conformation",
+BOOKTITLE="Prediction of Protein Structure and the Principles of Protein
+Conformation, Ed. G. D. Fasman",
+PUBLISHER="Plenum",
+ADDRESS="New York",
+PAGES="2--98",
+YEAR=1990)
+
+
+
+Recieved this buffer: @INPROCEEDINGS(EN20,
+AUTHOR="J. S. Richardson
+and D. C. Richardson",
+TITLE="Principles and Patterns of Protein Conformation",
+BOOKTITLE="Prediction of Protein Structure and the Principles of Protein
+Conformation, Ed. G. D. Fasman",
+PUBLISHER="Plenum",
+ADDRESS="New York",
+PAGES="2--98",
+YEAR=1990)
+
+
+
+ About to search 
+couldn't find ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1990)
+
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = author="D. E. McRee",
+
+Buffer = @book(C010,
+
+Line = title="Practical Protein Crystallography",
+
+Buffer = @book(C010,
+author="D. E. McRee",
+
+Line = publisher="Academic Press",
+
+Buffer = @book(C010,
+author="D. E. McRee",
+title="Practical Protein Crystallography",
+
+Line = address="San Diego",
+
+Buffer = @book(C010,
+author="D. E. McRee",
+title="Practical Protein Crystallography",
+publisher="Academic Press",
+
+Line = year=1993)
+
+Buffer = @book(C010,
+author="D. E. McRee",
+title="Practical Protein Crystallography",
+publisher="Academic Press",
+address="San Diego",
+
+Line = 
+
+Buffer = @book(C010,
+author="D. E. McRee",
+title="Practical Protein Crystallography",
+publisher="Academic Press",
+address="San Diego",
+year=1993)
+
+Line = @book(fersht85,
+
+Buffer = @book(C010,
+author="D. E. McRee",
+title="Practical Protein Crystallography",
+publisher="Academic Press",
+address="San Diego",
+year=1993)
+
+
+Recieved this buffer: @book(C010,
+author="D. E. McRee",
+title="Practical Protein Crystallography",
+publisher="Academic Press",
+address="San Diego",
+year=1993)
+
+
+ About to search 
+couldn't find ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: year=1993)
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="A. Fersht",
+
+Buffer = @book(fersht85,
+
+Line = TITLE="Enzyme {S}tructure and {M}echanism",
+
+Buffer = @book(fersht85,
+AUTHOR="A. Fersht",
+
+Line = publisher="W. H. Freeman and Company",
+
+Buffer = @book(fersht85,
+AUTHOR="A. Fersht",
+TITLE="Enzyme {S}tructure and {M}echanism",
+
+Line = address="New York",
+
+Buffer = @book(fersht85,
+AUTHOR="A. Fersht",
+TITLE="Enzyme {S}tructure and {M}echanism",
+publisher="W. H. Freeman and Company",
+
+Line = year="1985",
+
+Buffer = @book(fersht85,
+AUTHOR="A. Fersht",
+TITLE="Enzyme {S}tructure and {M}echanism",
+publisher="W. H. Freeman and Company",
+address="New York",
+
+Line = pages="209--210")
+
+Buffer = @book(fersht85,
+AUTHOR="A. Fersht",
+TITLE="Enzyme {S}tructure and {M}echanism",
+publisher="W. H. Freeman and Company",
+address="New York",
+year="1985",
+
+Line = 
+
+Buffer = @book(fersht85,
+AUTHOR="A. Fersht",
+TITLE="Enzyme {S}tructure and {M}echanism",
+publisher="W. H. Freeman and Company",
+address="New York",
+year="1985",
+pages="209--210")
+
+Line = 
+
+Buffer = @book(fersht85,
+AUTHOR="A. Fersht",
+TITLE="Enzyme {S}tructure and {M}echanism",
+publisher="W. H. Freeman and Company",
+address="New York",
+year="1985",
+pages="209--210")
+
+
+Line = @ARTICLE(C014,
+
+Buffer = @book(fersht85,
+AUTHOR="A. Fersht",
+TITLE="Enzyme {S}tructure and {M}echanism",
+publisher="W. H. Freeman and Company",
+address="New York",
+year="1985",
+pages="209--210")
+
+
+
+Recieved this buffer: @book(fersht85,
+AUTHOR="A. Fersht",
+TITLE="Enzyme {S}tructure and {M}echanism",
+publisher="W. H. Freeman and Company",
+address="New York",
+year="1985",
+pages="209--210")
+
+
+
+ About to search 
+couldn't find ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: year="1985",
+pages="209--210")
+
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="W. A. Franklin  
+
+Buffer = @ARTICLE(C014,
+
+Line = and T. Lindahl",
+
+Buffer = @ARTICLE(C014,
+AUTHOR="W. A. Franklin  
+
+Line = TITLE="{DNA} deoxyribophosphodiesterase",
+
+Buffer = @ARTICLE(C014,
+AUTHOR="W. A. Franklin  
+and T. Lindahl",
+
+Line = JOURNAL="EMBO J.",
+
+Buffer = @ARTICLE(C014,
+AUTHOR="W. A. Franklin  
+and T. Lindahl",
+TITLE="{DNA} deoxyribophosphodiesterase",
+
+Line = VOLUME=7,
+
+Buffer = @ARTICLE(C014,
+AUTHOR="W. A. Franklin  
+and T. Lindahl",
+TITLE="{DNA} deoxyribophosphodiesterase",
+JOURNAL="EMBO J.",
+
+Line = YEAR=1988,
+
+Buffer = @ARTICLE(C014,
+AUTHOR="W. A. Franklin  
+and T. Lindahl",
+TITLE="{DNA} deoxyribophosphodiesterase",
+JOURNAL="EMBO J.",
+VOLUME=7,
+
+Line = PAGES="3617--3622")
+
+Buffer = @ARTICLE(C014,
+AUTHOR="W. A. Franklin  
+and T. Lindahl",
+TITLE="{DNA} deoxyribophosphodiesterase",
+JOURNAL="EMBO J.",
+VOLUME=7,
+YEAR=1988,
+
+Line = 
+
+Buffer = @ARTICLE(C014,
+AUTHOR="W. A. Franklin  
+and T. Lindahl",
+TITLE="{DNA} deoxyribophosphodiesterase",
+JOURNAL="EMBO J.",
+VOLUME=7,
+YEAR=1988,
+PAGES="3617--3622")
+
+Line = @ARTICLE(C015,
+
+Buffer = @ARTICLE(C014,
+AUTHOR="W. A. Franklin  
+and T. Lindahl",
+TITLE="{DNA} deoxyribophosphodiesterase",
+JOURNAL="EMBO J.",
+VOLUME=7,
+YEAR=1988,
+PAGES="3617--3622")
+
+
+Recieved this buffer: @ARTICLE(C014,
+AUTHOR="W. A. Franklin  
+and T. Lindahl",
+TITLE="{DNA} deoxyribophosphodiesterase",
+JOURNAL="EMBO J.",
+VOLUME=7,
+YEAR=1988,
+PAGES="3617--3622")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=7,
+YEAR=1988,
+PAGES="3617--3622")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1988,
+PAGES="3617--3622")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="G. Dianov 
+
+Buffer = @ARTICLE(C015,
+
+Line = and A. Price 
+
+Buffer = @ARTICLE(C015,
+AUTHOR="G. Dianov 
+
+Line = and T. Lindahl",
+
+Buffer = @ARTICLE(C015,
+AUTHOR="G. Dianov 
+and A. Price 
+
+Line = TITLE="Generation of single-nucleotide repair patches following
+
+Buffer = @ARTICLE(C015,
+AUTHOR="G. Dianov 
+and A. Price 
+and T. Lindahl",
+
+Line = excision of uracil residues from {DNA}", 
+
+Buffer = @ARTICLE(C015,
+AUTHOR="G. Dianov 
+and A. Price 
+and T. Lindahl",
+TITLE="Generation of single-nucleotide repair patches following
+
+Line = JOURNAL="Mol. Cell. Biol.",
+
+Buffer = @ARTICLE(C015,
+AUTHOR="G. Dianov 
+and A. Price 
+and T. Lindahl",
+TITLE="Generation of single-nucleotide repair patches following
+excision of uracil residues from {DNA}", 
+
+Line = VOLUME=12,
+
+Buffer = @ARTICLE(C015,
+AUTHOR="G. Dianov 
+and A. Price 
+and T. Lindahl",
+TITLE="Generation of single-nucleotide repair patches following
+excision of uracil residues from {DNA}", 
+JOURNAL="Mol. Cell. Biol.",
+
+Line = YEAR=1992,
+
+Buffer = @ARTICLE(C015,
+AUTHOR="G. Dianov 
+and A. Price 
+and T. Lindahl",
+TITLE="Generation of single-nucleotide repair patches following
+excision of uracil residues from {DNA}", 
+JOURNAL="Mol. Cell. Biol.",
+VOLUME=12,
+
+Line = PAGES="1605--1612") 
+
+Buffer = @ARTICLE(C015,
+AUTHOR="G. Dianov 
+and A. Price 
+and T. Lindahl",
+TITLE="Generation of single-nucleotide repair patches following
+excision of uracil residues from {DNA}", 
+JOURNAL="Mol. Cell. Biol.",
+VOLUME=12,
+YEAR=1992,
+
+Line = 
+
+Buffer = @ARTICLE(C015,
+AUTHOR="G. Dianov 
+and A. Price 
+and T. Lindahl",
+TITLE="Generation of single-nucleotide repair patches following
+excision of uracil residues from {DNA}", 
+JOURNAL="Mol. Cell. Biol.",
+VOLUME=12,
+YEAR=1992,
+PAGES="1605--1612") 
+
+Line = @ARTICLE(C016,
+
+Buffer = @ARTICLE(C015,
+AUTHOR="G. Dianov 
+and A. Price 
+and T. Lindahl",
+TITLE="Generation of single-nucleotide repair patches following
+excision of uracil residues from {DNA}", 
+JOURNAL="Mol. Cell. Biol.",
+VOLUME=12,
+YEAR=1992,
+PAGES="1605--1612") 
+
+
+Recieved this buffer: @ARTICLE(C015,
+AUTHOR="G. Dianov 
+and A. Price 
+and T. Lindahl",
+TITLE="Generation of single-nucleotide repair patches following
+excision of uracil residues from {DNA}", 
+JOURNAL="Mol. Cell. Biol.",
+VOLUME=12,
+YEAR=1992,
+PAGES="1605--1612") 
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=12,
+YEAR=1992,
+PAGES="1605--1612") 
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1992,
+PAGES="1605--1612") 
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="B. K. Tye 
+
+Buffer = @ARTICLE(C016,
+
+Line = and P. O. Nyman 
+
+Buffer = @ARTICLE(C016,
+AUTHOR="B. K. Tye 
+
+Line = and I. R. Lehman
+
+Buffer = @ARTICLE(C016,
+AUTHOR="B. K. Tye 
+and P. O. Nyman 
+
+Line = and S. Hochhauser 
+
+Buffer = @ARTICLE(C016,
+AUTHOR="B. K. Tye 
+and P. O. Nyman 
+and I. R. Lehman
+
+Line = and B. Weiss",
+
+Buffer = @ARTICLE(C016,
+AUTHOR="B. K. Tye 
+and P. O. Nyman 
+and I. R. Lehman
+and S. Hochhauser 
+
+Line = TITLE="Transient accumulation of {O}kazaki fragments as a result
+
+Buffer = @ARTICLE(C016,
+AUTHOR="B. K. Tye 
+and P. O. Nyman 
+and I. R. Lehman
+and S. Hochhauser 
+and B. Weiss",
+
+Line = of uracil incorporation into nascent {DNA}", 
+
+Buffer = @ARTICLE(C016,
+AUTHOR="B. K. Tye 
+and P. O. Nyman 
+and I. R. Lehman
+and S. Hochhauser 
+and B. Weiss",
+TITLE="Transient accumulation of {O}kazaki fragments as a result
+
+Line = JOURNAL="Proc. Natl. Acad. Sci. USA",
+
+Buffer = @ARTICLE(C016,
+AUTHOR="B. K. Tye 
+and P. O. Nyman 
+and I. R. Lehman
+and S. Hochhauser 
+and B. Weiss",
+TITLE="Transient accumulation of {O}kazaki fragments as a result
+of uracil incorporation into nascent {DNA}", 
+
+Line = VOLUME=74,
+
+Buffer = @ARTICLE(C016,
+AUTHOR="B. K. Tye 
+and P. O. Nyman 
+and I. R. Lehman
+and S. Hochhauser 
+and B. Weiss",
+TITLE="Transient accumulation of {O}kazaki fragments as a result
+of uracil incorporation into nascent {DNA}", 
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+
+Line = YEAR=1977,
+
+Buffer = @ARTICLE(C016,
+AUTHOR="B. K. Tye 
+and P. O. Nyman 
+and I. R. Lehman
+and S. Hochhauser 
+and B. Weiss",
+TITLE="Transient accumulation of {O}kazaki fragments as a result
+of uracil incorporation into nascent {DNA}", 
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME=74,
+
+Line = PAGES="154--157") 
+
+Buffer = @ARTICLE(C016,
+AUTHOR="B. K. Tye 
+and P. O. Nyman 
+and I. R. Lehman
+and S. Hochhauser 
+and B. Weiss",
+TITLE="Transient accumulation of {O}kazaki fragments as a result
+of uracil incorporation into nascent {DNA}", 
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME=74,
+YEAR=1977,
+
+Line = 
+
+Buffer = @ARTICLE(C016,
+AUTHOR="B. K. Tye 
+and P. O. Nyman 
+and I. R. Lehman
+and S. Hochhauser 
+and B. Weiss",
+TITLE="Transient accumulation of {O}kazaki fragments as a result
+of uracil incorporation into nascent {DNA}", 
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME=74,
+YEAR=1977,
+PAGES="154--157") 
+
+Line = @ARTICLE(nation89,
+
+Buffer = @ARTICLE(C016,
+AUTHOR="B. K. Tye 
+and P. O. Nyman 
+and I. R. Lehman
+and S. Hochhauser 
+and B. Weiss",
+TITLE="Transient accumulation of {O}kazaki fragments as a result
+of uracil incorporation into nascent {DNA}", 
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME=74,
+YEAR=1977,
+PAGES="154--157") 
+
+
+Recieved this buffer: @ARTICLE(C016,
+AUTHOR="B. K. Tye 
+and P. O. Nyman 
+and I. R. Lehman
+and S. Hochhauser 
+and B. Weiss",
+TITLE="Transient accumulation of {O}kazaki fragments as a result
+of uracil incorporation into nascent {DNA}", 
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME=74,
+YEAR=1977,
+PAGES="154--157") 
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=74,
+YEAR=1977,
+PAGES="154--157") 
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1977,
+PAGES="154--157") 
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="M. D. Nation
+
+Buffer = @ARTICLE(nation89,
+
+Line = and S. N. Guzder
+
+Buffer = @ARTICLE(nation89,
+AUTHOR="M. D. Nation
+
+Line = and L. E. Giroir
+
+Buffer = @ARTICLE(nation89,
+AUTHOR="M. D. Nation
+and S. N. Guzder
+
+Line = and W. A. Deutsch",
+
+Buffer = @ARTICLE(nation89,
+AUTHOR="M. D. Nation
+and S. N. Guzder
+and L. E. Giroir
+
+Line = TITLE="Control of {{\it Drosophila}} deoxyuridine triphosphatase",
+
+Buffer = @ARTICLE(nation89,
+AUTHOR="M. D. Nation
+and S. N. Guzder
+and L. E. Giroir
+and W. A. Deutsch",
+
+Line = JOURNAL="Biochem. J.",
+
+Buffer = @ARTICLE(nation89,
+AUTHOR="M. D. Nation
+and S. N. Guzder
+and L. E. Giroir
+and W. A. Deutsch",
+TITLE="Control of {{\it Drosophila}} deoxyuridine triphosphatase",
+
+Line = VOLUME="259",
+
+Buffer = @ARTICLE(nation89,
+AUTHOR="M. D. Nation
+and S. N. Guzder
+and L. E. Giroir
+and W. A. Deutsch",
+TITLE="Control of {{\it Drosophila}} deoxyuridine triphosphatase",
+JOURNAL="Biochem. J.",
+
+Line = YEAR="1989",
+
+Buffer = @ARTICLE(nation89,
+AUTHOR="M. D. Nation
+and S. N. Guzder
+and L. E. Giroir
+and W. A. Deutsch",
+TITLE="Control of {{\it Drosophila}} deoxyuridine triphosphatase",
+JOURNAL="Biochem. J.",
+VOLUME="259",
+
+Line = PAGES="593--596")
+
+Buffer = @ARTICLE(nation89,
+AUTHOR="M. D. Nation
+and S. N. Guzder
+and L. E. Giroir
+and W. A. Deutsch",
+TITLE="Control of {{\it Drosophila}} deoxyuridine triphosphatase",
+JOURNAL="Biochem. J.",
+VOLUME="259",
+YEAR="1989",
+
+Line = 
+
+Buffer = @ARTICLE(nation89,
+AUTHOR="M. D. Nation
+and S. N. Guzder
+and L. E. Giroir
+and W. A. Deutsch",
+TITLE="Control of {{\it Drosophila}} deoxyuridine triphosphatase",
+JOURNAL="Biochem. J.",
+VOLUME="259",
+YEAR="1989",
+PAGES="593--596")
+
+Line = @ARTICLE(climie94,
+
+Buffer = @ARTICLE(nation89,
+AUTHOR="M. D. Nation
+and S. N. Guzder
+and L. E. Giroir
+and W. A. Deutsch",
+TITLE="Control of {{\it Drosophila}} deoxyuridine triphosphatase",
+JOURNAL="Biochem. J.",
+VOLUME="259",
+YEAR="1989",
+PAGES="593--596")
+
+
+Recieved this buffer: @ARTICLE(nation89,
+AUTHOR="M. D. Nation
+and S. N. Guzder
+and L. E. Giroir
+and W. A. Deutsch",
+TITLE="Control of {{\it Drosophila}} deoxyuridine triphosphatase",
+JOURNAL="Biochem. J.",
+VOLUME="259",
+YEAR="1989",
+PAGES="593--596")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME="259",
+YEAR="1989",
+PAGES="593--596")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR="1989",
+PAGES="593--596")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="S. Climie
+
+Buffer = @ARTICLE(climie94,
+
+Line = and T. Lutz
+
+Buffer = @ARTICLE(climie94,
+AUTHOR="S. Climie
+
+Line = and J. Radul
+
+Buffer = @ARTICLE(climie94,
+AUTHOR="S. Climie
+and T. Lutz
+
+Line = and M. Sumner-Smith
+
+Buffer = @ARTICLE(climie94,
+AUTHOR="S. Climie
+and T. Lutz
+and J. Radul
+
+Line = and E. Vandenberg
+
+Buffer = @ARTICLE(climie94,
+AUTHOR="S. Climie
+and T. Lutz
+and J. Radul
+and M. Sumner-Smith
+
+Line = and E. McIntosh",
+
+Buffer = @ARTICLE(climie94,
+AUTHOR="S. Climie
+and T. Lutz
+and J. Radul
+and M. Sumner-Smith
+and E. Vandenberg
+
+Line = TITLE="Expression of {T}rimeric {H}uman d{UTP} {P}yrophosphatase
+
+Buffer = @ARTICLE(climie94,
+AUTHOR="S. Climie
+and T. Lutz
+and J. Radul
+and M. Sumner-Smith
+and E. Vandenberg
+and E. McIntosh",
+
+Line = in {{\it Escherichia coli}} and {P}urification of the {E}nzyme",
+
+Buffer = @ARTICLE(climie94,
+AUTHOR="S. Climie
+and T. Lutz
+and J. Radul
+and M. Sumner-Smith
+and E. Vandenberg
+and E. McIntosh",
+TITLE="Expression of {T}rimeric {H}uman d{UTP} {P}yrophosphatase
+
+Line = JOURNAL="Prot. Exp. and Purif.",
+
+Buffer = @ARTICLE(climie94,
+AUTHOR="S. Climie
+and T. Lutz
+and J. Radul
+and M. Sumner-Smith
+and E. Vandenberg
+and E. McIntosh",
+TITLE="Expression of {T}rimeric {H}uman d{UTP} {P}yrophosphatase
+in {{\it Escherichia coli}} and {P}urification of the {E}nzyme",
+
+Line = VOLUME="5",    
+
+Buffer = @ARTICLE(climie94,
+AUTHOR="S. Climie
+and T. Lutz
+and J. Radul
+and M. Sumner-Smith
+and E. Vandenberg
+and E. McIntosh",
+TITLE="Expression of {T}rimeric {H}uman d{UTP} {P}yrophosphatase
+in {{\it Escherichia coli}} and {P}urification of the {E}nzyme",
+JOURNAL="Prot. Exp. and Purif.",
+
+Line = YEAR="1994",
+
+Buffer = @ARTICLE(climie94,
+AUTHOR="S. Climie
+and T. Lutz
+and J. Radul
+and M. Sumner-Smith
+and E. Vandenberg
+and E. McIntosh",
+TITLE="Expression of {T}rimeric {H}uman d{UTP} {P}yrophosphatase
+in {{\it Escherichia coli}} and {P}urification of the {E}nzyme",
+JOURNAL="Prot. Exp. and Purif.",
+VOLUME="5",    
+
+Line = PAGES="252--258")
+
+Buffer = @ARTICLE(climie94,
+AUTHOR="S. Climie
+and T. Lutz
+and J. Radul
+and M. Sumner-Smith
+and E. Vandenberg
+and E. McIntosh",
+TITLE="Expression of {T}rimeric {H}uman d{UTP} {P}yrophosphatase
+in {{\it Escherichia coli}} and {P}urification of the {E}nzyme",
+JOURNAL="Prot. Exp. and Purif.",
+VOLUME="5",    
+YEAR="1994",
+
+Line = 
+
+Buffer = @ARTICLE(climie94,
+AUTHOR="S. Climie
+and T. Lutz
+and J. Radul
+and M. Sumner-Smith
+and E. Vandenberg
+and E. McIntosh",
+TITLE="Expression of {T}rimeric {H}uman d{UTP} {P}yrophosphatase
+in {{\it Escherichia coli}} and {P}urification of the {E}nzyme",
+JOURNAL="Prot. Exp. and Purif.",
+VOLUME="5",    
+YEAR="1994",
+PAGES="252--258")
+
+Line = @ARTICLE(mcintosh94,
+
+Buffer = @ARTICLE(climie94,
+AUTHOR="S. Climie
+and T. Lutz
+and J. Radul
+and M. Sumner-Smith
+and E. Vandenberg
+and E. McIntosh",
+TITLE="Expression of {T}rimeric {H}uman d{UTP} {P}yrophosphatase
+in {{\it Escherichia coli}} and {P}urification of the {E}nzyme",
+JOURNAL="Prot. Exp. and Purif.",
+VOLUME="5",    
+YEAR="1994",
+PAGES="252--258")
+
+
+Recieved this buffer: @ARTICLE(climie94,
+AUTHOR="S. Climie
+and T. Lutz
+and J. Radul
+and M. Sumner-Smith
+and E. Vandenberg
+and E. McIntosh",
+TITLE="Expression of {T}rimeric {H}uman d{UTP} {P}yrophosphatase
+in {{\it Escherichia coli}} and {P}urification of the {E}nzyme",
+JOURNAL="Prot. Exp. and Purif.",
+VOLUME="5",    
+YEAR="1994",
+PAGES="252--258")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME="5",    
+YEAR="1994",
+PAGES="252--258")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR="1994",
+PAGES="252--258")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="E. M. McIntosh
+
+Buffer = @ARTICLE(mcintosh94,
+
+Line = and J. Looser
+
+Buffer = @ARTICLE(mcintosh94,
+AUTHOR="E. M. McIntosh
+
+Line = and R. H. Haynes
+
+Buffer = @ARTICLE(mcintosh94,
+AUTHOR="E. M. McIntosh
+and J. Looser
+
+Line = and R. E. Pearlman",
+
+Buffer = @ARTICLE(mcintosh94,
+AUTHOR="E. M. McIntosh
+and J. Looser
+and R. H. Haynes
+
+Line = TITLE="{{\em Mlu}}{I} site-dependent transcriptional regulation
+
+Buffer = @ARTICLE(mcintosh94,
+AUTHOR="E. M. McIntosh
+and J. Looser
+and R. H. Haynes
+and R. E. Pearlman",
+
+Line = of the {{\em Candida albicans}} d{UTP}ase gene",
+
+Buffer = @ARTICLE(mcintosh94,
+AUTHOR="E. M. McIntosh
+and J. Looser
+and R. H. Haynes
+and R. E. Pearlman",
+TITLE="{{\em Mlu}}{I} site-dependent transcriptional regulation
+
+Line = JOURNAL="Curr. Genet.",
+
+Buffer = @ARTICLE(mcintosh94,
+AUTHOR="E. M. McIntosh
+and J. Looser
+and R. H. Haynes
+and R. E. Pearlman",
+TITLE="{{\em Mlu}}{I} site-dependent transcriptional regulation
+of the {{\em Candida albicans}} d{UTP}ase gene",
+
+Line = VOLUME="26",
+
+Buffer = @ARTICLE(mcintosh94,
+AUTHOR="E. M. McIntosh
+and J. Looser
+and R. H. Haynes
+and R. E. Pearlman",
+TITLE="{{\em Mlu}}{I} site-dependent transcriptional regulation
+of the {{\em Candida albicans}} d{UTP}ase gene",
+JOURNAL="Curr. Genet.",
+
+Line = YEAR="1994",
+
+Buffer = @ARTICLE(mcintosh94,
+AUTHOR="E. M. McIntosh
+and J. Looser
+and R. H. Haynes
+and R. E. Pearlman",
+TITLE="{{\em Mlu}}{I} site-dependent transcriptional regulation
+of the {{\em Candida albicans}} d{UTP}ase gene",
+JOURNAL="Curr. Genet.",
+VOLUME="26",
+
+Line = PAGES="415--421")
+
+Buffer = @ARTICLE(mcintosh94,
+AUTHOR="E. M. McIntosh
+and J. Looser
+and R. H. Haynes
+and R. E. Pearlman",
+TITLE="{{\em Mlu}}{I} site-dependent transcriptional regulation
+of the {{\em Candida albicans}} d{UTP}ase gene",
+JOURNAL="Curr. Genet.",
+VOLUME="26",
+YEAR="1994",
+
+Line = 
+
+Buffer = @ARTICLE(mcintosh94,
+AUTHOR="E. M. McIntosh
+and J. Looser
+and R. H. Haynes
+and R. E. Pearlman",
+TITLE="{{\em Mlu}}{I} site-dependent transcriptional regulation
+of the {{\em Candida albicans}} d{UTP}ase gene",
+JOURNAL="Curr. Genet.",
+VOLUME="26",
+YEAR="1994",
+PAGES="415--421")
+
+Line = @ARTICLE(beck86,
+
+Buffer = @ARTICLE(mcintosh94,
+AUTHOR="E. M. McIntosh
+and J. Looser
+and R. H. Haynes
+and R. E. Pearlman",
+TITLE="{{\em Mlu}}{I} site-dependent transcriptional regulation
+of the {{\em Candida albicans}} d{UTP}ase gene",
+JOURNAL="Curr. Genet.",
+VOLUME="26",
+YEAR="1994",
+PAGES="415--421")
+
+
+Recieved this buffer: @ARTICLE(mcintosh94,
+AUTHOR="E. M. McIntosh
+and J. Looser
+and R. H. Haynes
+and R. E. Pearlman",
+TITLE="{{\em Mlu}}{I} site-dependent transcriptional regulation
+of the {{\em Candida albicans}} d{UTP}ase gene",
+JOURNAL="Curr. Genet.",
+VOLUME="26",
+YEAR="1994",
+PAGES="415--421")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME="26",
+YEAR="1994",
+PAGES="415--421")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR="1994",
+PAGES="415--421")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="W. R. Beck
+
+Buffer = @ARTICLE(beck86,
+
+Line = and G. E. Wright
+
+Buffer = @ARTICLE(beck86,
+AUTHOR="W. R. Beck
+
+Line = and N. J. Nusbaum
+
+Buffer = @ARTICLE(beck86,
+AUTHOR="W. R. Beck
+and G. E. Wright
+
+Line = and J. D. Chang
+
+Buffer = @ARTICLE(beck86,
+AUTHOR="W. R. Beck
+and G. E. Wright
+and N. J. Nusbaum
+
+Line = and E. M. Isselbacher",
+
+Buffer = @ARTICLE(beck86,
+AUTHOR="W. R. Beck
+and G. E. Wright
+and N. J. Nusbaum
+and J. D. Chang
+
+Line = TITLE="Enhancement of methotrexate toxicity by
+
+Buffer = @ARTICLE(beck86,
+AUTHOR="W. R. Beck
+and G. E. Wright
+and N. J. Nusbaum
+and J. D. Chang
+and E. M. Isselbacher",
+
+Line = uracil analogues that inhibit deoxyuridine
+
+Buffer = @ARTICLE(beck86,
+AUTHOR="W. R. Beck
+and G. E. Wright
+and N. J. Nusbaum
+and J. D. Chang
+and E. M. Isselbacher",
+TITLE="Enhancement of methotrexate toxicity by
+
+Line = triphosphate nucleotidyl (d{UTP}ase) activity",
+
+Buffer = @ARTICLE(beck86,
+AUTHOR="W. R. Beck
+and G. E. Wright
+and N. J. Nusbaum
+and J. D. Chang
+and E. M. Isselbacher",
+TITLE="Enhancement of methotrexate toxicity by
+uracil analogues that inhibit deoxyuridine
+
+Line = JOURNAL="Adv. Exp. Med. Biol.",
+
+Buffer = @ARTICLE(beck86,
+AUTHOR="W. R. Beck
+and G. E. Wright
+and N. J. Nusbaum
+and J. D. Chang
+and E. M. Isselbacher",
+TITLE="Enhancement of methotrexate toxicity by
+uracil analogues that inhibit deoxyuridine
+triphosphate nucleotidyl (d{UTP}ase) activity",
+
+Line = VOLUME="195B",
+
+Buffer = @ARTICLE(beck86,
+AUTHOR="W. R. Beck
+and G. E. Wright
+and N. J. Nusbaum
+and J. D. Chang
+and E. M. Isselbacher",
+TITLE="Enhancement of methotrexate toxicity by
+uracil analogues that inhibit deoxyuridine
+triphosphate nucleotidyl (d{UTP}ase) activity",
+JOURNAL="Adv. Exp. Med. Biol.",
+
+Line = YEAR="1986",
+
+Buffer = @ARTICLE(beck86,
+AUTHOR="W. R. Beck
+and G. E. Wright
+and N. J. Nusbaum
+and J. D. Chang
+and E. M. Isselbacher",
+TITLE="Enhancement of methotrexate toxicity by
+uracil analogues that inhibit deoxyuridine
+triphosphate nucleotidyl (d{UTP}ase) activity",
+JOURNAL="Adv. Exp. Med. Biol.",
+VOLUME="195B",
+
+Line = PAGES="97--104")
+
+Buffer = @ARTICLE(beck86,
+AUTHOR="W. R. Beck
+and G. E. Wright
+and N. J. Nusbaum
+and J. D. Chang
+and E. M. Isselbacher",
+TITLE="Enhancement of methotrexate toxicity by
+uracil analogues that inhibit deoxyuridine
+triphosphate nucleotidyl (d{UTP}ase) activity",
+JOURNAL="Adv. Exp. Med. Biol.",
+VOLUME="195B",
+YEAR="1986",
+
+Line = 
+
+Buffer = @ARTICLE(beck86,
+AUTHOR="W. R. Beck
+and G. E. Wright
+and N. J. Nusbaum
+and J. D. Chang
+and E. M. Isselbacher",
+TITLE="Enhancement of methotrexate toxicity by
+uracil analogues that inhibit deoxyuridine
+triphosphate nucleotidyl (d{UTP}ase) activity",
+JOURNAL="Adv. Exp. Med. Biol.",
+VOLUME="195B",
+YEAR="1986",
+PAGES="97--104")
+
+Line = @ARTICLE(C017,
+
+Buffer = @ARTICLE(beck86,
+AUTHOR="W. R. Beck
+and G. E. Wright
+and N. J. Nusbaum
+and J. D. Chang
+and E. M. Isselbacher",
+TITLE="Enhancement of methotrexate toxicity by
+uracil analogues that inhibit deoxyuridine
+triphosphate nucleotidyl (d{UTP}ase) activity",
+JOURNAL="Adv. Exp. Med. Biol.",
+VOLUME="195B",
+YEAR="1986",
+PAGES="97--104")
+
+
+Recieved this buffer: @ARTICLE(beck86,
+AUTHOR="W. R. Beck
+and G. E. Wright
+and N. J. Nusbaum
+and J. D. Chang
+and E. M. Isselbacher",
+TITLE="Enhancement of methotrexate toxicity by
+uracil analogues that inhibit deoxyuridine
+triphosphate nucleotidyl (d{UTP}ase) activity",
+JOURNAL="Adv. Exp. Med. Biol.",
+VOLUME="195B",
+YEAR="1986",
+PAGES="97--104")
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME="195B",
+YEAR="1986",
+PAGES="97--104")
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR="1986",
+PAGES="97--104")
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="K. Brynolf 
+
+Buffer = @ARTICLE(C017,
+
+Line = and R. Eliasson 
+
+Buffer = @ARTICLE(C017,
+AUTHOR="K. Brynolf 
+
+Line = and P. Reichard",
+
+Buffer = @ARTICLE(C017,
+AUTHOR="K. Brynolf 
+and R. Eliasson 
+
+Line = TITLE="Formation of {O}kazaki fragments in polyoma {DNA} synthesis
+
+Buffer = @ARTICLE(C017,
+AUTHOR="K. Brynolf 
+and R. Eliasson 
+and P. Reichard",
+
+Line = caused by misincorporation of uracil", 
+
+Buffer = @ARTICLE(C017,
+AUTHOR="K. Brynolf 
+and R. Eliasson 
+and P. Reichard",
+TITLE="Formation of {O}kazaki fragments in polyoma {DNA} synthesis
+
+Line = JOURNAL="Cell",
+
+Buffer = @ARTICLE(C017,
+AUTHOR="K. Brynolf 
+and R. Eliasson 
+and P. Reichard",
+TITLE="Formation of {O}kazaki fragments in polyoma {DNA} synthesis
+caused by misincorporation of uracil", 
+
+Line = VOLUME=13,
+
+Buffer = @ARTICLE(C017,
+AUTHOR="K. Brynolf 
+and R. Eliasson 
+and P. Reichard",
+TITLE="Formation of {O}kazaki fragments in polyoma {DNA} synthesis
+caused by misincorporation of uracil", 
+JOURNAL="Cell",
+
+Line = YEAR=1978,
+
+Buffer = @ARTICLE(C017,
+AUTHOR="K. Brynolf 
+and R. Eliasson 
+and P. Reichard",
+TITLE="Formation of {O}kazaki fragments in polyoma {DNA} synthesis
+caused by misincorporation of uracil", 
+JOURNAL="Cell",
+VOLUME=13,
+
+Line = PAGES="573--580") 
+
+Buffer = @ARTICLE(C017,
+AUTHOR="K. Brynolf 
+and R. Eliasson 
+and P. Reichard",
+TITLE="Formation of {O}kazaki fragments in polyoma {DNA} synthesis
+caused by misincorporation of uracil", 
+JOURNAL="Cell",
+VOLUME=13,
+YEAR=1978,
+
+Line = 
+
+Buffer = @ARTICLE(C017,
+AUTHOR="K. Brynolf 
+and R. Eliasson 
+and P. Reichard",
+TITLE="Formation of {O}kazaki fragments in polyoma {DNA} synthesis
+caused by misincorporation of uracil", 
+JOURNAL="Cell",
+VOLUME=13,
+YEAR=1978,
+PAGES="573--580") 
+
+Line = 
+
+Buffer = @ARTICLE(C017,
+AUTHOR="K. Brynolf 
+and R. Eliasson 
+and P. Reichard",
+TITLE="Formation of {O}kazaki fragments in polyoma {DNA} synthesis
+caused by misincorporation of uracil", 
+JOURNAL="Cell",
+VOLUME=13,
+YEAR=1978,
+PAGES="573--580") 
+
+
+Line = @ARTICLE(C018,
+
+Buffer = @ARTICLE(C017,
+AUTHOR="K. Brynolf 
+and R. Eliasson 
+and P. Reichard",
+TITLE="Formation of {O}kazaki fragments in polyoma {DNA} synthesis
+caused by misincorporation of uracil", 
+JOURNAL="Cell",
+VOLUME=13,
+YEAR=1978,
+PAGES="573--580") 
+
+
+
+Recieved this buffer: @ARTICLE(C017,
+AUTHOR="K. Brynolf 
+and R. Eliasson 
+and P. Reichard",
+TITLE="Formation of {O}kazaki fragments in polyoma {DNA} synthesis
+caused by misincorporation of uracil", 
+JOURNAL="Cell",
+VOLUME=13,
+YEAR=1978,
+PAGES="573--580") 
+
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=13,
+YEAR=1978,
+PAGES="573--580") 
+
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1978,
+PAGES="573--580") 
+
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="E. Wist 
+
+Buffer = @ARTICLE(C018,
+
+Line = and O. Unhjem 
+
+Buffer = @ARTICLE(C018,
+AUTHOR="E. Wist 
+
+Line = and H. E. Krokan",
+
+Buffer = @ARTICLE(C018,
+AUTHOR="E. Wist 
+and O. Unhjem 
+
+Line = TITLE="Accumulation of small fragments of {DNA} in isolated {H}e{L}a
+
+Buffer = @ARTICLE(C018,
+AUTHOR="E. Wist 
+and O. Unhjem 
+and H. E. Krokan",
+
+Line = cell nuclei due to transient incorporation of d{UMP}", 
+
+Buffer = @ARTICLE(C018,
+AUTHOR="E. Wist 
+and O. Unhjem 
+and H. E. Krokan",
+TITLE="Accumulation of small fragments of {DNA} in isolated {H}e{L}a
+
+Line = JOURNAL="Biochim. Biophys. Acta.",
+
+Buffer = @ARTICLE(C018,
+AUTHOR="E. Wist 
+and O. Unhjem 
+and H. E. Krokan",
+TITLE="Accumulation of small fragments of {DNA} in isolated {H}e{L}a
+cell nuclei due to transient incorporation of d{UMP}", 
+
+Line = VOLUME=520,
+
+Buffer = @ARTICLE(C018,
+AUTHOR="E. Wist 
+and O. Unhjem 
+and H. E. Krokan",
+TITLE="Accumulation of small fragments of {DNA} in isolated {H}e{L}a
+cell nuclei due to transient incorporation of d{UMP}", 
+JOURNAL="Biochim. Biophys. Acta.",
+
+Line = YEAR=1978,
+
+Buffer = @ARTICLE(C018,
+AUTHOR="E. Wist 
+and O. Unhjem 
+and H. E. Krokan",
+TITLE="Accumulation of small fragments of {DNA} in isolated {H}e{L}a
+cell nuclei due to transient incorporation of d{UMP}", 
+JOURNAL="Biochim. Biophys. Acta.",
+VOLUME=520,
+
+Line = PAGES="253--270") 
+
+Buffer = @ARTICLE(C018,
+AUTHOR="E. Wist 
+and O. Unhjem 
+and H. E. Krokan",
+TITLE="Accumulation of small fragments of {DNA} in isolated {H}e{L}a
+cell nuclei due to transient incorporation of d{UMP}", 
+JOURNAL="Biochim. Biophys. Acta.",
+VOLUME=520,
+YEAR=1978,
+
+Line = 
+
+Buffer = @ARTICLE(C018,
+AUTHOR="E. Wist 
+and O. Unhjem 
+and H. E. Krokan",
+TITLE="Accumulation of small fragments of {DNA} in isolated {H}e{L}a
+cell nuclei due to transient incorporation of d{UMP}", 
+JOURNAL="Biochim. Biophys. Acta.",
+VOLUME=520,
+YEAR=1978,
+PAGES="253--270") 
+
+Line = 
+
+Buffer = @ARTICLE(C018,
+AUTHOR="E. Wist 
+and O. Unhjem 
+and H. E. Krokan",
+TITLE="Accumulation of small fragments of {DNA} in isolated {H}e{L}a
+cell nuclei due to transient incorporation of d{UMP}", 
+JOURNAL="Biochim. Biophys. Acta.",
+VOLUME=520,
+YEAR=1978,
+PAGES="253--270") 
+
+
+Line = @ARTICLE(C019,
+
+Buffer = @ARTICLE(C018,
+AUTHOR="E. Wist 
+and O. Unhjem 
+and H. E. Krokan",
+TITLE="Accumulation of small fragments of {DNA} in isolated {H}e{L}a
+cell nuclei due to transient incorporation of d{UMP}", 
+JOURNAL="Biochim. Biophys. Acta.",
+VOLUME=520,
+YEAR=1978,
+PAGES="253--270") 
+
+
+
+Recieved this buffer: @ARTICLE(C018,
+AUTHOR="E. Wist 
+and O. Unhjem 
+and H. E. Krokan",
+TITLE="Accumulation of small fragments of {DNA} in isolated {H}e{L}a
+cell nuclei due to transient incorporation of d{UMP}", 
+JOURNAL="Biochim. Biophys. Acta.",
+VOLUME=520,
+YEAR=1978,
+PAGES="253--270") 
+
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=520,
+YEAR=1978,
+PAGES="253--270") 
+
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1978,
+PAGES="253--270") 
+
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="T. Lindahl 
+
+Buffer = @ARTICLE(C019,
+
+Line = and B. Nyberg",
+
+Buffer = @ARTICLE(C019,
+AUTHOR="T. Lindahl 
+
+Line = TITLE="Rate of depurination of native deoxyribonucleic acid", 
+
+Buffer = @ARTICLE(C019,
+AUTHOR="T. Lindahl 
+and B. Nyberg",
+
+Line = JOURNAL="Biochemistry",
+
+Buffer = @ARTICLE(C019,
+AUTHOR="T. Lindahl 
+and B. Nyberg",
+TITLE="Rate of depurination of native deoxyribonucleic acid", 
+
+Line = VOLUME=11,
+
+Buffer = @ARTICLE(C019,
+AUTHOR="T. Lindahl 
+and B. Nyberg",
+TITLE="Rate of depurination of native deoxyribonucleic acid", 
+JOURNAL="Biochemistry",
+
+Line = YEAR=1972,
+
+Buffer = @ARTICLE(C019,
+AUTHOR="T. Lindahl 
+and B. Nyberg",
+TITLE="Rate of depurination of native deoxyribonucleic acid", 
+JOURNAL="Biochemistry",
+VOLUME=11,
+
+Line = PAGES="3610--3618") 
+
+Buffer = @ARTICLE(C019,
+AUTHOR="T. Lindahl 
+and B. Nyberg",
+TITLE="Rate of depurination of native deoxyribonucleic acid", 
+JOURNAL="Biochemistry",
+VOLUME=11,
+YEAR=1972,
+
+Line = 
+
+Buffer = @ARTICLE(C019,
+AUTHOR="T. Lindahl 
+and B. Nyberg",
+TITLE="Rate of depurination of native deoxyribonucleic acid", 
+JOURNAL="Biochemistry",
+VOLUME=11,
+YEAR=1972,
+PAGES="3610--3618") 
+
+Line = 
+
+Buffer = @ARTICLE(C019,
+AUTHOR="T. Lindahl 
+and B. Nyberg",
+TITLE="Rate of depurination of native deoxyribonucleic acid", 
+JOURNAL="Biochemistry",
+VOLUME=11,
+YEAR=1972,
+PAGES="3610--3618") 
+
+
+Line = @inbook(C020,
+
+Buffer = @ARTICLE(C019,
+AUTHOR="T. Lindahl 
+and B. Nyberg",
+TITLE="Rate of depurination of native deoxyribonucleic acid", 
+JOURNAL="Biochemistry",
+VOLUME=11,
+YEAR=1972,
+PAGES="3610--3618") 
+
+
+
+Recieved this buffer: @ARTICLE(C019,
+AUTHOR="T. Lindahl 
+and B. Nyberg",
+TITLE="Rate of depurination of native deoxyribonucleic acid", 
+JOURNAL="Biochemistry",
+VOLUME=11,
+YEAR=1972,
+PAGES="3610--3618") 
+
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=11,
+YEAR=1972,
+PAGES="3610--3618") 
+
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1972,
+PAGES="3610--3618") 
+
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = author="R. Shapiro",
+
+Buffer = @inbook(C020,
+
+Line = title="Damage to {DNA} caused by hydrolysis. {\it In}: 
+
+Buffer = @inbook(C020,
+author="R. Shapiro",
+
+Line = {C}hromosome {D}amage and {R}epair. {S}eeberg, {E}. and {K}leppe, {K}. (eds)",
+
+Buffer = @inbook(C020,
+author="R. Shapiro",
+title="Damage to {DNA} caused by hydrolysis. {\it In}: 
+
+Line = publisher="Plenum Press",
+
+Buffer = @inbook(C020,
+author="R. Shapiro",
+title="Damage to {DNA} caused by hydrolysis. {\it In}: 
+{C}hromosome {D}amage and {R}epair. {S}eeberg, {E}. and {K}leppe, {K}. (eds)",
+
+Line = address="New York",
+
+Buffer = @inbook(C020,
+author="R. Shapiro",
+title="Damage to {DNA} caused by hydrolysis. {\it In}: 
+{C}hromosome {D}amage and {R}epair. {S}eeberg, {E}. and {K}leppe, {K}. (eds)",
+publisher="Plenum Press",
+
+Line = year=1981,
+
+Buffer = @inbook(C020,
+author="R. Shapiro",
+title="Damage to {DNA} caused by hydrolysis. {\it In}: 
+{C}hromosome {D}amage and {R}epair. {S}eeberg, {E}. and {K}leppe, {K}. (eds)",
+publisher="Plenum Press",
+address="New York",
+
+Line = pages="3--18") 
+
+Buffer = @inbook(C020,
+author="R. Shapiro",
+title="Damage to {DNA} caused by hydrolysis. {\it In}: 
+{C}hromosome {D}amage and {R}epair. {S}eeberg, {E}. and {K}leppe, {K}. (eds)",
+publisher="Plenum Press",
+address="New York",
+year=1981,
+
+Line = 
+
+Buffer = @inbook(C020,
+author="R. Shapiro",
+title="Damage to {DNA} caused by hydrolysis. {\it In}: 
+{C}hromosome {D}amage and {R}epair. {S}eeberg, {E}. and {K}leppe, {K}. (eds)",
+publisher="Plenum Press",
+address="New York",
+year=1981,
+pages="3--18") 
+
+Line = @ARTICLE(C021,
+
+Buffer = @inbook(C020,
+author="R. Shapiro",
+title="Damage to {DNA} caused by hydrolysis. {\it In}: 
+{C}hromosome {D}amage and {R}epair. {S}eeberg, {E}. and {K}leppe, {K}. (eds)",
+publisher="Plenum Press",
+address="New York",
+year=1981,
+pages="3--18") 
+
+
+Recieved this buffer: @inbook(C020,
+author="R. Shapiro",
+title="Damage to {DNA} caused by hydrolysis. {\it In}: 
+{C}hromosome {D}amage and {R}epair. {S}eeberg, {E}. and {K}leppe, {K}. (eds)",
+publisher="Plenum Press",
+address="New York",
+year=1981,
+pages="3--18") 
+
+
+ About to search 
+couldn't find ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: year=1981,
+pages="3--18") 
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR=" J.-C. Shen
+
+Buffer = @ARTICLE(C021,
+
+Line = and W. M. Rideout III
+
+Buffer = @ARTICLE(C021,
+AUTHOR=" J.-C. Shen
+
+Line = and P. A. Jones",
+
+Buffer = @ARTICLE(C021,
+AUTHOR=" J.-C. Shen
+and W. M. Rideout III
+
+Line = TITLE="High frequency mutagenesis by a {DNA} methyltransferase", 
+
+Buffer = @ARTICLE(C021,
+AUTHOR=" J.-C. Shen
+and W. M. Rideout III
+and P. A. Jones",
+
+Line = JOURNAL="Cell",
+
+Buffer = @ARTICLE(C021,
+AUTHOR=" J.-C. Shen
+and W. M. Rideout III
+and P. A. Jones",
+TITLE="High frequency mutagenesis by a {DNA} methyltransferase", 
+
+Line = VOLUME=71,
+
+Buffer = @ARTICLE(C021,
+AUTHOR=" J.-C. Shen
+and W. M. Rideout III
+and P. A. Jones",
+TITLE="High frequency mutagenesis by a {DNA} methyltransferase", 
+JOURNAL="Cell",
+
+Line = YEAR=1992,
+
+Buffer = @ARTICLE(C021,
+AUTHOR=" J.-C. Shen
+and W. M. Rideout III
+and P. A. Jones",
+TITLE="High frequency mutagenesis by a {DNA} methyltransferase", 
+JOURNAL="Cell",
+VOLUME=71,
+
+Line = PAGES="1073--1080") 
+
+Buffer = @ARTICLE(C021,
+AUTHOR=" J.-C. Shen
+and W. M. Rideout III
+and P. A. Jones",
+TITLE="High frequency mutagenesis by a {DNA} methyltransferase", 
+JOURNAL="Cell",
+VOLUME=71,
+YEAR=1992,
+
+Line = 
+
+Buffer = @ARTICLE(C021,
+AUTHOR=" J.-C. Shen
+and W. M. Rideout III
+and P. A. Jones",
+TITLE="High frequency mutagenesis by a {DNA} methyltransferase", 
+JOURNAL="Cell",
+VOLUME=71,
+YEAR=1992,
+PAGES="1073--1080") 
+
+Line = 
+
+Buffer = @ARTICLE(C021,
+AUTHOR=" J.-C. Shen
+and W. M. Rideout III
+and P. A. Jones",
+TITLE="High frequency mutagenesis by a {DNA} methyltransferase", 
+JOURNAL="Cell",
+VOLUME=71,
+YEAR=1992,
+PAGES="1073--1080") 
+
+
+Line = @ARTICLE(C022,
+
+Buffer = @ARTICLE(C021,
+AUTHOR=" J.-C. Shen
+and W. M. Rideout III
+and P. A. Jones",
+TITLE="High frequency mutagenesis by a {DNA} methyltransferase", 
+JOURNAL="Cell",
+VOLUME=71,
+YEAR=1992,
+PAGES="1073--1080") 
+
+
+
+Recieved this buffer: @ARTICLE(C021,
+AUTHOR=" J.-C. Shen
+and W. M. Rideout III
+and P. A. Jones",
+TITLE="High frequency mutagenesis by a {DNA} methyltransferase", 
+JOURNAL="Cell",
+VOLUME=71,
+YEAR=1992,
+PAGES="1073--1080") 
+
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=71,
+YEAR=1992,
+PAGES="1073--1080") 
+
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1992,
+PAGES="1073--1080") 
+
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="M. Wyszynski 
+
+Buffer = @ARTICLE(C022,
+
+Line = and S. Gabbara 
+
+Buffer = @ARTICLE(C022,
+AUTHOR="M. Wyszynski 
+
+Line = and A. S. Bhagwat",
+
+Buffer = @ARTICLE(C022,
+AUTHOR="M. Wyszynski 
+and S. Gabbara 
+
+Line = TITLE="Cytosine deaminations catalyzed by {DNA} cytosine methyltransferases
+
+Buffer = @ARTICLE(C022,
+AUTHOR="M. Wyszynski 
+and S. Gabbara 
+and A. S. Bhagwat",
+
+Line = are unlikely to be the major cause of mutational hot spots at sites of
+
+Buffer = @ARTICLE(C022,
+AUTHOR="M. Wyszynski 
+and S. Gabbara 
+and A. S. Bhagwat",
+TITLE="Cytosine deaminations catalyzed by {DNA} cytosine methyltransferases
+
+Line = cytosine methylation in {{\it {E}scherichia coli}}", 
+
+Buffer = @ARTICLE(C022,
+AUTHOR="M. Wyszynski 
+and S. Gabbara 
+and A. S. Bhagwat",
+TITLE="Cytosine deaminations catalyzed by {DNA} cytosine methyltransferases
+are unlikely to be the major cause of mutational hot spots at sites of
+
+Line = JOURNAL="Proc. Natl. Acad. Sci. USA",
+
+Buffer = @ARTICLE(C022,
+AUTHOR="M. Wyszynski 
+and S. Gabbara 
+and A. S. Bhagwat",
+TITLE="Cytosine deaminations catalyzed by {DNA} cytosine methyltransferases
+are unlikely to be the major cause of mutational hot spots at sites of
+cytosine methylation in {{\it {E}scherichia coli}}", 
+
+Line = VOLUME=91,
+
+Buffer = @ARTICLE(C022,
+AUTHOR="M. Wyszynski 
+and S. Gabbara 
+and A. S. Bhagwat",
+TITLE="Cytosine deaminations catalyzed by {DNA} cytosine methyltransferases
+are unlikely to be the major cause of mutational hot spots at sites of
+cytosine methylation in {{\it {E}scherichia coli}}", 
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+
+Line = YEAR=1994,
+
+Buffer = @ARTICLE(C022,
+AUTHOR="M. Wyszynski 
+and S. Gabbara 
+and A. S. Bhagwat",
+TITLE="Cytosine deaminations catalyzed by {DNA} cytosine methyltransferases
+are unlikely to be the major cause of mutational hot spots at sites of
+cytosine methylation in {{\it {E}scherichia coli}}", 
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME=91,
+
+Line = PAGES="1574--1578") 
+
+Buffer = @ARTICLE(C022,
+AUTHOR="M. Wyszynski 
+and S. Gabbara 
+and A. S. Bhagwat",
+TITLE="Cytosine deaminations catalyzed by {DNA} cytosine methyltransferases
+are unlikely to be the major cause of mutational hot spots at sites of
+cytosine methylation in {{\it {E}scherichia coli}}", 
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME=91,
+YEAR=1994,
+
+Line = 
+
+Buffer = @ARTICLE(C022,
+AUTHOR="M. Wyszynski 
+and S. Gabbara 
+and A. S. Bhagwat",
+TITLE="Cytosine deaminations catalyzed by {DNA} cytosine methyltransferases
+are unlikely to be the major cause of mutational hot spots at sites of
+cytosine methylation in {{\it {E}scherichia coli}}", 
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME=91,
+YEAR=1994,
+PAGES="1574--1578") 
+
+Line = 
+
+Buffer = @ARTICLE(C022,
+AUTHOR="M. Wyszynski 
+and S. Gabbara 
+and A. S. Bhagwat",
+TITLE="Cytosine deaminations catalyzed by {DNA} cytosine methyltransferases
+are unlikely to be the major cause of mutational hot spots at sites of
+cytosine methylation in {{\it {E}scherichia coli}}", 
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME=91,
+YEAR=1994,
+PAGES="1574--1578") 
+
+
+Line = @ARTICLE(C023,
+
+Buffer = @ARTICLE(C022,
+AUTHOR="M. Wyszynski 
+and S. Gabbara 
+and A. S. Bhagwat",
+TITLE="Cytosine deaminations catalyzed by {DNA} cytosine methyltransferases
+are unlikely to be the major cause of mutational hot spots at sites of
+cytosine methylation in {{\it {E}scherichia coli}}", 
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME=91,
+YEAR=1994,
+PAGES="1574--1578") 
+
+
+
+Recieved this buffer: @ARTICLE(C022,
+AUTHOR="M. Wyszynski 
+and S. Gabbara 
+and A. S. Bhagwat",
+TITLE="Cytosine deaminations catalyzed by {DNA} cytosine methyltransferases
+are unlikely to be the major cause of mutational hot spots at sites of
+cytosine methylation in {{\it {E}scherichia coli}}", 
+JOURNAL="Proc. Natl. Acad. Sci. USA",
+VOLUME=91,
+YEAR=1994,
+PAGES="1574--1578") 
+
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=91,
+YEAR=1994,
+PAGES="1574--1578") 
+
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1994,
+PAGES="1574--1578") 
+
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="B. K. Duncan 
+
+Buffer = @ARTICLE(C023,
+
+Line = and J. H. Miller",
+
+Buffer = @ARTICLE(C023,
+AUTHOR="B. K. Duncan 
+
+Line = TITLE="Mutagenic deamination of cytosine residues in {DNA}", 
+
+Buffer = @ARTICLE(C023,
+AUTHOR="B. K. Duncan 
+and J. H. Miller",
+
+Line = JOURNAL="Nature",
+
+Buffer = @ARTICLE(C023,
+AUTHOR="B. K. Duncan 
+and J. H. Miller",
+TITLE="Mutagenic deamination of cytosine residues in {DNA}", 
+
+Line = VOLUME=287,
+
+Buffer = @ARTICLE(C023,
+AUTHOR="B. K. Duncan 
+and J. H. Miller",
+TITLE="Mutagenic deamination of cytosine residues in {DNA}", 
+JOURNAL="Nature",
+
+Line = YEAR=1980,
+
+Buffer = @ARTICLE(C023,
+AUTHOR="B. K. Duncan 
+and J. H. Miller",
+TITLE="Mutagenic deamination of cytosine residues in {DNA}", 
+JOURNAL="Nature",
+VOLUME=287,
+
+Line = PAGES="560--561") 
+
+Buffer = @ARTICLE(C023,
+AUTHOR="B. K. Duncan 
+and J. H. Miller",
+TITLE="Mutagenic deamination of cytosine residues in {DNA}", 
+JOURNAL="Nature",
+VOLUME=287,
+YEAR=1980,
+
+Line =  
+
+Buffer = @ARTICLE(C023,
+AUTHOR="B. K. Duncan 
+and J. H. Miller",
+TITLE="Mutagenic deamination of cytosine residues in {DNA}", 
+JOURNAL="Nature",
+VOLUME=287,
+YEAR=1980,
+PAGES="560--561") 
+
+Line = 
+
+Buffer = @ARTICLE(C023,
+AUTHOR="B. K. Duncan 
+and J. H. Miller",
+TITLE="Mutagenic deamination of cytosine residues in {DNA}", 
+JOURNAL="Nature",
+VOLUME=287,
+YEAR=1980,
+PAGES="560--561") 
+ 
+
+Line = @ARTICLE(C024,
+
+Buffer = @ARTICLE(C023,
+AUTHOR="B. K. Duncan 
+and J. H. Miller",
+TITLE="Mutagenic deamination of cytosine residues in {DNA}", 
+JOURNAL="Nature",
+VOLUME=287,
+YEAR=1980,
+PAGES="560--561") 
+ 
+
+
+Recieved this buffer: @ARTICLE(C023,
+AUTHOR="B. K. Duncan 
+and J. H. Miller",
+TITLE="Mutagenic deamination of cytosine residues in {DNA}", 
+JOURNAL="Nature",
+VOLUME=287,
+YEAR=1980,
+PAGES="560--561") 
+ 
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=287,
+YEAR=1980,
+PAGES="560--561") 
+ 
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1980,
+PAGES="560--561") 
+ 
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="B. K. Duncan 
+
+Buffer = @ARTICLE(C024,
+
+Line = and B. Weiss",
+
+Buffer = @ARTICLE(C024,
+AUTHOR="B. K. Duncan 
+
+Line = TITLE="Specific mutator effects of {\it ung} (uracil-{DNA} glycosylase)
+
+Buffer = @ARTICLE(C024,
+AUTHOR="B. K. Duncan 
+and B. Weiss",
+
+Line = mutations in {{\it Escherichia coli}}", 
+
+Buffer = @ARTICLE(C024,
+AUTHOR="B. K. Duncan 
+and B. Weiss",
+TITLE="Specific mutator effects of {\it ung} (uracil-{DNA} glycosylase)
+
+Line = JOURNAL="J. Bacteriol.",
+
+Buffer = @ARTICLE(C024,
+AUTHOR="B. K. Duncan 
+and B. Weiss",
+TITLE="Specific mutator effects of {\it ung} (uracil-{DNA} glycosylase)
+mutations in {{\it Escherichia coli}}", 
+
+Line = VOLUME=151,
+
+Buffer = @ARTICLE(C024,
+AUTHOR="B. K. Duncan 
+and B. Weiss",
+TITLE="Specific mutator effects of {\it ung} (uracil-{DNA} glycosylase)
+mutations in {{\it Escherichia coli}}", 
+JOURNAL="J. Bacteriol.",
+
+Line = YEAR=1982,
+
+Buffer = @ARTICLE(C024,
+AUTHOR="B. K. Duncan 
+and B. Weiss",
+TITLE="Specific mutator effects of {\it ung} (uracil-{DNA} glycosylase)
+mutations in {{\it Escherichia coli}}", 
+JOURNAL="J. Bacteriol.",
+VOLUME=151,
+
+Line = PAGES="750--755") 
+
+Buffer = @ARTICLE(C024,
+AUTHOR="B. K. Duncan 
+and B. Weiss",
+TITLE="Specific mutator effects of {\it ung} (uracil-{DNA} glycosylase)
+mutations in {{\it Escherichia coli}}", 
+JOURNAL="J. Bacteriol.",
+VOLUME=151,
+YEAR=1982,
+
+Line =  
+
+Buffer = @ARTICLE(C024,
+AUTHOR="B. K. Duncan 
+and B. Weiss",
+TITLE="Specific mutator effects of {\it ung} (uracil-{DNA} glycosylase)
+mutations in {{\it Escherichia coli}}", 
+JOURNAL="J. Bacteriol.",
+VOLUME=151,
+YEAR=1982,
+PAGES="750--755") 
+
+Line = @ARTICLE(C025,
+
+Buffer = @ARTICLE(C024,
+AUTHOR="B. K. Duncan 
+and B. Weiss",
+TITLE="Specific mutator effects of {\it ung} (uracil-{DNA} glycosylase)
+mutations in {{\it Escherichia coli}}", 
+JOURNAL="J. Bacteriol.",
+VOLUME=151,
+YEAR=1982,
+PAGES="750--755") 
+ 
+
+Recieved this buffer: @ARTICLE(C024,
+AUTHOR="B. K. Duncan 
+and B. Weiss",
+TITLE="Specific mutator effects of {\it ung} (uracil-{DNA} glycosylase)
+mutations in {{\it Escherichia coli}}", 
+JOURNAL="J. Bacteriol.",
+VOLUME=151,
+YEAR=1982,
+PAGES="750--755") 
+ 
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=151,
+YEAR=1982,
+PAGES="750--755") 
+ 
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1982,
+PAGES="750--755") 
+ 
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="K. J. Impellizzeri 
+
+Buffer = @ARTICLE(C025,
+
+Line = and B. Anderson 
+
+Buffer = @ARTICLE(C025,
+AUTHOR="K. J. Impellizzeri 
+
+Line = and P. M. Burgers",
+
+Buffer = @ARTICLE(C025,
+AUTHOR="K. J. Impellizzeri 
+and B. Anderson 
+
+Line = TITLE="The spectrum of spontaneous mutations in a {{\it {S}accharomyces 
+
+Buffer = @ARTICLE(C025,
+AUTHOR="K. J. Impellizzeri 
+and B. Anderson 
+and P. M. Burgers",
+
+Line = cerevisiae}}
+
+Buffer = @ARTICLE(C025,
+AUTHOR="K. J. Impellizzeri 
+and B. Anderson 
+and P. M. Burgers",
+TITLE="The spectrum of spontaneous mutations in a {{\it {S}accharomyces 
+
+Line = uracil-{DNA}-glycosylase mutant limits the function of this enzyme to 
+
+Buffer = @ARTICLE(C025,
+AUTHOR="K. J. Impellizzeri 
+and B. Anderson 
+and P. M. Burgers",
+TITLE="The spectrum of spontaneous mutations in a {{\it {S}accharomyces 
+cerevisiae}}
+
+Line = cytosine deamination repair", 
+
+Buffer = @ARTICLE(C025,
+AUTHOR="K. J. Impellizzeri 
+and B. Anderson 
+and P. M. Burgers",
+TITLE="The spectrum of spontaneous mutations in a {{\it {S}accharomyces 
+cerevisiae}}
+uracil-{DNA}-glycosylase mutant limits the function of this enzyme to 
+
+Line = JOURNAL="J. Bacteriol.",
+
+Buffer = @ARTICLE(C025,
+AUTHOR="K. J. Impellizzeri 
+and B. Anderson 
+and P. M. Burgers",
+TITLE="The spectrum of spontaneous mutations in a {{\it {S}accharomyces 
+cerevisiae}}
+uracil-{DNA}-glycosylase mutant limits the function of this enzyme to 
+cytosine deamination repair", 
+
+Line = VOLUME=173,
+
+Buffer = @ARTICLE(C025,
+AUTHOR="K. J. Impellizzeri 
+and B. Anderson 
+and P. M. Burgers",
+TITLE="The spectrum of spontaneous mutations in a {{\it {S}accharomyces 
+cerevisiae}}
+uracil-{DNA}-glycosylase mutant limits the function of this enzyme to 
+cytosine deamination repair", 
+JOURNAL="J. Bacteriol.",
+
+Line = YEAR=1991,
+
+Buffer = @ARTICLE(C025,
+AUTHOR="K. J. Impellizzeri 
+and B. Anderson 
+and P. M. Burgers",
+TITLE="The spectrum of spontaneous mutations in a {{\it {S}accharomyces 
+cerevisiae}}
+uracil-{DNA}-glycosylase mutant limits the function of this enzyme to 
+cytosine deamination repair", 
+JOURNAL="J. Bacteriol.",
+VOLUME=173,
+
+Line = PAGES="6807--6810") 
+
+Buffer = @ARTICLE(C025,
+AUTHOR="K. J. Impellizzeri 
+and B. Anderson 
+and P. M. Burgers",
+TITLE="The spectrum of spontaneous mutations in a {{\it {S}accharomyces 
+cerevisiae}}
+uracil-{DNA}-glycosylase mutant limits the function of this enzyme to 
+cytosine deamination repair", 
+JOURNAL="J. Bacteriol.",
+VOLUME=173,
+YEAR=1991,
+
+Line =  
+
+Buffer = @ARTICLE(C025,
+AUTHOR="K. J. Impellizzeri 
+and B. Anderson 
+and P. M. Burgers",
+TITLE="The spectrum of spontaneous mutations in a {{\it {S}accharomyces 
+cerevisiae}}
+uracil-{DNA}-glycosylase mutant limits the function of this enzyme to 
+cytosine deamination repair", 
+JOURNAL="J. Bacteriol.",
+VOLUME=173,
+YEAR=1991,
+PAGES="6807--6810") 
+
+Line = 
+
+Buffer = @ARTICLE(C025,
+AUTHOR="K. J. Impellizzeri 
+and B. Anderson 
+and P. M. Burgers",
+TITLE="The spectrum of spontaneous mutations in a {{\it {S}accharomyces 
+cerevisiae}}
+uracil-{DNA}-glycosylase mutant limits the function of this enzyme to 
+cytosine deamination repair", 
+JOURNAL="J. Bacteriol.",
+VOLUME=173,
+YEAR=1991,
+PAGES="6807--6810") 
+ 
+
+Line = @ARTICLE(C026,
+
+Buffer = @ARTICLE(C025,
+AUTHOR="K. J. Impellizzeri 
+and B. Anderson 
+and P. M. Burgers",
+TITLE="The spectrum of spontaneous mutations in a {{\it {S}accharomyces 
+cerevisiae}}
+uracil-{DNA}-glycosylase mutant limits the function of this enzyme to 
+cytosine deamination repair", 
+JOURNAL="J. Bacteriol.",
+VOLUME=173,
+YEAR=1991,
+PAGES="6807--6810") 
+ 
+
+
+Recieved this buffer: @ARTICLE(C025,
+AUTHOR="K. J. Impellizzeri 
+and B. Anderson 
+and P. M. Burgers",
+TITLE="The spectrum of spontaneous mutations in a {{\it {S}accharomyces 
+cerevisiae}}
+uracil-{DNA}-glycosylase mutant limits the function of this enzyme to 
+cytosine deamination repair", 
+JOURNAL="J. Bacteriol.",
+VOLUME=173,
+YEAR=1991,
+PAGES="6807--6810") 
+ 
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=173,
+YEAR=1991,
+PAGES="6807--6810") 
+ 
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1991,
+PAGES="6807--6810") 
+ 
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="C. U. Wittwer 
+
+Buffer = @ARTICLE(C026,
+
+Line = and G. Bauw 
+
+Buffer = @ARTICLE(C026,
+AUTHOR="C. U. Wittwer 
+
+Line = and H. E. Krokan",
+
+Buffer = @ARTICLE(C026,
+AUTHOR="C. U. Wittwer 
+and G. Bauw 
+
+Line = TITLE="Purification and determination of the {NH}2-terminal amino acid
+
+Buffer = @ARTICLE(C026,
+AUTHOR="C. U. Wittwer 
+and G. Bauw 
+and H. E. Krokan",
+
+Line = sequence of uracil-{DNA} glycosylase from human placenta", 
+
+Buffer = @ARTICLE(C026,
+AUTHOR="C. U. Wittwer 
+and G. Bauw 
+and H. E. Krokan",
+TITLE="Purification and determination of the {NH}2-terminal amino acid
+
+Line = JOURNAL="Biochemistry",
+
+Buffer = @ARTICLE(C026,
+AUTHOR="C. U. Wittwer 
+and G. Bauw 
+and H. E. Krokan",
+TITLE="Purification and determination of the {NH}2-terminal amino acid
+sequence of uracil-{DNA} glycosylase from human placenta", 
+
+Line = VOLUME=28,
+
+Buffer = @ARTICLE(C026,
+AUTHOR="C. U. Wittwer 
+and G. Bauw 
+and H. E. Krokan",
+TITLE="Purification and determination of the {NH}2-terminal amino acid
+sequence of uracil-{DNA} glycosylase from human placenta", 
+JOURNAL="Biochemistry",
+
+Line = YEAR=1989,
+
+Buffer = @ARTICLE(C026,
+AUTHOR="C. U. Wittwer 
+and G. Bauw 
+and H. E. Krokan",
+TITLE="Purification and determination of the {NH}2-terminal amino acid
+sequence of uracil-{DNA} glycosylase from human placenta", 
+JOURNAL="Biochemistry",
+VOLUME=28,
+
+Line = PAGES="780--784") 
+
+Buffer = @ARTICLE(C026,
+AUTHOR="C. U. Wittwer 
+and G. Bauw 
+and H. E. Krokan",
+TITLE="Purification and determination of the {NH}2-terminal amino acid
+sequence of uracil-{DNA} glycosylase from human placenta", 
+JOURNAL="Biochemistry",
+VOLUME=28,
+YEAR=1989,
+
+Line =  
+
+Buffer = @ARTICLE(C026,
+AUTHOR="C. U. Wittwer 
+and G. Bauw 
+and H. E. Krokan",
+TITLE="Purification and determination of the {NH}2-terminal amino acid
+sequence of uracil-{DNA} glycosylase from human placenta", 
+JOURNAL="Biochemistry",
+VOLUME=28,
+YEAR=1989,
+PAGES="780--784") 
+
+Line = 
+
+Buffer = @ARTICLE(C026,
+AUTHOR="C. U. Wittwer 
+and G. Bauw 
+and H. E. Krokan",
+TITLE="Purification and determination of the {NH}2-terminal amino acid
+sequence of uracil-{DNA} glycosylase from human placenta", 
+JOURNAL="Biochemistry",
+VOLUME=28,
+YEAR=1989,
+PAGES="780--784") 
+ 
+
+Line = @ARTICLE(C027,
+
+Buffer = @ARTICLE(C026,
+AUTHOR="C. U. Wittwer 
+and G. Bauw 
+and H. E. Krokan",
+TITLE="Purification and determination of the {NH}2-terminal amino acid
+sequence of uracil-{DNA} glycosylase from human placenta", 
+JOURNAL="Biochemistry",
+VOLUME=28,
+YEAR=1989,
+PAGES="780--784") 
+ 
+
+
+Recieved this buffer: @ARTICLE(C026,
+AUTHOR="C. U. Wittwer 
+and G. Bauw 
+and H. E. Krokan",
+TITLE="Purification and determination of the {NH}2-terminal amino acid
+sequence of uracil-{DNA} glycosylase from human placenta", 
+JOURNAL="Biochemistry",
+VOLUME=28,
+YEAR=1989,
+PAGES="780--784") 
+ 
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=28,
+YEAR=1989,
+PAGES="780--784") 
+ 
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1989,
+PAGES="780--784") 
+ 
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="U. Varshney 
+
+Buffer = @ARTICLE(C027,
+
+Line = and T. Houtcheon 
+
+Buffer = @ARTICLE(C027,
+AUTHOR="U. Varshney 
+
+Line = and J. H. van de Sande",
+
+Buffer = @ARTICLE(C027,
+AUTHOR="U. Varshney 
+and T. Houtcheon 
+
+Line = TITLE="Sequence analysis, expression and conservation of {{\it Escherichia coli}
+Buffer = @ARTICLE(C027,
+AUTHOR="U. Varshney 
+and T. Houtcheon 
+and J. H. van de Sande",
+
+Line = } 
+
+Buffer = @ARTICLE(C027,
+AUTHOR="U. Varshney 
+and T. Houtcheon 
+and J. H. van de Sande",
+TITLE="Sequence analysis, expression and conservation of {{\it Escherichia coli}
+Line = uracil {DNA} glycosylase and its gene ({\it ung})", 
+
+Buffer = @ARTICLE(C027,
+AUTHOR="U. Varshney 
+and T. Houtcheon 
+and J. H. van de Sande",
+TITLE="Sequence analysis, expression and conservation of {{\it Escherichia coli}} 
+
+Line = JOURNAL="J. Biol. Chem.",
+
+Buffer = @ARTICLE(C027,
+AUTHOR="U. Varshney 
+and T. Houtcheon 
+and J. H. van de Sande",
+TITLE="Sequence analysis, expression and conservation of {{\it Escherichia coli}} 
+uracil {DNA} glycosylase and its gene ({\it ung})", 
+
+Line = VOLUME=263,
+
+Buffer = @ARTICLE(C027,
+AUTHOR="U. Varshney 
+and T. Houtcheon 
+and J. H. van de Sande",
+TITLE="Sequence analysis, expression and conservation of {{\it Escherichia coli}} 
+uracil {DNA} glycosylase and its gene ({\it ung})", 
+JOURNAL="J. Biol. Chem.",
+
+Line = YEAR=1988,
+
+Buffer = @ARTICLE(C027,
+AUTHOR="U. Varshney 
+and T. Houtcheon 
+and J. H. van de Sande",
+TITLE="Sequence analysis, expression and conservation of {{\it Escherichia coli}} 
+uracil {DNA} glycosylase and its gene ({\it ung})", 
+JOURNAL="J. Biol. Chem.",
+VOLUME=263,
+
+Line = PAGES="7776--7784") 
+
+Buffer = @ARTICLE(C027,
+AUTHOR="U. Varshney 
+and T. Houtcheon 
+and J. H. van de Sande",
+TITLE="Sequence analysis, expression and conservation of {{\it Escherichia coli}} 
+uracil {DNA} glycosylase and its gene ({\it ung})", 
+JOURNAL="J. Biol. Chem.",
+VOLUME=263,
+YEAR=1988,
+
+Line =  
+
+Buffer = @ARTICLE(C027,
+AUTHOR="U. Varshney 
+and T. Houtcheon 
+and J. H. van de Sande",
+TITLE="Sequence analysis, expression and conservation of {{\it Escherichia coli}} 
+uracil {DNA} glycosylase and its gene ({\it ung})", 
+JOURNAL="J. Biol. Chem.",
+VOLUME=263,
+YEAR=1988,
+PAGES="7776--7784") 
+
+Line = 
+
+Buffer = @ARTICLE(C027,
+AUTHOR="U. Varshney 
+and T. Houtcheon 
+and J. H. van de Sande",
+TITLE="Sequence analysis, expression and conservation of {{\it Escherichia coli}} 
+uracil {DNA} glycosylase and its gene ({\it ung})", 
+JOURNAL="J. Biol. Chem.",
+VOLUME=263,
+YEAR=1988,
+PAGES="7776--7784") 
+ 
+
+Line = @ARTICLE(C028,
+
+Buffer = @ARTICLE(C027,
+AUTHOR="U. Varshney 
+and T. Houtcheon 
+and J. H. van de Sande",
+TITLE="Sequence analysis, expression and conservation of {{\it Escherichia coli}} 
+uracil {DNA} glycosylase and its gene ({\it ung})", 
+JOURNAL="J. Biol. Chem.",
+VOLUME=263,
+YEAR=1988,
+PAGES="7776--7784") 
+ 
+
+
+Recieved this buffer: @ARTICLE(C027,
+AUTHOR="U. Varshney 
+and T. Houtcheon 
+and J. H. van de Sande",
+TITLE="Sequence analysis, expression and conservation of {{\it Escherichia coli}} 
+uracil {DNA} glycosylase and its gene ({\it ung})", 
+JOURNAL="J. Biol. Chem.",
+VOLUME=263,
+YEAR=1988,
+PAGES="7776--7784") 
+ 
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=263,
+YEAR=1988,
+PAGES="7776--7784") 
+ 
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1988,
+PAGES="7776--7784") 
+ 
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="V. M{\'{e}}jean 
+
+Buffer = @ARTICLE(C028,
+
+Line = and I. Rives 
+
+Buffer = @ARTICLE(C028,
+AUTHOR="V. M{\'{e}}jean 
+
+Line = and J. P. Claverys",
+
+Buffer = @ARTICLE(C028,
+AUTHOR="V. M{\'{e}}jean 
+and I. Rives 
+
+Line = TITLE="Nucleotide sequence of the {{\it Streptococcus pneumoniae ung}}
+
+Buffer = @ARTICLE(C028,
+AUTHOR="V. M{\'{e}}jean 
+and I. Rives 
+and J. P. Claverys",
+
+Line = gene encoding uracil-{DNA} glycosylase", 
+
+Buffer = @ARTICLE(C028,
+AUTHOR="V. M{\'{e}}jean 
+and I. Rives 
+and J. P. Claverys",
+TITLE="Nucleotide sequence of the {{\it Streptococcus pneumoniae ung}}
+
+Line = JOURNAL="Nucl. Acids Res.",
+
+Buffer = @ARTICLE(C028,
+AUTHOR="V. M{\'{e}}jean 
+and I. Rives 
+and J. P. Claverys",
+TITLE="Nucleotide sequence of the {{\it Streptococcus pneumoniae ung}}
+gene encoding uracil-{DNA} glycosylase", 
+
+Line = VOLUME=18,
+
+Buffer = @ARTICLE(C028,
+AUTHOR="V. M{\'{e}}jean 
+and I. Rives 
+and J. P. Claverys",
+TITLE="Nucleotide sequence of the {{\it Streptococcus pneumoniae ung}}
+gene encoding uracil-{DNA} glycosylase", 
+JOURNAL="Nucl. Acids Res.",
+
+Line = YEAR=1990,
+
+Buffer = @ARTICLE(C028,
+AUTHOR="V. M{\'{e}}jean 
+and I. Rives 
+and J. P. Claverys",
+TITLE="Nucleotide sequence of the {{\it Streptococcus pneumoniae ung}}
+gene encoding uracil-{DNA} glycosylase", 
+JOURNAL="Nucl. Acids Res.",
+VOLUME=18,
+
+Line = PAGES="6693") 
+
+Buffer = @ARTICLE(C028,
+AUTHOR="V. M{\'{e}}jean 
+and I. Rives 
+and J. P. Claverys",
+TITLE="Nucleotide sequence of the {{\it Streptococcus pneumoniae ung}}
+gene encoding uracil-{DNA} glycosylase", 
+JOURNAL="Nucl. Acids Res.",
+VOLUME=18,
+YEAR=1990,
+
+Line =  
+
+Buffer = @ARTICLE(C028,
+AUTHOR="V. M{\'{e}}jean 
+and I. Rives 
+and J. P. Claverys",
+TITLE="Nucleotide sequence of the {{\it Streptococcus pneumoniae ung}}
+gene encoding uracil-{DNA} glycosylase", 
+JOURNAL="Nucl. Acids Res.",
+VOLUME=18,
+YEAR=1990,
+PAGES="6693") 
+
+Line = 
+
+Buffer = @ARTICLE(C028,
+AUTHOR="V. M{\'{e}}jean 
+and I. Rives 
+and J. P. Claverys",
+TITLE="Nucleotide sequence of the {{\it Streptococcus pneumoniae ung}}
+gene encoding uracil-{DNA} glycosylase", 
+JOURNAL="Nucl. Acids Res.",
+VOLUME=18,
+YEAR=1990,
+PAGES="6693") 
+ 
+
+Line = 
+
+Buffer = @ARTICLE(C028,
+AUTHOR="V. M{\'{e}}jean 
+and I. Rives 
+and J. P. Claverys",
+TITLE="Nucleotide sequence of the {{\it Streptococcus pneumoniae ung}}
+gene encoding uracil-{DNA} glycosylase", 
+JOURNAL="Nucl. Acids Res.",
+VOLUME=18,
+YEAR=1990,
+PAGES="6693") 
+ 
+
+
+Line = @ARTICLE(C029,
+
+Buffer = @ARTICLE(C028,
+AUTHOR="V. M{\'{e}}jean 
+and I. Rives 
+and J. P. Claverys",
+TITLE="Nucleotide sequence of the {{\it Streptococcus pneumoniae ung}}
+gene encoding uracil-{DNA} glycosylase", 
+JOURNAL="Nucl. Acids Res.",
+VOLUME=18,
+YEAR=1990,
+PAGES="6693") 
+ 
+
+
+
+Recieved this buffer: @ARTICLE(C028,
+AUTHOR="V. M{\'{e}}jean 
+and I. Rives 
+and J. P. Claverys",
+TITLE="Nucleotide sequence of the {{\it Streptococcus pneumoniae ung}}
+gene encoding uracil-{DNA} glycosylase", 
+JOURNAL="Nucl. Acids Res.",
+VOLUME=18,
+YEAR=1990,
+PAGES="6693") 
+ 
+
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=18,
+YEAR=1990,
+PAGES="6693") 
+ 
+
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1990,
+PAGES="6693") 
+ 
+
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="K. J. Percival 
+
+Buffer = @ARTICLE(C029,
+
+Line = and M. B. Klein 
+
+Buffer = @ARTICLE(C029,
+AUTHOR="K. J. Percival 
+
+Line = and P. M. Burgers",
+
+Buffer = @ARTICLE(C029,
+AUTHOR="K. J. Percival 
+and M. B. Klein 
+
+Line = TITLE="Molecular cloning and primary structure of the uracil-{DNA}-glycosylase
+
+Buffer = @ARTICLE(C029,
+AUTHOR="K. J. Percival 
+and M. B. Klein 
+and P. M. Burgers",
+
+Line = gene from {{\it Saccharomyces cerevisiae}}", 
+
+Buffer = @ARTICLE(C029,
+AUTHOR="K. J. Percival 
+and M. B. Klein 
+and P. M. Burgers",
+TITLE="Molecular cloning and primary structure of the uracil-{DNA}-glycosylase
+
+Line = JOURNAL="J. Biol. Chem.",
+
+Buffer = @ARTICLE(C029,
+AUTHOR="K. J. Percival 
+and M. B. Klein 
+and P. M. Burgers",
+TITLE="Molecular cloning and primary structure of the uracil-{DNA}-glycosylase
+gene from {{\it Saccharomyces cerevisiae}}", 
+
+Line = VOLUME=264,
+
+Buffer = @ARTICLE(C029,
+AUTHOR="K. J. Percival 
+and M. B. Klein 
+and P. M. Burgers",
+TITLE="Molecular cloning and primary structure of the uracil-{DNA}-glycosylase
+gene from {{\it Saccharomyces cerevisiae}}", 
+JOURNAL="J. Biol. Chem.",
+
+Line = YEAR=1989,
+
+Buffer = @ARTICLE(C029,
+AUTHOR="K. J. Percival 
+and M. B. Klein 
+and P. M. Burgers",
+TITLE="Molecular cloning and primary structure of the uracil-{DNA}-glycosylase
+gene from {{\it Saccharomyces cerevisiae}}", 
+JOURNAL="J. Biol. Chem.",
+VOLUME=264,
+
+Line = PAGES="2593--2598") 
+
+Buffer = @ARTICLE(C029,
+AUTHOR="K. J. Percival 
+and M. B. Klein 
+and P. M. Burgers",
+TITLE="Molecular cloning and primary structure of the uracil-{DNA}-glycosylase
+gene from {{\it Saccharomyces cerevisiae}}", 
+JOURNAL="J. Biol. Chem.",
+VOLUME=264,
+YEAR=1989,
+
+Line =  
+
+Buffer = @ARTICLE(C029,
+AUTHOR="K. J. Percival 
+and M. B. Klein 
+and P. M. Burgers",
+TITLE="Molecular cloning and primary structure of the uracil-{DNA}-glycosylase
+gene from {{\it Saccharomyces cerevisiae}}", 
+JOURNAL="J. Biol. Chem.",
+VOLUME=264,
+YEAR=1989,
+PAGES="2593--2598") 
+
+Line = 
+
+Buffer = @ARTICLE(C029,
+AUTHOR="K. J. Percival 
+and M. B. Klein 
+and P. M. Burgers",
+TITLE="Molecular cloning and primary structure of the uracil-{DNA}-glycosylase
+gene from {{\it Saccharomyces cerevisiae}}", 
+JOURNAL="J. Biol. Chem.",
+VOLUME=264,
+YEAR=1989,
+PAGES="2593--2598") 
+ 
+
+Line = @ARTICLE(C030,
+
+Buffer = @ARTICLE(C029,
+AUTHOR="K. J. Percival 
+and M. B. Klein 
+and P. M. Burgers",
+TITLE="Molecular cloning and primary structure of the uracil-{DNA}-glycosylase
+gene from {{\it Saccharomyces cerevisiae}}", 
+JOURNAL="J. Biol. Chem.",
+VOLUME=264,
+YEAR=1989,
+PAGES="2593--2598") 
+ 
+
+
+Recieved this buffer: @ARTICLE(C029,
+AUTHOR="K. J. Percival 
+and M. B. Klein 
+and P. M. Burgers",
+TITLE="Molecular cloning and primary structure of the uracil-{DNA}-glycosylase
+gene from {{\it Saccharomyces cerevisiae}}", 
+JOURNAL="J. Biol. Chem.",
+VOLUME=264,
+YEAR=1989,
+PAGES="2593--2598") 
+ 
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=264,
+YEAR=1989,
+PAGES="2593--2598") 
+ 
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
+begin extract_quotes
+end extract_quotes
+Started extract_num
+Got the string start: YEAR=1989,
+PAGES="2593--2598") 
+ 
+
+
+extracted bit between = and ,
+Ended process_ref
+Line = AUTHOR="R. Baer 
+
+Buffer = @ARTICLE(C030,
+
+Line = and A. T. Bankier 
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+
+Line = and M. D. Biggin 
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+
+Line = and P. L. Deininger 
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+
+Line = and P. J. Farrell 
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+
+Line = and T. J. Gibson 
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+
+Line = and G. Hatfull 
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+
+Line = and G. S. Hudson 
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+
+Line = and S. C. Satchwell 
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+and G. S. Hudson 
+
+Line = and C. Seguin 
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+and G. S. Hudson 
+and S. C. Satchwell 
+
+Line = and P. S. Tuffnell 
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+and G. S. Hudson 
+and S. C. Satchwell 
+and C. Seguin 
+
+Line = and B. G. Barrell",
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+and G. S. Hudson 
+and S. C. Satchwell 
+and C. Seguin 
+and P. S. Tuffnell 
+
+Line = TITLE="{DNA} sequence and expression of the {B}95-8 {E}pstein-{B}arr virus genom
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+and G. S. Hudson 
+and S. C. Satchwell 
+and C. Seguin 
+and P. S. Tuffnell 
+and B. G. Barrell",
+
+Line = e", 
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+and G. S. Hudson 
+and S. C. Satchwell 
+and C. Seguin 
+and P. S. Tuffnell 
+and B. G. Barrell",
+TITLE="{DNA} sequence and expression of the {B}95-8 {E}pstein-{B}arr virus genom
+Line = JOURNAL="Nature",
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+and G. S. Hudson 
+and S. C. Satchwell 
+and C. Seguin 
+and P. S. Tuffnell 
+and B. G. Barrell",
+TITLE="{DNA} sequence and expression of the {B}95-8 {E}pstein-{B}arr virus genome", 
+
+Line = VOLUME=310,
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+and G. S. Hudson 
+and S. C. Satchwell 
+and C. Seguin 
+and P. S. Tuffnell 
+and B. G. Barrell",
+TITLE="{DNA} sequence and expression of the {B}95-8 {E}pstein-{B}arr virus genome", 
+JOURNAL="Nature",
+
+Line = YEAR=1984,
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+and G. S. Hudson 
+and S. C. Satchwell 
+and C. Seguin 
+and P. S. Tuffnell 
+and B. G. Barrell",
+TITLE="{DNA} sequence and expression of the {B}95-8 {E}pstein-{B}arr virus genome", 
+JOURNAL="Nature",
+VOLUME=310,
+
+Line = PAGES="207--211") 
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+and G. S. Hudson 
+and S. C. Satchwell 
+and C. Seguin 
+and P. S. Tuffnell 
+and B. G. Barrell",
+TITLE="{DNA} sequence and expression of the {B}95-8 {E}pstein-{B}arr virus genome", 
+JOURNAL="Nature",
+VOLUME=310,
+YEAR=1984,
+
+Line =  
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+and G. S. Hudson 
+and S. C. Satchwell 
+and C. Seguin 
+and P. S. Tuffnell 
+and B. G. Barrell",
+TITLE="{DNA} sequence and expression of the {B}95-8 {E}pstein-{B}arr virus genome", 
+JOURNAL="Nature",
+VOLUME=310,
+YEAR=1984,
+PAGES="207--211") 
+
+Line = 
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+and G. S. Hudson 
+and S. C. Satchwell 
+and C. Seguin 
+and P. S. Tuffnell 
+and B. G. Barrell",
+TITLE="{DNA} sequence and expression of the {B}95-8 {E}pstein-{B}arr virus genome", 
+JOURNAL="Nature",
+VOLUME=310,
+YEAR=1984,
+PAGES="207--211") 
+ 
+
+Line = @ARTICLE(C031,
+
+Buffer = @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+and G. S. Hudson 
+and S. C. Satchwell 
+and C. Seguin 
+and P. S. Tuffnell 
+and B. G. Barrell",
+TITLE="{DNA} sequence and expression of the {B}95-8 {E}pstein-{B}arr virus genome", 
+JOURNAL="Nature",
+VOLUME=310,
+YEAR=1984,
+PAGES="207--211") 
+ 
+
+
+Recieved this buffer: @ARTICLE(C030,
+AUTHOR="R. Baer 
+and A. T. Bankier 
+and M. D. Biggin 
+and P. L. Deininger 
+and P. J. Farrell 
+and T. J. Gibson 
+and G. Hatfull 
+and G. S. Hudson 
+and S. C. Satchwell 
+and C. Seguin 
+and P. S. Tuffnell 
+and B. G. Barrell",
+TITLE="{DNA} sequence and expression of the {B}95-8 {E}pstein-{B}arr virus genome", 
+JOURNAL="Nature",
+VOLUME=310,
+YEAR=1984,
+PAGES="207--211") 
+ 
+
+
+ About to search 
+found ARTICLE 
+begin extract_quotes
+end extract_quotes
+done with Title
+begin extract_quotes
+end extract_quotes
+done with Journal
+Started extract_num
+Got the string start: VOLUME=310,
+YEAR=1984,
+PAGES="207--211") 
+ 
+
+
+extracted bit between = and ,
+done with ARTICLE
+begin extract_quotes
+end extract_quotes
