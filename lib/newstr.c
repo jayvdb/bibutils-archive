@@ -12,9 +12,9 @@
 #define newstr_initlen (64)
 
 void 
-newstr_init(newstring *string)
+newstr_init( newstring *string )
 {
-	if (string==NULL) return;
+	if ( !string ) return;
 	string->dim=0;
 	string->len=0;
 	string->data=NULL;
@@ -24,7 +24,7 @@ void
 newstr_initalloc(newstring *string, unsigned long minsize)
 {
 	unsigned long size = newstr_initlen;
-	if (string==NULL) return;
+	if ( !string ) return;
 	if (minsize > newstr_initlen) size=minsize;
 	string->data = (char *) malloc (sizeof( *(string->data) ) * size);
 	if (string->data==NULL) {
@@ -183,7 +183,12 @@ void
 newstr_strcpy (newstring *string, char *addstr)
 {
 	unsigned long lenaddstr;
-	if ( !string || !addstr ) return;
+	if ( !string ) return;
+	if ( !addstr || addstr[0]=='\0' ) {
+		if ( string->data ) string->data[0]='\0';
+		string->len = 0;
+		return;
+	}
 	lenaddstr = strlen( addstr );
 	if (string->data==NULL || string->dim==0)
 		newstr_initalloc( string, lenaddstr+1 );
@@ -267,3 +272,155 @@ newstr_findreplace (newstring *string, char *find, char *replace)
 	}
 }
 
+
+/* newstr_fget()
+ *   returns 0 if we're done, 1 if we're not done
+ *   extracts line by line (regardless of end characters)
+ *   and feeds from buf....
+ */
+int
+newstr_fget( FILE *fp, char *buf, int bufsize, int *pbufpos, newstring *outs )
+{
+	int  bufpos = *pbufpos, done = 0;
+	char *ok;
+	newstr_empty( outs );
+	while ( !done ) {
+		while ( buf[bufpos] && buf[bufpos]!='\r' && buf[bufpos]!='\n' )
+			newstr_addchar( outs, buf[bufpos++] );
+		if ( buf[bufpos]=='\0' ) {
+			ok = fgets( buf, bufsize, fp );
+			bufpos=*pbufpos=0;
+			if ( !ok && feof(fp) ) return 0; /* end-of-file */
+		} else if ( buf[bufpos]=='\r' || buf[bufpos]=='\n' ) done=1;
+	}
+	if ( ( buf[bufpos]=='\n' && buf[bufpos+1]=='\r') ||
+	     ( buf[bufpos]=='\r' && buf[bufpos+1]=='\n') ) bufpos+=2;
+	else if ( buf[bufpos]=='\n' || buf[bufpos]=='\r' ) bufpos+=1; 
+	*pbufpos = bufpos;
+	return 1;
+}
+
+
+/* newstr_swapstrings( s1, s2 )
+ * be sneaky and swap internal newstring data from one
+ * string to another
+ */
+void
+newstr_swapstrings( newstring *s1, newstring *s2 )
+{
+	char *tmpp;
+	int tmp;
+
+	/* swap dimensioning info */
+	tmp = s1->dim;
+	s1->dim = s2->dim;
+	s2->dim = tmp;
+
+	/* swap length info */
+	tmp = s1->len;
+	s1->len = s2->len;
+	s2->len = tmp;
+
+	/* swap data */
+	tmpp = s1->data;
+	s1->data = s2->data;
+	s2->data = tmpp;
+}
+
+#include "htmlentities.c"
+
+void
+newstr_encodexml( newstring *s )
+{
+	newstring ns;
+	int i,j;
+	newstr_init( &ns );
+	for ( i=0; i<s->len; ++i ) {
+		/* Basic Latin conversions */
+		if ( s->data[i]==34 ) newstr_strcat( &ns, "&quot;" );
+		else if ( s->data[i]=='\'' ) newstr_strcat( &ns, "&apos;" );
+		else if ( s->data[i]==60 ) newstr_strcat( &ns, "&lt;" ); 
+		else if ( s->data[i]==62 ) newstr_strcat( &ns, "&gt;" );
+		else if ( s->data[i]==38 ) {  /* ampersand */
+			int found = -1;
+			if ( s->data[i+1]=='#' ) newstr_addchar( &ns, '&' );
+			else {
+				/* check for HTML entity */
+				for ( j=0; j<nhtml_entities && found==-1; ++j ) {
+					if ( !strncasecmp( &(s->data[i]), 
+						  &(html_entities[j].html[0]),
+						  strlen(&(html_entities[j].html[0])))) 
+						found = j;
+				}
+				if ( found==-1 )  /* isolated '&' */
+					newstr_strcat( &ns, "&amp;" );
+				else { /* replace HTML entity */
+					newstr_strcat( &ns,
+				       	   &(html_entities[found].decimal[0]) );
+					i += strlen( &(html_entities[found].decimal[0]) )-1;
+				}
+			}
+		} else if ( ((unsigned char)(s->data[i]))>127 ) { 
+			char buf[10];
+			unsigned char c = (unsigned char)(s->data[i]);
+			sprintf( buf, "&#%u;",c);
+			newstr_strcat( &ns, buf );
+		}
+		else newstr_addchar( &ns, s->data[i] );
+	}
+	newstr_swapstrings( s, &ns );
+	newstr_free( &ns );
+}
+
+void
+newstr_decodexml( newstring *s )
+{
+	newstring ns, code;
+	int i;
+	char ch;
+	newstr_init( &ns );
+	newstr_init( &code );
+	i = 0;
+	while ( i<s->len ) {
+		ch = s->data[i];
+		if ( ch!='&' ) {
+			newstr_addchar( &ns, ch );
+			i++;
+		} else {
+			i++;
+			while ( i<s->len && s->data[i]!=';' ) {
+				newstr_addchar( &code, s->data[i] );
+				i++;
+			}
+			if ( s->data[i]==';' ) i++;
+			if ( code.data[0]=='#' ) {
+				unsigned int c;
+				if ( code.data[1]!='x' ) 
+					c = atoi( &(code.data[1]) );
+				else
+					sscanf( &(code.data[2]), "%x", &c );
+				if ( c<256 ) 
+					newstr_addchar( &ns, (char) c );
+				else         
+					newstr_addchar( &ns, '?' );
+
+			} else {
+				if ( !strncmp( code.data, "quot", 4 ) ) {
+					newstr_addchar( &ns, '\"' );
+				} else if ( !strncmp( code.data, "apos", 4 ) ){
+					newstr_addchar( &ns, '\'' );
+				} else if ( !strncmp( code.data, "amp", 3 ) ){
+					newstr_addchar( &ns, '&' );
+				} else if ( !strncmp( code.data, "lt", 2 ) ) {
+					newstr_addchar( &ns, '<' );
+				} else if ( !strncmp( code.data, "gt", 2 ) ) {
+					newstr_addchar( &ns, '>' );
+				}
+			}
+			newstr_empty( &code );
+		}
+	}
+	newstr_swapstrings( s, &ns );
+	newstr_free( &code );
+	newstr_free( &ns );
+}

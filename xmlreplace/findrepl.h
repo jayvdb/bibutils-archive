@@ -12,10 +12,10 @@
 #include "newstr.h"
 
 typedef struct findreplace {
-	newstring Field;
-	newstring Find;
-	newstring Replace;
-	struct findreplace *Next;
+	newstring field;
+	newstring find;
+	newstring replace;
+	struct findreplace *next;
 }  findreplace;
 
 findreplace *readlist( char *filename  );

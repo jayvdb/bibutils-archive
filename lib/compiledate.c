@@ -1,1 +1,1 @@
-char bibutils_version[] = "2.5";
+char bibutils_version[] = VERSION;

@@ -1,0 +1,190 @@
+ISI Common Export  Format
+
+-- FN: File type. The file starts with 'FN ISI Export Format'
+VR: Version number of ISI export file format
+PT: Publication type (e.g., book, journal, book in series)
+AU: Authors
+TI: Title
+SO: journal title, in full
+LA: Language
+DT: Document type
+NR: Cited reference count
+SN: ISSN
+PU: Publisher
+C1: Research addresses
+DE: Original keywords
+ID: New keywords given by ISI
+JI: ISO journal title abbreviation
+AB: Abstract
+CR: Cited references
+TC: Times cited
+SE: Book series title
+BP: Beginnig page
+EP: Ending page
+PG: the number of pages
+PY: Publication year
+PD: Publication date eg. "JUN 8" or "JUL"
+PN: Part number
+SU: Supplement
+SI: Special issue
+VL: Volume
+IS: issue
+GA: ISI document delivery number
+PI: Publisher city
+WP: Publisher web address
+RP: Reprint address
+J9: 29-character journal title abbreviation
+UT: ISI unique article identifier
+ER: end of a record
+
+
+PT
+Publication type (e.g., book, journal, book in series)
+
+
+AU
+Author(s)
+
+
+TI
+Article title
+
+
+DE
+Author keywords
+
+
+ID
+KeyWords Plus
+
+
+AB
+Abstract
+
+
+RP
+Reprint address
+
+
+C1
+Research addresses
+
+
+EM
+Authors' Internet e-mail address(es)
+
+
+BP
+Beginning page
+
+
+EP
+Ending page
+
+
+PG
+Page count
+
+
+DT
+Document type
+
+
+LA
+Language
+
+
+SC
+Discipline
+
+
+SN
+ISSN
+
+
+SO
+Full source title
+
+
+J9
+29-character source title abbreviation
+
+
+JI
+ISO source title abbreviation
+
+
+SE
+Book series title
+
+
+BS
+Book series subtitle
+
+
+PY
+Publication year
+
+
+PD
+Publication date
+
+
+VL
+Volume
+
+
+IS
+Issue
+
+
+PN
+Part number
+
+
+SU
+Supplement
+
+
+SI
+Special issue
+
+
+GA
+ISI document delivery number
+
+
+PU
+Publisher
+
+
+PI
+Publisher city
+
+
+PA
+Publisher address
+
+
+WP
+Publisher Web address
+
+
+NF
+Notes or author addresses
+
+
+ER
+End of record
+
+
+Christopher Putnam, Ph.D.
+Ludwig Institute For Cancer Research
+Cellular and Molecular Medicine East, Room 3019
+9500 Gilman Drive
+La Jolla, CA 92093-0660 USA
+cdputnam@ucsd.edu
+Tel: (858) 822 1180
+Fax: (858) 822 1184
+
+

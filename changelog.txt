@@ -1,6 +1,257 @@
 
 BIBUTILS
 
+2.18
+7/23/04
+
+XML2BIB
++ ensure that there's no spaces or tabs in the auto-generated bibtex
+  keys
++ bump version number to 1.9
+
+2.17
+7/23/04
+
+BIB2XML
++ fix bug where stdin input didn't write XML and REFERENCES wrappers
++ fix up some name handling
++ lots of cleanups
++ add --verbose flag
++ add @STRING{} support to bibtex files
++ bump version number to 1.8
+
+ISI2XML
++ fix bug in adding periods after initials of first names
++ fix bug where stdin input didn't write XML and REFERENCES wrappers
++ convert isi2xml to use fields package
++ lots of cleanups
++ bump version number to 1.2
+
+RIS2XML
++ fix bug in adding periods after initials of first names
++ fix bug causing last reference to be missed with corrupted end-of-record tag
++ fix bug where stdin input didn't write XML and REFERENCES wrappers
++ convert ris2xml to use fields package
++ lots of cleanups
++ bump version number to 1.12
+
+FIELDS
++ bug fixes in field memory allocation from version 3
+
+2.16
+4/26/04
+
+BIB2XML
++ use fields_init()
++ version number 1.7
+
+END2XML
++ fix restriction in which %0 tag was expected to begin all references
++ use fields_init()
++ remove dead code
++ version number 1.3
+
+ISI2XML
++ add periods after initials of first names
++ version number 1.1
+
+RIS2XML
++ add periods after initials of first names
++ version number 1.11
+
+FIELDS
++ bug fixes in field memory allocation error paths from version 3
++ add fields_init() function
+
+XML2BIB
++ fix bug where non-numeric MONTH tags always output as January
++ ensure no spaces are put into the bibtex reference key
++ version number 1.8
+
+2.15
+2/19/04
+
+ISI2XML
++ write program, version number 1.0
+
+2.14
+12/03/03
+
+END2XML
++ fix bug when non-endnote references are seen, get coredump
++ bump version number to 1.2
+
+XML2BIB
++ add -b, --brackets flag to allow data elements to be placed
+  in output instead of quotations
++ add -w, --whitespace flag to include beautifying whitespace
+  in output
++ clean up code a bit
++ bump version number to 1.7
+
+XMLREPLACE
++ fix bug introduced when newstring library was upgraded
++ fix bug where it tried to add empty field/find/replace elements
+  on blank lines in the rule file
++ use dynamic allocation for subnodes
++ clean up code a bit
++ bump version number to 1.1
+
+changes 2.12->2.13
+11/28/03
+
+BIB2XML
++ fix bug where whitespace in long input lines was clobbered
++ clean dead code
++ bump version number to 1.6
+
+changes 2.11->2.12
+11/07/03
+
+END2XML
++ fix bug where input line buffer isn't cleared initially
++ fix initialization of fields that can core dump on non-endnote
+  input files
++ bump version number to 1.1
+
+RIS2XML
++ fix core dump in output_type() when no type exists
++ prevent empty references from being output with stray "ER  -"
+  tags
++ fix bug where input line buffer isn't cleared initially
++ bump version number to 1.10
+
+changes 2.10->2.11
+11/03/03
+
+GENERAL
++ fix processing of HTML entities so that they don't require
+  xml entity definitions
++ fix output of Latin-1 encoded elements so they don't put
+  bad characters into the XML
++ extract is_ws() function for general use
+
+BIB2XML
++ fix xml processing for first names
++ bump version number to 1.5
+
+END2XML
++ new program (backported from bibutils 3.0 alpha), version number 1.0
+
+RIS2XML
++ fix core dumping if ris2xml doesn't see any RIS tags in a file
++ use a more sophisticated line extractor to more cleanly handle
+  mac/dos/unix end-of-line differences in text files (backport
+  from bibutils 3.0 alpha)
++ bump version number to 1.9
+
+MED2XML
++ bump version number to 1.7
+
+changes 2.9->2.10
+11/01/03
+
+GENERAL
++ ensure that quotations, less-than, greater-than, and ampersand
+  characters are recoded as proper xml and then decoded back to
+  normal characters afterwards
+
+BIB2XML
++ fix bug in which tags for entire list surround output for
+  each file rather than for one set around output from all files
++ fix core dump when no references are recognized
++ bump version number to 1.4
+
+MED2XML
++ fix bug where working groups (separated from author list by
+  a semi-colon) wasn't being properly removed and would 
+  garble the last author
++ fix bug where translated titles in brackets were garbled by
+  the parser
++ fix bug in which tags for entire list surround output for
+  each file rather than for one set around output from all files
++ remove used function output_abstract()
++ reduce unnecessary malloc'ing and free'ing of newstrings by
+  using newstr_empty() instead of newstr_free() for each
+  reference
++ various cleanups
++ bump version number to 1.6
+
+RIS2XML
++ fix bug in which tags for entire list surround output for
+  each file rather than for one set around output from all files
++ bump version number to 1.8
+
+XML2BIB
++ add -sd, --singledash command line option so page ranges can be
+  set to have a single dash between them (instead of the "--" default
+  which looks good in latex)
++ bump version number to 1.6
+
+XML2EN
++ bump version number to 1.2
+
+XML2RIS
++ add number field output
++ bump version number to 1.3
+
+changes 2.8->2.9
+10/19/03
+
+BIB2XML
++ fix problem where tex-encoded quotations weren't being ignored
++ bump version number to 1.3
+
+RIS2XML
++ fix problems in identification of tags with Mac-end of lines
+  with multi-line tagged fields
++ bump version number to 1.7
+
+XML2BIB
++ fix missing commas before ISSN, ISBN, and serial number
+  output
++ add -fc or --finalcomma flag so that a final unnecessary
+  comma is added to the bibtex output for those that want it
++ bump version number to 1.5
+
+changes 2.7->2.8
+10/16/03
+
+MED2XML
++  fix bug in pages output
++  crush core dump
++  add number output for journals
++  bump version number to 1.5
+
+RIS2XML
++  fix extra spaces in tag output
++  bump version number to 1.6
+
+XML2BIB
++  have output distinguish between ISSN and ISBN and unidentifiable
+   serial number
++  bump version number to 1.4
+
+
+changes 2.6->2.7
+9/02/03
+
+BIB2XML
++  have Report and TechReport types be outputted as "REPORT" type
+
+XML2EN
++  output REPORT type as report
+
+changes 2.5->2.6
+8/29/03
+
+BIB2XML
++  rename process_article() to more accurate process_cite()
++  fix parsing code for bibtex files generated by pybliographer
++  have all unrecognized tags outputed into xml file rather than
+   being silently dropped
++  bump version number 1.1->1.2
+
 changes 2.4->2.5
 5/22/03
 

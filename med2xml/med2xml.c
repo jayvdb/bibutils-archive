@@ -9,6 +9,7 @@
 #include <ctype.h>
 #include "newstr.h"
 #include "strsearch.h"
+#include "is_ws.h"
 
 #define TRUE  1
 #define FALSE 0
@@ -21,77 +22,78 @@
 
 int abstractout = FALSE;
 char progname[] = "med2xml";
-char version[] = "version 1.4 02/10/03";
+char version[] = "version 1.7 11/03/03";
 
-int whitespace (char ch)
+int
+endofline (char ch)
 {
-  if (ch==' ' || ch=='\t' || ch=='\n' || ch=='\r') return TRUE;
-
-  else return FALSE;
+	if (ch=='\n' || ch=='\r') return TRUE;
+	else return FALSE;
 }
 
-int endofline (char ch)
+void 
+output_abbrev (newstring *lastnamesptr, newstring *sourceptr)
 {
-  if (ch=='\n' || ch=='\r') return TRUE;
-  else return FALSE;
-}
+	char *p;
+	int pos;
+	newstring abbrev;
 
-void output_abbrev (newstring *lastnamesptr, int numauthors, newstring *sourceptr)
-{
-  char *p;
-  int pos;
-  newstring abbrev;
+	printf("  <REFNUM>");
 
-  newstr_init(&abbrev);
+	newstr_init(&abbrev);
 
-  /** Get the first author's last name w/o spaces **/
-    p = lastnamesptr[0].data;
-    while (*p) {
-       if (!whitespace(*p) && *p!='{' && *p!='}' ) newstr_addchar(&abbrev,*p);
-       p++;
-    }
-    if (abbrev.data!=NULL) printf("%s",abbrev.data);
-    else printf("REF");
-
-  /** Output the year **/
-    if (sourceptr!=NULL && sourceptr->data!=NULL) {
-      p=strchr(sourceptr->data,'.');
-      if (p!=NULL) { 
-        p++;
-        while (*p && whitespace(*p)) p++;
-        pos=1;
-        while (*p && !whitespace(*p) && pos<5) {
-           printf("%c",*p);
-           p++;
-           pos++;
-        }
-     }
-  }
-  newstr_free(&abbrev);
-}
-
-void output_authors (newstring* lastnames, newstring* initials, int numauthors)
-{
-   int i;
-   unsigned long pos;
-   printf("  <AUTHORS>\n");
-   for (i=0; i<numauthors; ++i) {
-	printf("    <AUTHOR>");
-	printf("<LAST>");
-	if (lastnames[i].data!=NULL && lastnames[i].dim!=0) 
-		printf("%s",lastnames[i].data);
-	printf("</LAST>");
-	if (initials[i].data!=NULL && initials[i].dim!=0) {
-         for (pos=0; pos < strlen(initials[i].data); pos++)
-            printf("<PREF>%c.</PREF>",initials[i].data[pos]);
+	/** Get the first author's last name w/o spaces **/
+	if ( lastnamesptr[0].len==0 || sourceptr->len==0 ) p = NULL;
+	else p = lastnamesptr[0].data;
+	while ( p && *p ) {
+		if (!is_ws(*p) && *p!='{' && *p!='}' ) 
+			newstr_addchar(&abbrev,*p);
+		p++;
 	}
-	printf("</AUTHOR>\n");
-   }
-   printf("  </AUTHORS>\n");
+	if ( abbrev.len>0 ) printf("%s",abbrev.data);
+	else printf("REF");
+
+	/** Output the year **/
+	if (sourceptr!=NULL && sourceptr->data!=NULL) {
+		p=strchr(sourceptr->data,'.');
+		if ( p ) { 
+			p++;
+			while (*p && is_ws(*p)) p++;
+			pos=1;
+			while (*p && !is_ws(*p) && pos<5) {
+				printf("%c",*p);
+				p++;
+				pos++;
+			}
+		}
+	}
+	newstr_free(&abbrev);
+	printf("</REFNUM>\n");
+}
+
+void
+output_authors( newstring* lastnames, newstring* initials, int numauthors )
+{
+	int i, j;
+	if ( numauthors<1 ) return;
+	printf("  <AUTHORS>\n");
+	for (i=0; i<numauthors; ++i) {
+		printf("    <AUTHOR>");
+		if (lastnames[i].len>0 ) {
+			newstr_encodexml( &(lastnames[i]) );
+			printf("<LAST>%s</LAST>",lastnames[i].data);
+		}
+		if (initials[i].len>0 )
+			for (j=0; j<initials[i].len; j++)
+				printf("<PREF>%c.</PREF>",initials[i].data[j]);
+		printf("</AUTHOR>\n");
+	}
+	printf("  </AUTHORS>\n");
 }
 
 
-int generate_authors (newstring *authorsptr, newstring** lastnamesptr, newstring** firstnamesptr)
+int
+generate_authors (newstring *authorsptr, newstring** lastnamesptr, newstring** firstnamesptr)
 {
   char *p,*q;
   int est,i,nauthor;
@@ -135,9 +137,9 @@ fprintf(stderr,"AUTHORLIST: '%s'\n",authorsptr->data);
        nblocks=0;
        q = wholename.data;
        while (*q) {
-           while (*q && whitespace(*q)) q++;
-           if (*q && !whitespace(*q)) nblocks ++;
-           while (*q && !whitespace(*q)) q++;
+           while (*q && is_ws(*q)) q++;
+           if (*q && !is_ws(*q)) nblocks ++;
+           while (*q && !is_ws(*q)) q++;
        }
        if ( nblocks > dimblocks ) {
             newstring *newblocks;
@@ -159,12 +161,12 @@ fprintf(stderr,"AUTHORLIST: '%s'\n",authorsptr->data);
        nblocks=0;
        q = wholename.data;
        while (*q) {
-           while (*q && whitespace(*q)) q++;
-           while (*q && !whitespace(*q)) {
+           while (*q && is_ws(*q)) q++;
+           while (*q && !is_ws(*q)) {
               newstr_addchar(&(blocks[nblocks]),*q);
               q++;
            }
-           while (*q && whitespace(*q)) q++;
+           while (*q && is_ws(*q)) q++;
            nblocks++;
        }
 
@@ -205,153 +207,181 @@ fprintf(stderr,"AUTHORLIST: '%s'\n",authorsptr->data);
 
 }
 
-void free_authors( newstring **lastnamesptr, newstring **firstnamesptr, int numauthors)
+void
+free_authors( newstring **lastnames, newstring **firstnames, int numauthors)
 {
-   int i;
-   newstring *firstnames, *lastnames;
-
-   firstnames = *firstnamesptr;
-   lastnames  = *lastnamesptr;
-
-   for ( i=0; i<numauthors; ++i ) {
-      newstr_free(&(lastnames[i]));
-      newstr_free(&(firstnames[i]));
-   }
-   free(*lastnamesptr);
-   free(*firstnamesptr);
-   *lastnamesptr = *firstnamesptr = NULL;
+	int i;
+	for ( i=0; i<numauthors; ++i ) {
+		newstr_free(&((*lastnames)[i]));
+		newstr_free(&((*firstnames)[i]));
+	}
+	free(*lastnames);
+	free(*firstnames);
+	*lastnames = *firstnames = NULL;
 }
 
-void output_title (newstring *titleptr)
+void
+output_title( newstring *title )
 {
-  printf("  <TITLE>%s</TITLE>\n",titleptr->data);
+	newstr_encodexml( title );
+	printf("  <TITLE>%s</TITLE>\n",title->data);
 }
 
-void output_source (newstring *sourceptr)
+char *
+output_journal( char *p )
 {
-  char *p,*savep;
-  int pos;
-  newstring journal;
-  newstring pgbegin,pgend;
+	newstring journal;
+	if ( !p || !(*p) ) return p;
+	newstr_init(&journal);
+	while (*p && is_ws(*p)) p++;
+	while (*p && *p!='.') {
+		if (!is_ws(*p))
+			newstr_addchar(&journal,*p++);
+		else {
+			newstr_addchar(&journal,' ');
+			while (is_ws(*p)) p++;
+		}
+	}
+	if (journal.len>0) {
+		newstr_encodexml( &journal );
+		printf("  <JOURNAL>%s</JOURNAL>\n",journal.data);
+	}
+	newstr_free(&journal);
+	return p;
+}
 
-  if ( sourceptr!=NULL && sourceptr->data!=NULL) {
+char *
+output_date( char *p )
+{
+	char *months[]={ "Jan","Feb","Mar","Apr","May","Jun",
+		"Jul","Aug","Sep","Oct", "Nov", "Dec" };
+	int i;
+	char *savep = p;
 
-    /** Output Journal **/
-     printf("  <JOURNAL>");
-     newstr_init(&journal);
-     p = sourceptr->data;
-     while (*p && whitespace(*p)) p++;
-     while (*p && *p!='.') {
-         if (!whitespace(*p)) {
-           newstr_addchar(&journal,*p);
-           p++;
-         }
-         else {
-           newstr_addchar(&journal,' ');
-           while (whitespace(*p)) p++;
-         }
-     }
-/*     process_journal(&journal); */
-     if (journal.data!=NULL) printf("%s",journal.data);
-     printf("</JOURNAL>\n");
-     newstr_free(&journal);
-     savep=p;
-
-	/** Output Year **/
-	if (savep!=NULL) {
-		printf("  <DATE>");
-		p = strchr(savep,'.');
-		if (p!=NULL) {
-			printf("<YEAR>");
-			p++;
-			while (*p && whitespace(*p)) p++;
-			while (*p && !whitespace(*p) && *p!='(' && *p!=':' && *p!='.' && *p!=',' && *p!=';') {
-				printf("%c",*p++);
-			} 
-			printf("</YEAR>");
-			while (*p && whitespace(*p)) p++;
-			if ( *p && *p!=';' && *p!=':' && *p!=',' && *p!='(' && *p!='.'){
-				char *months[12]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct", "Nov", "Dec"};
-				int i;
-				for (i=0; i<12; ++i)
-					if (strsearch(p,months[i])==p) 
-						printf("<MONTH>%d</MONTH>",i+1);
-				while (*p && *p!=';' &&  *p!=':' && *p!=',' && *p!='(' && *p!='.' && !whitespace(*p)) p++;
-				while (*p && whitespace(*p)) p++;
-
-			}
-			if ( *p && *p!=';' && *p!=':' && *p!=',' && *p!='(' && *p!='.'){
-				printf("<DAY>");
-				while (*p && *p!=';' && *p!=':' && *p!=','  && *p!='(' && *p!='.') printf("%c",*p++);
-				printf("</DAY>");
-			}
-
+	if ( !p || !(*p) ) return p;
+	p = strchr(p,'.');
+	if ( p ) {
+		p++;
+		while (*p && is_ws(*p)) p++;
+		printf("  <DATE><YEAR>");
+		while (*p && !is_ws(*p) && *p!='(' && *p!=':' && *p!='.' && *p!=',' && *p!=';') {
+			printf("%c",*p++);
+		} 
+		printf("</YEAR>");
+		while (*p && is_ws(*p)) p++;
+		if ( *p && *p!=';' && *p!=':' && *p!=',' && *p!='(' && *p!='.'){
+			for (i=0; i<12; ++i)
+				if (strsearch(p,months[i])==p) 
+					printf("<MONTH>%d</MONTH>",i+1);
+			while (*p && *p!=';' &&  *p!=':' && *p!=',' && *p!='(' && *p!='.' && !is_ws(*p)) p++;
+			while (*p && is_ws(*p)) p++;
+		}
+		if ( *p && *p!=';' && *p!=':' && *p!=',' && *p!='(' && *p!='.'){
+			printf("<DAY>");
+			while (*p && *p!=';' && *p!=':' && *p!=','  && *p!='(' && *p!='.') printf("%c",*p++);
+			printf("</DAY>");
 		}
 		printf("</DATE>\n");
-		savep=p;
-	}
-
-    /** Output Volume **/
-    if (savep!=NULL) {
-     printf("  <VOLUME>");
-     p = strchr(savep,';');
-     if (p!=NULL) {
-       p++;
-       while (*p && whitespace(*p)) p++;
-       while (*p && !whitespace(*p) && *p!='(' && *p!=',' && *p!='.' && *p!=':') {
-         printf("%c",*p);
-         p++;
-       }
-     }
-     printf("</VOLUME>\n");
-   }
-
-    /** Output Pages **/
-if (savep!=NULL) {
-     printf("  <PAGES>");
-     newstr_init(&pgbegin);
-     newstr_init(&pgend);
-     p = strchr(savep,':');
-     if (p!=NULL) {
-       while (*p && (whitespace(*p) || *p==':')) p++;
-       while (*p && !whitespace(*p) && *p!=',' && *p!='-' && *p!='.') { 
-         newstr_addchar(&pgbegin,*p);
-         p++;
-       }
-       if (pgbegin.data!=NULL && pgbegin.dim!=0) printf("<START>%s</START>",pgbegin.data);
-       while (*p=='-' || whitespace(*p)) p++;
-       while (*p && !whitespace(*p) && *p!=',' && *p!='.' && *p!=':') {
-         newstr_addchar(&pgend,*p);
-         p++;
-       }
-       if (pgend.data!=NULL && pgend.dim!=0) {
-          if (strlen(pgend.data)>=strlen(pgbegin.data)) printf("<END>%s</END>",pgend.data);
-          else {
-	  printf("<START>");
-          for (pos=0; pos<(long)strlen(pgbegin.data)-(long)strlen(pgend.data); pos++)
-             printf("%c",pgbegin.data[pos]);
-	  printf("</START>");
-            printf("<END>%s</END>",pgend.data);
-          }
-       }
-     }
-     printf("</PAGES>\n");
-     newstr_free (&pgbegin);
-     newstr_free (&pgend);
-}
-}
+		return p;
+	} else return savep;
 }
 
-void output_abstract(newstring *abstractptr)
+char *
+output_volume( char *p )
 {
-  char *p;
-  printf(",\nABSTRACT=\"\n");
-  p=abstractptr->data;
-  while (*p) {
-    if (*p!='\"') printf("%c",*p);
-    p++;
-  }
-  printf("\"");
+	newstring volume;
+	char *savep = p;
+	if ( !p || !(*p) ) return p;
+	p = strchr(p,';');
+	if ( p ) {
+		newstr_init( &volume );
+		p++;
+		while ( *p && is_ws(*p) ) p++;
+		while (*p && !is_ws(*p) && *p!='(' && *p!=',' && *p!='.' && *p!=':')
+			newstr_addchar( &volume, *p++ );
+		if ( volume.len > 0 ) {
+			newstr_encodexml( &volume );
+			printf("  <VOLUME>%s</VOLUME>\n",volume.data);
+		}
+		newstr_free( &volume );
+		return p;
+	} else return savep;
+}
+
+char *
+output_number( char *p ) 
+{
+	newstring number;
+	char *savep = p;
+	if ( !p || !(*p) ) return p;
+	p = strchr( savep, '(' );
+	if ( p ) {
+		newstr_init( &number );
+		p++;
+		while ( *p && is_ws(*p)) p++;
+		while ( *p && !is_ws(*p) && *p!=')' )
+			newstr_addchar( &number, *p++ );
+		if ( number.len > 0 ) {
+			newstr_encodexml( &number );
+			printf("  <NUMBER>%s</NUMBER>\n",number.data);
+		}
+		newstr_free( &number );
+		return p;
+	} else return savep;
+}
+
+char *
+output_pages( char *p )
+{
+	newstring pgbegin, pgend;
+	char *savep = p;
+	int pos;
+	if ( !p || !(*p) ) return p;
+	p = strchr(p,':');
+	if ( p ) {
+		p++; /*skip ':' character*/
+		while (*p && is_ws(*p)) p++;
+		printf("  <PAGES>");
+		newstr_init(&pgbegin);
+		while (*p && !is_ws(*p) && *p!=',' && *p!='-' && *p!='.')
+			newstr_addchar(&pgbegin,*p++);
+		if ( pgbegin.len>0 ) {
+			newstr_encodexml( &pgbegin );
+			printf("<START>%s</START>",pgbegin.data);
+		}
+		while ( is_ws(*p) || *p=='-' ) p++;
+		newstr_init(&pgend);
+		while (*p && !is_ws(*p) && *p!=',' && *p!='-' && *p!='.')
+			newstr_addchar(&pgend,*p++);
+		newstr_encodexml( &pgend );
+		if ( pgend.len>0 ) {
+			int diff = pgbegin.len - pgend.len;
+			if ( diff <= 0 )
+				printf("<END>%s</END>",pgend.data);
+			else {
+				printf("<END>");
+				for (pos=0; pos<diff; pos++ )
+					printf("%c",pgbegin.data[pos]);
+				printf("%s</END>",pgend.data);
+			}
+		}
+		newstr_free (&pgbegin);
+		newstr_free (&pgend);
+		printf("</PAGES>\n");
+		return p;
+	} else return savep;
+}
+
+void
+output_source( newstring *source )
+{
+	char *p;
+	if ( !source || source->len==0 ) return;
+	p = output_journal( source->data );
+	p = output_date( p );
+	p = output_volume( p );
+	p = output_number( p );
+	p = output_pages( p );
 }
 
 void 
@@ -367,32 +397,26 @@ output_fields (newstring *authorsptr, newstring *titleptr,
 	output_authors(lastnames,initials,numauthors);
 	output_title(titleptr); 
 	output_source(sourceptr); 
-	printf("  <REFNUM>");
-	output_abbrev(lastnames,numauthors,sourceptr);
-	printf("</REFNUM>\n");
+	output_abbrev(lastnames,sourceptr); 
 	printf("</REF>\n");
 	free_authors(&lastnames,&initials,numauthors); 
 }
 
 long
-get_fields (FILE *fp)
+get_fields( FILE *fp )
 {
-	int field_id;
-	int i, startfield;
-	long numref = 0L;
 	newstring authors,title,journal,date,source,abstract;
-	char buf[512];
+	long numref = 0L;
+	char buf[512], titlestartch='\0';
+	int field_id = FIELD_OTHER, startfield, i;
 
-	printf("<XML>\n");
-	printf("<REFERENCES>\n");
+	newstr_init(&authors);
+	newstr_init(&title);
+	newstr_init(&journal);
+	newstr_init(&date);
+	newstr_init(&source);
+	newstr_init(&abstract);
 
-  field_id = FIELD_OTHER;
-  newstr_init(&authors);
-  newstr_init(&title);
-  newstr_init(&journal);
-  newstr_init(&date);
-  newstr_init(&source);
-  newstr_init(&abstract);
   while (!feof(fp)) {
     if (fgets(buf,sizeof(buf),fp)) {
       i = 0;
@@ -404,8 +428,9 @@ fprintf(stderr,"field_id= %d i=%d\n",field_id,i);
 fprintf(stderr,"BUF: '%s'\n",buf);
 */
  
-        /* Keep parsing until we reach a number starting a line and then a ':' */
+        /*Keep parsing until we reach a number starting a line and then a ':'*/
         if (field_id == FIELD_OTHER && buf[i]!='\0') {
+
 /*
                 while (buf[i] && (! ( buf[i]>='0' && buf[i]<='9'))) {
 printf("loop 1: %d '%c'\n",buf[i],buf[i]);
@@ -416,20 +441,25 @@ printf("loop 1: %d '%c'\n",buf[i],buf[i]);
 		    isdigit(buf[i-1]) ) ) )  ++i;
                 if (buf[i]==':') {
                         i++;
-                        while (whitespace(buf[i])) ++i;
+                        while (is_ws(buf[i])) ++i;
                         field_id = FIELD_AUTHORS;
                 }
         }
 
         if (field_id == FIELD_AUTHORS && buf[i]!='\0') {
-                /* while (whitespace(buf[i])) ++i; */
+                /* while (is_ws(buf[i])) ++i; */
                 startfield = i;
                 while (buf[i]!='\r' && buf[i]!='\n' && buf[i]!='\0' && 
-			buf[i]!='.') ++i;
+			buf[i]!='.' && buf[i]!=';') ++i;
                 if (buf[i]=='\0') newstr_strcat(&authors,&(buf[startfield]));
                 else {
 			if (buf[i]=='.') {
 				buf[i] = '\0';
+				field_id=FIELD_TITLE;
+			} else if ( buf[i]==';' ) {
+				buf[i] = '\0';
+				i++;
+				while ( buf[i]!='\0' && buf[i]!='.' ) i++;
 				field_id=FIELD_TITLE;
 			} else {
 				/* remove the newline and paste */
@@ -444,20 +474,23 @@ fprintf(stderr,"Authors: '%s'\n",authors.data);
 */
                         i++;
                         if (field_id==FIELD_AUTHORS) newstr_addchar(&authors,' ');
-                        else while (whitespace(buf[i])) i++;
+                        else while (is_ws(buf[i])) i++;
                 }
         }
 
         if (field_id == FIELD_TITLE && buf[i]!='\0') {
-                /* while (whitespace(buf[i])) ++i; */
+		while ( titlestartch=='\0' && is_ws(buf[i]) ) ++i;
                 startfield = i;
+		if ( titlestartch=='\0' ) titlestartch = buf[i];
                 while (buf[i]!='\r' && buf[i]!='\n' && buf[i]!='\0') ++i;
                 if (buf[i]=='\0') newstr_strcat(&title,&(buf[startfield]));
                 else {
 			buf[i] = '\0';
-			if ( i>0 && (buf[i-1]=='.' || buf[i-1]=='?') ) {
+			if ( i>0 && ((buf[i-1]=='.' || buf[i-1]=='?' ) ||
+			     (titlestartch=='[' && buf[i-1]==']'))) {
 				if (buf[i-1]=='.') buf[i-1] = '\0';
 				field_id = FIELD_JOURNAL;
+				titlestartch='\0';
 			} 
 			if (buf[i+1]=='\r' || buf[i+1]=='\n') buf[i+1]=' ';
                         newstr_strcat(&title,&(buf[startfield]));
@@ -467,12 +500,12 @@ fprintf(stderr,"Title: '%s'\n",title.data);
 */
                         i++;
 			if (field_id==FIELD_TITLE) newstr_addchar(&title,' ');
-			else while (whitespace(buf[i])) ++i;
+			else while (is_ws(buf[i])) ++i;
                 }
         }
 
         if (field_id == FIELD_JOURNAL && buf[i]!='\0') {
-                /* while (whitespace(buf[i])) ++i; */
+                /* while (is_ws(buf[i])) ++i; */
                 startfield = i;
                 while ( buf[i]!='\r' && buf[i]!='\n' && buf[i]!='.' && buf[i]!='\0' ) ++i;
                 if (buf[i]=='\0') newstr_strcat(&journal,&(buf[startfield]));
@@ -489,11 +522,11 @@ fprintf(stderr,"Title: '%s'\n",title.data);
                         newstr_strcat(&journal,&(buf[startfield]));
                         i++;
                         if (field_id==FIELD_JOURNAL) newstr_addchar(&title,' ');
-                        else while (whitespace(buf[i])) ++i;
+                        else while (is_ws(buf[i])) ++i;
 		}
 	}
         if (field_id == FIELD_DATE && buf[i]!='\0') {
-                /* while (whitespace(buf[i])) ++i; */
+                /* while (is_ws(buf[i])) ++i; */
                 startfield = i;
                 while ( buf[i]!='\r' && buf[i]!='\n' && buf[i]!='.' && buf[i]!='\0' ) ++i;
                 if (buf[i]=='\0') newstr_strcat(&date,&(buf[startfield]));
@@ -510,7 +543,7 @@ fprintf(stderr,"Title: '%s'\n",title.data);
                         newstr_strcat(&date,&(buf[startfield]));
                         i++;
                         if (field_id==FIELD_DATE) newstr_addchar(&title,' ');
-                        else while (whitespace(buf[i])) ++i;
+                        else while (is_ws(buf[i])) ++i;
                         /* Now process this reference and reset all */
                         if (field_id==FIELD_OTHER){
 				newstr_strcpy(&source,journal.data);
@@ -519,12 +552,12 @@ fprintf(stderr,"Title: '%s'\n",title.data);
                                 output_fields(&authors,&title,&source,&abstract);
 				numref++;
                                 fflush(stdout);
-                                newstr_free(&authors);
-                                newstr_free(&title);
-				newstr_free(&journal);
-				newstr_free(&date);
-                                newstr_free(&source);
-                                newstr_free(&abstract);
+                                newstr_empty(&authors);
+                                newstr_empty(&title);
+				newstr_empty(&journal);
+				newstr_empty(&date);
+                                newstr_empty(&source);
+                                newstr_empty(&abstract);
                         }
                 }
         }
@@ -533,8 +566,14 @@ fprintf(stderr,"Title: '%s'\n",title.data);
 
 }
 
-  printf("</REFERENCES>\n</XML>\n");
-  return numref;
+	newstr_free(&authors);
+	newstr_free(&title);
+	newstr_free(&journal);
+	newstr_free(&date);
+	newstr_free(&source);
+	newstr_free(&abstract);
+
+	return numref;
 }
 
 
@@ -604,6 +643,7 @@ main(int argc, char *argv[])
 	if (argc==1) 
 		numref=get_fields(stdin);
 	else {
+		printf("<XML>\n<REFERENCES>\n");
 		for (i=1; i<argc; i++) {
 			fp=fopen(argv[i],"r");
 			if (fp==NULL) {
@@ -614,8 +654,10 @@ main(int argc, char *argv[])
 				fclose(fp);
 			}
 		}
+		printf("</REFERENCES>\n</XML>\n");
 	}
-	fprintf(stderr,"%s:  Processed %ld references.\n", progname, numref);
+	fprintf(stderr,"%s %s:  Processed %ld references.\n", progname,
+			version, numref);
 	return EXIT_SUCCESS;
 }
  

@@ -22,6 +22,10 @@ void newstr_segcpy      ( newstring *string, char *startat, char *endat );
 void newstr_fprintf     ( FILE *fp, newstring *string );
 void newstr_findreplace ( newstring *string, char *find, char *replace );
 void newstr_empty       ( newstring *string );
+int newstr_fget( FILE *fp, char *buf, int bufsize, int *pbufpos, newstring *outs );
+void newstr_encodexml   ( newstring *s );
+void newstr_decodexml   ( newstring *s );
+
 
 /* NEWSTR_PARANOIA
  *

@@ -2,8 +2,7 @@
 # xml2ris MAKEFILE
 #
 
-#CC         = cc
-INCLUDEDIR = -I ../include
+INCLUDEDIR = -I ../include -I ../lib
 LIBDIR     = -L../lib
 LIBS       = -lnewstr
 

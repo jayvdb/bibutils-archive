@@ -15,18 +15,40 @@ node *
 node_new( void )
 {
 	node *currnode;
-	int i;
-	currnode = (node*) malloc( sizeof( *currnode) );
-	if ( currnode==NULL ) {
+	int i, min_alloc=25;
+	currnode = (node*) malloc( sizeof(node) );
+	if ( !currnode ) {
 		fprintf(stderr,"%s: cannot allocate memory\n",progname);
 		exit(EXIT_FAILURE);
 	}
 	newstr_init( &(currnode->tag) );
 	newstr_init( &(currnode->value) );
-	for (i=0; i<30; ++i)
+	currnode->nodes = (node**) malloc( sizeof(node*)*min_alloc );
+	if ( !currnode->nodes ) {
+		fprintf(stderr,"%s: cannot allocate memory\n",progname);
+		exit(EXIT_FAILURE);
+	}
+	for (i=0; i<min_alloc; ++i)
 		currnode->nodes[i] = NULL;
+	currnode->maxnodes = min_alloc;
 	currnode->nnodes = 0;
 	return currnode;
+}
+
+void
+node_moresubnodes( node *currnode )
+{
+	node **newnodes;
+	int i, min_alloc = currnode->maxnodes*2;
+	newnodes = (node**) realloc( currnode->nodes, sizeof(node*)*min_alloc );
+	if ( !newnodes ) {
+		fprintf(stderr,"%s: cannot allocate memory\n",progname);
+		exit(EXIT_FAILURE);
+	}
+	currnode->nodes = newnodes;
+	for ( i=currnode->maxnodes; i<min_alloc; ++i )
+		currnode->nodes[i] = NULL;
+	currnode->maxnodes = min_alloc;
 }
 
 node *
@@ -63,12 +85,10 @@ node_build( char *tag, char *interior )
 			p = xml_extractdata( p, newtag.data, &newinterior );
 			currnode->nodes[currnode->nnodes] =
 				node_build( newtag.data, newinterior.data );
-			if (newtag.data!=NULL) newtag.data[0]='\0';
+			newstr_empty( &newtag );
 			currnode->nnodes++;
-			if (currnode->nnodes>=30) {
-				fprintf(stderr,"%s: MAXNODES exceeded\n",progname);
-				exit(EXIT_FAILURE);
-			}
+			if (currnode->nnodes>=currnode->maxnodes)
+				node_moresubnodes( currnode );
 		}
 	}
 
@@ -82,6 +102,20 @@ void
 node_output( FILE *outptr, node *currnode )
 {
 	int i;
+	int inname, indate, inpages;
+	inname = ( !strcasecmp(currnode->tag.data,"LAST") ||
+	           !strcasecmp(currnode->tag.data,"PREF") ||
+	           !strcasecmp(currnode->tag.data,"SUFF") );
+	indate = ( !strcasecmp(currnode->tag.data,"YEAR") ||
+	           !strcasecmp(currnode->tag.data,"MONTH") ||
+	           !strcasecmp(currnode->tag.data,"DAY") ||
+	           !strcasecmp(currnode->tag.data,"DATEOTHER") );
+	inpages =( !strcasecmp(currnode->tag.data,"START") ||
+	           !strcasecmp(currnode->tag.data,"END") );
+	if ( !inname && !indate && !inpages ) fprintf( outptr, "    " );
+	if ( !strcasecmp(currnode->tag.data,"AUTHOR") ||
+	     !strcasecmp(currnode->tag.data,"EDITOR") ) 
+		fprintf( outptr, "    " );
 	fprintf(outptr,"<%s>",currnode->tag.data);
 	if (strcasecmp(currnode->tag.data,"REF")==0 ||
 	    strcasecmp(currnode->tag.data,"AUTHORS")==0 ||
@@ -92,11 +126,11 @@ node_output( FILE *outptr, node *currnode )
 	for (i=0; i<currnode->nnodes; ++i) {
 		node_output( outptr, currnode->nodes[i] );
 	}
+	if ( !strcasecmp(currnode->tag.data,"AUTHORS") ||
+	     !strcasecmp(currnode->tag.data,"EDITORS") ) 
+		fprintf( outptr, "    ");
 	fprintf(outptr,"</%s>",currnode->tag.data);
-	if (strcasecmp(currnode->tag.data,"LAST") &&
-	    strcasecmp(currnode->tag.data,"PREF") &&
-	    strcasecmp(currnode->tag.data,"SUFF") )
-		fprintf(outptr,"\n");
+	if ( !inname && !indate && !inpages ) fprintf( outptr, "\n" );
 }
 
 void
@@ -104,13 +138,11 @@ node_findreplace( findreplace *toplist, node *currnode )
 {
 	findreplace *list;
 	int i;
-	for (list=toplist; list!=NULL; list=list->Next) {
-		if (strcasecmp(currnode->tag.data,list->Field.data)==0 &&
-		    currnode->value.data!=NULL && 
-		    currnode->value.data[0]!='\0' ) {
-			newstr_findreplace(&(currnode->value),
-					list->Find.data, list->Replace.data );
-		}
+	for ( list=toplist; list; list=list->next ) {
+		if ( currnode->tag.len==0 || currnode->value.len==0 ) continue;
+		if ( strcasecmp(currnode->tag.data,list->field.data) ) continue;
+		newstr_findreplace( &(currnode->value),
+				list->find.data, list->replace.data );
 	}
 	for (i=0; i<currnode->nnodes; ++i) {
 		node_findreplace( toplist, currnode->nodes[i] );

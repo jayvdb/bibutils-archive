@@ -6,71 +6,82 @@
 #include <string.h>
 #include "findrepl.h"
 
+extern char progname[];
+
 void
-disposelist (findreplace *top)
+disposelist (findreplace *curr)
 {
-	findreplace *CurrPtr,*NextPtr;
-	CurrPtr=top;
-	while (CurrPtr!=NULL) {
-		newstr_free( &CurrPtr->Field);
-		newstr_free( &CurrPtr->Find);
-		newstr_free( &CurrPtr->Replace);
-		NextPtr=CurrPtr->Next;
-		free(CurrPtr);
-		CurrPtr=NextPtr;
+	findreplace *next;
+	while ( curr ) {
+		next=curr->next;
+		newstr_free( &(curr->field) );
+		newstr_free( &(curr->find) );
+		newstr_free( &(curr->replace) );
+		free( curr );
+		curr=next;
 	}
 }
 
 findreplace *
 newelement( void )
 {
-	findreplace *CurrPtr;
-	CurrPtr = (findreplace *) malloc (sizeof(findreplace));
-	if (CurrPtr==NULL) {
-		fprintf(stderr,"Error.  Cannot allocate memory in newelement.\n");
-		exit(EXIT_FAILURE);
+	findreplace *curr = (findreplace *) malloc( sizeof(findreplace) );
+	if ( !curr ) {
+		fprintf(stderr,"%s error: cannot allocate memory in newelement.\n",progname);
+		exit( EXIT_FAILURE );
 	}
-	newstr_init(&(CurrPtr->Field));
-	newstr_init(&(CurrPtr->Find));
-	newstr_init(&(CurrPtr->Replace));
-	CurrPtr->Next=NULL;
-	return CurrPtr;
+	newstr_init(&(curr->field));
+	newstr_init(&(curr->find));
+	newstr_init(&(curr->replace));
+	curr->next=NULL;
+	return curr;
 }
 
 findreplace *
-readlist (char *filename)
+readlist( char *filename )
 {
+	newstring field, find, replace;
 	FILE *fp;
-	findreplace *CurrPtr, *PrevPtr, *FirstPtr;
+	findreplace *curr, *prev=NULL, *first=NULL;
 	char deliminator, *p;
 	char buf[512];
 
 	fp = fopen (filename,"r");
-	if (fp==NULL) return NULL;
+	if ( !fp ) return NULL;
 
-	FirstPtr=NULL;
-	PrevPtr=NULL;
-	while (fgets(buf,sizeof(buf),fp)!=NULL) {
+	newstr_init( &field );
+	newstr_init( &find );
+	newstr_init( &replace );
 
-		CurrPtr = newelement();
-		if (FirstPtr==NULL) FirstPtr=CurrPtr;
-		else PrevPtr->Next=CurrPtr;
-
+	while ( fgets(buf,sizeof(buf),fp) ) {
+		newstr_empty( &field );
+		newstr_empty( &find );
+		newstr_empty( &replace );
 		deliminator=buf[0];
 		p=&(buf[1]);
 		while (*p && *p!=deliminator && *p!='\n' && *p!='\r')
-			newstr_addchar(&(CurrPtr->Field),*p++);
+			newstr_addchar( &field, *p++ );
 		if (*p==deliminator) p++;
 		while (*p && *p!=deliminator && *p!='\n' && *p!='\r')
-			newstr_addchar(&(CurrPtr->Find),*p++);
+			newstr_addchar( &find, *p++ );
 		if (*p==deliminator) p++;
 		while (*p && *p!=deliminator && *p!='\n' && *p!='\r')
-			newstr_addchar(&(CurrPtr->Replace),*p++);
-
-		PrevPtr=CurrPtr;
+			newstr_addchar( &replace, *p++ );
+		if ( field.len!=0 && find.len!=0 ) {
+			curr = newelement();
+			if ( !first ) first=curr;
+			else prev->next = curr;
+			newstr_strcpy( &(curr->field),   field.data   );
+			newstr_strcpy( &(curr->find),    find.data    );
+			newstr_strcpy( &(curr->replace), replace.data );
+			prev = curr;
+		}
 	}
 	fclose(fp);
-	return FirstPtr;
+	newstr_free( &replace );
+	newstr_free( &find );
+	newstr_free( &field );
+	return first;
 }
 
 

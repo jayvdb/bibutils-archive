@@ -2,14 +2,13 @@
  * tree.h
  */
 
-struct node {
+typedef struct node {
 	newstring tag;
 	newstring value;
-	struct node *nodes[30];
+	struct node **nodes;
 	int nnodes;
-};
-
-typedef struct node node;
+	int maxnodes;
+} node;
 
 extern node *node_new( void );
 extern node *node_build( char *tag, char *interior );

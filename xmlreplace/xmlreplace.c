@@ -14,7 +14,7 @@ xmlreplace -- find/replace elemments in bibliography XML
 #include "xml.h"
 
 char progname[] = "xmlreplace";
-char version[]  = "1.0 02/10/03";
+char version[]  = "1.1 12/03/03";
 
 findreplace *findreplacelist = NULL;
 
@@ -26,12 +26,13 @@ process_article( FILE *outptr, newstring *s, long refnum )
 {
 	node *topnode;
 	topnode = node_build( "REF", s->data );
-	node_findreplace( findreplacelist, topnode );
-	if (topnode!=NULL) node_output( outptr, topnode );
-	node_free( topnode );
-	free( topnode );
+	if ( topnode ) {
+		node_findreplace( findreplacelist, topnode );
+		node_output( outptr, topnode );
+		node_free( topnode );
+		free( topnode );
+	}
 }
-
 
 void
 help( void )
@@ -112,7 +113,7 @@ main( int argc, char *argv[] )
 				fclose(fp);
 			}
 		}
-		fprintf(outptr,"</REFERENCES></XML>\n");
+		fprintf(outptr,"</REFERENCES>\n</XML>\n");
 	}
 
 	return EXIT_SUCCESS;

@@ -13,7 +13,7 @@ xml2en --   Bibliography XML to EndNote
 #include "xml.h"
 
 char progname[] = "xml2en";
-char version[]  = "1.1 02/10/03";
+char version[]  = "1.2 11/01/03";
 
 void 
 process_authors(newstring *authors, FILE *outptr, char *xmltag, char *tag)
@@ -36,12 +36,15 @@ process_authors(newstring *authors, FILE *outptr, char *xmltag, char *tag)
 		fprintf(outptr,"%s ",tag);
 		while (pos2!=NULL && *pos2!='\0') {
 			pos2 = xml_extractdata(pos2,"PREF",&part);
-			if (part.data!=NULL && part.data[0]!='\0')
+			if (part.data!=NULL && part.data[0]!='\0') {
+				newstr_decodexml( &part );
 				fprintf(outptr,"%s ",part.data);
+			}
 		}
 		(void) xml_extractdata(author.data,"LAST",&part);
 		if (part.data==NULL || part.data[0]=='\0') 
 			continue;
+		newstr_decodexml( &part );
 		fprintf(outptr,"%s\n",part.data);
 	}
 
@@ -56,6 +59,7 @@ process_date( newstring *date, FILE *outptr )
 	newstr_init( &year );
 	(void) xml_extractdata(date->data,"YEAR",&year);
 	if ( year.data!=NULL && year.data[0]!='\0' ) {
+		newstr_decodexml( &year );
 		fprintf(outptr,"%%D %s\n",year.data);
 	} 
 	newstr_free( &year );
@@ -73,11 +77,13 @@ process_pages( newstring *pages, FILE *outptr )
 	fprintf(outptr,"%%P ");
 	(void) xml_extractdata(pages->data,"START",&sp);
 	if (sp.data!=NULL && sp.data[0]!='\0') {
+		newstr_decodexml( &sp );
 		fprintf(outptr,"%s",sp.data);
 		npages++;
 	}
 	(void) xml_extractdata(pages->data,"END",&ep);
 	if (ep.data!=NULL && ep.data[0]!='\0') {
+		newstr_decodexml( &ep );
 		if (npages) fprintf(outptr,"-");
 		fprintf(outptr,"%s",ep.data);
 	}
@@ -96,7 +102,10 @@ process_keywords( newstring *keywords, FILE *outptr )
 	p = keywords->data;
 	while ( p && *p ) {
 		p = xml_extractdata(p,"KEYWORD",&word);
-		if (p && *p) fprintf(outptr,"%%K %s\n",word.data);
+		if (p && *p) {
+			newstr_decodexml( &word );
+			fprintf(outptr,"%%K %s\n",word.data);
+		}
 	}
 	newstr_free(&word);
 }
@@ -131,6 +140,10 @@ process_article (FILE *outptr, newstring *ref, long nref )
 				fprintf(outptr,"%%0 Book Section\n");
 			else if (strcasecmp(s.data,"PHDTHESIS")==0)
 				fprintf(outptr,"%%0 Thesis\n");
+			else if (strcasecmp(s.data,"REPORT")==0)
+				fprintf(outptr,"%%0 Report\n");
+			else
+				fprintf(outptr,"%%0 Journal Article\n");
 		} else if (i==1) {  /* Authors */
 			(void) xml_extractdata(buffer,"AUTHORS",&s);
 			process_authors(&s,outptr,"AUTHOR","%A");
@@ -149,6 +162,7 @@ process_article (FILE *outptr, newstring *ref, long nref )
          	} else {  /* Default */
 			(void) xml_extractdata(buffer,xmltags[i],&s);
 			if (s.data!=NULL && s.data[0]!='\0') {
+				newstr_decodexml( &s );
 				fprintf(outptr,"%s %s\n",enimport[i],s.data);
 			}
 		}

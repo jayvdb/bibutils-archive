@@ -2,9 +2,7 @@
 # ris2xml MAKEFILE
 #
 
-# SGI CC
-CC         = cc
-INCLUDEDIR = -I ../include
+INCLUDEDIR = -I ../include -I ../lib
 LIBDIR     = -L../lib
 LIBS       = -lnewstr
 
@@ -16,7 +14,10 @@ ris2xml : ris2xml.o
 	$(CC) ris2xml.o $(LIBDIR) $(OBJS) -o $@ $(LIBS)
 
 ris2xml.o : ris2xml.c
-	$(CC) $(INCLUDEDIR) ris2xml.c -c -o ris2xml.o
+	$(CC) $(CFLAGS) $(INCLUDEDIR) ris2xml.c -c -o ris2xml.o
+
+test: ris2xml FORCE
+	csh -f test.com
 
 clean:  FORCE
 	rm -f *.o core

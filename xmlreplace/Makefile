@@ -2,7 +2,7 @@
 # xmlreplace MAKEFILE
 #
 
-INCLUDEDIR = -I ../include
+INCLUDEDIR = -I ../include -I ../lib
 LIBDIR     = -L../lib
 LIBS       = -lnewstr
 

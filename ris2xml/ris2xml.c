@@ -1,167 +1,135 @@
+/*
+ * ris2xml.c
+ *
+ * Copyright (c) Chris Putnam 2003-2004
+ *
+ * Program and source code released under the GPL
+ *
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "newstr.h"
+#include "fields.h"
+#include "is_ws.h"
 
 #define TRUE (1)
 #define FALSE (0)
 
 char progname[] = "ris2xml";
-char version[] = "1.5 4/02/03";
+char version[] = "1.12 07/19/04";
 
 void
-outputtype( newstring *tags, newstring *values, int numtags )
+ris_xmltype( fields *info )
 {
-	int i, typepos;
-
-	/* process type */
-	typepos = -1;
-	for (i=0; i<numtags && typepos == -1; ++i) 
-		if (strncmp(tags[i].data,"TY  - ",6)==0) typepos = i;
-	if (strncasecmp(values[typepos].data,"BOOK",4)==0)
-		printf("      <TYPE>BOOK</TYPE>\n");
-	else if (strncasecmp(values[typepos].data,"CHAP",4)==0)
-		printf("      <TYPE>INBOOK</TYPE>\n");
-	else if (strncasecmp(values[typepos].data,"THES",4)==0)
-		printf("      <TYPE>PHDTHESIS</TYPE>\n");
-	else    printf("      <TYPE>ARTICLE</TYPE>\n");
+	int n = fields_find( info, "TY" );
+	if ( n!=-1 ) {
+		if (!strncasecmp(info->data[n].data,"BOOK",4))
+			printf("      <TYPE>BOOK</TYPE>\n");
+		else if (!strncasecmp(info->data[n].data,"CHAP",4))
+			printf("      <TYPE>INBOOK</TYPE>\n");
+		else if (!strncasecmp(info->data[n].data,"THES",4))
+			printf("      <TYPE>PHDTHESIS</TYPE>\n");
+		else    printf("      <TYPE>ARTICLE</TYPE>\n");
+	}
 }
 
 void
-outputpages( newstring *tags, newstring *values, int numtags )
+ris_xmlpages( fields *info )
 {
-	int i, sp=-1, ep=-1;
-	for (i=0; i<numtags && (sp==-1 || ep==-1); ++i) {
-		if(strncmp(tags[i].data,"SP  - ",6)==0) sp = i;
-		if(strncmp(tags[i].data,"EP  - ",6)==0) ep = i;
-	}
+	char *p;
+	int sp = fields_find( info, "SP" );
+	int ep = fields_find( info, "EP" );
 	if ( sp==-1 && ep==-1 ) return;
 	printf("      <PAGES>\n");
-	if (sp!=-1) printf("        <START>%s</START>\n",values[sp].data);
-	if (ep!=-1) printf("        <END>%s</END>\n",values[ep].data);
+	if ( sp!=-1 ) {
+		newstr_encodexml( &(info->data[sp]) );
+		p = info->data[sp].data;
+		if ( p ) {
+			while ( is_ws( *p ) ) p++;
+			printf("        <START>%s</START>\n",p);
+		}
+	}
+	if ( ep!=-1 ) {
+		newstr_encodexml( &(info->data[ep]) );
+		p = info->data[ep].data;
+		if ( p ) {
+			while ( is_ws( *p ) ) p++;
+			printf("        <END>%s</END>\n",p);
+		}
+	}
 	printf("      </PAGES>\n");
 }
 
 /* name is in format Lastname,Firstname(or inits),Suffix */
 void
-outputname( char *name )
+ris_xmlname( char *p )
 {
-	char *p = name;
-	if ( p == NULL ) return;
-	printf("<LAST>");
-	while ( *p && *p!=',') printf("%c",*p++);
-	printf("</LAST>");
-	if ( *p == 0 ) return;
-	while ( *p==',' || *p==' ' ) p++;
-	while ( *p && *p!=',') {
-		printf("<PREF>");
-		while ( *p && *p!=' ' && *p!=',') printf("%c",*p++);
-		while ( *p==' ' ) p++;
-		printf("</PREF>");
-	}
-	while ( *p==',' || *p==' ' ) p++;
+	int suffix = 0;
+
+	if ( !p ) return;
+	while ( is_ws( *p ) ) p++;
+
 	if ( *p ) {
-		printf("<SUFF>");
-		while ( *p && *p!=' ' && *p!=',') printf("%c",*p++);
-		while ( *p==' ' ) p++;
-		printf("</SUFF>");
+		printf("<LAST>");
+		while ( *p && *p!=',') printf("%c",*p++);
+		printf("</LAST>");
+	}
+
+	while ( *p==',' || is_ws( *p ) ) p++;
+
+	while ( *p  ) {
+		if ( !strncasecmp( p, "Jr", 2 ) || !strncasecmp( p, "III", 3 ) )
+			suffix = 1;
+		if ( !suffix ) {
+			printf("<PREF>");
+			while ( *p && *p!=' ' && *p!=',' && *p!='.' ) {
+				printf("%c.",*p++);
+				while ( *p && *p!=' ' && *p!=',' && *p!='.' ) 
+					p++;
+			}
+			printf("</PREF>");
+		} else {
+			printf("<SUFF>");
+			while ( *p && *p!=' ' && *p!=',' && *p!='.' ) {
+				printf("%c",*p++);
+			}
+			printf("</SUFF>");
+			suffix = 0;
+		}
+		while ( is_ws( *p ) || *p=='.' || *p=='-' || *p==',' ) p++;
 	}
 }
 
 /* potentially multiple names separated by semicolons */
 void
-outputnames( char *tag, char *value )
+ris_xmlnames( char *tag, char *value )
 {
 	newstring name;
-	int i, len_value;
+	char *p;
 
 	newstr_init( &name );
-	len_value = strlen( value );
-	for ( i=0; i<len_value; ++i ) {
-		if ( value[i]==';' ) {
-			if (name.data) {
+	p = value;
+	while ( p && (p==value || *(p-1)) ) {
+		if ( *p==';' || *p=='\0' ) {
+			if ( name.len ) {
 				printf("        <%s>",tag); 
-				outputname( name.data );
+				newstr_encodexml( &name );
+				ris_xmlname( name.data );
 				printf("</%s>\n",tag);
-				name.data[0]='\0';
+				newstr_empty( &name );
 			}
 		} else {
-			if ( name.data==NULL || strlen(name.data)>0 || 
-			     (value[i]!=' ' && value[i]!='\t'))
-				newstr_addchar( &name, value[i] );
+			if ( name.len || ( *p!=' ' && *p!='\t' ) )
+				newstr_addchar( &name, *p );
 		}
-	}
-	printf("        <%s>",tag); 
-	outputname( name.data );
-	printf("</%s>\n",tag);
+		p++;
+	} 
 	newstr_free( &name );
 }
 
 void
-outputauthors( newstring *tags, newstring *values, int numtags )
-{
-	char *authortags[] = { "AU  - ", "A1  - ", "A3  - " };
-	int  nauthortags = sizeof(authortags)/sizeof(char*);
-	int i,j,found=0;
-
-	for (j=0; j<nauthortags; ++j)
-		for (i=0; i<numtags; ++i ) {
-			if (strcasecmp(tags[i].data,authortags[j])==0) {
-				if (found==0) {
-					found=1;
-					printf("      <AUTHORS>\n");
-				}
-				outputnames( "AUTHOR", values[i].data );
-				found++;
-			}
-		}
-	if ( found ) printf("      </AUTHORS>\n");
-}
-
-void
-outputeditors( newstring *tags, newstring *values, int numtags )
-{
-	char *editortags[] = { "ED  - ", "A2  - " };
-	int  neditortags = sizeof(editortags)/sizeof(char*);
-	int i,j,found=0;
-
-	for (j=0; j<neditortags; ++j)
-		for (i=0; i<numtags; ++i ) {
-			if (strcasecmp(tags[i].data,editortags[j])==0) {
-				if (found==0) {
-					found=1;
-					printf("      <EDITORS>\n");
-				}
-				outputnames( "EDITOR", values[i].data );
-				found++;
-			}
-		}
-	if ( found ) printf("      </EDITORS>\n");
-}
-
-void
-outputseriesauthors( newstring *tags, newstring *values, int numtags )
-{
-	char *authortags[] = { "A3  - " };
-	int  nauthortags = sizeof(authortags)/sizeof(char*);
-	int i,j,found=0;
-
-	for (j=0; j<nauthortags; ++j)
-		for (i=0; i<numtags; ++i ) {
-			if (strcasecmp(tags[i].data,authortags[j])==0) {
-				if (found==0) {
-					found=1;
-					printf("      <SERIESAUTHORS>\n");
-				}
-				outputnames( "AUTHOR", values[i].data );
-				found++;
-			}
-		}
-	if ( found ) printf("      </SERIESAUTHORS>\n");
-}
-
-void
-outputkeyword( char *value )
+ris_xmlkeyword( char *value )
 {
 	newstring keyword;
 	int i, len_value;
@@ -171,11 +139,12 @@ outputkeyword( char *value )
 	for ( i=0; i<len_value; ++i ) {
 		if ( value[i]==';' ) {
 			if (keyword.data) {
+			newstr_encodexml( &keyword );
 			printf("        <KEYWORD>%s</KEYWORD>\n",keyword.data );
-			keyword.data[0]='\0';
+			newstr_empty( &keyword );
 			}
 		} else {
-			if ( keyword.data==NULL || strlen(keyword.data)>0 || 
+			if ( keyword.data!=NULL || keyword.len>0 || 
 			     (value[i]!=' ' && value[i]!='\t'))
 				newstr_addchar( &keyword, value[i] );
 		}
@@ -186,189 +155,101 @@ outputkeyword( char *value )
 
 /* potentially multiple keywords, separated by keywords */
 void
-outputkeywords( newstring *tags, newstring *values, int numtags )
+ris_xmlkeywords( fields *info )
 {
 	int i,found=0;
 
-	for (i=0; i<numtags; ++i ) {
-		if ((strcasecmp(tags[i].data,"KW  - ")==0) &&
-		    (values[i].data!=NULL) &&
-		    (values[i].data[0]!='\0') ) {
-			if (found==0) {
-				found=1;
+	for (i=0; i<info->nfields; ++i ) {
+		if ( !(strcasecmp(info->tag[i].data,"KW"))) {
+			if ( !found ) {
 				printf("      <KEYWORDS>\n");
 			}
-			outputkeyword( values[i].data );
+			newstr_encodexml( &(info->data[i]) );
+			ris_xmlkeyword( info->data[i].data );
 			found++;
 		}
 	}
 	if ( found ) printf("      </KEYWORDS>\n");
 }
 
-
-
 void
-outputyear( newstring *tags, newstring *values, int numtags )
+ris_xmldate( fields *info )
 {
-	char *checktags[]={"PY  - ", "Y1  - ", "Y2  - "};
-	int  nchecktags = sizeof(checktags)/sizeof(char*);
-	int  i,j,found=0;
+	char *tags[]={ "PY", "Y1", "Y2" };
+	int  ntags = sizeof(tags)/sizeof(char*);
+	int  j,n=-1;
 	char *p;
-	for (j=0; j<nchecktags && !found; ++j) {
-		for (i=0; i<numtags; ++i) {
-			if (strncmp(tags[i].data,checktags[j],6)==0) {
-				found++;
-				/* output year */
-				printf("      <DATE>");
-				printf("<YEAR>");
-				p = values[i].data;
-				while ( p && *p && *p!='/') printf("%c",*p++);
-				printf("</YEAR>");
-				/* output month */
-				if ( p && *p=='/' ) p++;
-				while ( p && *p && (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n')) p++;
-				if ( p && *p && *p!='/' ) {
-					printf("<MONTH>");
-					while ( p && *p && *p!='/' ) 
-						printf("%c",*p++);
-					printf("</MONTH>");
-				}
-				/* output day */
-				if ( p && *p=='/' ) p++;
-				while ( p && *p && (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n')) p++;
-				if ( p && *p && *p!='/' ) {
-					printf("<DAY>");
-					while ( p && *p && *p!='/' ) 
-						printf("%c",*p++);
-					printf("</DAY>");
-				}
-				/* output other */
-				if ( p && *p=='/' ) p++;
-				while ( p && *p && (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n')) p++;
-				if ( p && *p && *p!='/' ) {
-					printf("<OTHER>");
-					while ( p && *p && *p!='/' ) 
-						printf("%c",*p++);
-					printf("</OTHER>");
-				}
-				printf("</DATE>\n");
-			}
+	for (j=0; j<ntags && n==-1; ++j) {
+
+		n = fields_find( info, tags[j] );
+		if ( n==-1 ) continue;
+
+		printf("      <DATE>");
+		newstr_encodexml( &(info->data[n]) );
+
+		/* output year */
+		printf("<YEAR>");
+		p = info->data[n].data;
+		while ( p && (*p==' ' || *p=='\t') ) p++;
+		while ( p && *p && *p!='/') printf("%c",*p++);
+		printf("</YEAR>");
+
+		/* output month */
+		if ( p && *p=='/' ) p++;
+		while ( p && *p && (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n')) p++;
+		if ( p && *p && *p!='/' ) {
+			printf("<MONTH>");
+			while ( p && (*p==' ' || *p=='\t') ) p++;
+			while ( p && *p && *p!='/' ) 
+				printf("%c",*p++);
+			printf("</MONTH>");
 		}
-	}
-}
 
-/* JF - Periodical name, full format
- * JO/JA - Standard abbreviation
- * J1/J2 - User-defined abbreviation
- * preferentially output JO/JA abbreviated form if present
- */
-void
-outputjournal( newstring *tags, newstring *values, int numtags )
-{
-	char *checktags[]={"J1  - ", "J2  - ", "JO  - ", "JA  - ", "JF  - "};
-	int  nchecktags = sizeof(checktags)/sizeof(char*);
-	int  i,j,found=0;
-
-	for ( j=0; j<nchecktags && found==0; ++j ) {
-		for ( i=0; i<numtags; ++i ) {
-			if ((strcasecmp(tags[i].data,checktags[j])==0) &&
-			    (values[i].data!=NULL) &&
-			    (values[i].data[0]!='\0') ) {
-				found++;
-				printf("      <JOURNAL>%s</JOURNAL>\n",
-						values[i].data );
-			}
+		/* output day */
+		if ( p && *p=='/' ) p++;
+		while ( p && *p && (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n')) p++;
+		if ( p && *p && *p!='/' ) {
+			printf("<DAY>");
+			while ( p && (*p==' ' || *p=='\t') ) p++;
+			while ( p && *p && *p!='/' ) 
+				printf("%c",*p++);
+			printf("</DAY>");
 		}
-	}
-}
 
-/* IS, CP -- issue */
-void
-outputissue( newstring *tags, newstring *values, int numtags )
-{
-	char *checktags[] = {"IS  - ", "CP  - "};
-	int  nchecktags = sizeof(checktags)/sizeof(char*);
-	int  i,j,found=0;
-
-	for ( j=0; j<nchecktags && found==0; ++j ) {
-		for ( i=0; i<numtags; ++i ) {
-			if ((strcasecmp(tags[i].data,checktags[j])==0) &&
-			    (values[i].data!=NULL) &&
-			    (values[i].data[0]!='\0') ) {
-				found++;
-				printf("      <ISSUE>%s</ISSUE>\n",
-						values[i].data );
-			}
+		/* output other */
+		if ( p && *p=='/' ) p++;
+		while ( p && *p && (*p==' ' || *p=='\t' || *p=='\r' || *p=='\n')) p++;
+		if ( p && *p && *p!='/' ) {
+			printf("<OTHER>");
+			while ( p && (*p==' ' || *p=='\t') ) p++;
+			while ( p && *p && *p!='/' ) 
+				printf("%c",*p++);
+			printf("</OTHER>");
 		}
-	}
-}
 
-/* Primary title */
-void
-outputtitle( newstring *tags, newstring *values, int numtags )
-{
-	char *checktags[] = {"T1  - ", "TI  - ", "CT  - "};
-	int  nchecktags = sizeof(checktags)/sizeof(char*);
-	int  i,j,found=0;
-
-	for ( j=0; j<nchecktags && found==0; ++j ) {
-		for ( i=0; i<numtags; ++i ) {
-			if ((strcasecmp(tags[i].data,checktags[j])==0) &&
-			    (values[i].data!=NULL) &&
-			    (values[i].data[0]!='\0') ) {
-				found++;
-				printf("      <TITLE>%s</TITLE>\n",
-						values[i].data );
-			}
-		}
-	}
-}
-
-/* Abstract */
-void
-outputabstract( newstring *tags, newstring *values, int numtags )
-{
-	char *checktags[] = {"AB  - ", "N2  - "};
-	int  nchecktags = sizeof(checktags)/sizeof(char*);
-	int  i,j,found=0;
-
-	for ( j=0; j<nchecktags && found==0; ++j ) {
-		for ( i=0; i<numtags; ++i ) {
-			if ((strcasecmp(tags[i].data,checktags[j])==0) &&
-			    (values[i].data!=NULL) &&
-			    (values[i].data[0]!='\0') ) {
-				if (found==0) 
-				  printf("      <ABSTRACT>%s</ABSTRACT>\n",
-						values[i].data );
-				else
-				  printf("      <NOTES2>%s</NOTES2>\n",
-						values[i].data );
-				found++;
-			}
-		}
+		printf("</DATE>\n");
 	}
 }
 
 void
-outputrefnumfromnamedate( newstring *tags, newstring *values, int numtags )
+ris_xmlmakerefnum( fields *info )
 {
-	int i, year=-1,name=-1;
+	int year, name;
 	char *p;
-	for (i=0; i<numtags && (year==-1 || name==-1); ++i ) {
-		if (year==-1 && (strncmp(tags[i].data,"PY  - ",6)==0 ||
-			         strncmp(tags[i].data,"Y1  - ",6)==0) )
-			year = i;
-		else if (name==-1 && (
-			strncmp(tags[i].data,"AU  - ",6)==0 ||
-			strncmp(tags[i].data,"A1  - ",6)==0)) 
-			name = i;
-	}
+
+	year = fields_find( info, "PY" );
+	if ( year==-1 ) year = fields_find( info, "Y1" );
+
+	name = fields_find( info, "AU" );
+	if ( name==-1 ) name = fields_find( info, "A1" );
+
 	if (year!=-1 && name!=-1) {
 		printf("      <REFNUM>");
-		p = values[name].data;
+		p = info->data[name].data;
 		while ( p && *p && *p!=',' && *p!=' ' && *p!=';' && *p!='\t' &&
 		       	*p!='\r' && *p!='\n') printf("%c",*p++);
-		p = values[year].data;
+		p = info->data[year].data;
+		while ( p && *p && ( *p==' ' || *p=='\t' ) ) p++;
 		while ( p && *p && *p!=',' && *p!='/' && *p!='\t' && *p!='\r'
 			&& *p!='\n') printf("%c",*p++);
 		printf("</REFNUM>\n");
@@ -376,134 +257,117 @@ outputrefnumfromnamedate( newstring *tags, newstring *values, int numtags )
 }
 
 void
-outputrefnum( newstring *tags, newstring *values, int numtags )
+ris_xmlrefnum( fields *info )
 {
-	int found=0, i;
-	for (i=0; i<numtags; ++i) {
-		if ((strncmp(tags[i].data,"ID  - ",6)==0) && 
-		    (values[i].data!=NULL) &&
-		    (values[i].data[0]!='\0') ) {
-			printf("      <REFNUM>%s</REFNUM>\n",
-					values[i].data);
-			found = 1;
-		}
-	}
-	if (!found) outputrefnumfromnamedate(tags,values,numtags);
-}
-
-void
-outputeasy( newstring *tags, newstring *values, int numtags, 
-	char *ristag, char *xmltag)
-{
-	int i;
-	for (i=0; i<numtags; ++i ) {
-		if (strncmp(tags[i].data,ristag,6)==0 && (values[i].data!=NULL)
-				&& (values[i].data[0]!='\0')){
-			printf("      <%s>%s</%s>\n", xmltag,
-				values[i].data, xmltag);
-		}
+	int n=fields_find( info, "ID" );
+	if ( n!=-1 ) {
+		newstr_encodexml( &(info->data[n]) );
+		printf("      <REFNUM>%s</REFNUM>\n", info->data[n].data );
+	} else {
+		ris_xmlmakerefnum( info );
 	}
 }
 
 void
-outputref( newstring *tags, newstring *values, int numtags )
+ris_xmlpeople( fields *info, char *oldtags[], char *xmltag, char *plural,
+	    char all )
 {
-	int i;
-
-	printf("  <REF>\n");
-
-	outputtype( tags, values, numtags );
-	outputauthors( tags, values, numtags );
-	outputtitle( tags, values, numtags );
-	outputeasy( tags, values, numtags, "T2  - ","SECONDARYTITLE");
-	outputeasy( tags, values, numtags, "T3  - ","SERIESTITLE");
-	outputeasy( tags, values, numtags, "BT  - ","BOOKTITLE");
-	outputjournal( tags, values, numtags );
-	outputyear( tags, values, numtags );
-	outputeasy( tags, values, numtags, "VL  - ","VOLUME");
-	outputissue( tags, values, numtags );
-	outputpages( tags, values, numtags );
-	outputeditors( tags, values, numtags );
-	outputseriesauthors( tags, values, numtags );
-	outputeasy( tags, values, numtags, "PB  - ","PUBLISHER");
-	outputeasy( tags, values, numtags, "CT  - ","ADDRESS");
-	outputeasy( tags, values, numtags, "AD  - ","ADDRESS");
-	outputeasy( tags, values, numtags, "CY  - ","ADDRESS");
-	outputeasy( tags, values, numtags, "SN  - ","SERIALNUM");
-	outputeasy( tags, values, numtags, "RP  - ","REPRINTSTATUS");
-	outputeasy( tags, values, numtags, "UR  - ","URL");
-	outputeasy( tags, values, numtags, "N1  - ","NOTES");
-	outputabstract( tags, values, numtags );
-	outputkeywords( tags, values, numtags );
-	outputrefnum( tags, values, numtags );
-
-#ifdef DONTCOMPILE
-{ 
-for (i=0; i<numtags; ++i) {
-		printf("     <TAG>%s</TAG><VALUE>%s</VALUE>\n",tags[i].data,values[i].data);
+	int i,j=0,n=0;
+	while ( oldtags[j][0]!='\0' && ( all || n==-1 ) ) {
+		for (i=0; i<info->nfields; ++i ) {
+			if (!strcasecmp(info->tag[i].data,oldtags[j])) {
+				if ( !n ) printf("      <%s>\n", plural);
+				ris_xmlnames( xmltag, info->data[i].data );
+				n++;
+			}
+		}
+		j++;
 	}
-}
-#endif
-
-	printf("  </REF>\n");
-	for (i=0; i<numtags; ++i) {
-		newstr_strcpy(&(tags[i]),"\0");
-		newstr_strcpy(&(values[i]),"\0");
-	}
+	if ( n ) printf( "      </%s>\n", plural );
 }
 
 void
-addtag( newstring **ptags, newstring **pvalues, int *maxtags, int n, char *buf )
+ris_xmleasy( fields *info, char *oldtags[], char *xmltag, char all )
 {
-	newstring *tags = *ptags, *values = *pvalues;
-	int ntags = 64, i;
-	if ( tags==NULL || values==NULL ) {
-		tags   = (newstring *) malloc( sizeof (newstring) * ntags );
-		values = (newstring *) malloc( sizeof (newstring) * ntags );
-		if ( tags==NULL || values==NULL ) {
-			fprintf(stderr,"ris2xml:  cannot allocate memory\n");
-			if (tags)   free(tags);
-			if (values) free(values);
-			*ptags = *pvalues = NULL;
-			*maxtags = 0;
-			return;
+	int i = 0, n = -1;
+	char *p, *q;
+	while ( oldtags[i][0]!='\0' && ( all || n==-1 ) ) {
+		n = fields_find( info, oldtags[i] );
+		if ( n!=-1 ) {
+			newstr_encodexml( &(info->data[n]) );
+			p = info->data[n].data;
+			while ( is_ws( *p ) ) p++;
+			q = &(info->data[n].data[info->data[n].len]);
+			while ( q!=p && (q-1)!=p && is_ws(*(q-1)) ) q--;
+			printf("      <%s>",xmltag);
+			while ( p!=q )
+				printf("%c",*p++);
+			printf("</%s>\n",xmltag);
 		}
-		*maxtags = ntags;
-		*ptags = tags;
-		*pvalues = values;
-		for (i=0; i<*maxtags; ++i) {
-			newstr_init( &(tags[i]) );
-			newstr_init( &(values[i]) );
-		}
-	} else if ( n == *maxtags ) {
-		newstring *newtags, *newvalues;
-		ntags = *maxtags  * 2;
-		newtags   = (newstring *) realloc(tags, 
-				sizeof (newstring) * ntags );
-		newvalues = (newstring *) realloc(values, 
-				sizeof (newstring) * ntags );
-		if ( newtags==NULL || newvalues==NULL ) {
-			fprintf(stderr,"ris2xml:  cannot allocate memory\n");
-			if (newtags)   free(newtags);   else free(tags);
-			if (newvalues) free(newvalues); else free(values);
-			*ptags = *pvalues = NULL;
-			*maxtags = 0;
-			return;
-		}
-		tags = *ptags = newtags;
-		values = *pvalues = newvalues;
-		for (i=*maxtags; i<ntags; ++i) {
-			newstr_init( &(tags[i]) );
-			newstr_init( &(values[i]) );
-		}
-		*maxtags = ntags;
-	}
-	for (i=0; i<6; ++i) newstr_addchar( &(tags[n]), buf[i] );
-	while ( buf[i]==' ' || buf[i]=='\t' ) i++;
-	while ( buf[i]!='\0' && buf[i]!='\t' && buf[i]!='\r' && buf[i]!='\n'){
-		newstr_addchar( &(values[n]), buf[i] );
 		i++;
 	}
+}
+
+void
+ris_xmlout( fields *info )
+{
+	enum modes { SIMPLE, PEOPLE, PAGES, DATE, KEYWORD, REFNUM };
+	typedef struct rismapping {
+		char mode;
+		char *oldtags[6];
+		char *newtag;
+		char *plural;
+		char all;
+	} rismapping;
+	rismapping mapping[] = {
+		{ PEOPLE, { "AU", "A1", "A3", "" }, "AUTHOR", "AUTHORS", 1 },
+		{ SIMPLE, { "T1", "TI", "CT", "" }, "TITLE", "", 0 },
+		{ SIMPLE, { "T2", "" }, "SECONDARYTITLE", "", 0 },
+		{ SIMPLE, { "T3", "" }, "SERIESTITLE", "", 0 },
+		{ SIMPLE, { "BT", "" }, "BOOKTITLE", "", 0 },
+		{ SIMPLE, { "J1", "J2", "JO", "JA", "JF", "" }, "JOURNAL", "", 0 },
+		{ DATE,   { "" }, "", "", 0 },
+		{ SIMPLE, { "VL", "" }, "VOLUME", "", 0 },
+		{ SIMPLE, { "IS", "CP", "" }, "ISSUE", "", 0 },
+		{ PAGES,  { "" }, "", "", 0 },
+		{ PEOPLE, { "ED", "A2", "" }, "EDITOR", "EDITORS", 1 },
+		{ SIMPLE, { "PB", "" }, "PUBLISHER", "", 0 },
+		{ PEOPLE, { "A3", "" }, "AUTHOR", "SERIESAUTHORS", 1 },
+		{ SIMPLE, { "CT", "AD", "CY", "" }, "ADDRESS", "", 1 },
+		{ SIMPLE, { "SN", "" }, "SERIALNUM", "", 0 },
+		{ SIMPLE, { "RP", "" }, "REPRINTSTATUS", "", 0 },
+		{ SIMPLE, { "UR", "" }, "URL", "", 0 },
+		{ SIMPLE, { "N1", "" }, "NOTES", "", 0 },
+		{ SIMPLE, { "AB", "N2", "" }, "ABSTRACT", "", 1 },
+		{ KEYWORD,  { "" }, "", "", 0 },
+		{ REFNUM,  { "" }, "", "", 0 }
+	};
+	int i, n = sizeof(mapping)/sizeof(rismapping);
+	printf("  <REF>\n");
+	ris_xmltype( info );
+	for ( i=0; i<n; ++i ) {
+		if ( mapping[i].mode == SIMPLE ) {
+			ris_xmleasy( info, 
+					mapping[i].oldtags, 
+					mapping[i].newtag,
+				   	mapping[i].all );
+		} else if ( mapping[i].mode == PEOPLE ) {
+			ris_xmlpeople( info, 
+					mapping[i].oldtags, 
+					mapping[i].newtag, 
+					mapping[i].plural, 
+					mapping[i].all );
+		} else if ( mapping[i].mode == DATE ) {
+			ris_xmldate( info );
+		} else if ( mapping[i].mode == PAGES ) {
+			ris_xmlpages( info );
+		} else if ( mapping[i].mode == KEYWORD ) {
+			ris_xmlkeywords( info );
+		} else if ( mapping[i].mode == REFNUM ) {
+			ris_xmlrefnum( info );
+		}
+	}
+	printf("  </REF>\n");
 }
 
 /* RIS definition of a tag is strict:
@@ -515,7 +379,7 @@ addtag( newstring **ptags, newstring **pvalues, int *maxtags, int n, char *buf )
     character 6 = space (ansi 32)
 */
 int
-is_tag( char *buf )
+ris_istag( char *buf )
 {
 	if (! (buf[0]>='A' && buf[0]<='Z') ) return FALSE;
 	if (! (((buf[1]>='A' && buf[1]<='Z'))||(buf[1]>='0'&&buf[1]<='9')) ) return FALSE;
@@ -527,77 +391,64 @@ is_tag( char *buf )
 }
 
 long 
-get_refs( FILE *fp )
+ris_read( FILE *fp )
 {
-	char buf[1024];
-	newstring *tags = NULL;
-	newstring *values = NULL;
-	int i;
+	newstring line;
+	fields reffields;
+	char buf[1024]="", *p;
+	char tag[3];
 	long numrefs = 0;
-	int numtags = 0;
-	int maxtags = 64;
+	int i;
 	int inref = FALSE;
+	int bufpos = 0;
 
-	printf("<XML>\n");
-	printf("<REFERENCES>\n");
+	newstr_init( &line );
+	fields_init( &reffields );
 
-	while( fgets( buf, sizeof(buf), fp ) != NULL ) {
-		i = 0;
-		if ( buf[i]=='\r' || buf[i]=='\n' ) i++;
+	while( newstr_fget( fp, buf, sizeof(buf), &bufpos, &line ) ) {
+		if ( line.len == 0 ) continue;  /* blank line */
+		p = &(line.data[0]);
+
+		if ( inref && !strncmp( p, "TY  - ", 6 ) ) {
+			fprintf(stderr,"Warning.  Reference %ld "
+				"not properly terminated.\n", numrefs+1 );
+			inref = FALSE;
+		} else if ( inref && !strncmp( p, "ER  - ", 6 ) ) {
+			inref = FALSE;
+		}
+
+		if ( reffields.nfields && !inref ) {
+			ris_xmlout( &reffields );
+			numrefs++;
+			reffields.nfields = 0;
+		}
 
 		/* Each reference starts with 'TY  - ' && ends with 'ER  - ' */
-		while( buf[i]!='\0' ) {
-			if (is_tag(&(buf[i]))) {
-				if (strncmp(&(buf[i]),"TY  - ",6)==0) {
-					if (inref==TRUE) {
-						fprintf(stderr,"Warning.  Reference %ld not properly terminated.\n",numrefs+1);
-						outputref( tags, values, numtags);
-						numrefs ++;
-					}
-					inref = TRUE;
-					numtags = 0;
-					addtag(&tags,&values,&maxtags,
-						numtags++,&(buf[i]));
-				} else if (strncmp(&(buf[i]),"ER  - ",6)==0) {
-					inref = FALSE;
-					numrefs ++;
-					outputref( tags, values, numtags );
-				} else if (inref==TRUE) {
-					addtag(&tags,&values,&maxtags,
-							numtags++,&(buf[i]));
-				} else {
-					fprintf(stderr,"Warning.  Tagged line not in properly started reference.\n");
-					fprintf(stderr,"Ignored: '%s'\n",&(buf[i]));
-				}
+		if ( ris_istag( p ) && strncmp( p, "ER", 2 ) ) {
+			for ( i=0; i<2; ++i ) tag[i] = p[i];
+			tag[2]='\0';
+			if ( !strncmp( p, "TY", 2 ) ) inref = TRUE;
+			if ( inref ) fields_add( &reffields, tag, p+6 );
+			else {
+				fprintf(stderr,"Warning.  Tagged line not in properly started reference.\n");
+				fprintf( stderr, "Ignored: '%s'\n", p );
 			}
-			/* not a tag, but we'll append to last values ...*/
-			else if (inref) {
-				int added=0;
-				while ( buf[i] ) {
-					if (buf[i]!='\r' && buf[i]!='\n') {
-					   if (added==0) newstr_addchar(&(values[numtags-1]),' ');
-					   newstr_addchar(&(values[numtags-1]),buf[i]);
-					   added++;
-					} 
-					i++;
-				}
-			}
-			while ( buf[i]!='\0' && buf[i]!='\t' && 
- 				  buf[i]!='\r' && buf[i]!='\n' ) ++i;
-			if (buf[i]=='\t'|| buf[i]=='\r' || buf[i]=='\n') ++i;
+		}
+		/* not a tag, but we'll append to last values ...*/
+		else if ( inref ) {
+			newstr_addchar( &(reffields.data[reffields.nfields-1]),' ' );
+			newstr_strcat( &(reffields.data[reffields.nfields-1]),
+					p );
 		}
 	}
 
-	/* clean up memory usage */
-	for (i=0; i<maxtags; ++i) {
-		newstr_free( &(tags[i]) );
-		newstr_free( &(values[i]) );
+	if ( reffields.nfields ) {
+		ris_xmlout( &reffields );
+		numrefs++;
 	}
-	free(tags);
-	free(values);
 
-	printf("</REFERENCES>\n");
-	printf("</XML>\n");
+	newstr_free( &line );
+	fields_free( &reffields );
 
 	return numrefs;
 }
@@ -655,19 +506,27 @@ main(int argc, char *argv[])
 
 	process_args( &argc, argv );
 
-	if (argc==1) 
-		numref=get_refs(stdin);
-	else {
+	if (argc==1)  {
+		printf("<XML>\n");
+		printf("<REFERENCES>\n");
+		numref = ris_read( stdin );
+		printf("</REFERENCES>\n");
+		printf("</XML>\n");
+	} else {
+		printf("<XML>\n");
+		printf("<REFERENCES>\n");
 		for (i=1; i<argc; i++) {
 			fp=fopen(argv[i],"r");
 			if (fp==NULL) {
 				fprintf(stderr,"ris2xml %s: cannot open %s\n",
 					version, argv[i]);
 			} else { 
-				numref+=get_refs(fp);
+				numref += ris_read( fp );
 				fclose(fp);
 			}
 		}
+		printf("</REFERENCES>\n");
+		printf("</XML>\n");
 	}
 	fprintf(stderr,"ris2xml %s:  Processed %ld references.\n",
 		version, numref);

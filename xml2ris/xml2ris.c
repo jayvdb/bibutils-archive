@@ -13,7 +13,7 @@ xml2ris --   Bibliography XML to RIS format Pre-Reference Manager
 #include "xml.h"
 
 char progname[] = "xml2ris";
-char version[]  = "1.2 02/16/03";
+char version[]  = "1.3 11/01/03";
 
 void
 process_person( newstring *person, FILE *outptr )
@@ -25,6 +25,7 @@ process_person( newstring *person, FILE *outptr )
 	newstr_init( &part );
 	(void) xml_extractdata(person->data,"LAST",&part);
 	if (part.data!=NULL && part.data[0]!='\0') {
+		newstr_decodexml( &part );
 		fprintf(outptr,"%s",part.data);
 		last++;
 	}
@@ -33,6 +34,7 @@ process_person( newstring *person, FILE *outptr )
 		p = xml_extractdata(p,"PREF",&part);
 		if (part.data!=NULL && part.data[0]!='\0') {
 			if ( last && pref==0 ) fprintf(outptr,", ");
+			newstr_decodexml( &part );
 			fprintf(outptr,"%s ",part.data);
 			pref++;
 		}
@@ -43,6 +45,7 @@ process_person( newstring *person, FILE *outptr )
 		if (part.data!=NULL && part.data[0]!='\0') {
 			if ( last && pref==0 && suff==0 ) fprintf(outptr,",");
 			if ( last && suff==0 ) fprintf(outptr,",");
+			newstr_decodexml( &part );
 			fprintf(outptr,"%s ",part.data);
 			suff++;
 		}
@@ -82,20 +85,28 @@ process_date( newstring *date, FILE *outptr )
 	newstr_init( &part );
 	fprintf(outptr,"PY  - ");
 	(void) xml_extractdata(date->data,"YEAR",&part);
-	if (part.data!=NULL && part.data[0]!='\0') 
+	if (part.data!=NULL && part.data[0]!='\0') {
+		newstr_decodexml( &part );
 		fprintf(outptr,"%s",part.data);
+	}
 	fprintf(outptr,"/");
 	(void) xml_extractdata(date->data,"MONTH",&part);
-	if (part.data!=NULL && part.data[0]!='\0')
+	if (part.data!=NULL && part.data[0]!='\0') {
+		newstr_decodexml( &part );
 		fprintf(outptr,"%s",part.data);
+	}
 	fprintf(outptr,"/");
 	(void) xml_extractdata(date->data,"DAY",&part);
-	if (part.data!=NULL && part.data[0]!='\0')
+	if (part.data!=NULL && part.data[0]!='\0') {
+		newstr_decodexml( &part );
 		fprintf(outptr,"%s",part.data);
+	}
 	fprintf(outptr,"/");
 	(void) xml_extractdata(date->data,"OTHER",&part);
-	if (part.data!=NULL && part.data[0]!='\0')
+	if (part.data!=NULL && part.data[0]!='\0') {
+		newstr_decodexml( &part );
 		fprintf(outptr,"%s",part.data);
+	}
 	fprintf(outptr,"%c%c",13,10);
 	newstr_free( &part );
 }
@@ -108,10 +119,12 @@ process_pages( newstring *pages, FILE *outptr )
 	newstr_init(&ep);
 	(void) xml_extractdata(pages->data,"START",&sp);
 	if (sp.data!=NULL && sp.data[0]!='\0') {
+		newstr_decodexml( &sp );
 		fprintf(outptr,"SP  - %s%c%c",sp.data,13,10);
 	}
 	(void) xml_extractdata(pages->data,"END",&ep);
 	if (ep.data!=NULL && ep.data[0]!='\0') {
+		newstr_decodexml( &ep );
 		fprintf(outptr,"EP  - %s%c%c",ep.data,13,10);
 	}
 	newstr_free(&sp);
@@ -129,10 +142,10 @@ process_article (FILE *outptr, newstring *ref, long nref)
 			"ADDRESS", "CHAPTER", "BOOKTITLE", "REFNUM",
 			"ABSTRACT", "NOTES", "SERIALNUM", "ISSUE", 
 			"URL", "SECONDARYTITLE", "SERIESTITLE", "REPRINTSTATUS",
-			"SERIESAUTHORS"	};
+			"SERIESAUTHORS", "NUMBER"	};
 	char	*descriptors[]={"AU","","TI","JO", "VL","","",
 			"PB", "CT","CP","BT", "ID", "AB", "N1", "SN", 
-			"IS", "UR", "T2", "T3", "RP", "" };
+			"IS", "UR", "T2", "T3", "RP", "", "IS" };
 	int 	numfields = sizeof(tags) / sizeof(char*);
 	int	i;
 	char 	*p, *buffer;
@@ -189,6 +202,7 @@ process_article (FILE *outptr, newstring *ref, long nref)
          	} else {  /* default */
 			(void) xml_extractdata(buffer,tags[i],&s);
 			if (s.data!=NULL && s.data[0]!='\0') {
+				newstr_decodexml( &s );
 				fprintf(outptr,"%s  - %s%c%c",descriptors[i],
 					s.data,13,10); 
 			}
