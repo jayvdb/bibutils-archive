@@ -9,7 +9,7 @@ xml2bib --   Bibliography XML to RIS format Pre-Reference Manager
 #include <string.h>
 #include <ctype.h>
 #include "newstr.h"
-#include "search.h"
+#include "strsearch.h"
 #include "xml.h"
 
 #define TRUE (1==1)
@@ -112,15 +112,15 @@ void process_article (FILE *outptr, char *buffer, long refnum)
 	(void) extract_xmldata(buffer,"TYPE",&s);
 	if (s!=NULL) {
 		p = s->data;
-		if (p!=NULL && strncasecmp(p,"ARTICLE",7)==0)  
+		if (p!=NULL && strsearch(p,"ARTICLE")==p)  
 			fprintf(outptr,"@ARTICLE(");
-		else if (p!=NULL && strncasecmp(p,"INBOOK",6)==0) 
+		else if (p!=NULL && strsearch(p,"INBOOK")==p) 
 			fprintf(outptr,"@INBOOK(");
-		else if (p!=NULL && strncasecmp(p,"INPROCEEDINGS",13)==0) 
+		else if (p!=NULL && strsearch(p,"INPROCEEDINGS")==p) 
 			fprintf(outptr,"@INPROCEEDINGS(");
-		else if (p!=NULL && strncasecmp(p,"BOOK",4)==0) 
+		else if (p!=NULL && strsearch(p,"BOOK")==p) 
 			fprintf(outptr,"@BOOK(");
-		else if (p!=NULL && strncasecmp(p,"PHDTHESIS",9)==0)  
+		else if (p!=NULL && strsearch(p,"PHDTHESIS")==p)  
 			fprintf(outptr,"@PHDTHESIS");
 		else {
 			fprintf(stderr,"xml2bib: cannot identify TYPE");
@@ -200,7 +200,7 @@ read_refs(FILE *inptr, FILE *outptr)
 
 		errorptr = fgets (line, sizeof(line), inptr);
 		if (errorptr != NULL) {
-			startptr = search(line,"<REF>");
+			startptr = strsearch(line,"<REF>");
 			if (startptr != NULL || haveref ) {
 				haveref = TRUE;
 				if (startptr!=NULL) newstr_strcat(&buffer,startptr);
@@ -215,7 +215,7 @@ read_refs(FILE *inptr, FILE *outptr)
 						newstr_addchar(&buffer,*p);
 						p++;
 					}
-					startptr = search(buffer.data,"<REF>"); 
+					startptr = strsearch(buffer.data,"<REF>"); 
 					if (startptr!=NULL) haveref=TRUE;
 					else haveref=FALSE;
 				}

@@ -1,0 +1,35 @@
+13: Marcu MG, Chadli A, Bouhouche I, Catelli M, Neckers LM.
+The heat shock protein 90 antagonist novobiocin interacts with a previously
+unrecognized ATP-binding domain in the C-terminus of the chaperone.
+J Biol Chem. 2000 Aug 16 [epub ahead of print].
+[Record as supplied by publisher]
+PMID: 10945979
+
+
+33: Klaus W, Ross A, Gsell B, Senn H.
+Letter to the editor: Backbone resonance assignment of the N-terminal 24 kDa
+fragment of the gyrase B subunit from S. aureus complexed with novobiocin.
+J Biomol NMR. 2000 Apr;16(4):357-8. No abstract available.
+PMID: 10826892; UI: 20285168
+ 
+ 
+34: Morrissey I, George JT.
+Purification of pneumococcal type II topoisomerases and inhibition by
+gemifloxacin and other quinolones.
+J Antimicrob Chemother. 2000 Apr;45 Suppl 1:101-6.
+PMID: 10824040; UI: 20285515
+
+88: Suzuki M, Nakagawa Y, Harayama S, Yamamoto S.
+Phylogenetic analysis of genus Marinilabilia and related bacteria based on the
+amino acid sequences of gyrB and emended description of Marinilabilia
+salmonicolor with Marinilabilia agarovorans as its subjective synonym.
+Int J Syst Bacteriol. 1999 Oct;49 Pt 4:1551-7.
+PMID: 10555336; UI: 20023036
+ 
+ 
+89: Bowker-Kinley M, Popov KM.
+Evidence that pyruvate dehydrogenase kinase belongs to the ATPase/kinase
+superfamily.
+Biochem J. 1999 Nov 15;344 Pt 1:47-53.
+PMID: 10548532; UI: 20018014
+

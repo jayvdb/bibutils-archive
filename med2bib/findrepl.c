@@ -1,9 +1,10 @@
 /*
  * find and replace routines for med2bib
  *
- * Copyright (c) 1996-8 C. Putnam
+ * Copyright (c) 1996-2000 C. Putnam
  */
 
+#include <string.h>
 #include "findrepl.h"
 
 static findreplace *titlesub=NULL, *journalsub=NULL;
@@ -23,6 +24,7 @@ findreplace *disposelist (findreplace *top)
 void process_journal (newstring *journalstr)
 {
   findreplace *CurrPtr;
+  if (journalstr==NULL || journalstr->data==NULL) return;
   CurrPtr=journalsub;
   while (CurrPtr!=NULL) {
     newstr_findreplace(journalstr,CurrPtr->Find.data,CurrPtr->Replace.data);
@@ -33,6 +35,7 @@ void process_journal (newstring *journalstr)
 void process_title (newstring *titlestr)
 {
   findreplace *CurrPtr;
+  if (titlestr==NULL || titlestr->data==NULL) return;
   CurrPtr=titlesub;
   while (CurrPtr!=NULL) {
     newstr_findreplace(titlestr,CurrPtr->Find.data,CurrPtr->Replace.data);
@@ -45,14 +48,14 @@ findreplace *readlist (char *filename)
   FILE *fp;
   findreplace *CurrPtr, *PrevPtr, *FirstPtr;
   char deliminator;
-  int pos;
+  unsigned int pos;
   char buf[512];
 
   fp = fopen (filename,"r");
   if (fp==NULL) return NULL;
 
   FirstPtr=NULL;
-  PrevPtr==NULL;
+  PrevPtr=NULL;
   while (fgets(buf,sizeof(buf),fp)!=NULL) {
     CurrPtr = (findreplace *) malloc (sizeof(findreplace));
     if (CurrPtr==NULL) {
@@ -87,17 +90,39 @@ findreplace *readlist (char *filename)
 void initialize_subs(void)
 {
   char *filename;
-  findreplace *CurrPtr;
-  disposelist(titlesub);
+
+  titlesub = disposelist(titlesub);
   filename=getenv("MED2BIB_TITLE");
   if (filename!=NULL) {
     titlesub=readlist(filename);
   }
   if (titlesub==NULL) titlesub=readlist("title.sub");
-  disposelist(journalsub);
+
+/* 
+  {
+    findrepl *CurrPtr;
+    CurrPtr = titlesub;
+    while (CurrPtr!=NULL) {
+       printf("%s-->%s\n",CurrPtr->Find.data,CurrPtr->Replace.data);
+       CurrPtr=CurrPtr->Next;
+    }
+  }
+*/
+
+  journalsub = disposelist(journalsub);
+
   filename=getenv("MED2BIB_JOURNAL");
   if (filename!=NULL) {
     journalsub=readlist(filename);
   }
   if (journalsub==NULL) journalsub=readlist("journal.sub");
+
+/*
+  CurrPtr = titlesub;
+  while (CurrPtr!=NULL) {
+    printf("%s-->%s\n",CurrPtr->Find.data,CurrPtr->Replace.data);
+    CurrPtr=CurrPtr->Next;
+  }
+*/
+
 }

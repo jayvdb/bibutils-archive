@@ -9,7 +9,7 @@ xml.c
 #include <string.h>
 #include <ctype.h>
 #include "newstr.h"
-#include "search.h"
+#include "strsearch.h"
 #include "xml.h"
 
 #define XML_BUFSIZE (512)
@@ -22,13 +22,13 @@ char *find_xmlstartdata(char *buffer, char *tag)
 	length = strlen(tag);
 	if (length<XML_BUFSIZE-3) {
 		sprintf(starttag,"<%s>",tag);
-		p = search(buffer,starttag);
+		p = strsearch(buffer,starttag);
 	} else {
 		p = NULL;
 		startptr = (char *) malloc( sizeof(char)*(length+4));
 		if (startptr!=NULL) {
 			sprintf(startptr,"<%s>",tag);
-			p = search(buffer,startptr);
+			p = strsearch(buffer,startptr);
 			free(startptr);
 		}
 	}
@@ -44,12 +44,12 @@ char *find_xmlenddata(char *buffer, char *tag)
 	length = strlen(tag);
 	if (length<XML_BUFSIZE-4) {
 		sprintf(endtag,"</%s>",tag);
-		p = search(buffer,endtag);
+		p = strsearch(buffer,endtag);
 	} else {
 		p = NULL;
 		endptr = (char *) malloc( sizeof(char)*(length+5));
 		sprintf(endptr,"</%s>",tag);
-		p = search(buffer,endptr);
+		p = strsearch(buffer,endptr);
 		free(endptr);
 	}
 	return p;

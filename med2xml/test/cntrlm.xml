@@ -1,0 +1,207 @@
+<XML>
+<REFERENCES>
+<REF>
+  <TYPE>ARTICLE</TYPE>
+  <AUTHORS>
+    <AUTHOR><LAST>Hosfield</LAST><PREF>D.</PREF><PREF>J.</PREF></AUTHOR>
+    <AUTHOR><LAST>Daniels</LAST><PREF>D.</PREF><PREF>S.</PREF></AUTHOR>
+    <AUTHOR><LAST>Mol</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Putnam</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Parikh</LAST><PREF>S.</PREF><PREF>S.</PREF></AUTHOR>
+    <AUTHOR><LAST>Tainer</LAST><PREF>J.</PREF><PREF>A.</PREF></AUTHOR>
+  </AUTHORS>
+  <TITLE>DNA damage recognition and repair pathway coordination revealed by the structural biochemistry of DNA repair enzymes</TITLE>
+  <JOURNAL>Prog Nucleic Acid Res Mol Biol</JOURNAL>
+  <YEAR>2001</YEAR>
+  <VOLUME>68</VOLUME>
+  <PAGES><START>315</START><START>3</START><END>47</END></PAGES>
+  <REFNUM>Hosfield01</REFNUM>
+</REF>
+<REF>
+  <TYPE>ARTICLE</TYPE>
+  <AUTHORS>
+    <AUTHOR><LAST>Putnam</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Clancy</LAST><PREF>S.</PREF><PREF>B.</PREF></AUTHOR>
+    <AUTHOR><LAST>Tsuruta</LAST><PREF>H.</PREF></AUTHOR>
+    <AUTHOR><LAST>Gonzalez</LAST><PREF>S.</PREF></AUTHOR>
+    <AUTHOR><LAST>Wetmur</LAST><PREF>J.</PREF><PREF>G.</PREF></AUTHOR>
+    <AUTHOR><LAST>Tainer</LAST><PREF>J.</PREF><PREF>A.</PREF></AUTHOR>
+  </AUTHORS>
+  <TITLE>Structure and mechanism of the RuvB Holliday junction branch migration motor</TITLE>
+  <JOURNAL>J Mol Biol</JOURNAL>
+  <YEAR>2001</YEAR>
+  <VOLUME>311</VOLUME>
+  <PAGES><START>297</START><END>310</END></PAGES>
+  <REFNUM>Putnam01</REFNUM>
+</REF>
+<REF>
+  <TYPE>ARTICLE</TYPE>
+  <AUTHORS>
+    <AUTHOR><LAST>Parikh</LAST><PREF>S.</PREF><PREF>S.</PREF></AUTHOR>
+    <AUTHOR><LAST>Putnam</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Tainer</LAST><PREF>J.</PREF><PREF>A.</PREF></AUTHOR>
+  </AUTHORS>
+  <TITLE>Lessons learned from structural results on uracil-DNA glycosylase</TITLE>
+  <JOURNAL>Mutat Res</JOURNAL>
+  <YEAR>2000</YEAR>
+  <VOLUME>460</VOLUME>
+  <PAGES><START>183</START><START>1</START><END>99</END></PAGES>
+  <REFNUM>Parikh00</REFNUM>
+</REF>
+<REF>
+  <TYPE>ARTICLE</TYPE>
+  <AUTHORS>
+    <AUTHOR><LAST>Putnam</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Arvai</LAST><PREF>A.</PREF><PREF>S.</PREF></AUTHOR>
+    <AUTHOR><LAST>Bourne</LAST><PREF>Y.</PREF></AUTHOR>
+    <AUTHOR><LAST>Tainer</LAST><PREF>J.</PREF><PREF>A.</PREF></AUTHOR>
+  </AUTHORS>
+  <TITLE>Active and inhibited human catalase structures: ligand and NADPH binding and catalytic mechanism</TITLE>
+  <JOURNAL>J Mol Biol</JOURNAL>
+  <YEAR>2000</YEAR>
+  <VOLUME>296</VOLUME>
+  <PAGES><START>295</START><END>309</END></PAGES>
+  <REFNUM>Putnam00</REFNUM>
+</REF>
+<REF>
+  <TYPE>ARTICLE</TYPE>
+  <AUTHORS>
+    <AUTHOR><LAST>Putnam</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Tainer</LAST><PREF>J.</PREF><PREF>A.</PREF></AUTHOR>
+  </AUTHORS>
+  <TITLE>The food of sweet and bitter fancy</TITLE>
+  <JOURNAL>Nat Struct Biol</JOURNAL>
+  <YEAR>2000</YEAR>
+  <VOLUME>7</VOLUME>
+  <PAGES><START>17</START><START>1</START><END>8</END></PAGES>
+  <REFNUM>Putnam00</REFNUM>
+</REF>
+<REF>
+  <TYPE>ARTICLE</TYPE>
+  <AUTHORS>
+    <AUTHOR><LAST>Han</LAST><PREF>S.</PREF></AUTHOR>
+    <AUTHOR><LAST>Craig</LAST><PREF>J.</PREF><PREF>A.</PREF></AUTHOR>
+    <AUTHOR><LAST>Putnam</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Carozzi</LAST><PREF>N.</PREF><PREF>B.</PREF></AUTHOR>
+    <AUTHOR><LAST>Tainer</LAST><PREF>J.</PREF><PREF>A.</PREF></AUTHOR>
+  </AUTHORS>
+  <TITLE>Evolution and mechanism from structures of an ADP-ribosylating toxin and NAD complex</TITLE>
+  <JOURNAL>Nat Struct Biol</JOURNAL>
+  <YEAR>1999</YEAR>
+  <VOLUME>6</VOLUME>
+  <PAGES><START>932</START><START>93</START><END>6</END></PAGES>
+  <REFNUM>Han99</REFNUM>
+</REF>
+<REF>
+  <TYPE>ARTICLE</TYPE>
+  <AUTHORS>
+    <AUTHOR><LAST>Mol</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Parikh</LAST><PREF>S.</PREF><PREF>S.</PREF></AUTHOR>
+    <AUTHOR><LAST>Putnam</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Lo</LAST><PREF>T.</PREF><PREF>P.</PREF></AUTHOR>
+    <AUTHOR><LAST>Tainer</LAST><PREF>J.</PREF><PREF>A.</PREF></AUTHOR>
+  </AUTHORS>
+  <TITLE>DNA repair mechanisms for the recognition and removal of damaged DNA bases</TITLE>
+  <JOURNAL>Annu Rev Biophys Biomol Struct</JOURNAL>
+  <YEAR>1999</YEAR>
+  <VOLUME>28</VOLUME>
+  <PAGES><START>101</START><START>1</START><END>28</END></PAGES>
+  <REFNUM>Mol99</REFNUM>
+</REF>
+<REF>
+  <TYPE>ARTICLE</TYPE>
+  <AUTHORS>
+    <AUTHOR><LAST>Shroyer</LAST><PREF>M.</PREF><PREF>J.</PREF></AUTHOR>
+    <AUTHOR><LAST>Bennett</LAST><PREF>S.</PREF><PREF>E.</PREF></AUTHOR>
+    <AUTHOR><LAST>Putnam</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Tainer</LAST><PREF>J.</PREF><PREF>A.</PREF></AUTHOR>
+    <AUTHOR><LAST>Mosbaugh</LAST><PREF>D.</PREF><PREF>W.</PREF></AUTHOR>
+  </AUTHORS>
+  <TITLE>Mutation of an active site residue in Escherichia coli uracil-DNA glycosylase: effect on DNA binding, uracil inhibition and catalysis</TITLE>
+  <JOURNAL>Biochemistry</JOURNAL>
+  <YEAR>1999</YEAR>
+  <VOLUME>38</VOLUME>
+  <PAGES><START>4834</START><START>48</START><END>45</END></PAGES>
+  <REFNUM>Shroyer99</REFNUM>
+</REF>
+<REF>
+  <TYPE>ARTICLE</TYPE>
+  <AUTHORS>
+    <AUTHOR><LAST>Putnam</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Shroyer</LAST><PREF>M.</PREF><PREF>J.</PREF></AUTHOR>
+    <AUTHOR><LAST>Lundquist</LAST><PREF>A.</PREF><PREF>J.</PREF></AUTHOR>
+    <AUTHOR><LAST>Mol</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Arvai</LAST><PREF>A.</PREF><PREF>S.</PREF></AUTHOR>
+    <AUTHOR><LAST>Mosbaugh</LAST><PREF>D.</PREF><PREF>W.</PREF></AUTHOR>
+    <AUTHOR><LAST>Tainer</LAST><PREF>J.</PREF><PREF>A.</PREF></AUTHOR>
+  </AUTHORS>
+  <TITLE>Protein mimicry of DNA from crystal structures of the uracil-DNA glycosylase inhibitor protein and its complex with Escherichia coli uracil-DNA glycosylase</TITLE>
+  <JOURNAL>J Mol Biol</JOURNAL>
+  <YEAR>1999</YEAR>
+  <VOLUME>287</VOLUME>
+  <PAGES><START>331</START><START>3</START><END>46</END></PAGES>
+  <REFNUM>Putnam99</REFNUM>
+</REF>
+<REF>
+  <TYPE>ARTICLE</TYPE>
+  <AUTHORS>
+    <AUTHOR><LAST>Wilcox</LAST><PREF>S.</PREF><PREF>K.</PREF></AUTHOR>
+    <AUTHOR><LAST>Putnam</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Sastry</LAST><PREF>M.</PREF></AUTHOR>
+    <AUTHOR><LAST>Blankenship</LAST><PREF>J.</PREF></AUTHOR>
+    <AUTHOR><LAST>Chazin</LAST><PREF>W.</PREF><PREF>J.</PREF></AUTHOR>
+    <AUTHOR><LAST>McRee</LAST><PREF>D.</PREF><PREF>E.</PREF></AUTHOR>
+    <AUTHOR><LAST>Goodin</LAST><PREF>D.</PREF><PREF>B.</PREF></AUTHOR>
+  </AUTHORS>
+  <TITLE>Rational design of a functional metalloenzyme: introduction of a site for manganese binding and oxidation into a heme peroxidase</TITLE>
+  <JOURNAL>Biochemistry</JOURNAL>
+  <YEAR>1998</YEAR>
+  <VOLUME>37</VOLUME>
+  <PAGES><START>16853</START><START>168</START><END>62</END></PAGES>
+  <REFNUM>Wilcox98</REFNUM>
+</REF>
+<REF>
+  <TYPE>ARTICLE</TYPE>
+  <AUTHORS>
+    <AUTHOR><LAST>Putnam</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Copenhaver</LAST><PREF>G.</PREF><PREF>P.</PREF></AUTHOR>
+    <AUTHOR><LAST>Denton</LAST><PREF>M.</PREF><PREF>L.</PREF></AUTHOR>
+    <AUTHOR><LAST>Pikaard</LAST><PREF>C.</PREF><PREF>S.</PREF></AUTHOR>
+  </AUTHORS>
+  <TITLE>The RNA polymerase I transactivator upstream binding factor requires its dimerization domain and high-mobility-group (HMG) box 1 to bend, wrap, and positively supercoil enhancer DNA</TITLE>
+  <JOURNAL>Mol Cell Biol</JOURNAL>
+  <YEAR>1994</YEAR>
+  <VOLUME>14</VOLUME>
+  <PAGES><START>6476</START><START>64</START><END>88</END></PAGES>
+  <REFNUM>Putnam94</REFNUM>
+</REF>
+<REF>
+  <TYPE>ARTICLE</TYPE>
+  <AUTHORS>
+    <AUTHOR><LAST>Copenhaver</LAST><PREF>G.</PREF><PREF>P.</PREF></AUTHOR>
+    <AUTHOR><LAST>Putnam</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Denton</LAST><PREF>M.</PREF><PREF>L.</PREF></AUTHOR>
+    <AUTHOR><LAST>Pikaard</LAST><PREF>C.</PREF><PREF>S.</PREF></AUTHOR>
+  </AUTHORS>
+  <TITLE>The RNA polymerase I transcription factor UBF is a sequence-tolerant HMG-box protein that can recognize structured nucleic acids</TITLE>
+  <JOURNAL>Nucleic Acids Res</JOURNAL>
+  <YEAR>1994</YEAR>
+  <VOLUME>22</VOLUME>
+  <PAGES><START>2651</START><START>265</START><END>7</END></PAGES>
+  <REFNUM>Copenhaver94</REFNUM>
+</REF>
+<REF>
+  <TYPE>ARTICLE</TYPE>
+  <AUTHORS>
+    <AUTHOR><LAST>Putnam</LAST><PREF>C.</PREF><PREF>D.</PREF></AUTHOR>
+    <AUTHOR><LAST>Pikaard</LAST><PREF>C.</PREF><PREF>S.</PREF></AUTHOR>
+  </AUTHORS>
+  <TITLE>Cooperative binding of the Xenopus RNA polymerase I transcription factor xUBF to repetitive ribosomal gene enhancers</TITLE>
+  <JOURNAL>Mol Cell Biol</JOURNAL>
+  <YEAR>1992</YEAR>
+  <VOLUME>12</VOLUME>
+  <PAGES><START>4970</START><START>49</START><END>80</END></PAGES>
+  <REFNUM>Putnam92</REFNUM>
+</REF>
+</REFERENCES>
+</XML>

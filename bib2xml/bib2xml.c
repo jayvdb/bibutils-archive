@@ -13,6 +13,7 @@ Author:  Chris Putnam (cdputnam@scripps.edu, http://www.scripps.edu/~cdputnam/)
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "strsearch.h"
 #include "newstr.h"
 
 #define TRUE (1==1)
@@ -38,42 +39,6 @@ int iswhitespace (char ch)
 {
   if (ch==' ' || ch=='\t') return TRUE;
   else return FALSE;
-}
-
-/*
- * Search is a case-independent version of strstr()
- * it returns NULL on not finding target in buffer,
- * otherwise it returns the pointer to the position
- * in buffer.
- */
-char *search (char *buffer, char *target)
-{
-  char *pbuf,*ptar,*returnptr=NULL;
-  int found=FALSE;
-  int pos=0;
-  pbuf=buffer;
-  ptar=target;
-  while (*ptar && *pbuf && !found) {
-
-    while ((*pbuf) && (*(pbuf+pos)) && (*(ptar+pos)) && (!found)) {
-      if (toupper(*(pbuf+pos))==toupper(*(ptar+pos))) {
-        pos++;
-        if (*(ptar+pos)=='\0') {
-          found=TRUE;
-          returnptr=pbuf;
-        }
-        else if (*(pbuf+pos)=='\0') {
-          return NULL;
-        }
-      }
-      else {
-        pos=0;
-        pbuf++;
-      }
-    }
-
-  }
-  return returnptr;
 }
 
 newstring* extract_refnum (char *buffer)
@@ -117,8 +82,12 @@ void extract_pages(char *buffer,newstring **sp, newstring **ep)
 }
 
 #define MAXELEMENT (100)
- 
-int extract_name(char **buffer, newstring **s)
+/*
+ * extract_name1()
+ *
+ * extract names in the format "H. F. Author", w/o comma
+ */ 
+int extract_name1(char **buffer, newstring **s)
 {
    int ok = FALSE;
    int junior = FALSE;
@@ -136,8 +105,8 @@ int extract_name(char **buffer, newstring **s)
        p = *buffer;
        while (*p && *p!='|') { newstr_addchar(prename,*p); p++; }
        if (*p=='|') p++;
-       if (search(prename->data," Jr.")) { newstr_findreplace(prename," Jr."," "); junior=TRUE; }
-       if (search(prename->data," III")) { newstr_findreplace(prename," III"," "); third=TRUE; }
+       if (strsearch(prename->data," Jr.")) { newstr_findreplace(prename," Jr."," "); junior=TRUE; }
+       if (strsearch(prename->data," III")) { newstr_findreplace(prename," III"," "); third=TRUE; }
        element = 0;
        q = strtok(prename->data," \t");
        while ( q != NULL ) {
@@ -168,6 +137,68 @@ int extract_name(char **buffer, newstring **s)
    return ok;
 }
 
+/*
+ * extract_name2()
+ *
+ * extract names in the format "Author, H.F.", w/comma
+ */ 
+int extract_name2(char **buffer, newstring **s)
+{
+   int ok=FALSE;
+   char *p;
+   newstring *prename,*postname;
+   prename = (newstring *) malloc (sizeof(newstring));
+   newstr_init(prename);
+   postname = (newstring *) malloc (sizeof(newstring));
+   newstr_init(postname);
+   if (buffer!=NULL && strlen(*buffer)>0) {
+       p = *buffer;
+       ok = TRUE;
+
+       /* skip past whitespace */
+       while (*p && *p!='|' && (*p==' ' || *p=='\t')) p++; 
+
+       /* get last name */
+       newstr_strcpy(postname,"<LAST>");
+       while (*p && *p!='|' && *p!=',') { newstr_addchar(postname,*p); p++; }
+       newstr_strcat(postname,"</LAST>");
+
+       /* skip past comma and whitespace */
+       if ( *p==',' ) p++;
+       while (*p && *p!='|' && (*p==' ' || *p=='\t')) p++; 
+
+       /* add each element */
+       newstr_strcpy(prename,"");
+       while (*p && *p!='|') {
+          if (*p!=' ' && *p!='\t') newstr_addchar(prename,*p);
+          if (*p==' ' || *p=='\t' || *(p+1)=='|' || *(p+1)=='\0') {
+             if (strlen(prename->data)>0) {
+                 newstr_strcat(postname,"<PREF>");
+                 newstr_strcat(postname,prename->data);
+                 newstr_strcat(postname,"</PREF>");
+                 newstr_strcpy(prename,"");
+             }
+          }
+          p++;
+       }
+       if (*p=='|') p++;
+   }
+   newstr_clear(prename);
+   free(prename);
+   *s = postname;
+   *buffer = p;
+   return ok;
+}
+
+/*
+ * send to appropriate algorithm depending on if the author name is
+ * in the format:  "H. F. Author" or "Author, H. F."
+ */
+int extract_name(char **buffer, newstring **s)
+{
+	if (strchr(*buffer,',')==NULL) return extract_name1(buffer,s);
+	else return extract_name2(buffer,s);
+}
 
 newstring* extract_field (char *buffer)
 {
@@ -209,18 +240,26 @@ void process_article (FILE *outptr, char *buffer)
 
 	fprintf(outptr,"<REF>\n");
 
-	if (search(buffer,"@ARTICLE")!=NULL) 
+	/* Incollection -- part of a book with its own title */
+
+	if (strsearch(buffer,"@ARTICLE")!=NULL) 
 	           fprintf(outptr,"  <TYPE>ARTICLE</TYPE>\n");
-	else if (search(buffer,"@INBOOK")!=NULL || 
-	    search(buffer,"@INPROCEEDINGS")!=NULL) 
+	else if (strsearch(buffer,"@INBOOK")!=NULL || 
+	    strsearch(buffer,"@INPROCEEDINGS")!=NULL ||
+            strsearch(buffer,"@INCOLLECTION")!=NULL ) 
 		   fprintf(outptr,"  <TYPE>INBOOK</TYPE>\n");
-	else if (search(buffer,"@BOOK")!=NULL) 
+	else if (strsearch(buffer,"@BOOK")!=NULL) 
 	           fprintf(outptr,"  <TYPE>BOOK</TYPE>\n");
-	else if (search(buffer,"@PHDTHESIS")!=NULL) 
+	else if (strsearch(buffer,"@PHDTHESIS")!=NULL) 
 	           fprintf(outptr,"  <TYPE>PHDTHESIS</TYPE>\n");
+	else {
+		fprintf(stderr,"bib2xml: defaulting to type ARTICLE.  Cannot identify type for:\n");
+		fprintf(stderr,"%s\n",buffer);
+		fprintf(outptr,"  <TYPE>ARTICLE</TYPE>\n");
+	}
 
 	for (i=0; i<NUMFIELDS; ++i) {
-		if ( (p=search(buffer,field[i])) != NULL ) {
+		if ( (p=strsearch(buffer,field[i])) != NULL ) {
 
 			s = extract_field(p);
 
@@ -271,7 +310,7 @@ void process_article (FILE *outptr, char *buffer)
    /*
     * Put reference number in Notes field
     */
-   if ( (p=search(buffer,"@")) != NULL ) {
+   if ( (p=strsearch(buffer,"@")) != NULL ) {
      s = extract_refnum(p);
      if (s->data!=NULL) fprintf(outptr,"  <REFNUM>%s</REFNUM>\n",s->data);
      newstr_clear(s);
@@ -339,31 +378,29 @@ long read_refs(FILE *inptr, FILE *outptr)
 int 
 main(int argc, char *argv[])
 {
-	char infile[255],outfile[255];
 	FILE *outptr,*inptr;
 	long numrefs;
+	int i;
 
 	inptr = stdin;
 	outptr = stdout;
 
-	if (argc>1) {
-		inptr = fopen( argv[1], "r" );
-		if (inptr==NULL) {
-			fprintf(stderr,"bib2xml: cannot open %s\n",argv[1]);
-			exit(EXIT_FAILURE);
-		}
-	}
-	if (argc>2) {
-		outptr = fopen( argv[2], "w" );
-		if (outptr==NULL) {
-			fprintf(stderr,"bib2xml: cannot open %s\n",argv[2]);
-			exit(EXIT_FAILURE);
+	if (argc==1) {
+		numrefs = read_refs(inptr,outptr);
+	} else {
+		numrefs = 0;
+		for (i=1; i<argc; ++i) {
+			inptr = fopen( argv[i], "r" );
+			if (inptr!=NULL) {
+				numrefs += read_refs(inptr,outptr);
+				fclose(inptr);
+			} else {
+				fprintf(stderr,"bib2xml: cannot open %s\n",
+					argv[2]);
+			}
 		}
 	}
 
-	numrefs = read_refs(inptr,outptr);
-	fclose(inptr);
-	fclose(outptr);
 	fprintf(stderr,"bib2xml:  Processed %ld references.\n",numrefs);
 	return EXIT_SUCCESS;
 }

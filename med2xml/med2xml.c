@@ -1,5 +1,5 @@
 /*
- * medline to bibtex
+ * medline to xml
  *
  */
 
@@ -12,14 +12,17 @@
 #define FIELD_OTHER    0
 #define FIELD_AUTHORS  1
 #define FIELD_TITLE    2
-#define FIELD_SOURCE   3
-#define FIELD_ABSTRACT 4
+#define FIELD_JOURNAL  3
+#define FIELD_DATE     4
+#define FIELD_ABSTRACT 5
 
 int abstractout = FALSE;
+char version[] = "version 1.2";
 
 int whitespace (char ch)
 {
   if (ch==' ' || ch=='\t' || ch=='\n' || ch=='\r') return TRUE;
+
   else return FALSE;
 }
 
@@ -95,6 +98,9 @@ int generate_authors (newstring *authorsptr, newstring** lastnamesptr, newstring
   newstring *lastnames  = NULL;
 
   if (authorsptr==NULL || authorsptr->data==NULL) return 0;
+/*
+fprintf(stderr,"AUTHORLIST: '%s'\n",authorsptr->data);
+*/
 
   /* Estimate the initial number of authors */
     est=1;
@@ -352,7 +358,7 @@ get_fields (FILE *fp)
 	int field_id;
 	int i, startfield;
 	long numref = 0L;
-	newstring authors,title,source,abstract;
+	newstring authors,title,journal,date,source,abstract;
 	char buf[512];
 
 	printf("<XML>\n");
@@ -361,111 +367,147 @@ get_fields (FILE *fp)
   field_id = FIELD_OTHER;
   newstr_init(&authors);
   newstr_init(&title);
+  newstr_init(&journal);
+  newstr_init(&date);
   newstr_init(&source);
   newstr_init(&abstract);
   while (!feof(fp)) {
     if (fgets(buf,sizeof(buf),fp)) {
       i = 0;
-      /* Keep parsing until we reach a number starting a line and then a ':' */
-      if (field_id == FIELD_OTHER && (buf[0]>='0' && buf[0]<='9')) {
-		while (buf[i]!=':' && buf[i]!='\0') ++i;
-		if (buf[i]==':' && ((i>0) && (buf[i-1]>='0' && buf[i-1]<='9')) ) {
-           i++;
-           while (whitespace(buf[i])) ++i;
-           field_id = FIELD_AUTHORS;
-        }
-        else i++;
-      }
-      if (field_id == FIELD_AUTHORS) {
-        while (whitespace(buf[i])) ++i;
-        startfield = i;
-        while ((buf[i]!='\r' && buf[i]!='\n') && buf[i]!='\0') ++i;
-        if (buf[i]=='\0') newstr_strcat(&authors,&(buf[startfield]));
-        if (buf[i]=='\r' || buf[i]=='\n') {
-           /* remove the newline and paste */
-           buf[i] = ' ';
-           if (buf[i+1]=='\r' || buf[i+1]=='\n') buf[i+1]=' ';
-           /* if we've reached ".\n", we need to go on to next field */
-           if ((i>0 && buf[i-1]=='.') || (i>0 && buf[i-1]=='?')) {
-                buf[i-1]='\0';
-                field_id=FIELD_TITLE;
-           } 
-           newstr_strcat(&authors,&(buf[startfield]));
-           /* Display */
-/* 
-           if (field_id==FIELD_TITLE) {
-				printf("Authors: `");
-                newstr_fprintf(stdout,&authors);
-                printf("'\n");
-           }
- */
-        }
-      }
-      while (buf[i]!='\0' && whitespace(buf[i])) ++i;
 
-      if (field_id == FIELD_TITLE && buf[i]!='\0') {
-        startfield = i;
-        while ((buf[i]!='\r' && buf[i]!='\n') && buf[i]!='\0') ++i;
-        if (buf[i]=='\0') newstr_strcat(&title,&(buf[startfield]));
-        else {
-           /* remove the newline and paste */
-           buf[i] = ' ';
-           if (buf[i+1]=='\r' || buf[i+1]=='\n') buf[i+1]=' ';
-           /* if we've reached ".\n", we need to go to the next field */
-           if ((i>0 && buf[i-1]=='.') || (i>0 && buf[i-1]=='?') || (i>0 && buf[i-1]=='!')) {
-              buf[i-1]='\0';
-              field_id=FIELD_SOURCE;
-           }
-           newstr_strcat(&title,&(buf[startfield]));
-           /* Display */
-/* 
-           if (field_id==FIELD_SOURCE) {
-                printf("Title: `");
-                newstr_fprintf(stdout,&title);
-                printf("'\n");
-           }
- */
+        while (i<sizeof(buf) && buf[i]!='\0') {
+ 
+/*
+fprintf(stderr,"field_id= %d i=%d\n",field_id,i);
+fprintf(stderr,"BUF: '%s'\n",buf);
+*/
+ 
+        /* Keep parsing until we reach a number starting a line and then a ':' */
+        if (field_id == FIELD_OTHER && buf[i]!='\0') {
+                while (buf[i] && ( buf[i]>='0' && buf[i]<='9')) ++i;
+                while (buf[i]!=':' && buf[i]!='\0') ++i;
+/*printf("BUF: '%s'\n",&(buf[i]));*/
+                if (buf[i]==':' &&
+                   ((i>0) && (buf[i-1]>='0' && buf[i-1]<='9')) ) {
+                        i++;
+                        while (whitespace(buf[i])) ++i;
+                        field_id = FIELD_AUTHORS;
+                }
+                else i++;
         }
-      }
-      while (buf[i]!='\0' && whitespace(buf[i])) ++i;
 
-
-      if (field_id == FIELD_SOURCE && buf[i]!='\0') {
-        startfield = i;
-        while ((buf[i]!='\r' && buf[i]!='\n') && buf[i]!='\0') ++i;
-        if (buf[i]=='\0') newstr_strcat(&source,&(buf[startfield]));
-        if (buf[i]=='\r' || buf[i]=='\n') {
-           /* remove the newline and paste */
-           buf[i] = ' ';
-           if (buf[i+1]=='\r' || buf[i+1]=='\n') buf[i+1]=' ';
-           /* if we've reached ".\n", we need to go to the next field */
-           if (i>0 && buf[i-1]=='.') {
-                buf[i-1]='\0';
-                field_id=FIELD_OTHER;
-           }
-           newstr_strcat(&source,&(buf[startfield]));
-           /* Now process this reference and reset all */
-           if (field_id==FIELD_OTHER){
-                /* Display */
-/* 
-                printf("Source: `");
-                newstr_fprintf(stdout,&source);
-                printf("'\n");
- */
-                output_fields(&authors,&title,&source,&abstract);
-		numref++;
-                fflush(stdout);
-                newstr_clear(&authors);
-                newstr_clear(&title);
-                newstr_clear(&source);
-                newstr_clear(&abstract);
-           }
+        if (field_id == FIELD_AUTHORS && buf[i]!='\0') {
+                /* while (whitespace(buf[i])) ++i; */
+                startfield = i;
+                while (buf[i]!='\r' && buf[i]!='\n' && buf[i]!='\0' && 
+			buf[i]!='.') ++i;
+                if (buf[i]=='\0') newstr_strcat(&authors,&(buf[startfield]));
+                else {
+			if (buf[i]=='.') {
+				buf[i] = '\0';
+				field_id=FIELD_TITLE;
+			} else {
+				/* remove the newline and paste */
+				buf[i] = '\0';
+				if ( buf[i+1] == '\r' || buf[i+1] == '\n' ) 
+					buf[i+1]=' ';
+			}
+                        newstr_strcat(&authors,&(buf[startfield]));
+/*
+fprintf(stderr,"buf: '%s'\n",&(buf[startfield]));
+fprintf(stderr,"Authors: '%s'\n",authors.data);
+*/
+                        i++;
+                        if (field_id==FIELD_AUTHORS) newstr_addchar(&authors,' ');
+                        else while (whitespace(buf[i])) i++;
+                }
         }
-      }
-      while (buf[i]!='\0' && whitespace(buf[i])) ++i;
 
+        if (field_id == FIELD_TITLE && buf[i]!='\0') {
+                /* while (whitespace(buf[i])) ++i; */
+                startfield = i;
+                while (buf[i]!='\r' && buf[i]!='\n' && buf[i]!='\0') ++i;
+                if (buf[i]=='\0') newstr_strcat(&title,&(buf[startfield]));
+                else {
+			buf[i] = '\0';
+			if ( i>0 && (buf[i-1]=='.' || buf[i-1]=='?') ) {
+				if (buf[i-1]=='.') buf[i-1] = '\0';
+				field_id = FIELD_JOURNAL;
+			} 
+			if (buf[i+1]=='\r' || buf[i+1]=='\n') buf[i+1]=' ';
+                        newstr_strcat(&title,&(buf[startfield]));
+/*
+fprintf(stderr,"buf: '%s'\n",&(buf[startfield]));
+fprintf(stderr,"Title: '%s'\n",title.data);
+*/
+                        i++;
+			if (field_id==FIELD_TITLE) newstr_addchar(&title,' ');
+			else while (whitespace(buf[i])) ++i;
+                }
+        }
+
+        if (field_id == FIELD_JOURNAL && buf[i]!='\0') {
+                /* while (whitespace(buf[i])) ++i; */
+                startfield = i;
+                while ( buf[i]!='\r' && buf[i]!='\n' && buf[i]!='.' && buf[i]!='\0' ) ++i;
+                if (buf[i]=='\0') newstr_strcat(&journal,&(buf[startfield]));
+                else {
+			if (buf[i]=='.') {
+				buf[i] = '\0';
+				field_id = FIELD_DATE;
+			} else {
+	                        /* remove the newline and paste */
+				buf[i] = '\0';
+				if (buf[i+1]=='\r' || buf[i+1]=='\n') 
+					buf[i+1]=' ';
+                        }
+                        newstr_strcat(&journal,&(buf[startfield]));
+                        i++;
+                        if (field_id==FIELD_JOURNAL) newstr_addchar(&title,' ');
+                        else while (whitespace(buf[i])) ++i;
+		}
+	}
+        if (field_id == FIELD_DATE && buf[i]!='\0') {
+                /* while (whitespace(buf[i])) ++i; */
+                startfield = i;
+                while ( buf[i]!='\r' && buf[i]!='\n' && buf[i]!='.' && buf[i]!='\0' ) ++i;
+                if (buf[i]=='\0') newstr_strcat(&date,&(buf[startfield]));
+                else {
+			if (buf[i]=='.') {
+				buf[i] = '\0';
+				field_id = FIELD_OTHER;
+			} else {
+	                        /* remove the newline and paste */
+				buf[i] = '\0';
+				if (buf[i+1]=='\r' || buf[i+1]=='\n') 
+					buf[i+1]=' ';
+                        }
+                        newstr_strcat(&date,&(buf[startfield]));
+                        i++;
+                        if (field_id==FIELD_DATE) newstr_addchar(&title,' ');
+                        else while (whitespace(buf[i])) ++i;
+                        /* Now process this reference and reset all */
+                        if (field_id==FIELD_OTHER){
+				newstr_strcpy(&source,journal.data);
+				newstr_addchar(&source,'.');
+				newstr_strcat(&source,date.data);
+                                output_fields(&authors,&title,&source,&abstract);
+				numref++;
+                                fflush(stdout);
+                                newstr_clear(&authors);
+                                newstr_clear(&title);
+				newstr_clear(&journal);
+				newstr_clear(&date);
+                                newstr_clear(&source);
+                                newstr_clear(&abstract);
+                        }
+                }
+        }
+        }
     }
-  }
+
+}
+
   printf("</REFERENCES>\n</XML>\n");
   return numref;
 }
@@ -503,15 +545,16 @@ main(int argc, char *argv[])
 		for (i=1; i<argc; i++) {
 			fp=fopen(argv[i],"r");
 			if (fp==NULL) {
-				fprintf(stderr,"med2xml: cannot open %s\n",
-					argv[i]);
+				fprintf(stderr,"med2xml %s: cannot open %s\n",
+					version, argv[i]);
 			} else { 
 				numref+=get_fields(fp);
 				fclose(fp);
 			}
 		}
 	}
-	fprintf(stderr,"med2xml:  Processed %ld references.\n",numref);
+	fprintf(stderr,"med2xml %s:  Processed %ld references.\n",
+		version, numref);
 	return EXIT_SUCCESS;
 }
  

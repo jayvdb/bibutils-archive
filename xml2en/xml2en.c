@@ -9,7 +9,7 @@ xml2en --   Bibliography XML to EndNote
 #include <string.h>
 #include <ctype.h>
 #include "newstr.h"
-#include "search.h"
+#include "strsearch.h"
 #include "xml.h"
 
 #define TRUE (1==1)
@@ -100,29 +100,7 @@ void process_article (FILE *outptr, char *buffer)
 	char *tags[NUMFIELDS]={"AUTHORS","YEAR","TITLE","JOURNAL",
 		"VOLUME", "PAGES", "REFNUM"};
 	int 	i;
-	char 	*p;
 	newstring *s = NULL;
-
-	/*****
-	(void) extract_xmldata(buffer,"TYPE",&s);
-	if (s!=NULL) {
-		p = s->data;
-		if (strncasecmp(p,"ARTICLE",7)==0)  
-			fprintf(outptr,"\nTY  - JOUR\n");
-		else if (strncasecmp(p,"INBOOK",6)==0) 
-			fprintf(outptr,"\nTY  - CHAP\n");
-		else if (strncasecmp(p,"INPROCEEDINGS",13)==0) 
-			fprintf(outptr,"\n  - CHAP\n");
-		else if (strncasecmp(p,"BOOK",4)==0) 
-			fprintf(outptr,"\nTY  - BOOK\n");
-		else if (strncasecmp(p,"PHDTHESIS",9)==0)  
-			fprintf(outptr,"\nTY  - BOOK\n");
-		else {
-			fprintf(stderr,"xml2en: cannot identify TYPE %s\n",p);
-			fprintf(outptr,"\nTY  - JOUR\n");  
-		}
-	}
-	*****/
 
 	for (i=0; i<NUMFIELDS; ++i) {
 		if (i==0) {  /* Name */
@@ -178,7 +156,7 @@ read_refs(FILE *inptr, FILE *outptr)
 
 		errorptr = fgets (line, sizeof(line), inptr);
 		if (errorptr != NULL) {
-			startptr = search(line,"<REF>");
+			startptr = strsearch(line,"<REF>");
 			if (startptr != NULL || haveref ) {
 				haveref = TRUE;
 				if (startptr!=NULL) newstr_strcat(&buffer,startptr);
@@ -193,7 +171,7 @@ read_refs(FILE *inptr, FILE *outptr)
 						newstr_addchar(&buffer,*p);
 						p++;
 					}
-					startptr = search(buffer.data,"<REF>"); 
+					startptr = strsearch(buffer.data,"<REF>"); 
 					if (startptr!=NULL) haveref=TRUE;
 					else haveref=FALSE;
 				}
