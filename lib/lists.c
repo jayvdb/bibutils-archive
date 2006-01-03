@@ -1,23 +1,22 @@
 /*
  * lists.c
  *
- * Copyright (c) Chris Putnam 2004
+ * Copyright (c) Chris Putnam 2004-5
  *
  * Source code released under the GPL
  *
- * Implements a simple managed array of newstrings.
+ * Implements a simple managed array of newstrs.
  *
  */
-
 #include "lists.h"
 
 int
 lists_add( lists *info, char *value )
 {
-	newstring *newdata;
+	newstr *newdata;
 	int min_alloc = 20, i;
 	if ( info->maxstr==0 ) {
-		info->str = (newstring*) malloc( sizeof(newstring)*min_alloc );
+		info->str = (newstr*) malloc( sizeof(newstr)*min_alloc );
 		if ( !(info->str) ) return 0;
 		info->maxstr = min_alloc;
 		info->nstr = 0;
@@ -25,8 +24,8 @@ lists_add( lists *info, char *value )
 			newstr_init( &(info->str[i]) );
 	} else if ( info->nstr >= info->maxstr ) {
 		min_alloc = info->maxstr * 2;
-		newdata = (newstring*) realloc( info->str,
-				sizeof( newstring ) * min_alloc );
+		newdata = (newstr*) realloc( info->str,
+				sizeof( newstr ) * min_alloc );
 		if ( !newdata ) return 0;
 		info->maxstr = min_alloc;
 		info->str = newdata;
@@ -45,6 +44,15 @@ lists_free( lists *info )
 	for ( i=0; i<info->maxstr; ++i )
 		newstr_free( &(info->str[i]) );
 	free( info->str );
+	lists_init( info );
+}
+
+void
+lists_init( lists *info  )
+{
+	info->str = NULL;
+	info->maxstr = 0;
+	info->nstr = 0;
 }
 
 int
@@ -59,7 +67,7 @@ lists_find( lists *info, char *searchstr )
 int
 lists_fill( lists *info, char *filename )
 {
-	newstring line;
+	newstr line;
 	FILE *fp;
 	char *p;
 	char buf[512]="";

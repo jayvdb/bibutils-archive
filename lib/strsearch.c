@@ -1,5 +1,9 @@
 /* strsearch.c
  *
+ * Copyright (c) Chris Putnam 1995-2005
+ *
+ * Source code released under the GPL
+ *
  * strsearch() locates a case-independent substring
  *    e.g. a case-independent version of strstr()
  *

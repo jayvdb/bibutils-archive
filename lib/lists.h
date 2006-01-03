@@ -1,7 +1,7 @@
 /*
  * lists.h
  *
- * Copyright (c) Chris Putnam 2004
+ * Copyright (c) Chris Putnam 2004-5
  *
  * Source code released under the GPL
  *
@@ -17,9 +17,10 @@
 
 typedef struct lists {
 	int nstr, maxstr;
-	newstring *str;
+	newstr *str;
 } lists;
 
+extern void lists_init( lists *info );
 extern int  lists_add( lists *info, char *value );
 extern int  lists_find( lists *info, char *searchstr );
 extern void lists_free( lists *info );

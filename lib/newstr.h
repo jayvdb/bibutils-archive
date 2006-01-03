@@ -1,31 +1,39 @@
 /*
- * newstring header file
+ * newstring.h
+ *
+ * Copyright (c) Chris Putnam 1999-2005
+ *
+ * Source code released under the GPL
+ *
  */
 
 #ifndef NEWSTR_H
 #define NEWSTR_H
 
-typedef struct newstring {
+typedef struct newstr {
 	char *data;
 	unsigned long dim;
 	unsigned long len;
-}  newstring;
+}  newstr;
 
-newstring *newstr_new   ( void ); 
-void newstr_init        ( newstring *string );
-void newstr_free        ( newstring *string );
-void newstr_addchar     ( newstring *string, char newchar );
-void newstr_strcat      ( newstring *string, char *addstr );
-void newstr_segcat      ( newstring *string, char *startat, char *endat );
-void newstr_strcpy      ( newstring *string, char *addstr );
-void newstr_segcpy      ( newstring *string, char *startat, char *endat );
-void newstr_fprintf     ( FILE *fp, newstring *string );
-void newstr_findreplace ( newstring *string, char *find, char *replace );
-void newstr_empty       ( newstring *string );
-int newstr_fget( FILE *fp, char *buf, int bufsize, int *pbufpos, newstring *outs );
-void newstr_encodexml   ( newstring *s );
-void newstr_decodexml   ( newstring *s );
-
+newstr *newstr_new   ( void ); 
+void newstr_init        ( newstr *string );
+void newstr_free        ( newstr *string );
+void newstr_addchar     ( newstr *string, char newchar );
+void newstr_strcat      ( newstr *string, char *addstr );
+void newstr_segcat      ( newstr *string, char *startat, char *endat );
+void newstr_prepend     ( newstr *string, char *addstr );
+void newstr_strcpy      ( newstr *string, char *addstr );
+void newstr_segcpy      ( newstr *string, char *startat, char *endat );
+void newstr_segdel      ( newstr *string, char *startat, char *endat );
+void newstr_fprintf     ( FILE *fp, newstr *string );
+int  newstr_fget        ( FILE *fp, char *buf, int bufsize, int *pbufpos,
+                          newstr *outs );
+int  newstr_findreplace ( newstr *string, char *find, char *replace );
+void newstr_empty       ( newstr *string );
+void newstr_toupper     ( newstr *s );
+void newstr_trimendingws( newstr *s );
+void newstr_swapstrings ( newstr *s1, newstr *s2 );
 
 /* NEWSTR_PARANOIA
  *

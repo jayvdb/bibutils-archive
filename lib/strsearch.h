@@ -1,5 +1,10 @@
 /*
  * strsearch.h
+ *
+ * Copyright (c) Chris Putnam 1995-2005
+ *
+ * Source code released under the GPL
+ *
  */
 
 #ifndef STRSEARCH_H

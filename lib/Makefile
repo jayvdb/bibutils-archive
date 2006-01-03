@@ -1,31 +1,37 @@
-#CC = cc -Wall
-CFLAGS = -I../include
-OBJS = newstr.o xml.o strsearch.o compiledate.o is_ws.o fields.o lists.o
+#CC = gcc -Wall 
+#RANLIB = echo
 
-libnewstr.a: $(OBJS)
-	ar -cr libnewstr.a $(OBJS)
-	$(RANLIB) libnewstr.a
+BIB_OBJS = bbl.o fields.o lists.o name.o title.o reftypes.o
 
-newstr.o : newstr.h newstr.c
-	$(CC) $(CFLAGS) -c -o newstr.o newstr.c
+SIMPLE_OBJS   = is_ws.o strsearch.o charsets.o
+NEWSTR_OBJS   = newstr.o newstr_conv.o entities.o latex.o utf8.o
+CONTAIN_OBJS  = fields.o lists.o xml.o xml_encoding.o
+INPUT_OBJS    = bibtexin.o bibtypes.o bibtexout.o \
+		copacin.o copactypes.o \
+		endin.o endtypes.o endout.o \
+		isiin.o isitypes.o \
+		medin.o \
+		modsin.o \
+		risin.o ristypes.o risout.o \
+		reftypes.o
+OUTPUT_OBJS   = modsout.o
+BIBUTILS_OBJS = $(SIMPLE_OBJS) $(NEWSTR_OBJS) $(CONTAIN_OBJS) \
+	$(INPUT_OBJS) $(OUTPUT_OBJS) name.o title.o bibl.o serialno.o bibutils.o
 
-xml.o : xml.h xml.c
-	$(CC) $(CFLAGS) -c -o xml.o xml.c
+BIBPROGS_OBJS = bibprogs.o compiledate.o
 
-strsearch.o : strsearch.h strsearch.c
-	$(CC) $(CFLAGS) -c -o strsearch.o strsearch.c
+all:  libbibutils.a libbibprogs.a
 
-is_ws.o : is_ws.c
-	$(CC) $(CFLAGS) -c -o is_ws.o is_ws.c
+libbibutils.a: $(BIBUTILS_OBJS)
+	ar -cr libbibutils.a $(BIBUTILS_OBJS)
+	$(RANLIB) libbibutils.a
 
-fields.o: fields.c
-	$(CC) $(CFLAGS) -c -o fields.o fields.c
-
-lists.o: lists.c
-	$(CC) $(CFLAGS) -c -o lists.o lists.c
+libbibprogs.a: $(BIBPROGS_OBJS)
+	ar -cr libbibprogs.a $(BIBPROGS_OBJS)
+	$(RANLIB) libbibprogs.a
 
 compiledate.o : compiledate.c
-	$(CC) $(CFLAGS) -DVERSION="\"$(VERSION)\"" -c -o compiledate.o compiledate.c
+	$(CC) -DVERSION="\"$(VERSION)\"" -DDATE="\"$(DATE)\"" -c -o compiledate.o compiledate.c
 
 clean: 
 	/bin/rm -f *.o core

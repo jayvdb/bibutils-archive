@@ -1,4 +1,11 @@
 /*
+ * newstr.c
+ *
+ * Copyright (c) Chris Putnam 1999-2005
+ *
+ * Source code released under the GPL
+ *
+ *
  * newstring routines for dynamically allocated strings
  *
  * C. Putnam 3/29/02  Clean up newstr_findreplace() (x4 speed increase too)
@@ -7,24 +14,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <limits.h>
 #include "newstr.h"
+#include "is_ws.h"
 
 #define newstr_initlen (64)
 
 void 
-newstr_init( newstring *string )
+newstr_init(newstr *string)
 {
-	if ( !string ) return;
+	if (string==NULL) return;
 	string->dim=0;
 	string->len=0;
 	string->data=NULL;
 }
 
-void 
-newstr_initalloc(newstring *string, unsigned long minsize)
+static void 
+newstr_initalloc(newstr *string, unsigned long minsize)
 {
 	unsigned long size = newstr_initlen;
-	if ( !string ) return;
+	if (string==NULL) return;
 	if (minsize > newstr_initlen) size=minsize;
 	string->data = (char *) malloc (sizeof( *(string->data) ) * size);
 	if (string->data==NULL) {
@@ -36,11 +46,11 @@ newstr_initalloc(newstring *string, unsigned long minsize)
 	string->len=0;
 }
 
-newstring *
+newstr *
 newstr_new( void )
 {
-	newstring *string;
-	string = (newstring *) malloc( sizeof( *string ) );
+	newstr *string;
+	string = (newstr *) malloc( sizeof( *string ) );
 	if (string!=NULL) 
 		newstr_initalloc( string, newstr_initlen );
 	return string;
@@ -51,7 +61,7 @@ newstr_new( void )
  * empty data in string
  */
 void
-newstr_empty( newstring *string )
+newstr_empty( newstr *string )
 {
 	if (string && string->data) {
 		string->data[0]='\0';
@@ -62,7 +72,7 @@ newstr_empty( newstring *string )
 #ifndef NEWSTR_PARANOIA
 
 void 
-newstr_free(newstring *string)
+newstr_free(newstr *string)
 {
 	if (string==NULL) return;
 	string->dim=0;
@@ -71,8 +81,8 @@ newstr_free(newstring *string)
 	string->data=NULL;
 }
 
-void 
-newstr_realloc(newstring *string, unsigned long minsize)
+static void 
+newstr_realloc(newstr *string, unsigned long minsize)
 {
 	char *newptr;
 	unsigned long size;
@@ -90,7 +100,7 @@ newstr_realloc(newstring *string, unsigned long minsize)
 #else
 
 void 
-newstr_free(newstring *string)
+newstr_free(newstr *string)
 {
 	unsigned long i;
 	if (string==NULL) return;
@@ -101,7 +111,7 @@ newstr_free(newstring *string)
 }
 
 void 
-newstr_realloc(newstring *string, unsigned long minsize)
+newstr_realloc(newstr *string, unsigned long minsize)
 {
 	char *newptr;
 	unsigned long size;
@@ -122,7 +132,7 @@ newstr_realloc(newstring *string, unsigned long minsize)
 #endif
 
 void
-newstr_addchar(newstring *string, char newchar)
+newstr_addchar(newstr *string, char newchar)
 {
 	if ( !string ) return;
 	if ( !string->data || string->dim==0 ) 
@@ -134,13 +144,32 @@ newstr_addchar(newstring *string, char newchar)
 }
 
 void 
-newstr_fprintf( FILE *fp, newstring *string )
+newstr_fprintf( FILE *fp, newstr *string )
 {
-    if (string && string->data) fprintf(fp,"%s",string->data);
+    if ( string && string->data ) fprintf(fp,"%s",string->data);
+}
+
+void
+newstr_prepend( newstr *string, char *addstr )
+{
+	unsigned long lenaddstr, i;
+	if ( !string || !addstr ) return;
+	lenaddstr = strlen( addstr );
+	if ( string->data==NULL || string->dim==0 )
+		newstr_initalloc( string, lenaddstr+1 );
+	else {
+		if ( string->len + lenaddstr  + 1 > string->dim )
+			newstr_realloc( string, string->len + lenaddstr + 1 );
+		for ( i=string->len+lenaddstr-1; i>=lenaddstr; i-- )
+			string->data[i] = string->data[i-lenaddstr];
+	}
+	strncpy( string->data, addstr, lenaddstr );
+	string->len += lenaddstr;
+	string->data[ string->len ] = '\0';
 }
 
 void 
-newstr_strcat (newstring *string, char *addstr)
+newstr_strcat( newstr *string, char *addstr )
 {
 	unsigned long lenaddstr;
 	if ( !string || !addstr ) return;
@@ -148,8 +177,8 @@ newstr_strcat (newstring *string, char *addstr)
 	if (string->data==NULL || string->dim==0) 
 		newstr_initalloc(string, lenaddstr+1 );
 	else {
-		if ( string->len + lenaddstr + 1 > string->dim) 
-		   newstr_realloc(string, string->len + lenaddstr + 1 );
+		if ( string->len + lenaddstr + 1 > string->dim )
+			newstr_realloc( string, string->len + lenaddstr + 1 );
 	}
 	strncpy(&(string->data[string->len]),addstr,lenaddstr);
 	string->len += lenaddstr;
@@ -157,7 +186,7 @@ newstr_strcat (newstring *string, char *addstr)
 }
 
 void
-newstr_segcat (newstring *string, char *startat, char *endat)
+newstr_segcat( newstr *string, char *startat, char *endat )
 {
 	unsigned int seglength;
 	char *p, *q;
@@ -180,15 +209,10 @@ newstr_segcat (newstring *string, char *startat, char *endat)
 }
 
 void 
-newstr_strcpy (newstring *string, char *addstr)
+newstr_strcpy (newstr *string, char *addstr)
 {
 	unsigned long lenaddstr;
-	if ( !string ) return;
-	if ( !addstr || addstr[0]=='\0' ) {
-		if ( string->data ) string->data[0]='\0';
-		string->len = 0;
-		return;
-	}
+	if ( !string || !addstr ) return;
 	lenaddstr = strlen( addstr );
 	if (string->data==NULL || string->dim==0)
 		newstr_initalloc( string, lenaddstr+1 );
@@ -199,8 +223,12 @@ newstr_strcpy (newstring *string, char *addstr)
 	string->len=lenaddstr;
 }
 
+/* newstr_segcpy( s, start, end );
+ *
+ * copies [start,end) into s
+ */
 void
-newstr_segcpy (newstring *string, char *startat, char *endat )
+newstr_segcpy (newstr *string, char *startat, char *endat )
 {
 	unsigned long seglength;
 	char *p, *q;
@@ -222,14 +250,29 @@ newstr_segcpy (newstring *string, char *startat, char *endat )
 	string->len = seglength;
 }
 
+void
+newstr_segdel( newstr *s, char *p, char *q )
+{
+	newstr tmp1, tmp2;
+	char *r = &(s->data[s->len]);
+	newstr_init( &tmp1 );
+	newstr_init( &tmp2 );
+	newstr_segcpy( &tmp1, s->data, p );
+	newstr_segcpy( &tmp2, q, r );
+	newstr_strcpy( s, tmp1.data );
+	newstr_strcat( s, tmp2.data );
+	newstr_free( &tmp2 );
+	newstr_free( &tmp1 );
+}
+
 /*
  * newstr_findreplace()
  *
  *   if replace is "" or NULL, then delete find
  */
 
-void 
-newstr_findreplace (newstring *string, char *find, char *replace)
+int
+newstr_findreplace( newstr *string, char *find, char *replace )
 {
 	long diff;
 	unsigned long findstart, searchstart;
@@ -238,11 +281,10 @@ newstr_findreplace (newstring *string, char *find, char *replace)
 	char empty[2] = "";
 	unsigned long minsize;
 	char *p;
+	int n = 0;
 
-	if (string==NULL || string->data==NULL || string->dim==0 ||
-		find==NULL) return;
-
-	if (replace==NULL) replace = empty;
+	if ( !string || !string->data || !string->dim || !find ) return n;
+	if ( !replace ) replace = empty;
 
 	find_len = strlen( find );
 	rep_len  = strlen( replace );
@@ -261,15 +303,18 @@ newstr_findreplace (newstring *string, char *find, char *replace)
 			while( string->data[p2] )
 				string->data[p1++]=string->data[p2++];
 			string->data[p1]='\0';
+			n++;
 		} else if ( find_len < rep_len ) {
 			for (p1=curr_len; p1>=findstart+find_len; p1--)
 				string->data[p1+diff] = string->data[p1];
+			n++;
 		}
 		for (p1=0; p1<rep_len; p1++)
 			string->data[findstart+p1]=replace[p1];
 		searchstart = findstart + rep_len; 
 		string->len += rep_len - find_len;
 	}
+	return n;
 }
 
 
@@ -279,7 +324,7 @@ newstr_findreplace (newstring *string, char *find, char *replace)
  *   and feeds from buf....
  */
 int
-newstr_fget( FILE *fp, char *buf, int bufsize, int *pbufpos, newstring *outs )
+newstr_fget( FILE *fp, char *buf, int bufsize, int *pbufpos, newstr *outs )
 {
 	int  bufpos = *pbufpos, done = 0;
 	char *ok;
@@ -290,7 +335,11 @@ newstr_fget( FILE *fp, char *buf, int bufsize, int *pbufpos, newstring *outs )
 		if ( buf[bufpos]=='\0' ) {
 			ok = fgets( buf, bufsize, fp );
 			bufpos=*pbufpos=0;
-			if ( !ok && feof(fp) ) return 0; /* end-of-file */
+			if ( !ok && feof(fp) ) { /* end-of-file */
+				buf[bufpos] = 0;
+				if ( outs->len==0 ) return 0; /*nothing in out*/
+				else return 1; /*one last out */
+			}
 		} else if ( buf[bufpos]=='\r' || buf[bufpos]=='\n' ) done=1;
 	}
 	if ( ( buf[bufpos]=='\n' && buf[bufpos+1]=='\r') ||
@@ -300,13 +349,21 @@ newstr_fget( FILE *fp, char *buf, int bufsize, int *pbufpos, newstring *outs )
 	return 1;
 }
 
+void
+newstr_toupper( newstr *s )
+{
+	unsigned int i;
+	if ( !s ) return;
+	for ( i=0; i<s->len; ++i )
+		s->data[i] = toupper( s->data[i] );
+}
 
 /* newstr_swapstrings( s1, s2 )
  * be sneaky and swap internal newstring data from one
  * string to another
  */
 void
-newstr_swapstrings( newstring *s1, newstring *s2 )
+newstr_swapstrings( newstr *s1, newstr *s2 )
 {
 	char *tmpp;
 	int tmp;
@@ -327,100 +384,12 @@ newstr_swapstrings( newstring *s1, newstring *s2 )
 	s2->data = tmpp;
 }
 
-#include "htmlentities.c"
-
 void
-newstr_encodexml( newstring *s )
+newstr_trimendingws( newstr *s )
 {
-	newstring ns;
-	int i,j;
-	newstr_init( &ns );
-	for ( i=0; i<s->len; ++i ) {
-		/* Basic Latin conversions */
-		if ( s->data[i]==34 ) newstr_strcat( &ns, "&quot;" );
-		else if ( s->data[i]=='\'' ) newstr_strcat( &ns, "&apos;" );
-		else if ( s->data[i]==60 ) newstr_strcat( &ns, "&lt;" ); 
-		else if ( s->data[i]==62 ) newstr_strcat( &ns, "&gt;" );
-		else if ( s->data[i]==38 ) {  /* ampersand */
-			int found = -1;
-			if ( s->data[i+1]=='#' ) newstr_addchar( &ns, '&' );
-			else {
-				/* check for HTML entity */
-				for ( j=0; j<nhtml_entities && found==-1; ++j ) {
-					if ( !strncasecmp( &(s->data[i]), 
-						  &(html_entities[j].html[0]),
-						  strlen(&(html_entities[j].html[0])))) 
-						found = j;
-				}
-				if ( found==-1 )  /* isolated '&' */
-					newstr_strcat( &ns, "&amp;" );
-				else { /* replace HTML entity */
-					newstr_strcat( &ns,
-				       	   &(html_entities[found].decimal[0]) );
-					i += strlen( &(html_entities[found].decimal[0]) )-1;
-				}
-			}
-		} else if ( ((unsigned char)(s->data[i]))>127 ) { 
-			char buf[10];
-			unsigned char c = (unsigned char)(s->data[i]);
-			sprintf( buf, "&#%u;",c);
-			newstr_strcat( &ns, buf );
-		}
-		else newstr_addchar( &ns, s->data[i] );
+	while ( s->len > 0 && is_ws( s->data[s->len-1] ) ) {
+		s->data[s->len-1] = '\0';
+		s->len--;
 	}
-	newstr_swapstrings( s, &ns );
-	newstr_free( &ns );
 }
 
-void
-newstr_decodexml( newstring *s )
-{
-	newstring ns, code;
-	int i;
-	char ch;
-	newstr_init( &ns );
-	newstr_init( &code );
-	i = 0;
-	while ( i<s->len ) {
-		ch = s->data[i];
-		if ( ch!='&' ) {
-			newstr_addchar( &ns, ch );
-			i++;
-		} else {
-			i++;
-			while ( i<s->len && s->data[i]!=';' ) {
-				newstr_addchar( &code, s->data[i] );
-				i++;
-			}
-			if ( s->data[i]==';' ) i++;
-			if ( code.data[0]=='#' ) {
-				unsigned int c;
-				if ( code.data[1]!='x' ) 
-					c = atoi( &(code.data[1]) );
-				else
-					sscanf( &(code.data[2]), "%x", &c );
-				if ( c<256 ) 
-					newstr_addchar( &ns, (char) c );
-				else         
-					newstr_addchar( &ns, '?' );
-
-			} else {
-				if ( !strncmp( code.data, "quot", 4 ) ) {
-					newstr_addchar( &ns, '\"' );
-				} else if ( !strncmp( code.data, "apos", 4 ) ){
-					newstr_addchar( &ns, '\'' );
-				} else if ( !strncmp( code.data, "amp", 3 ) ){
-					newstr_addchar( &ns, '&' );
-				} else if ( !strncmp( code.data, "lt", 2 ) ) {
-					newstr_addchar( &ns, '<' );
-				} else if ( !strncmp( code.data, "gt", 2 ) ) {
-					newstr_addchar( &ns, '>' );
-				}
-			}
-			newstr_empty( &code );
-		}
-	}
-	newstr_swapstrings( s, &ns );
-	newstr_free( &code );
-	newstr_free( &ns );
-}
