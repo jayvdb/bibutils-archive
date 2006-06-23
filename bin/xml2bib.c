@@ -84,6 +84,9 @@ process_args( int *argc, char *argv[], param *p )
 		} else if ( args_match( argv[i], "-w", "--whitespace" ) ) {
 			p->format_opts |= BIBOUT_WHITESPACE;
 			subtract = 1;
+		} else if ( args_match( argv[i], "-U", "--uppercase" ) ) {
+			p->format_opts |= BIBOUT_UPPERCASE;
+			subtract = 1;
 		} else if ( args_match( argv[i], "-i", "--input-encoding" ) ) {
 			args_encoding( *argc, argv, i, &(p->charsetin), 
 					&(p->utf8in), progname );

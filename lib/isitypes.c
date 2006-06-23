@@ -27,6 +27,7 @@ static lookups article[] = {
 	{ "PY",     "PARTYEAR",  SIMPLE, LEVEL_MAIN },
 	{ "PD",     "PARTMONTH", SIMPLE, LEVEL_MAIN },
 	{ "VL",     "VOLUME",    SIMPLE, LEVEL_MAIN },
+	{ "AR",     "ARTICLENUMBER", SIMPLE, LEVEL_MAIN }, /* AR=article number that Phys. Rev. B uses instead of page numbers */
 	{ "BP",     "PAGESTART", SIMPLE, LEVEL_MAIN },
 	{ "EP",     "PAGEEND",   SIMPLE, LEVEL_MAIN },
 	{ "PG",     "TOTALPAGES", SIMPLE, LEVEL_MAIN },

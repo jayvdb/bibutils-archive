@@ -3,7 +3,7 @@
  *
  * mangle names w/ and w/o commas
  *
- * Copyright (c) Chris Putnam 2004-5
+ * Copyright (c) Chris Putnam 2004-6
  *
  * Source code released under the GPL
  *
@@ -135,6 +135,74 @@ name_comma( char *p, newstr *outname )
 	}
 }
 
+extern lists asis;
+extern lists corps;
+
+/* Determine if name is of type "corporate" or if it
+ * should be added "as-is"; both should not be mangled.
+ *
+ * First check tag for prefixes ":CORP" and ":ASIS",
+ * then optionally check lists, bailing if "corporate"
+ * type can be identified.
+ *
+ * "corporate" is the same as "as-is" plus getting 
+ * special MODS treatment, so "corporate" type takes
+ * priority
+ */
+static void
+name_determine_flags( int *ctf, int *clf, int *atf, int *alf, char *tag, char *data )
+{
+	int corp_tag_flag = 0, corp_list_flag = 0;
+	int asis_tag_flag = 0, asis_list_flag = 0;
+
+	if ( strstr( tag, ":CORP" ) ) corp_tag_flag = 1;
+	else if ( lists_find( &corps, data ) != -1 )
+		corp_list_flag = 1;
+
+	if ( strstr( tag, ":ASIS" ) ) {
+		asis_tag_flag = 1;
+		if ( lists_find( &corps, data ) != -1 )
+			corp_list_flag = 1;
+	} else {
+		if ( lists_find( &corps, data ) != -1 )
+			corp_list_flag = 1;
+		else if ( lists_find( &asis, data ) != -1 )
+			asis_list_flag = 1;
+	}
+
+	*ctf = corp_tag_flag;
+	*clf = corp_list_flag;
+	*atf = asis_tag_flag;
+	*alf = asis_list_flag;
+}
+
+/*
+ * return 1 on a nomangle with a newtag value
+ * return 0 on a name to mangle
+ */
+static int
+name_nomangle( char *tag, char *data, newstr *newtag )
+{
+	int corp_tag_flag = 0, corp_list_flag = 0;
+	int asis_tag_flag = 0, asis_list_flag = 0;
+	name_determine_flags( &corp_tag_flag, &corp_list_flag,
+		&asis_tag_flag, &asis_list_flag, tag, data );
+	if ( corp_tag_flag || corp_list_flag || asis_tag_flag || asis_list_flag ) {
+		newstr_strcpy( newtag, tag );
+		if ( corp_tag_flag ) { /* do nothing else */
+		} else if ( corp_list_flag && !asis_tag_flag ) {
+			newstr_strcat( newtag, ":CORP" );
+		} else if ( corp_list_flag && asis_tag_flag ) {
+			newstr_findreplace( newtag, ":ASIS", ":CORP" );
+		} else if ( asis_tag_flag ) { /* do nothing else */
+		} else if ( asis_list_flag ) {
+			newstr_strcat( newtag, ":ASIS" );
+		}
+		return 1;
+	}
+	else return 0;
+}
+
 /*
  * name_add( info, newtag, data, level )
  *
@@ -151,19 +219,17 @@ name_comma( char *p, newstr *outname )
  * "Author, H. F."
  */
 
-extern lists asis;
-extern lists corps;
-
 void
 name_add( fields *info, char *tag, char *q, int level )
 {
-	newstr inname, outname;
+	newstr inname, outname, newtag;
 	char *p, *start, *end;
 
 	if ( !q ) return;
 
 	newstr_init( &inname );
 	newstr_init( &outname );
+	newstr_init( &newtag );
 
 	while ( *q ) {
 		/* remove leading ws */
@@ -176,13 +242,8 @@ name_add( fields *info, char *tag, char *q, int level )
 		for ( p=start; p<=end; p++ )
 			newstr_addchar( &inname, *p );
 		if ( *q=='|' ) q++;
-
-		if ( lists_find( &asis, inname.data ) != -1 ) {
-			fields_add_tagsuffix( info, tag, ":ASIS", inname.data, 
-				level );
-		} else if ( lists_find( &corps, inname.data )!=-1 ) {
-			fields_add_tagsuffix( info, tag, ":CORP", inname.data,
-				level );
+		if ( name_nomangle( tag, inname.data, &newtag ) ) {
+			fields_add( info, newtag.data, inname.data, level );
 		} else {
 			newstr_findreplace( &inname, ".", ". " );
 			if ( strchr( inname.data, ',' ) ) 
@@ -193,9 +254,14 @@ name_add( fields *info, char *tag, char *q, int level )
 				fields_add( info, tag, outname.data, level );
 			}
 		}
+
 		newstr_empty( &inname );
 		newstr_empty( &outname );
+		newstr_empty( &newtag );
 	}
+
 	newstr_free( &inname );
 	newstr_free( &outname );
+	newstr_free( &newtag );
+
 }

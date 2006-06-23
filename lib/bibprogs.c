@@ -149,10 +149,14 @@ tomods_processargs( int *argc, char *argv[], param *p, char *progname,
 		} else if ( args_match( argv[i], "-u", "--unicode-characters")){
 			p->utf8out = 1;
 			p->format_opts |= MODSOUT_BOM;
+			p->charsetout = BIBL_CHARSET_UNICODE;
+			p->charsetout_src = BIBL_SRC_USER;
 			subtract = 1;
 		} else if ( args_match( argv[i], "-un", "--unicode-no-bom")){
 			p->utf8out = 1;
 			subtract = 1;
+			p->charsetout = BIBL_CHARSET_UNICODE;
+			p->charsetout_src = BIBL_SRC_USER;
 		} else if ( args_match( argv[i], "-c", "--corporation-file")){
 			subtract = 2;
 			args_namelist( *argc, argv, i, progname, &corps,

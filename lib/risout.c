@@ -28,7 +28,7 @@ enum {
 	TYPE_NEWS    = 9,     /* newspaper */
 	TYPE_MPCT    = 10,
 	TYPE_PCOMM   = 11,    /* personal communication */
-	TYPE_PAMP    = 12,    /* pamplet */
+	TYPE_PAMP    = 12,    /* pamphlet */
 	TYPE_ELEC    = 13     /* electronic */
 };
 
@@ -230,6 +230,16 @@ output_keywords( FILE *fp, fields *info, long refnum )
 }
 
 static void
+output_pubmed( FILE *fp, fields *info, long refnum )
+{
+	int i;
+	for ( i=0; i<info->nfields; ++i ) {
+		if ( !strcmp( info->tag[i].data, "PUBMED" ) )
+			fprintf( fp, "UR  - PM:%s\n", info->data[i].data );
+	}
+}
+
+static void
 output_easy( FILE *fp, fields *info, long refnum, char *tag, char *ristag, int level )
 {
 	int n = fields_find( info, tag, level );
@@ -271,14 +281,17 @@ for ( i=0; i<info->nfields; ++i )
 	output_easy( fp, info, refnum, "VOLUME", "VL", -1 );
 	output_easy( fp, info, refnum, "ISSUE", "IS", -1 );
 	output_easy( fp, info, refnum, "NUMBER", "IS", -1 );
+	/* output article number as pages */
+	output_easy( fp, info, refnum, "ARTICLENUMBER", "SP", -1 );
 	output_easy( fp, info, refnum, "PUBLISHER", "PB", -1 );
+	output_easy( fp, info, refnum, "DEGREEGRANTOR", "PB", -1 );
 	output_easy( fp, info, refnum, "ADDRESS", "CY", -1 );
-	output_easy( fp, info, refnum, "SCHOOL", "CY", -1 );
 	output_keywords( fp, info, refnum );
 	output_easy( fp, info, refnum, "ABSTRACT", "AB", -1 );
 	output_easy( fp, info, refnum, "ISSN", "SN", -1 );
 	output_easy( fp, info, refnum, "ISBN", "SN", -1 );
 	output_easy( fp, info, refnum, "URL", "UR", -1 );
+	output_pubmed( fp, info, refnum );
 	output_easy( fp, info, refnum, "NOTES", "N1", -1 );
 	output_easy( fp, info, refnum, "REFNUM", "ID", -1 );
 	fprintf( fp, "ER  - \n" );

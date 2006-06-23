@@ -1,8 +1,72 @@
 
 BIBUTILS
 
-<b>3.23
-1/02/06</b>
+3.27
+06/22/06
+BIBTEXIN
++ Fix scrambling of title/booktitle for bibtex cross-references
+  involving "incollection" and "inproceeding" types
+
+
+3.26
+06/21/06
+MODSIN
++ Add reading in pubmed/medline/pii identifiers
+
+RISOUT
++ Output pubmed identifiers as UR  - PM:###### (Thanks to Mark Runyan)
+
+
+3.25
+06/14/06
+
+BUILD PROCESS
++ Add NetBSD, FreeBSD, and Cygwin to recognized architectures
+
+MODSOUT
++ Convert patent assignee to the MARC term "patent holder" (modified from
+  patch by Ralf Ahlbrink)
++ Add role types "organizer of meeting", "inventor", "degree grantor"
+ (modified from patch by Ralf Ahlbrink)
+
+NAME MANGLING
++ Fix possible interactions between pre-defined corporate types
+  and user-defined as-is and corporate types
+
+ISI2XML
++ Add support for "article number" (AR) field that some journals are
+  now using instead of page numbers
+
+MED2XML
++ Fix date parsing for entries that have a "medline format date" rather
+  than a date broken down into XML fields
++ Fix bug that doesn't output proper end pages if first and last pages
+  are the same length (thanks to Andreas Hartmetz for finding and patching
+  the bug)
+
+
+3.24
+02/21/06
+
+CHARSET CONVERSION
++ fix bug where requests for UTF-8 encoded output were ignored
+
+MED2XML
++ default input to UTF-8 encoded unicode, as it ought to be
++ extract a few more items (like pubmed/medline/pii ID's, MeSH
+  headings)...most currently only make it into MODS output
+
+XML
++ fix potential core dump from empty xml attributes values
+
+XML2BIB
++ for better compatibility with Emacs, default the bibtex tags to
+  lower case
++ new switch -U, --uppercase to switch to old all uppercase tag behavior
+
+
+3.23
+1/02/06
 
 Changes in this release are thanks to patch and bug report by Jeremy Malcolm.
 

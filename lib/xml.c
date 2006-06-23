@@ -314,10 +314,10 @@ xml_tagexact( xml *node, char *s )
 {
 	unsigned int slen = strlen( s );
 
-#ifdef COUNT_TRAVERSAL
+/*#ifdef COUNT_TRAVERSAL
 	node->count++;
 	fprintf( stderr, "xml_tagexact checking node tag='%s' value='%s' %d for tag='%s'\n",node->tag->data,node->value->data,node->count,s);
-#endif
+#endif*/
 	if ( node->tag->len==slen && !strcasecmp( node->tag->data, s ) ) {
 /*#ifdef COUNT_TRAVERSAL
 		node->count++;
@@ -334,6 +334,7 @@ xml_tag_attrib( xml *node, char *s, char *attrib, char *value )
 	int i, nattrib = 0;
 	if ( !na ) return 0;
 	else nattrib = na->attrib.nstr;
+
 #ifdef COUNT_TRAVERSAL
 	node->count++;
 	fprintf( stderr, "xml_tag_attrib checking node tag='%s' value='%s' %d for attrib='%s' value='%s'\n",node->tag->data,node->value->data,node->count,attrib,value);
@@ -341,6 +342,8 @@ xml_tag_attrib( xml *node, char *s, char *attrib, char *value )
 	if ( node->tag->len!=strlen(s) || strcasecmp( node->tag->data, s ) )
 		return 0;
 	for ( i=0; i<nattrib; ++i ) {
+		if ( !na->attrib.str[i].data || !na->value.str[i].data )
+			continue;
 		if ( !strcasecmp( na->attrib.str[i].data, attrib ) &&
 		     !strcasecmp( na->value.str[i].data, value ) )
 			return 1;

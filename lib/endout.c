@@ -271,10 +271,12 @@ endout_write( fields *info, FILE *fp, int format_opts, unsigned long refnum )
 	output_easy( fp, info, refnum, "VOLUME", "%V", -1 );
 	output_easy( fp, info, refnum, "ISSUE", "%N", -1 );
 	output_easy( fp, info, refnum, "NUMBER", "%N", -1 );
+	/* output article number as pages */
+	output_easy( fp, info, refnum, "ARTICLENUMBER", "%P", -1 );
 	output_easy( fp, info, refnum, "EDITION", "%7", -1 );
 	output_easy( fp, info, refnum, "PUBLISHER", "%I", -1 );
 	output_easy( fp, info, refnum, "ADDRESS", "%C", -1 );
-	output_easy( fp, info, refnum, "SCHOOL", "%C", -1 );
+	output_easy( fp, info, refnum, "DEGREEGRANTOR", "%C", -1 );
 	output_easy( fp, info, refnum, "SERIALNUM", "%@", -1 );
 	output_easy( fp, info, refnum, "ISSN", "%@", -1 );
 	output_easy( fp, info, refnum, "ISBN", "%@", -1 );

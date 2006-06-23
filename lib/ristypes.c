@@ -507,6 +507,7 @@ static lookups communication[] = {
 
 variants ris_all[] = {
 	{ "STD",  &(generic[0]), sizeof(generic)/sizeof(lookups)},
+	{ "GEN",  &(generic[0]), sizeof(generic)/sizeof(lookups)},
 	{ "JOUR", &(article[0]), sizeof(article)/sizeof(lookups)},
 	{ "BOOK", &(book[0]), sizeof(book)/sizeof(lookups)},
 	{ "CHAP", &(inbook[0]), sizeof(inbook)/sizeof(lookups)},
@@ -516,11 +517,8 @@ variants ris_all[] = {
 	{ "CASE", &(cases[0]), sizeof(cases)/sizeof(lookups)},
 	{ "NEWS", &(newsarticle[0]), sizeof(newsarticle)/sizeof(lookups)},
 	{ "MPCT", &(generic[0]), sizeof(generic)/sizeof(lookups)},
-	   /* film or broadcast */
 	{ "PCOMM", &(communication[0]), sizeof(communication)/sizeof(lookups)},
-	   /* personal communication?? */
 	{ "PAMP", &(generic[0]), sizeof(generic)/sizeof(lookups)},
-	   /* pamphlet?? */
 	{ "ELEC", &(generic[0]), sizeof(generic)/sizeof(lookups)}
 };
 

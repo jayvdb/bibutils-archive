@@ -360,9 +360,10 @@ bibtexin_findref( bibl *bin, char *citekey )
 static void
 bibtexin_crossref( bibl *bin )
 {
+	char booktitle[] = "booktitle";
 	long i, j, ncross;
-	char *nt, *nd;
-	int n, nl;
+	char *nt, *nd, *type;
+	int n, ntype, nl;
         for ( i=0; i<bin->nrefs; ++i ) {
 		n = fields_find( bin->ref[i], "CROSSREF", -1 );
 		if ( n==-1 ) continue;
@@ -378,11 +379,18 @@ bibtexin_crossref( bibl *bin )
 			
 			continue;
 		}
+		ntype = fields_find( bin->ref[i], "TYPE", -1 );
+		type = bin->ref[i]->data[ntype].data;
 		bin->ref[i]->used[n] = 1;
 		for ( j=0; j<bin->ref[ncross]->nfields; ++j ) {
 			nt = bin->ref[ncross]->tag[j].data;
 			if ( !strcasecmp( nt, "TYPE" ) ) continue;
 			if ( !strcasecmp( nt, "REFNUM" ) ) continue;
+			if ( !strcasecmp( nt, "TITLE" ) ) {
+				if ( !strcasecmp( type, "Inproceedings" ) ||
+				     !strcasecmp( type, "Incollection" ) )
+					nt = booktitle;
+			}
 			nd = bin->ref[ncross]->data[j].data;
 			nl = bin->ref[ncross]->level[j] + 1;
 			fields_add( bin->ref[i], nt, nd, nl );

@@ -8,6 +8,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include "is_ws.h"
 #include "newstr.h"
 #include "newstr_conv.h"
 #include "fields.h"
@@ -27,7 +28,8 @@ medin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, newstr
 			m = xml_getencoding( line );
 			if ( m!=CHARSET_UNKNOWN ) file_charset = m;
 		}
-		startptr = xml_findstart( line->data, "PubmedArticle" );
+		if ( line->data )
+			startptr = xml_findstart( line->data, "PubmedArticle" );
 		if ( startptr || inref ) {
 			if ( inref ) newstr_strcat( &tmp, line->data );
 			else {
@@ -36,7 +38,7 @@ medin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, newstr
 			}
 			endptr = xml_findend( tmp.data, "PubmedArticle" );
 			if ( endptr ) {
-//				newstr_segcpy( reference, tmp.data, endptr+1 );
+/*				newstr_segcpy( reference, tmp.data, endptr+1 );*/
 				newstr_segcpy( reference, tmp.data, endptr );
 				haveref = 1;
 /*				newstr_empty( &buffer ); */
@@ -60,6 +62,40 @@ medin_articletitle( xml *node, fields *info )
 		fields_add( info, "TITLE", node->value->data, 0 );
 }
 
+/*            <MedlineDate>2003 Jan-Feb</MedlineDate> */
+static void
+medin_medlinedate( fields *info, char *string, int level )
+{
+	newstr tmp;
+	char *p, *q;
+	newstr_init( &tmp );
+	/* extract year */
+	p = q = string;
+	while ( *q && !is_ws(*q) ) q++;
+	newstr_segcpy( &tmp, p, q );
+	fields_add( info, "PARTYEAR", tmp.data, level );
+	while ( is_ws(*q) ) q++;
+	/* extract month */
+	if ( q ) {
+		p = q;
+		newstr_empty( &tmp );
+		while ( *q && !is_ws(*q) ) q++;
+		newstr_segcpy( &tmp, p, q );
+		newstr_findreplace( &tmp, "-", "/" );
+		fields_add( info, "PARTMONTH", tmp.data, level );
+		while ( is_ws(*q) ) q++;
+	}
+	/* extract day */
+	if ( q ) {
+		p = q;
+		newstr_empty( &tmp );
+		while ( *q && !is_ws(*q) ) q++;
+		newstr_segcpy( &tmp, p, q );
+		fields_add( info, "PARTDAY", tmp.data, level );
+	}
+	newstr_free( &tmp );
+}
+
 /* <Journal>
  *    <ISSN>0027-8424</ISSN>
  *    <JournalIssue PrintYN="Y">
@@ -71,6 +107,21 @@ medin_articletitle( xml *node, fields *info )
  *          <Day>14</Day>
  *       </PubDate>
  *    </Journal Issue>
+ * </Journal>
+ *
+ * or....
+ *
+ * <Journal>
+ *    <ISSN IssnType="Print">0735-0414</ISSN>
+ *    <JournalIssue CitedMedium="Print">
+ *        <Volume>38</Volume>
+ *        <Issue>1</Issue>
+ *        <PubDate>
+ *            <MedlineDate>2003 Jan-Feb</MedlineDate>
+ *        </PubDate>
+ *    </JournalIssue>
+ *    <Title>Alcohol and alcoholism (Oxford, Oxfordshire)  </Title>
+ *    <ISOAbbreviation>Alcohol Alcohol.</ISOAbbreviation>
  * </Journal>
  */
 static void
@@ -89,6 +140,8 @@ medin_journal1( xml *node, fields *info )
 			fields_add( info, "PARTMONTH", node->value->data, 1 );
 		else if ( xml_tagexact( node, "Day" ) )
 			fields_add( info, "PARTDAY", node->value->data, 1 );
+		else if ( xml_tagexact( node, "MedlineDate" ) )
+			medin_medlinedate( info, node->value->data, 1 );
 	}
 	if ( node->down ) medin_journal1( node->down, info );
 	if ( node->next ) medin_journal1( node->next, info );
@@ -115,10 +168,12 @@ medin_pagination( xml *node, fields *info )
 			newstr_addchar( &ep, *p++ );
 		if ( sp.len ) fields_add( info, "PAGESTART", sp.data, 1 );
 		if ( ep.len ) {
-			if ( sp.len > ep.len )
+			if ( sp.len > ep.len ) {
 				for ( i=sp.len-ep.len; i<sp.len; ++i )
 					sp.data[i] = ep.data[i-sp.len+ep.len];
-			fields_add( info, "PAGEEND", sp.data, 1 );
+				fields_add( info, "PAGEEND", sp.data, 1 );
+			} else
+				fields_add( info, "PAGEEND", ep.data, 1 );
 		}
 		newstr_free( &sp );
 		newstr_free( &ep );
@@ -207,6 +262,33 @@ medin_journal2( xml *node, fields *info )
 	if ( node->next ) medin_journal2( node->next, info );
 }
 
+/*
+<MeshHeadingList>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Biophysics</DescriptorName>
+</MeshHeading>
+<MeshHeading>
+<DescriptorName MajorTopicYN="N">Crystallography, X-Ray</DescriptorName>
+</MeshHeading>
+</MeshHeadingList>
+*/
+static void
+medin_meshheading( xml *node, fields *info )
+{
+	if ( xml_tagexact( node, "DescriptorName" ) && node->value && node->value->data ) {
+		fields_add( info, "KEYWORD", node->value->data, 0 );
+	}
+	if ( node->next ) medin_meshheading( node->next, info );
+}
+
+static void
+medin_meshheadinglist( xml *node, fields *info )
+{
+	if ( xml_tagexact( node, "MeshHeading" ) && node->down )
+		medin_meshheading( node->down, info );
+	if ( node->next ) medin_meshheadinglist( node->next, info );
+}
+
 /* <PubmedData>
  *     ....
  *     <ArticleIdList>
@@ -216,6 +298,8 @@ medin_journal2( xml *node, fields *info )
  *         <ArticleId IdType="medline">22922082</ArticleId>
  *     </ArticleIdList>
  * </PubmedData>
+ *
+ * I think "pii" is "Publisher Item Identifier"
  */
 
 static void
@@ -223,6 +307,12 @@ medin_pubmeddata( xml *node, fields *info )
 {
 	if ( xml_tag_attrib( node, "ArticleId", "IdType", "doi" ) )
 		fields_add( info, "DOI", node->value->data, 0 );
+	if ( xml_tag_attrib( node, "ArticleId", "IdType", "pubmed" ) )
+		fields_add( info, "PUBMED", node->value->data, 0 );
+	if ( xml_tag_attrib( node, "ArticleId", "IdType", "medline" ) )
+		fields_add( info, "MEDLINE", node->value->data, 0 );
+	if ( xml_tag_attrib( node, "ArticleId", "IdType", "pii" ) )
+		fields_add( info, "PII", node->value->data, 0 );
 	if ( node->next ) medin_pubmeddata( node->next, info );
 	if ( node->down ) medin_pubmeddata( node->down, info );
 }
@@ -250,6 +340,8 @@ medin_medlinecitation( xml *node, fields *info )
 		medin_article( node->down, info );
 	else if ( xml_tagexact( node, "MedlineJournalInfo" ) && node->down )
 		medin_journal2( node->down, info );
+	else if ( xml_tagexact( node, "MeshHeadingList" ) && node->down )
+		medin_meshheadinglist( node->down, info );
 	if ( node->next ) medin_medlinecitation( node->next, info );
 }
 

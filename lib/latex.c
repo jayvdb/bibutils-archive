@@ -210,6 +210,22 @@ static struct latex_chars latex_chars[] = {
 
    { 181, "$\\mu$", "\\mu", "" }, /* 181=micro sign, techically  */
 
+/* Make sure that these don't stomp on other latex things above */
+
+   { 8242, "$'$",    "", "" },  /* Prime symbol &#x2032 */
+   { 769,  "\\'",    "", "" },  /* Acute accent &#x0301--apply to next char */
+   { 768,  "\\`",    "", "" },  /* Grave accent &#x0300--apply to next char */
+   { 8220, "``",     "", "" },  /* Opening double quote &#x201C */
+   { 8221, "''",     "", "" },  /* Closing double quote &#x201D */
+   { 8216, "`",      "", "" },  /* Opening single quote &#x2018 */
+   { 8217, "'",      "", "" },  /* Closing single quote &#x2019 */
+   { 8243, "$''$",   "", "" },  /* Double prime &#x2033 */
+   { 8211, "--",     "", "" },  /* En-dash &#x2013 */
+   { 8212, "---",    "", "" },  /* Em-dash &#x2014 */
+   { 8230, "\\ldots", "", "" },  /* Ellipsis &#x2026 */
+   { 8195, "\\hspace{1em}", "", "" }, /* Em-space &#x2003 */
+   { 8194, "\\hspace{.5em}","", "" }, /* En-space &#x2002 */
+
 };
 
 static int nlatex_chars = sizeof(latex_chars)/sizeof(struct latex_chars);

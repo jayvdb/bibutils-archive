@@ -17,6 +17,11 @@
 #include "name.h"
 #include "reftypes.h"
 
+typedef struct convert {
+	char *o; /* old */
+	char *n; /* new */
+} convert;
+
 static void
 modsin_detailr( xml *node, newstr *value )
 {
@@ -166,18 +171,45 @@ modsin_corpr( xml *node, newstr *name, newstr *role )
 static void
 modsin_corp( xml *node, fields *info, int level )
 {
+	convert roles_convert[] = {
+		{ "author",              "CORPAUTHOR" },
+		{ "creator",             "CORPAUTHOR" },
+		{ "editor",              "CORPEDITOR" },
+		{ "degree grantor",      "DEGREEGRANTOR" },
+		{ "organizer of meeting","ORGANIZER" },
+		{ "patent holder",       "ASSIGNEE"  }
+	};
 	newstr name, role;
+	int i, found;
+	int nroles = sizeof( roles_convert ) / sizeof( roles_convert[0] );
 	xml *dnode = node->down;
 	if ( dnode ) {
 		newstr_init( &name );
 		newstr_init( &role );
 		modsin_corpr( dnode, &name, &role );
+		if ( role.len ) {
+			found = -1;
+			for ( i=0; i<nroles; ++i ) {
+				if ( !strcasecmp( role.data, roles_convert[i].o ) )
+					found = i;
+			}
+			if ( found!=-1 ) {
+				fields_add( info, roles_convert[found].n, name.data, level );
+			} else {
+				fields_add( info, role.data, name.data, level );
+			}
+		}
+		else fields_add( info, "CORPAUTHOR", name.data, level );
+/*
 		if ( !role.len || !strcasecmp( role.data, "author" ) ||
 				!strcasecmp( role.data, "creator" ) )
 			fields_add( info, "CORPAUTHOR", name.data, level );
 		else if ( !strcasecmp( role.data, "editor" ) )
 			fields_add( info, "CORPEDITOR", name.data, level );
+		else if ( !strcasecmp( role.data, "degree grantor" ) )
+			fields_add( info, "DEGREEGRANTOR", name.data, level );
 		else fields_add( info, role.data, name.data, level );
+*/
 		newstr_free( &name );
 		newstr_free( &role );
 	}
@@ -518,16 +550,23 @@ modsin_classification( xml *node, fields *info, int level )
 static void
 modsin_identifier( xml *node, fields *info, int level )
 {
-	if ( xml_tag_attrib( node, "identifier", "type", "citekey" ) )
-		fields_add( info, "REFNUM", node->value->data, level );
-	else if ( xml_tag_attrib( node, "identifier", "type", "issn" ) )
-	       fields_add( info, "ISSN", node->value->data, level );
-	else if ( xml_tag_attrib( node, "identifier", "type", "isbn" ) )
-		fields_add( info, "ISBN", node->value->data, level );
-	else if ( xml_tag_attrib( node, "identifier", "type", "doi" ) )
-		fields_add( info, "DOI", node->value->data, level );
-	else if ( xml_tag_attrib( node, "identifier", "type", "uri" ) )
-		fields_add( info, "URL", node->value->data, level );
+	convert ids[] = {
+		{ "citekey", "REFNUM" },
+		{ "issn",    "ISSN"   },
+		{ "isbn",    "ISBN"   },
+		{ "doi",     "DOI"    },
+		{ "url",     "URL"    },
+		{ "uri",     "URL"    },
+		{ "pubmed",  "PUBMED" },
+		{ "medline", "MEDLINE" },
+		{ "pii",     "PII" }
+	};
+	int i , n = sizeof( ids ) / sizeof( ids[0] );
+	if ( !node->value || !node->value->data ) return;
+	for ( i=0; i<n; ++i ) {
+		if ( xml_tag_attrib( node, "identifier", "type", ids[i].o ) )
+			fields_add( info, ids[i].n, node->value->data, level );
+	}
 }
 
 static void
@@ -538,6 +577,8 @@ modsin_mods( xml *node, fields *info, int level )
 	else if ( xml_tag_attrib( node, "name", "type", "personal" ) )
 		modsin_person( node, info, level );
 	else if ( xml_tag_attrib( node, "name", "type", "corporate" ) )
+		modsin_corp( node, info, level );
+	else if ( xml_tagexact( node, "name" ) )
 		modsin_corp( node, info, level );
 	else if  ( xml_tagexact( node, "part" ) )
 		modsin_part( node, info, level );

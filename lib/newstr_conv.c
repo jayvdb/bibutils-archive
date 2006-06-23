@@ -48,15 +48,7 @@ list_charsets( FILE *fp )
 }
 
 static void
-addlatexchar( newstr *s, unsigned int ch )
-{
-	char buf[512];
-	uni2latex( ch, buf, sizeof( buf ) );
-	newstr_strcat( s, buf );
-}
-
-static void
-addutf8entity( newstr *s, unsigned int ch )
+addentity( newstr *s, unsigned int ch )
 {
 	char buf[512];
 	sprintf( buf, "&#%d;", ch );
@@ -64,7 +56,7 @@ addutf8entity( newstr *s, unsigned int ch )
 }
 
 static void
-addutf8char( newstr *s, unsigned int ch, int xmlout )
+addutf8char( newstr *s, unsigned int ch, int xmlout, int utf8out )
 {
 	unsigned char code[6];
 	int nc, i;
@@ -72,11 +64,28 @@ addutf8char( newstr *s, unsigned int ch, int xmlout )
 		if ( ch==60 ) { newstr_strcat( s, "&lt;" ); return; }
 		else if ( ch==62 ) { newstr_strcat( s, "&gt;" ); return; }
 		else if ( ch==38 ) { newstr_strcat( s, "&amp;" ); return; }
-		else if ( ch > 127 ) { addutf8entity( s, ch ); return; }
+		else if ( ch > 127 && !utf8out )
+			{ addentity( s, ch ); return; }
 	}
 	nc = utf8_encode( ch, code );
 	for ( i=0; i<nc; ++i )
 		newstr_addchar( s, code[i] );
+}
+
+static void
+addlatexchar( newstr *s, unsigned int ch, int xmlout, int utf8out )
+{
+	char buf[512];
+	uni2latex( ch, buf, sizeof( buf ) );
+	/* If the unicode character isn't recognized as latex output
+	 * a '?' unless the user has requested unicode output.  If so,
+	 * output the unicode.
+	 */
+	if ( utf8out && !strcmp( buf, "?" ) ) {
+		addutf8char( s, ch, xmlout, utf8out );
+	} else {
+		newstr_strcat( s, buf );
+	}
 }
 
 static void
@@ -85,7 +94,7 @@ addxmlchar( newstr *s, unsigned int ch )
 	if ( ch==60 )        newstr_strcat ( s, "&lt;" ); 
 	else if ( ch==62 )   newstr_strcat ( s, "&gt;" );
 	else if ( ch==38 )   newstr_strcat ( s, "&amp;" );
-	else if ( ch > 127 ) addutf8entity( s, ch );
+	else if ( ch > 127 ) addentity( s, ch );
 	else                 newstr_addchar( s, ch );
 }
 
@@ -151,8 +160,8 @@ write_unicode( newstr *s, unsigned int ch, int charsetout, int latexout,
 		int utf8out, int xmlout )
 {
 	unsigned int c;
-	if ( latexout ) addlatexchar( s, ch );
-	else if ( utf8out ) addutf8char( s, ch, xmlout );
+	if ( latexout ) addlatexchar( s, ch, xmlout, utf8out );
+	else if ( utf8out ) addutf8char( s, ch, xmlout, utf8out );
 	else {
 		c = lookupuni( charsetout, ch );
 		if ( xmlout ) addxmlchar( s, c );

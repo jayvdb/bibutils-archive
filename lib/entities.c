@@ -21,8 +21,12 @@ entities html_entities[] = {
 	/* Special Entities */
 	{ "&quot;",     34 },  /* quotation mark */
 	{ "&amp;",      38 },  /* ampersand */
+	{ "&lpar;",     40 },  /* left parenthesis */
+	{ "&rpar;",     41 },  /* right parenthesis */
+	{ "&hyphen;",   45 },  /* hyphen */
 	{ "&lt;",       60 },  /* less-than sign */
 	{ "&gt;",       62 },  /* greater-than sign */
+	{ "&quest;",    63 },  /* question mark */
 	{ "&OElig;",   338 },  /* Latin cap ligature OE */
 	{ "&oelig;",   339 },  /* Latin small ligature OE */
 	{ "&Scaron;",  352 },  /* Latin cap S with caron */

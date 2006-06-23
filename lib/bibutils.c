@@ -52,6 +52,11 @@ bibl_initparams( param *p, int readmode, int writemode )
 	p->singlerefperfile = 0;
 	p->output_raw       = 0;
 
+	/* default medline to UTF8 Unicode */
+	if ( readmode == BIBL_MEDLINEIN ) {
+		p->charsetin = BIBL_CHARSET_UNICODE;
+		p->utf8in = 1;
+	}
 	if ( readmode == BIBL_BIBTEXIN ) p->latexin = 1;
 	else if ( readmode == BIBL_MODSIN ) {
 		p->xmlin = 1;

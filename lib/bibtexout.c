@@ -1,7 +1,7 @@
 /*
  * bibtexout.c
  *
- * Copyright (c) Chris Putnam 2003-5
+ * Copyright (c) Chris Putnam 2003-6
  *
  * Program and source code released under the GPL
  *
@@ -44,13 +44,10 @@ output_citekeysafe( FILE *fp, char *q1, char *q2 )
 		else p = q2;
 		while ( p && *p && *p!='|' ) {
 			if ( *p!=' ' && *p!='\t' ) {
-/*			if ( ( *p>='A' && *p<='Z' ) || 
-			     ( *p>='a' && *p<='z' ) ||
-			     ( *p>='0' && *p<='9' ) ) {*/
-					if ( n==0 && (*p>='0' && *p<='9') ) 
-						fprintf(fp,"ref");
-					fprintf(fp,"%c",*p);
-					n++;
+				if ( n==0 && (*p>='0' && *p<='9') ) 
+					fprintf(fp,"ref");
+				fprintf(fp,"%c",*p);
+				n++;
 			}
 			p++;
 		}
@@ -137,49 +134,44 @@ bibtexout_type( fields *info, char *filename, int refnum )
 	return type;
 }
 
+typedef struct {
+	int bib_type;
+	char *type_name;
+} typenames;
+
 static void
-output_type( FILE *fp, int type )
+output_type( FILE *fp, int type, int format_opts )
 {
-	switch ( type ) {
-		case TYPE_ARTICLE:
-			fprintf( fp, "@ARTICLE{" );
+	typenames types[] = {
+		{ TYPE_ARTICLE, "Article" },
+		{ TYPE_INBOOK, "Inbook" },
+		{ TYPE_PROCEEDINGS, "Proceedings" },
+		{ TYPE_INPROCEEDINGS, "InProceedings" },
+		{ TYPE_BOOK, "Book" },
+		{ TYPE_PHDTHESIS, "PhdThesis" },
+		{ TYPE_MASTERSTHESIS, "MastersThesis" },
+		{ TYPE_REPORT, "TechReport" },
+		{ TYPE_MANUAL, "Manual" },
+		{ TYPE_COLLECTION, "Collection" },
+		{ TYPE_INCOLLECTION, "InCollection" },
+		{ TYPE_UNPUBLISHED, "Unpublished" },
+		{ TYPE_MISC, "Misc" } };
+	int i, len, ntypes = sizeof( types ) / sizeof( types[0] );
+	char *s = NULL;
+	for ( i=0; i<ntypes; ++i ) {
+		if ( types[i].bib_type == type ) {
+			s = types[i].type_name;
 			break;
-		case TYPE_INBOOK:
-			fprintf( fp, "@INBOOK{" );
-			break;
-		case TYPE_PROCEEDINGS:
-			fprintf( fp, "@PROCEEDINGS{" );
-			break;
-		case TYPE_INPROCEEDINGS:
-			fprintf( fp, "@INPROCEEDINGS{" );
-			break;
-		case TYPE_BOOK:
-			fprintf( fp, "@BOOK{" );
-			break;
-		case TYPE_PHDTHESIS:
-			fprintf( fp, "@PHDTHESIS{" );
-			break;
-		case TYPE_MASTERSTHESIS:
-			fprintf( fp, "@MASTERSTHESIS{" );
-			break;
-		case TYPE_REPORT:
-			fprintf( fp, "@TECHREPORT{" );
-			break;
-		case TYPE_MANUAL:
-			fprintf( fp, "@MANUAL{" );
-			break;
-		case TYPE_COLLECTION:
-			fprintf( fp, "@COLLECTION{" );
-			break;
-		case TYPE_INCOLLECTION:
-			fprintf( fp, "@INCOLLECTION{" );
-			break;
-		case TYPE_UNPUBLISHED:
-			fprintf( fp, "@UNPUBLISHED{" );
-			break;
-		case TYPE_MISC:
-			fprintf( fp, "@MISC{" );
-			break;
+		}
+	}
+	if ( !s ) s = types[ntypes-1].type_name; /* default to TYPE_MISC */
+	if ( !(format_opts & BIBOUT_UPPERCASE ) ) fprintf( fp, "@%s{", s );
+	else {
+		len = strlen( s );
+		fprintf( fp, "@" );
+		for ( i=0; i<len; ++i )
+			fprintf( fp, "%c", toupper(s[i]) );
+		fprintf( fp, "{" );
 	}
 }
 
@@ -188,10 +180,16 @@ output_element( FILE *fp, char *tag, char *data, int format_opts )
 {
 	int i, len, nquotes = 0;
 	char ch;
-	if ( format_opts & BIBOUT_WHITESPACE ) 
-		fprintf( fp, ",\n  %s = \t", tag );
-	else
-		fprintf( fp, ",\n%s=", tag );
+	fprintf( fp, ",\n" );
+	if ( format_opts & BIBOUT_WHITESPACE ) fprintf( fp, "  " );
+	if ( !(format_opts & BIBOUT_UPPERCASE ) ) fprintf( fp, "%s", tag );
+	else {
+		len = strlen( tag );
+		for ( i=0; i<len; ++i )
+			fprintf( fp, "%c", toupper(tag[i]) );
+	}
+	if ( format_opts & BIBOUT_WHITESPACE ) fprintf( fp, " = \t" );
+	else fprintf( fp, "=" );
 
 	if ( format_opts & BIBOUT_BRACKETS ) fprintf( fp, "{" );
 	else fprintf( fp, "\"" );
@@ -293,25 +291,24 @@ output_title( FILE *fp, fields *info, unsigned long refnum, char *bibtag, int le
 static void
 output_date( FILE *fp, fields *info, unsigned long refnum, int format_opts )
 {
-	char *months[12] = { "January", "February", "March", "April",
-		"May", "June", "July", "August", "September", "October",
-		"November", "December" };
+	char *months[12] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+		"Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	int n, month;
 	n = fields_find( info, "YEAR", -1 );
 	if ( n==-1 ) n = fields_find( info, "PARTYEAR", -1 );
-	if ( n!=-1 ) output_element( fp, "YEAR", info->data[n].data, format_opts );
+	if ( n!=-1 ) output_element( fp, "year", info->data[n].data, format_opts );
 	n = fields_find( info, "MONTH", -1 );
 	if ( n==-1 ) n = fields_find( info, "PARTMONTH", -1 );
 	if ( n!=-1 ) {
 		month = atoi( info->data[n].data );
 		if ( month>0 && month<13 )
-			output_element( fp, "MONTH", months[month-1], format_opts );
+			output_element( fp, "month", months[month-1], format_opts );
 		else
-			output_element( fp, "MONTH", info->data[n].data, format_opts );
+			output_element( fp, "month", info->data[n].data, format_opts );
 	}
 	n = fields_find( info, "DAY", -1 );
 	if ( n==-1 ) n = fields_find( info, "PARTDAY", -1 );
-	if ( n!=-1 ) output_element( fp, "DAY", info->data[n].data, format_opts );
+	if ( n!=-1 ) output_element( fp, "day", info->data[n].data, format_opts );
 }
 
 static void
@@ -331,7 +328,7 @@ output_pages( FILE *fp, fields *info, unsigned long refnum, int format_opts )
 			newstr_strcat( &pages, "--" );
 	}
 	if ( en!=-1 ) newstr_strcat( &pages, info->data[en].data );
-	output_element( fp, "PAGES", pages.data, format_opts );
+	output_element( fp, "pages", pages.data, format_opts );
 	newstr_free( &pages );
 }
 
@@ -359,48 +356,60 @@ void
 bibtexout_write( fields *info, FILE *fp, int format_opts, unsigned long refnum )
 {
 	int type;
+#ifdef NOCOMPILE
+{
+int i;
+for ( i=0; i<info->nfields; ++i )
+	fprintf(stderr,"%s - %s\n",info->tag[i].data,info->data[i].data);
+fprintf(stderr,"\n");
+}
+#endif
 	type = bibtexout_type( info, "", refnum );
-	output_type( fp, type );
+	output_type( fp, type, format_opts );
 	output_citekey( fp, info, refnum );
-	output_people( fp, info, refnum, "AUTHOR", "CORPAUTHOR", "AUTHOR", 0,
+	output_people( fp, info, refnum, "AUTHOR", "CORPAUTHOR", "author", 0,
 		format_opts );
-	output_people( fp, info, refnum, "EDITOR", "CORPEDITOR", "EDITOR", -1,
+	output_people( fp, info, refnum, "EDITOR", "CORPEDITOR", "editor", -1,
 		format_opts );
 
 	/* item=main level title */
 	if ( type==TYPE_INBOOK )
-		output_title( fp, info, refnum, "CHAPTER", 0, format_opts );
+		output_title( fp, info, refnum, "chapter", 0, format_opts );
 	else
-		output_title( fp, info, refnum, "TITLE", 0, format_opts );
+		output_title( fp, info, refnum, "title", 0, format_opts );
 
 	/* item=host level title */
 	if ( type==TYPE_ARTICLE )
-		output_title( fp, info, refnum, "JOURNAL", 1, format_opts );
+		output_title( fp, info, refnum, "journal", 1, format_opts );
 	else if ( type==TYPE_INBOOK )
-		output_title( fp, info, refnum, "TITLE", 1, format_opts );
+		output_title( fp, info, refnum, "title", 1, format_opts );
 	else if ( type==TYPE_INPROCEEDINGS || type==TYPE_INCOLLECTION )
-		output_title( fp, info, refnum, "BOOKTITLE", 1, format_opts );
+		output_title( fp, info, refnum, "booktitle", 1, format_opts );
 	else if ( type==TYPE_BOOK || type==TYPE_COLLECTION || type==TYPE_PROCEEDINGS )
-		output_title( fp, info, refnum, "SERIES", 1, format_opts );
+		output_title( fp, info, refnum, "series", 1, format_opts );
 
 	output_date( fp, info, refnum, format_opts );
-	output_simple( fp, info, "EDITION", "EDITION", format_opts );
-	output_simple( fp, info, "PUBLISHER", "PUBLISHER", format_opts );
-	output_simple( fp, info, "ADDRESS", "ADDRESS", format_opts );
-	output_simple( fp, info, "VOLUME", "VOLUME", format_opts );
-	output_simple( fp, info, "ISSUE", "ISSUE", format_opts );
-	output_simple( fp, info, "NUMBER", "NUMBER", format_opts );
+	output_simple( fp, info, "EDITION", "edition", format_opts );
+	output_simple( fp, info, "PUBLISHER", "publisher", format_opts );
+	output_simple( fp, info, "ADDRESS", "address", format_opts );
+	output_simple( fp, info, "VOLUME", "volume", format_opts );
+	output_simple( fp, info, "ISSUE", "issue", format_opts );
+	output_simple( fp, info, "NUMBER", "number", format_opts );
+	/* bibtex normally avoid article number, so output as page */
+	output_simple( fp, info, "ARTICLENUMBER", "pages", format_opts );
 	output_pages( fp, info, refnum, format_opts );
-	output_simpleall( fp, info, "KEYWORD", "KEYWORDS", format_opts );
-	output_simple( fp, info, "CONTENTS", "CONTENTS", format_opts );
-	output_simple( fp, info, "ABSTRACT", "ABSTRACT", format_opts );
-	output_simple( fp, info, "LOCATION", "LOCATION", format_opts );
-	output_simple( fp, info, "SCHOOL", "SCHOOL", format_opts );
-	output_simpleall( fp, info, "NOTES", "NOTE", format_opts );
-	output_simple( fp, info, "ISBN", "ISBN", format_opts );
-	output_simple( fp, info, "ISSN", "ISSN", format_opts );
-	output_simple( fp, info, "DOI", "DOI", format_opts );
-	output_simpleall( fp, info, "URL", "URL", format_opts );
+	output_simpleall( fp, info, "KEYWORD", "keywords", format_opts );
+	output_simple( fp, info, "CONTENTS", "contents", format_opts );
+	output_simple( fp, info, "ABSTRACT", "abstract", format_opts );
+	output_simple( fp, info, "LOCATION", "location", format_opts );
+	output_simple( fp, info, "DEGREEGRANTOR", "school", format_opts );
+	output_simple( fp, info, "DEGREEGRANTOR:ASIS", "school", format_opts );
+	output_simple( fp, info, "DEGREEGRANTOR:CORP", "school", format_opts );
+	output_simpleall( fp, info, "NOTES", "note", format_opts );
+	output_simple( fp, info, "ISBN", "isbn", format_opts );
+	output_simple( fp, info, "ISSN", "issn", format_opts );
+	output_simple( fp, info, "DOI", "doi", format_opts );
+	output_simpleall( fp, info, "URL", "url", format_opts );
 	if ( format_opts & BIBOUT_FINALCOMMA ) fprintf( fp, "," );
 	fprintf( fp, "\n}\n\n" );
 	fflush( fp );

@@ -167,7 +167,9 @@ output_names( fields *info, FILE *outptr, int level )
 		{ "WRITER",       "writer",       MARC_AUTHORITY },
 		{ "WRITER:ASIS",  "writer",       MARC_AUTHORITY | NAME_ASIS },
 		{ "WRITER:CORP",  "writer",       MARC_AUTHORITY | NAME_CORP },
-		{ "ASSIGNEE",     "assignee",     NO_AUTHORITY },
+		{ "ASSIGNEE",     "patent holder",MARC_AUTHORITY },
+		{ "ASSIGNEE:ASIS","patent holder",MARC_AUTHORITY | NAME_ASIS },
+		{ "ASSIGNEE:CORP","patent holder",MARC_AUTHORITY | NAME_CORP },
 		{ "EDITOR",       "editor",       MARC_AUTHORITY },
 		{ "EDITOR:ASIS",  "editor",       MARC_AUTHORITY | NAME_ASIS },
 		{ "EDITOR:CORP",  "editor",       MARC_AUTHORITY | NAME_CORP },
@@ -177,6 +179,15 @@ output_names( fields *info, FILE *outptr, int level )
 		{ "CARTOGRAPHER", "cartographer", MARC_AUTHORITY },
 		{ "CARTOGRAPHER:ASIS", "cartographer",MARC_AUTHORITY|NAME_ASIS},
 		{ "CARTOGRAPHER:CORP", "cartographer",MARC_AUTHORITY|NAME_CORP},
+		{ "DEGREEGRANTOR","degree grantor", MARC_AUTHORITY },
+		{ "DEGREEGRANTOR:ASIS","degree grantor", MARC_AUTHORITY | NAME_ASIS },
+		{ "DEGREEGRANTOR:CORP","degree grantor", MARC_AUTHORITY | NAME_CORP },
+		{ "INVENTOR",     "inventor",     MARC_AUTHORITY },
+		{ "INVENTOR:ASIS","inventor",     MARC_AUTHORITY |NAME_ASIS},
+		{ "INVENTOR:CORP","inventor",     MARC_AUTHORITY |NAME_CORP},
+		{ "ORGANIZER",    "organizer of meeting", MARC_AUTHORITY },
+		{ "ORGANIZER:ASIS","organizer of meeting", MARC_AUTHORITY|NAME_ASIS },
+		{ "ORGANIZER:CORP","organizer of meeting", MARC_AUTHORITY|NAME_CORP },
 		{ "DIRECTOR",     "director",     MARC_AUTHORITY },
 		{ "DIRECTOR:ASIS","director",     MARC_AUTHORITY | NAME_ASIS },
 		{ "DIRECTOR:CORP","director",     MARC_AUTHORITY | NAME_CORP },
@@ -186,6 +197,13 @@ output_names( fields *info, FILE *outptr, int level )
 		{ "REPORTER",     "reporter",     NO_AUTHORITY   },
 		{ "REPORTER:ASIS","reporter",     NO_AUTHORITY   | NAME_ASIS },
 		{ "REPORTER:CORP","reporter",     NO_AUTHORITY   | NAME_CORP },
+		{ "TRANSLATOR",   "translator",   MARC_AUTHORITY },
+		{ "DIRECTOR",     "director",     MARC_AUTHORITY },
+		{ "DIRECTOR:ASIS","director",     MARC_AUTHORITY | NAME_ASIS },
+		{ "DIRECTOR:CORP","director",     MARC_AUTHORITY | NAME_CORP },
+		{ "PERFORMER",    "performer",    MARC_AUTHORITY },
+		{ "PERFORMER:ASIS","performer",   MARC_AUTHORITY | NAME_ASIS },
+		{ "PERFORMER:CORP","performer",   MARC_AUTHORITY | NAME_CORP },
 		{ "TRANSLATOR",   "translator",   MARC_AUTHORITY },
 		{ "TRANSLATOR:ASIS", "translator",MARC_AUTHORITY | NAME_ASIS },
 		{ "TRANSLATOR:CORP", "translator",MARC_AUTHORITY | NAME_CORP },
@@ -287,7 +305,6 @@ output_origin( fields *info, FILE *outptr, int level )
 		{ "ISSUANCE",	"issuance",	0 },
 		{ "PUBLISHER",	"publisher",	0 },
 		{ "ADDRESS",	"place",	1 },
-		{ "SCHOOL",	"place",	3 },
 		{ "EDITION",	"edition",	0 }
 	};
 	int	  n, ntypes = sizeof( origin ) / sizeof ( convert );
@@ -310,7 +327,6 @@ output_origin( fields *info, FILE *outptr, int level )
 		if ( pos[n]==-1 ) continue;
 		output_tab0( outptr, level+1 );
 		fprintf( outptr, "<%s", origin[n].newstr );
-		if ( origin[n].code==3 ) fprintf( outptr, " type=\"school\"" );
 		fprintf( outptr, ">" );
 		if ( origin[n].code ) {
 			fprintf( outptr, "\n" );
@@ -613,8 +629,10 @@ output_key( fields *info, FILE *outptr, int level )
 static void
 output_sn( fields *info, FILE *outptr, int level )
 {
-	char      *internal_names[] = { "ISBN", "LCCN", "ISSN", "REFNUM", "DOI" };
-	char      *mods_types[] = { "isbn", "lccn", "issn", "citekey", "doi" };
+	char      *internal_names[] = { "ISBN", "LCCN", "ISSN", "REFNUM", 
+		"DOI" , "PUBMED", "MEDLINE", "PII" };
+	char      *mods_types[] = { "isbn", "lccn", "issn", "citekey", "doi",
+		"pubmed", "medline", "pii" };
 	int       n, ntypes = sizeof( internal_names ) / sizeof( char* );
 	int       found, i;
 
