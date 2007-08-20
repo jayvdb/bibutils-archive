@@ -1,6 +1,7 @@
-/* * tomods.c
+/*
+ * tomods.c
  *
- * Copyright (c) Chris Putnam 2004-5
+ * Copyright (c) Chris Putnam 2004-7
  *
  * Program and source code released under the GPL
  *
@@ -76,7 +77,7 @@ args_namelist( int argc, char *argv[], int i, char *progname, lists *names,
 		if ( !lists_fill( names, argv[i+1] ) ) {
 			fprintf( stderr, "%s: warning problems reading '%s', "
 				"obtained %d elements\n", progname, 
-				argv[i+1], names->nstr );
+				argv[i+1], names->n );
 		}
 	}
 }
@@ -137,9 +138,11 @@ tomods_processargs( int *argc, char *argv[], param *p, char *progname,
 			subtract = 1;
 			/* --debug + --verbose = --debug */
 			if ( p->verbose<1 ) p->verbose = 1;
+			p->format_opts |= BIBL_FORMAT_VERBOSE;
 		} else if ( args_match(argv[i], NULL, "--debug" ) ) {
 			subtract = 1;
 			p->verbose = 3;
+			p->format_opts |= BIBL_FORMAT_VERBOSE;
 		} else if ( args_match( argv[i], "-d", "--drop-key" ) ) {
 			subtract = 1;
 			p->format_opts |= MODSOUT_DROPKEY;

@@ -19,7 +19,7 @@
 
 if ( ( $2 != _osx ) && ( $2 != _i386 ) ) exit
 
-set programs = ( bib2xml copac2xml end2xml isi2xml med2xml modsclean ris2xml xml2bib xml2end xml2ris )
+set programs = ( bib2xml copac2xml end2xml endx2xml isi2xml med2xml modsclean ris2xml xml2bib xml2end xml2isi xml2ris xml2word )
 
 if ( -e update/debian ) /bin/rm -r update/debian
 if ( -e update/bibutils-${1}.deb ) /bin/rm -f update/*.deb

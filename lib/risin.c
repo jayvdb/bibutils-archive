@@ -1,7 +1,7 @@
 /*
  * risin.c
  *
- * Copyright (c) Chris Putnam 2003-5
+ * Copyright (c) Chris Putnam 2003-7
  *
  * Program and source code released under the GPL
  *
@@ -203,12 +203,16 @@ adddate( fields *info, char *tag, char *p, int level )
 int
 risin_typef( fields *risin, char *filename, int nref, variants *all, int nall )
 {
-	int n, reftype;
+	char *refnum = "";
+	int n, reftype, nreftype;
 	n = fields_find( risin, "TY", 0 );
+	nreftype = fields_find( risin, "ID", 0 );
+	if ( nreftype!=-1 ) refnum = risin[n].data->data;
 	if ( n!=-1 )
-		reftype = get_reftype( (risin[n].data)->data, nref, all, nall );
+		reftype = get_reftype( (risin[n].data)->data, nref, all, nall,
+			refnum );
 	else
-		reftype = get_reftype( "", nref, all, nall ); /*default */
+		reftype = get_reftype( "", nref, all, nall, refnum ); /*default */
 	return reftype;
 }
 
@@ -243,5 +247,19 @@ risin_convertf( fields *risin, fields *info, int reftype, int verbose, variants 
 		else if ( process==SERIALNO )
 			addsn( info, d->data, level );
 		else { /* do nothing */ }
+	}
+	/* look for thesis-type hint */
+	if ( !strcasecmp( all[reftype].type, "THES" ) ) {
+		for ( i=0; i<risin->nfields; ++i ) {
+			if ( strcasecmp(risin->tag[i].data, "U1") )
+				continue;
+			if ( !strcasecmp(risin->data[i].data,"Ph.D. Thesis")||
+			     !strcasecmp(risin->data[i].data,"Masters Thesis")||
+			     !strcasecmp(risin->data[i].data,"Diploma Thesis")||
+			     !strcasecmp(risin->data[i].data,"Doctoral Thesis")||
+			     !strcasecmp(risin->data[i].data,"Habilitation Thesis"))
+				fields_add( info, "GENRE", risin->data[i].data,
+					0 );
+		}
 	}
 }

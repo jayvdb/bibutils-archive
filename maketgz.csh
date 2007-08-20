@@ -4,7 +4,7 @@
 # $2 = postfix
 #
 #
-set programs = ( bib2xml copac2xml end2xml isi2xml med2xml modsclean ris2xml xml2bib xml2end xml2ris )
+set programs = ( bib2xml copac2xml end2xml endx2xml isi2xml med2xml modsclean ris2xml xml2bib xml2end xml2isi xml2ris xml2word )
 
 set VERSION = $1
 set POSTFIX = $2

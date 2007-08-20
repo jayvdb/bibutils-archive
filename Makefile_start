@@ -3,11 +3,11 @@ CC = REPLACE_CC
 RANLIB=REPLACE_RANLIB
 INSTALLDIR=REPLACE_INSTALLDIR
 
-VERSION=3.27
-DATE=6/22/06
+VERSION=3.37
+DATE=8/20/07
 
-PROGRAMS=bib2xml ris2xml end2xml med2xml isi2xml copac2xml \
-	xml2bib xml2end xml2ris modsclean
+PROGRAMS=bib2xml ris2xml end2xml endx2xml med2xml isi2xml copac2xml \
+	xml2bib xml2end xml2isi xml2ris xml2word modsclean
 
 all : FORCE
 	cd lib; make -k $(CC) -k $(RANLIB) -k VERSION="$(VERSION)" -k DATE="$(DATE)"; cd ..

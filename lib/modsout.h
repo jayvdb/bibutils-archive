@@ -1,7 +1,7 @@
 /*
  * modsout.h
  *
- * Copyright (c) Chris Putnam 2003-5
+ * Copyright (c) Chris Putnam 2003-7
  *
  * Source code released under the GPL
  *
@@ -10,8 +10,8 @@
 #define MODSOUT_H
 
 /* format-specific options */
-#define MODSOUT_DROPKEY (1)
-#define MODSOUT_BOM     (2)
+#define MODSOUT_DROPKEY (2)
+#define MODSOUT_BOM     (4)
 
 #include <stdio.h>
 #include <stdlib.h>

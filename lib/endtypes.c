@@ -1,7 +1,7 @@
 /*
  * endtypes.c
  *
- * Copyright (c) Chris Putnam 2003-5
+ * Copyright (c) Chris Putnam 2003-7
  *
  * Program and source code released under the GPL
  *
@@ -32,9 +32,9 @@ static lookups generic[] = {
 	{ "%Y", "3RD_AUTHOR",   PERSON, LEVEL_MAIN },
 	{ "%S", "3RD_TITLE",    SIMPLE, LEVEL_MAIN },
 	{ "%7", "EDITION",      SIMPLE, LEVEL_MAIN },
-	{ "%8", "MONTHDATE",    DATE,   LEVEL_MAIN },
+	{ "%8", "MONTH",    DATE,   LEVEL_MAIN },
 	{ "%9", "GENRE",        SIMPLE, LEVEL_MAIN },
-	{ "%?", "SUB_AUTHOR",   PERSON, LEVEL_MAIN },
+	{ "%?", "SUB_AUTHOR",   PERSON, LEVEL_MAIN }, /* subsidiary-authors */
 	{ "%!", "SHORTTITLE",   TITLE,  LEVEL_MAIN },
 	{ "%@", "SERIALNUM", SERIALNO,  LEVEL_MAIN },
 	{ "%(", "ORIGINALPUB",  SIMPLE, LEVEL_MAIN },
@@ -65,11 +65,12 @@ static lookups journalarticle[] = {
 	{ "%T", "TITLE" ,    TITLE,    LEVEL_MAIN },
 	{ "%J", "TITLE",     TITLE,    LEVEL_HOST }, /* journal title */
 	{ "%B", "TITLE",     TITLE,    LEVEL_HOST }, /* journal title */
+	{ "%C", "ADDRESS",   SIMPLE, LEVEL_MAIN },
 	{ "%V", "VOLUME" ,   SIMPLE,   LEVEL_MAIN },
 	{ "%N", "ISSUE",     SIMPLE,   LEVEL_MAIN },
 	{ "%P", "PAGES",     PAGES,    LEVEL_MAIN },
 	{ "%I", "PUBLISHER", SIMPLE,    LEVEL_HOST }, 
-	{ "%8", "PARTMONTHDATE", DATE,     LEVEL_MAIN },
+	{ "%8", "PARTMONTH", DATE,     LEVEL_MAIN },
 	{ "%9", "GENRE",     SIMPLE,  LEVEL_MAIN },
 	{ "%!", "SHORTTITLE",TITLE,    LEVEL_MAIN },
 	{ "%@", "SERIALNUMBER",      SERIALNO, LEVEL_HOST },
@@ -99,11 +100,12 @@ static lookups magazinearticle[] = {
 	{ "%T", "TITLE",     TITLE,   LEVEL_MAIN },
 	{ "%J", "TITLE",     TITLE,   LEVEL_HOST }, /* magazine name */
 	{ "%B", "TITLE",     TITLE,   LEVEL_HOST }, /* magazine name */
+	{ "%C", "ADDRESS",   SIMPLE, LEVEL_MAIN },
 	{ "%V", "VOLUME",    SIMPLE,  LEVEL_MAIN },
 	{ "%N", "ISSUE",     SIMPLE,  LEVEL_MAIN },
 	{ "%P", "PAGES",     PAGES,   LEVEL_MAIN },
 	{ "%I", "PUBLISHER", SIMPLE,    LEVEL_HOST }, 
-	{ "%8", "PARTMONTHDATE", DATE,    LEVEL_MAIN },
+	{ "%8", "PARTMONTH", DATE,    LEVEL_MAIN },
 	{ "%!", "SHORTTITLE",TITLE,   LEVEL_MAIN },
 	{ "%@", "SERIALNUMBER",      SERIALNO,LEVEL_HOST },
 	{ "%(", "ORIGINALPUB",SIMPLE, LEVEL_MAIN },
@@ -133,10 +135,11 @@ static lookups newspaperarticle[] = {
 	{ "%J", "TITLE",     TITLE,   LEVEL_HOST }, /* newspaper name */
 	{ "%B", "TITLE",     TITLE,   LEVEL_HOST }, /* newspaper name */
 	{ "%V", "VOLUME" ,   SIMPLE,  LEVEL_MAIN },
+	{ "%C", "ADDRESS",   SIMPLE, LEVEL_MAIN },
 	{ "%N", "ISSUE",     SIMPLE,  LEVEL_MAIN },
 	{ "%P", "PAGES",     PAGES,   LEVEL_MAIN },
 	{ "%7", "EDITION",   SIMPLE,  LEVEL_MAIN },
-	{ "%8", "PARTMONTHDATE", DATE,    LEVEL_MAIN },
+	{ "%8", "PARTMONTH", DATE,    LEVEL_MAIN },
 	{ "%!", "SHORTTITLE",TITLE,   LEVEL_MAIN },
 	{ "%@", "SERIALNUMBER",      SERIALNO, LEVEL_MAIN },
 	{ "%(", "ORIGINALPUB",SIMPLE, LEVEL_MAIN },
@@ -164,6 +167,7 @@ static lookups book[] = {
 	{ "%T", "TITLE" ,    TITLE,     LEVEL_MAIN },
 	{ "%E", "AUTHOR",    PERSON,    LEVEL_HOST }, /* SERIES_AUTHOR */
 	{ "%B", "TITLE",     TITLE,     LEVEL_HOST }, /* SERIES_TITLE */
+	{ "%S", "TITLE",     TITLE,     LEVEL_SERIES },
 	{ "%C", "ADDRESS",   SIMPLE,    LEVEL_MAIN },
 	{ "%I", "PUBLISHER", SIMPLE,    LEVEL_MAIN }, 
 	{ "%V", "VOLUME" ,   SIMPLE,    LEVEL_MAIN },
@@ -285,7 +289,7 @@ static lookups manuscript[] = {
 	{ "%C", "ADDRESS",   SIMPLE,  LEVEL_MAIN },
 	{ "%N", "NUMBER",    SIMPLE,  LEVEL_MAIN },
 	{ "%P", "PAGES",     PAGES,   LEVEL_MAIN },
-	{ "%8", "MONTHDATE", DATE,    LEVEL_MAIN },
+	{ "%8", "MONTH", DATE,    LEVEL_MAIN },
 	{ "%9", "GENRE",     SIMPLE,  LEVEL_MAIN },
 	{ "%!", "SHORTTITLE",TITLE,   LEVEL_MAIN },
 	{ "%M", "ACCESSNUM", SIMPLE,  LEVEL_MAIN },
@@ -317,7 +321,7 @@ static lookups communication[] = {
 	{ "%C", "ADDRESS",   SIMPLE,  LEVEL_MAIN },
 	{ "%V", "VOLUME",    SIMPLE,  LEVEL_MAIN },
 	{ "%I", "PUBLISHER", SIMPLE,  LEVEL_MAIN },
-	{ "%8", "MONTHDATE", DATE,    LEVEL_MAIN },
+	{ "%8", "MONTH", DATE,    LEVEL_MAIN },
 	{ "%9", "GENRE",     SIMPLE,  LEVEL_MAIN },
 	{ "%!", "SHORTTITLE",TITLE,   LEVEL_MAIN },
 	{ "%M", "ACCESSNUM", SIMPLE,  LEVEL_MAIN },
@@ -355,7 +359,7 @@ static lookups proceedings[] = {
 	{ "%Y", "EDITOR",    PERSON,  LEVEL_HOST }, /* SERIES_EDITOR */
 	{ "%S", "TITLE",     TITLE,   LEVEL_HOST }, /* SERIES_TITLE */
 	{ "%7", "EDITION",   SIMPLE,  LEVEL_HOST },
-	{ "%8", "MONTHDATE", DATE,    LEVEL_MAIN },
+	{ "%8", "MONTH", DATE,    LEVEL_MAIN },
 	{ "%!", "SHORTTITLE",TITLE,   LEVEL_MAIN },
 	{ "%1", "CUSTOM1",   SIMPLE,  LEVEL_MAIN },
 	{ "%2", "CUSTOM2",   SIMPLE,  LEVEL_MAIN },
@@ -389,7 +393,7 @@ static lookups thesis[] = {
 	{ "%P", "NUMPAGES",     PAGES    , LEVEL_MAIN },
 /*	{ "%9", "THESIS_TYPE", SIMPLE   , LEVEL_MAIN },*/
 	{ "%9", "GENRE",     SIMPLE   , LEVEL_MAIN }, /* thesis type */
-	{ "%8", "MONTHDATE", DATE     , LEVEL_MAIN },
+	{ "%8", "MONTH", DATE     , LEVEL_MAIN },
 	{ "%!", "SHORTTITLE",TITLE    , LEVEL_MAIN },
 	{ "%1", "CUSTOM1",   SIMPLE   , LEVEL_MAIN },
 	{ "%2", "CUSTOM2",   SIMPLE   , LEVEL_MAIN },
@@ -450,7 +454,7 @@ static lookups audiovisual[] = {
 	{ "%I", "PUBLISHER", SIMPLE   , LEVEL_MAIN },
 	{ "%V", "EXTENTOFWORK",     SIMPLE   , LEVEL_MAIN },
 	{ "%N", "NUMBER",    SIMPLE   , LEVEL_MAIN },
-	{ "%8", "MONTHDATE", DATE     , LEVEL_MAIN },
+	{ "%8", "MONTH", DATE     , LEVEL_MAIN },
 	{ "%9", "GENRE",     SIMPLE   , LEVEL_MAIN },
 	{ "%?", "PERFORMER", PERSON   , LEVEL_MAIN },
 	{ "%!", "SHORTTITLE",TITLE    , LEVEL_MAIN },
@@ -483,7 +487,7 @@ static lookups broadcast[] = {
 	{ "%C", "ADDRESS",   SIMPLE   , LEVEL_MAIN },
 	{ "%I", "PUBLISHER", SIMPLE   , LEVEL_MAIN },
 	{ "%Y", "PRODUCER",  PERSON   , LEVEL_MAIN },
-	{ "%8", "MONTHDATE", DATE     , LEVEL_MAIN },
+	{ "%8", "MONTH", DATE     , LEVEL_MAIN },
 	{ "%9", "GENRE",     SIMPLE   , LEVEL_MAIN },
 	{ "%!", "SHORTTITLE",TITLE    , LEVEL_MAIN },
 	{ "%@", "SERIALNUMBER",      SERIALNO , LEVEL_MAIN },
@@ -512,6 +516,7 @@ static lookups electronic[] = {
 	{ "%A", "AUTHOR",    PERSON    , LEVEL_MAIN },
 	{ "%D", "YEAR",      SIMPLE    , LEVEL_MAIN },
 	{ "%T", "TITLE" ,    TITLE     , LEVEL_MAIN },
+	{ "%C", "ADDRESS",   SIMPLE, LEVEL_MAIN },
 	{ "%I", "PUBLISHER", SIMPLE    , LEVEL_MAIN }, 
 	{ "%V", "ACCESS_YEAR",  SIMPLE , LEVEL_MAIN },
 	{ "%N", "ACCESS_DATE",  DATE   , LEVEL_MAIN },
@@ -535,7 +540,9 @@ static lookups electronic[] = {
 	{ "%Z", "NOTES",     SIMPLE    , LEVEL_MAIN },
 	{ "%W", "PHYSICALLOC",  SIMPLE, LEVEL_MAIN },  /* physical location */
 	{ "%+", "AUTHORADDRESS",SIMPLE , LEVEL_MAIN },
-        { " ",         "TYPE|electronic",       ALWAYS, LEVEL_MAIN },
+        { " ",  "RESOURCE|software, multimedia",    ALWAYS, LEVEL_MAIN },
+        { " ",  "GENRE|electronic",       ALWAYS, LEVEL_MAIN },
+
 };
 
 static lookups artwork[] = {
@@ -545,7 +552,7 @@ static lookups artwork[] = {
 	{ "%T", "TITLE" ,    TITLE    , LEVEL_MAIN },
 	{ "%C", "ADDRESS",   SIMPLE   , LEVEL_MAIN },
 	{ "%I", "PUBLISHER", SIMPLE   , LEVEL_MAIN },
-	{ "%8", "MONTHDATE", DATE     , LEVEL_MAIN },
+	{ "%8", "MONTH", DATE     , LEVEL_MAIN },
 	{ "%9", "GENRE",     SIMPLE   , LEVEL_MAIN },
 	{ "%!", "SHORTTITLE",TITLE    , LEVEL_MAIN },
 	{ "%M", "ACCESSNUM", SIMPLE   , LEVEL_MAIN },
@@ -575,7 +582,7 @@ static lookups report[] = {
 	{ "%C", "ADDRESS",   SIMPLE   , LEVEL_MAIN },
 	{ "%I", "PUBLISHER", SIMPLE   , LEVEL_MAIN },
 	{ "%P", "PAGES",     PAGES    , LEVEL_MAIN },
-	{ "%8", "MONTHDATE", DATE     , LEVEL_MAIN },
+	{ "%8", "MONTH", DATE     , LEVEL_MAIN },
 	{ "%9", "GENRE",     SIMPLE   , LEVEL_MAIN },
 	{ "%@", "SERIALNUMBER", SERIALNO , LEVEL_MAIN },
 	{ "%!", "SHORTTITLE",TITLE    , LEVEL_MAIN },
@@ -673,7 +680,7 @@ static lookups hearing[] = {
 	{ "%P", "NUMPAGES",  PAGES,  LEVEL_MAIN  },
 	{ "%S", "LEGISLATIVEBODY", SIMPLE, LEVEL_MAIN  },
 	{ "%7", "SESSION",   SIMPLE, LEVEL_MAIN  },
-	{ "%8", "MONTHDATE", DATE,   LEVEL_MAIN  },
+	{ "%8", "MONTH", DATE,   LEVEL_MAIN  },
 	{ "%!", "SHORTTITLE",TITLE,  LEVEL_MAIN  },
 	{ "%(", "ORIGINALPUB",SIMPLE, LEVEL_MAIN },
 	{ "%M", "ACCESSNUM", SIMPLE, LEVEL_MAIN  },
@@ -706,7 +713,7 @@ static lookups bill[] = {
 	{ "%&", "CODESECTION",SIMPLE, LEVEL_MAIN  },
 	{ "%S", "LEGISLATIVEBODY", SIMPLE, LEVEL_MAIN  },
 	{ "%7", "SESSION",   SIMPLE, LEVEL_MAIN  },
-	{ "%8", "MONTHDATE", DATE, LEVEL_MAIN    },
+	{ "%8", "MONTH", DATE, LEVEL_MAIN    },
 	{ "%?", "SPONSOR",   PERSON, LEVEL_MAIN  },
 	{ "%!", "SHORTTITLE",TITLE,  LEVEL_MAIN   },
 	{ "%(", "ORIGINALPUB",SIMPLE, LEVEL_MAIN  },
@@ -739,7 +746,7 @@ static lookups statute[] = {
 	{ "%P", "PAGES",     PAGES, LEVEL_MAIN    },
 	{ "%&", "SECTION",   SIMPLE, LEVEL_MAIN  },
 	{ "%7", "SESSION",   SIMPLE, LEVEL_MAIN  },
-	{ "%8", "MONTHDATE", DATE, LEVEL_MAIN    },
+	{ "%8", "MONTH", DATE, LEVEL_MAIN    },
 	{ "%!", "SHORTTITLE",TITLE,  LEVEL_MAIN   },
 	{ "%(", "ORIGINALPUB",SIMPLE, LEVEL_MAIN  },
 	{ "%M", "ACCESSNUM", SIMPLE, LEVEL_MAIN  },
@@ -771,7 +778,7 @@ static lookups lawcase[] = {
 	{ "%V", "VOLUME",    SIMPLE, LEVEL_MAIN   },
 	{ "%N", "PUBLICLAWNUMBER",    SIMPLE, LEVEL_MAIN  },
 	{ "%P", "STARTPAGE",     SIMPLE, LEVEL_MAIN  },
-	{ "%8", "MONTHDATE", DATE, LEVEL_MAIN    },
+	{ "%8", "MONTH", DATE, LEVEL_MAIN    },
 	{ "%?", "COUNSEL",   PERSON, LEVEL_MAIN  },
 	{ "%!", "SHORTTITLE",TITLE,  LEVEL_MAIN   },
 	{ "%(", "ORIGINALPUB",SIMPLE, LEVEL_MAIN  },

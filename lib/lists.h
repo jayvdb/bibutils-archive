@@ -1,7 +1,7 @@
 /*
  * lists.h
  *
- * Copyright (c) Chris Putnam 2004-5
+ * Copyright (c) Chris Putnam 2004-7
  *
  * Source code released under the GPL
  *
@@ -16,14 +16,17 @@
 #include "newstr.h"
 
 typedef struct lists {
-	int nstr, maxstr;
+	int n, max;
 	newstr *str;
 } lists;
 
-extern void lists_init( lists *info );
-extern int  lists_add( lists *info, char *value );
-extern int  lists_find( lists *info, char *searchstr );
-extern void lists_free( lists *info );
-extern int  lists_fill( lists *info, char *filename );
+extern void    lists_init( lists *a );
+extern int     lists_add( lists *a, char *value );
+extern int     lists_find( lists *a, char *searchstr );
+extern void    lists_empty( lists *a );
+extern void    lists_free( lists *a );
+extern int     lists_fill( lists *a, char *filename );
+extern newstr* lists_getstr( lists *a, int n );
+extern char*   lists_getcharptr( lists *a, int n );
 
 #endif

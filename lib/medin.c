@@ -1,7 +1,7 @@
 /*
  * medin.c
  *
- * Copyright (c) Chris Putnam 2004-5
+ * Copyright (c) Chris Putnam 2004-7
  *
  * Program and source code released under the GPL
  *
@@ -20,7 +20,7 @@ int
 medin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, newstr *reference, int *fcharset )
 {
 	newstr tmp;
-	char *startptr, *endptr;
+	char *startptr = NULL, *endptr;
 	int haveref = 0, inref = 0, file_charset = CHARSET_UNKNOWN, m;
 	newstr_init( &tmp );
 	while ( !haveref && newstr_fget( fp, buf, bufsize, bufpos, line ) ) {

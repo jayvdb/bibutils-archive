@@ -1,7 +1,7 @@
 /*
  * isitypes.c
  *
- * Copyright (c) Chris Putnam 2004-5
+ * Copyright (c) Chris Putnam 2004-7
  *
  * Program and source code released under the GPL
  *
@@ -15,6 +15,7 @@
 
 static lookups article[] = {
 	{ "AU",     "AUTHOR",    PERSON, LEVEL_MAIN },
+	{ "AF",     "AUTHOR",    PERSON, LEVEL_MAIN },
 	{ "TI",     "TITLE",     TITLE,  LEVEL_MAIN },
 	{ "SO",     "TITLE",     TITLE,  LEVEL_HOST }, /* full journal name */
 	{ "JI",     "SHORTTITLE",TITLE,  LEVEL_HOST }, /* abbr journal name */
@@ -35,7 +36,7 @@ static lookups article[] = {
 	{ "SN",     "SERIALNUMBER", SERIALNO, LEVEL_HOST },
 	{ "AB",     "ABSTRACT",  SIMPLE, LEVEL_MAIN },
 	{ "NF",     "NOTES",     SIMPLE, LEVEL_MAIN },
-	{ "DE",     "KEYWORD",   ISI_KEYWORD, LEVEL_MAIN }, /* original keywords */
+	{ "DE",     "KEYWORD",   ISI_KEYWORD, LEVEL_MAIN }, /* author keywords */
 	{ "ID",     "KEYWORD",   ISI_KEYWORD, LEVEL_MAIN }, /* new ISI keywords */
 	{ "LA",     "LANGUAGE",  SIMPLE, LEVEL_MAIN },
 	{ "TC",     "TIMESCITED", SIMPLE, LEVEL_MAIN },
@@ -45,6 +46,8 @@ static lookups article[] = {
 	{ "DT",     "DOCUMENTTYPE", TYPE, LEVEL_MAIN },
 	{ "GA",     "ISIDELIVERNUM", SIMPLE, LEVEL_MAIN}, /*ISI document delivery number */
 	{ "UT",     "ISIREFNUM", SIMPLE, LEVEL_MAIN }, /* ISI unique article identifer */
+	{ "DI",     "DOI",       SIMPLE, LEVEL_MAIN },
+
 	{ " ",      "TYPE|ARTICLE",           ALWAYS, LEVEL_MAIN },
 	{ " ",      "ISSUANCE|continuing",    ALWAYS, LEVEL_HOST },
 	{ " ",      "RESOURCE|text",          ALWAYS, LEVEL_MAIN },
@@ -54,6 +57,7 @@ static lookups article[] = {
 
 static lookups book[] = {
 	{ "AU",     "AUTHOR",    PERSON, LEVEL_MAIN },
+	{ "AF",     "AUTHOR",    PERSON, LEVEL_MAIN },
 	{ "TI",     "TITLE",     TITLE,  LEVEL_MAIN },
 	{ "SO",     "TITLE",     TITLE,  LEVEL_HOST }, /* full journal name */
 	{ "JI",     "SHORTTITLE",TITLE,  LEVEL_HOST }, /* abbr journal name */
@@ -73,7 +77,7 @@ static lookups book[] = {
 	{ "SN",     "SERIALNUMBER", SERIALNO, LEVEL_HOST },
 	{ "AB",     "ABSTRACT",  SIMPLE, LEVEL_MAIN },
 	{ "NF",     "NOTES",     SIMPLE, LEVEL_MAIN },
-	{ "DE",     "KEYWORD",   ISI_KEYWORD, LEVEL_MAIN }, /* original keywords */
+	{ "DE",     "KEYWORD",   ISI_KEYWORD, LEVEL_MAIN }, /* author keywords */
 	{ "ID",     "KEYWORD",   ISI_KEYWORD, LEVEL_MAIN }, /* new ISI keywords */
 	{ "LA",     "LANGUAGE",  SIMPLE, LEVEL_MAIN },
 	{ "TC",     "TIMESCITED", SIMPLE, LEVEL_MAIN },
@@ -85,6 +89,7 @@ static lookups book[] = {
 	{ "UT",     "ISIREFNUM", SIMPLE, LEVEL_MAIN }, /* ISI unique article identifer */
 	
 	{ "PT",     " ",         TYPE,   LEVEL_HOST },
+	{ "DI",     "DOI",       SIMPLE, LEVEL_MAIN },
 	{ " ",         "TYPE|BOOK",       ALWAYS, LEVEL_MAIN },
 	{ " ",         "ISSUANCE|monographic",    ALWAYS, LEVEL_MAIN },
 	{ " ",         "RESOURCE|text",   ALWAYS, LEVEL_MAIN },
@@ -93,6 +98,7 @@ static lookups book[] = {
 
 static lookups inbook[] = {
 	{ "AU",     "AUTHOR",    PERSON, LEVEL_MAIN },
+	{ "AF",     "AUTHOR",    PERSON, LEVEL_MAIN },
 	{ "TI",     "TITLE",     TITLE,  LEVEL_MAIN },
 	{ "SO",     "TITLE",     TITLE,  LEVEL_HOST }, /* full journal name */
 	{ "JI",     "SHORTTITLE",TITLE,  LEVEL_HOST }, /* abbr journal name */
@@ -112,7 +118,7 @@ static lookups inbook[] = {
 	{ "SN",     "SERIALNUMBER", SERIALNO, LEVEL_HOST },
 	{ "AB",     "ABSTRACT",  SIMPLE, LEVEL_MAIN },
 	{ "NF",     "NOTES",     SIMPLE, LEVEL_MAIN },
-	{ "DE",     "KEYWORD",   ISI_KEYWORD, LEVEL_MAIN }, /* original keywords */
+	{ "DE",     "KEYWORD",   ISI_KEYWORD, LEVEL_MAIN }, /* author keywords */
 	{ "ID",     "KEYWORD",   ISI_KEYWORD, LEVEL_MAIN }, /* new ISI keywords */
 	{ "LA",     "LANGUAGE",  SIMPLE, LEVEL_MAIN },
 	{ "TC",     "TIMESCITED", SIMPLE, LEVEL_MAIN },
@@ -122,17 +128,64 @@ static lookups inbook[] = {
 	{ "DT",     "DOCUMENTTYPE", TYPE, LEVEL_MAIN },
 	{ "GA",     "ISIDELIVERNUM", SIMPLE, LEVEL_MAIN}, /*ISI document delivery number */
 	{ "UT",     "ISIREFNUM", SIMPLE, LEVEL_MAIN }, /* ISI unique article identifer */
+	{ "DI",     "DOI",       SIMPLE, LEVEL_MAIN },
 	{ " ",         "TYPE|INBOOK",   ALWAYS, LEVEL_MAIN },
 	{ " ",         "RESOURCE|text", ALWAYS, LEVEL_MAIN },
 	{ " ",         "ISSUANCE|monographic",    ALWAYS, LEVEL_HOST },
 	{ " ",         "GENRE|book",    ALWAYS, LEVEL_HOST }
 };
 
+static lookups bookinseries[] = {
+	{ "AU",     "AUTHOR",    PERSON, LEVEL_MAIN },
+	{ "AF",     "AUTHOR",    PERSON, LEVEL_MAIN },
+	{ "TI",     "TITLE",     TITLE,  LEVEL_MAIN },
+	{ "SO",     "TITLE",     TITLE,  LEVEL_MAIN },
+	{ "SE",     "TITLE",     TITLE,  LEVEL_HOST },
+	{ "BS",     "SUBTITLE",  TITLE,  LEVEL_HOST },
+	{ "JI",     "SHORTTITLE",TITLE,  LEVEL_HOST }, /* abbr journal name */
+	{ "J9",     "SHORTTITLE",TITLE,  LEVEL_HOST }, /* 29char journal name */
+	{ "PU",     "PUBLISHER", SIMPLE, LEVEL_HOST },
+	{ "PI",     "ADDRESS",   SIMPLE, LEVEL_HOST }, /* publisher city */
+	{ "C1",     "ADDRESS",   SIMPLE, LEVEL_MAIN }, /* author address */
+	{ "PA",     "ADDRESS",   SIMPLE, LEVEL_HOST }, /* publisher address */
+	{ "RP",     "REPRINTADDRESS", SIMPLE, LEVEL_MAIN },
+	{ "PY",     "PARTYEAR",  SIMPLE, LEVEL_MAIN },
+	{ "PD",     "PARTMONTH", SIMPLE, LEVEL_MAIN },
+	{ "VL",     "VOLUME",    SIMPLE, LEVEL_MAIN },
+	{ "BP",     "PAGESTART", SIMPLE, LEVEL_MAIN },
+	{ "EP",     "PAGEEND",   SIMPLE, LEVEL_MAIN },
+	{ "PG",     "TOTALPAGES", SIMPLE, LEVEL_MAIN },
+	{ "IS",     "ISSUE",     SIMPLE, LEVEL_MAIN },
+	{ "SN",     "SERIALNUMBER", SERIALNO, LEVEL_HOST },
+	{ "AB",     "ABSTRACT",  SIMPLE, LEVEL_MAIN },
+	{ "NF",     "NOTES",     SIMPLE, LEVEL_MAIN },
+	{ "DE",     "KEYWORD",   ISI_KEYWORD, LEVEL_MAIN }, /* author keywords */
+	{ "ID",     "KEYWORD",   ISI_KEYWORD, LEVEL_MAIN }, /* new ISI keywords */
+	{ "LA",     "LANGUAGE",  SIMPLE, LEVEL_MAIN },
+	{ "TC",     "TIMESCITED", SIMPLE, LEVEL_MAIN },
+	{ "NR",     "NUMBERREFS", SIMPLE, LEVEL_MAIN },
+	{ "CR",     "CITEDREFS",  SIMPLE, LEVEL_MAIN },
+	{ "PT",     " ",         TYPE,   LEVEL_HOST },
+	{ "DT",     "DOCUMENTTYPE", TYPE, LEVEL_MAIN },
+	{ "GA",     "ISIDELIVERNUM", SIMPLE, LEVEL_MAIN}, /*ISI document delivery number */
+	{ "UT",     "ISIREFNUM", SIMPLE, LEVEL_MAIN }, /* ISI unique article identifer */
+	{ "DI",     "DOI",       SIMPLE, LEVEL_MAIN },
+
+	{ " ",      "TYPE|INCOLLECTION",      ALWAYS, LEVEL_MAIN },
+	{ " ",      "ISSUANCE|monographic",   ALWAYS, LEVEL_HOST },
+	{ " ",      "RESOURCE|text",          ALWAYS, LEVEL_MAIN },
+	{ " ",      "GENRE|collection",       ALWAYS, LEVEL_MAIN }
+};
+
+
+
 variants isi_all[] = {
 	{ "Journal", &(article[0]), sizeof(article)/sizeof(lookups)},
 	{ "J", &(article[0]), sizeof(article)/sizeof(lookups)},
 	{ "Book", &(book[0]), sizeof(book)/sizeof(lookups)},
+	{ "B", &(book[0]), sizeof(book)/sizeof(lookups)},
 	{ "Chapter", &(inbook[0]), sizeof(inbook)/sizeof(lookups)},
+	{ "S", &(bookinseries[0]), sizeof(bookinseries)/sizeof(lookups)},
 };
 
 int isi_nall = sizeof( isi_all ) / sizeof( variants );

@@ -42,6 +42,8 @@ help( void )
 
 	fprintf(stderr,"  -s, --single-refperfile one reference per output file\n");
 	fprintf(stderr,"  -h, --help     display this help\n");
+	fprintf(stderr,"  --verbose      for verbose output\n");
+	fprintf(stderr,"  --debug        for debug output\n");
 	fprintf(stderr,"  -v, --version  display version\n\n");
 
 	fprintf(stderr,"Citation codes (ID  - ) generated from <REFNUM> tag.   See \n");
@@ -74,6 +76,12 @@ process_args( int *argc, char *argv[], param *p )
 					&(p->utf8out), progname );
 			p->charsetout_src = BIBL_SRC_USER;
 			subtract = 2;
+		} else if ( args_match( argv[i], "--verbose", "" ) ) {
+			p->verbose = 1;
+			subtract = 1;
+		} else if ( args_match( argv[i], "--debug", "" ) ) {
+			p->verbose = 3;
+			subtract = 1;
 		}
 		if ( subtract ) {
 			for ( j=i+subtract; j<*argc; ++j )

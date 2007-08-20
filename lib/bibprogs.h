@@ -1,7 +1,7 @@
 /*
  * bibprogs.h
  *
- * Copyright (c) Chris Putnam 2005
+ * Copyright (c) Chris Putnam 2005-7
  *
  */
 

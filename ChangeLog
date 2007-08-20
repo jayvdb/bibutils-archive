@@ -1,15 +1,239 @@
 
 BIBUTILS
 
-3.27
-06/22/06
+3.37
+8/20/07
+MODSOUT
++ fix bug where terminating > symbol is missing in 
+  <identifier type="serialnumber"> output
+
+3.36
+8/19/07
+
+CHARSET CONVERSION
++ add recognition of apostrophe HTML entity
+
+LIBRARY HANDLING
++ resolve duplicates of citation keys by adding a-z
+
+BIB2XML
++ properly handle bibtex files output by endnote that don't have field keys
++ add support for Diploma, Doctoral, and Habilitation theses (German)
+
+ENDX2XML
++ properly handle whitespace in style tags
++ add support for Diploma, Doctoral, and Habilitation theses (German)
+
+RIS2XML
++ support computer program "COMP" type
++ support patent "PAT" type
++ support unpublished "UNPB" type
++ add support for Diploma, Doctoral, and Habilitation theses (German)
+
+XML2BIB
++ output newspaper articles as @ARTICLE as well
++ output series titles as "series" for book chapter, inproceedings, theses
+  types
++ add support for Diploma, Doctoral, and Habilitation theses (German)
+
+XML2END
++ support magazine article type
++ support patent type
++ support computer program type
++ add support for Diploma, Doctoral, and Habilitation theses (German)
+
+XML2ISI
++ be more aggressive about outputing the date
+
+XML2RIS
++ support magazine article type
++ support abstract/summary type
++ support patent type
++ support computer program type
++ support unpublished "UNPB" type
++ add support for Diploma, Doctoral, and Habilitation theses (German)
+
+
+3.35
+7/30/07
+
+BIB2XML
++ support translator field
+
+COPAC2XML
++ fix bug where garbage input can lead to infinite loop
+
+ENDX2XML
++ fix bug where multiple style tags caused data to be lost
+
+ISI2XML
++ use authors listed with "AF" instead of "AU" when present as they
+  are a "better" annotated list
++ fix bug where garbage input can lead to infinite loop (patch thanks
+  to Fred Howell)
++ add type S for book in series
++ fix bug where NR number of references was being recognized as
+  journal number
+
+RIS2XML
++ add support for RIS magazine article "MGZN"
++ add support for RIS abstract "ABST"
++ add support for reading thesis hint in "user 1" tag "U1"
+
+XML2BIB
++ output article number as page number if page numbers aren't found
++ support translator field
++ make preferred form of \text markups have curly brackets
+
+XML2END
++ output article number as page number if page numbers aren't found
+
+XML2RIS
++ output article number as page number if page numbers aren't found
++ fix recognition of thesis type
++ output "U1  - Masters thesis" or "U1  - Ph.D. thesis" as a hint
+  for Refbase of the thesis type
+
+XML2WORD
++ output article number as page number if page numbers aren't found
+
+
+3.34
+6/07/07
+
+END2XML
+
++ fix bug that prevent dates from being read in
+
+
+3.33
+5/23/07
+
+MED2XML
++ fix stupid change that caused coredumps
+
+
+3.32
+5/21/07
+
+CHARSET CONVERSION
++ fix bug where UTF-8/Unicode input is ignored for BibTeX files
+
+MODSIN
++ Recognize both &gt;extent unit="page"&lt; and &gt;extent unit="pages"&lt;
+
+NEWSTR
++ Fix compilation on 64 bit processors
+
+BIB2XML
++ Strip latex \url{} tags from input data
+
+XML2BIB
++ Add recognition of --verbose and --debug
+
+XML2END
++ Add recognition of --verbose and --debug
+
+XML2ISI
++ Add recognition of --verbose and --debug
+
+XML2RIS
++ Add recognition of --verbose and --debug
+
+XML2WORD
++ Add recognition of command line switches
+
+
+3.31
+4/1/07
+
 BIBTEXIN
-+ Fix scrambling of title/booktitle for bibtex cross-references
-  involving "incollection" and "inproceeding" types
++ Fix typo in genre for "incollection" to "monographic"
++ Remove text markups like \textit{} and \textbf{}
++ Replace text markups like "\textonesuperior" with appropriate Unicode
+  characters
++ Have electronic types set MODS resource "software, multimedia"
+
+BIBTEXOUT
++ Modify warning message for "xml2bib: cannot identify type" to
+  tell user that it's defaulting to @Misc so people stop reporting
+  this information to me
++ Add electronic type recognition and output
+
+ENDIN
++ Have electronic types set MODS genre "electronic"
++ Add '%S' Series title to Book type
++ Add recognition of Unicode UTF8 byte order information
+
+ENDXMLIN
++ Ensure that the "label" field ends up in the MODS output as
+  reference ID
++ Pass through "short-title" information
+
+MODSOUT
++ Fix typo so MARC-authority genre types are "marcgt", not "marc"
++ Output ACCESSNUM to MODS
+
+RISIN
++ Add thesis type
++ Add report type
+
+RISOUT
++ Map "collection" and "incollection" from bibtex to "book" and "inbook"
++ Add thesis type
++ Add report type
+
+ENDOUT
++ Map "collection" and "incollection" from bibtex to "book" and "inbook"
+
+
+3.30
+3/17/07
+
+XML2WORD
++ Write first version of the program
+
+
+3.29
+3/12/07
+
+ENDIN
++ Fix addition of extraneous tag for electronic types; add
+  proper MODS resource tag
+
+ENDX2XML
++ Fix problems parsing in XML files without newlines
+
+3.28
+3/10/07
+
+BIBTEXIN
++ Fix problems parsing files that have non-bibtex lines in them
++ Add c with a hacek support to latex characters (thanks to
+  George Smith for the information)
++ Add enspace, emspace, and thinspace support to latex
+  characters (patch from John Spray; thanks!)
+
+ENDX2XML
++ Write first version of the program
+
+ISIIN
++ Add support for DOI tag "DI"
+
+NAME MANGLING
++ Fix bug in handling multibyte Unicode characters
+
+XMLIN
++ Fix bug where single quoted XML attributes were not recognized
+(Patch due to Jason Lerch; thanks!)
+
+XML2ISI
++ Write first version of the program
 
 
 3.26
 06/21/06
+
 MODSIN
 + Add reading in pubmed/medline/pii identifiers
 
@@ -135,6 +359,7 @@ MODSOUT
 + start fixing position of items like volume, issue, pages for entries
   now that MODS v3.1 allows part tags at the main level
 
+
 3.19
 09/14/05
 
@@ -177,10 +402,9 @@ MODSOUT
 + fix bug where -un/-u flags weren't being respected
 
 
-
-
 3.18
 07/11/05
+
 BIB2XML
 + accomodate all entries from the IEEEtrans bibtex style and other requests
   for missing common fields
@@ -398,6 +622,7 @@ RIS2XML
 
 3.13
 12/15/04
+
 COPAC2XML
 + write first version of program
 

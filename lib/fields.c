@@ -1,7 +1,7 @@
 /*
  * fields.c
  *
- * Copyright (c) Chris Putnam 2003-5
+ * Copyright (c) Chris Putnam 2003-7
  *
  * Source code released under the GPL
  *
@@ -136,7 +136,8 @@ fields_find( fields *info, char *searchtag, int level )
 	int i, found = -1;
 	for ( i=0; i<info->nfields && found==-1; ++i ) {
 		if ( (level==-1 || level==info->level[i]) &&
-		     strsearch( info->tag[i].data, searchtag )==info->tag[i].data ) {
+//		     strsearch( info->tag[i].data, searchtag )==info->tag[i].data ) {
+		     !strcasecmp( info->tag[i].data, searchtag ) ) {
 			found = i;
 			/* if there is no data for the tag, mark as unfound */
 			/* but set "used" so noise is suppressed */
@@ -158,3 +159,20 @@ fields_maxlevel( fields *info )
 	}
 	return max;
 }
+
+void
+fields_clearused( fields *info )
+{
+	int i;
+	for ( i=0; i<info->nfields; ++i )
+		info->used[i] = 0;
+}
+
+void
+fields_setused( fields *info, int n )
+{
+	if ( n < info->nfields )
+		info->used[n] = 1;
+}
+
+

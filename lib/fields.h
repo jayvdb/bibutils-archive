@@ -1,7 +1,7 @@
 /*
  * fields.h
  *
- * Copyright (c) Chris Putnam 2003-5
+ * Copyright (c) Chris Putnam 2003-7
  *
  * Source code released under the GPL
  *
@@ -32,5 +32,8 @@ extern void fields_init( fields *info );
 extern fields *fields_new( void );
 extern int  fields_find( fields *info, char *searchtag, int level );
 extern int  fields_maxlevel( fields *info );
+extern void fields_clearused( fields *info );
+extern void fields_setused( fields *info, int n );
+
 
 #endif

@@ -1,7 +1,7 @@
 /*
  * newstring.h
  *
- * Copyright (c) Chris Putnam 1999-2005
+ * Copyright (c) Chris Putnam 1999-2007
  *
  * Source code released under the GPL
  *
@@ -24,6 +24,7 @@ void newstr_strcat      ( newstr *string, char *addstr );
 void newstr_segcat      ( newstr *string, char *startat, char *endat );
 void newstr_prepend     ( newstr *string, char *addstr );
 void newstr_strcpy      ( newstr *string, char *addstr );
+void newstr_newstrcpy   ( newstr *s, newstr *old );
 void newstr_segcpy      ( newstr *string, char *startat, char *endat );
 void newstr_segdel      ( newstr *string, char *startat, char *endat );
 void newstr_fprintf     ( FILE *fp, newstr *string );

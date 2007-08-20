@@ -50,6 +50,8 @@ help( void )
 	fprintf(stderr,"  -b, -brackets      use brackets, not quotation marks surrounding data\n");
 	fprintf(stderr,"  -w, --whitespace   use beautifying whitespace to output\n");
 	fprintf(stderr,"  -s, --single-refperfile one reference per output file\n");
+	fprintf(stderr,"  --verbose          for verbose\n" );
+	fprintf(stderr,"  --debug            for debug output\n" );
 	fprintf(stderr,"\n");
 
 	fprintf(stderr,"Citation codes generated from <REFNUM> tag.   See \n");
@@ -97,6 +99,12 @@ process_args( int *argc, char *argv[], param *p )
 					&(p->utf8out), progname );
 			p->charsetout_src = BIBL_SRC_USER;
 			subtract = 2;
+		} else if ( args_match( argv[i], "--verbose", "" ) ) {
+			p->verbose = 1;
+			subtract = 1;
+		} else if ( args_match( argv[i], "--debug", "" ) ) {
+			p->verbose = 3;
+			subtract = 1;
 		}
 		if ( subtract ) {
 			for ( j=i+subtract; j<*argc; ++j )
@@ -117,7 +125,7 @@ main( int argc, char *argv[] )
 	bibl_init( &b );
 	bibl_initparams( &p, BIBL_MODSIN, BIBL_BIBTEXOUT );
 	process_args( &argc, argv, &p );
-	if ( argc==1 ) {
+	if ( argc == 1 ) {
 		err = bibl_read( &b, stdin, "stdin", BIBL_MODSIN, &p ); 
 		if ( err ) bibl_reporterr( err );
 	} else {

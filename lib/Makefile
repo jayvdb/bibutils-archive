@@ -6,15 +6,16 @@ BIB_OBJS = bbl.o fields.o lists.o name.o title.o reftypes.o
 SIMPLE_OBJS   = is_ws.o strsearch.o charsets.o
 NEWSTR_OBJS   = newstr.o newstr_conv.o entities.o latex.o utf8.o
 CONTAIN_OBJS  = fields.o lists.o xml.o xml_encoding.o
-INPUT_OBJS    = bibtexin.o bibtypes.o bibtexout.o \
+INPUT_OBJS    = bibtexin.o bibtypes.o \
 		copacin.o copactypes.o \
-		endin.o endtypes.o endout.o \
+		endin.o endtypes.o \
+		endxmlin.o \
 		isiin.o isitypes.o \
 		medin.o \
-		modsin.o \
-		risin.o ristypes.o risout.o \
+		modsin.o modstypes.o \
+		risin.o ristypes.o \
 		reftypes.o
-OUTPUT_OBJS   = modsout.o
+OUTPUT_OBJS   = bibtexout.o endout.o isiout.o modsout.o risout.o wordout.o
 BIBUTILS_OBJS = $(SIMPLE_OBJS) $(NEWSTR_OBJS) $(CONTAIN_OBJS) \
 	$(INPUT_OBJS) $(OUTPUT_OBJS) name.o title.o bibl.o serialno.o bibutils.o
 
