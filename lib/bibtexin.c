@@ -1,7 +1,7 @@
 /*
  * bibtexin.c
  *
- * Copyright (c) Chris Putnam 2003-7
+ * Copyright (c) Chris Putnam 2003-8
  *
  * Program and source code released under the GPL
  *
@@ -56,7 +56,7 @@ bibtexin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, new
 	while ( haveref!=2 && readmore( fp, buf, bufsize, bufpos, line ) ) {
 		if ( line->len == 0 ) continue; /* blank line */
 		p = &(line->data[0]);
-		while ( is_ws( *p ) ) p++;
+		p = skip_ws( p );
 		if ( *p == '%' ) { /* commented out line */
 			newstr_empty( line );
 			continue;
@@ -80,7 +80,7 @@ bibtex_item( char *p, newstr *s )
 	int nbrackets = 0;
 	while ( *p ) {
 		if ( !nquotes && !nbrackets ) {
-			if ( /*is_ws( *p ) ||*/ *p==',' || *p=='=' || *p=='}' || *p==')' )
+			if ( *p==',' || *p=='=' || *p=='}' || *p==')' )
 				goto out;
 		}
 		if ( *p=='\"' && *(p-1)!='\\') {
@@ -106,17 +106,17 @@ out:
 static char *
 process_bibtexline( char *p, newstr *tag, newstr *data )
 {
-	while ( is_ws( *p ) ) p++;
+	p = skip_ws( p );
 	p = bibtex_item( p, tag );
-	while ( is_ws( *p ) ) p++;
+	p = skip_ws( p );
 	if ( *p=='=' ) {
 		p++;
-		while ( is_ws ( *p ) ) p++;
+		p = skip_ws( p );
 		p = bibtex_item( p, data );
-		while ( is_ws ( *p ) ) p++;
+		p = skip_ws( p );
 	}
 	if ( *p==',' || *p=='}' || *p==')' ) p++;
-	while ( is_ws ( *p ) ) p++;
+	p = skip_ws( p );
 	return p;
 }
 
@@ -157,18 +157,13 @@ bibtex_addstring( char *p )
 	newstr s1, s2;
 	newstr_init( &s1 );
 	newstr_init( &s2 );
-	while ( is_ws( *p ) ) p++;
+	p = skip_ws( p );
 	if ( *p=='(' || *p=='{' ) p++;
 	p = process_bibtexline( p, &s1, &s2 );
 	lists_add( &find, s1.data );
 	newstr_findreplace( &s2, "\\ ", " " );
-/*	newstr_findreplace( &s2, "\&", "&" );*/
 	bibtex_cleantoken( &s2 );
 	lists_add( &replace, s2.data );
-/*	if ( verbose ) {
-		fprintf( stderr, "String replacement: '%s' = '%s'\n",
-				s1.data, s2.data );
-	} */
 	newstr_free( &s1 );
 	newstr_free( &s2 );
 }
@@ -253,7 +248,7 @@ process_bibtextype( char *p, newstr *data )
 	if ( *p=='@' ) p++; /* skip '@' character */
 	while ( *p && *p!='{' && *p!='(' ) newstr_addchar( &tmp, *p++ );
 	if ( *p=='{' || *p=='(' ) p++;
-	if ( is_ws( *p ) ) p++;
+	p = skip_ws( p );
 
 	if ( tmp.len ) {
 		/* add '{' and '}' to protect from string expansion */
@@ -275,21 +270,24 @@ process_bibtexid( char *p, newstr *data )
 
 	while ( *p && *p!=',' ) newstr_addchar( &tmp, *p++ );
 	if ( *p==',' ) p++;
-	if ( is_ws( *p ) ) p++; /* skip ending newline/carriage return */
+	p = skip_ws( p ); /* skip ending newline/carriage return */
 
-	if ( strchr( tmp.data, '=' ) ) {
-		/* Endnote writes bibtex files w/o fields, try to
-		 * distinguish via presence of an equal sign.... if
-		 * it's there, assume that it's a tag/data pair instead
-		 * and roll back.
-		 */
-		p = start_p;
-	} else if ( tmp.len ) {
-		/* add '{' and '}' to protect from string expansion */
-		newstr_addchar( data, '{' );
-		newstr_strcat( data, tmp.data );
-		newstr_addchar( data, '}' );
+	if ( tmp.len ) {
+		if ( strchr( tmp.data, '=' ) ) {
+			/* Endnote writes bibtex files w/o fields, try to
+			 * distinguish via presence of an equal sign.... if
+			 * it's there, assume that it's a tag/data pair instead
+			 * and roll back.
+			 */
+			p = start_p;
+		} else {
+			/* add '{' and '}' to protect from string expansion */
+			newstr_addchar( data, '{' );
+			newstr_strcat( data, tmp.data );
+			newstr_addchar( data, '}' );
+		}
 	}
+
 	newstr_free( &tmp );
 	return p;
 }

@@ -1,4 +1,10 @@
-/* xml_getencoding.c
+/*
+ * xml_getencoding.c
+ *
+ * Copyright (c) Chris Putnam 2007-8
+ *
+ * Source code released under the GPL
+ *
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,6 +12,7 @@
 #include "newstr.h"
 #include "newstr_conv.h"
 #include "xml.h"
+#include "xml_encoding.h"
 
 static int
 xml_getencodingr( xml *node )

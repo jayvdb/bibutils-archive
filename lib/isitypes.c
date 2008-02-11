@@ -1,7 +1,7 @@
 /*
  * isitypes.c
  *
- * Copyright (c) Chris Putnam 2004-7
+ * Copyright (c) Chris Putnam 2004-8
  *
  * Program and source code released under the GPL
  *
@@ -195,7 +195,7 @@ int
 get_reftype( char *p, long refnum )
 {
 	int i;
-	while ( is_ws( *p ) ) p++;
+	p = skip_ws( p );
 	for ( i=0; i<nall; ++i )
 		if ( strncasecmp( all[i].type, p, strlen(all[i].type) ) == 0 ) return i;
 	fprintf( stderr, "Warning: Did not recognize '%s' of refnum %ld, defaulting to article.\n",

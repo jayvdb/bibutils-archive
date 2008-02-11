@@ -1,7 +1,7 @@
 /*
  * bibtexout.c
  *
- * Copyright (c) Chris Putnam 2003-7
+ * Copyright (c) Chris Putnam 2003-8
  *
  * Program and source code released under the GPL
  *
@@ -36,15 +36,22 @@ enum {
 };
 
 static void
-output_citekey( FILE *fp, fields *info, unsigned long refnum )
+output_citekey( FILE *fp, fields *info, unsigned long refnum, int format_opts )
 {
 	int n = fields_find( info, "REFNUM", -1 );
 	char *p;
 	if ( n!=-1 ) {
 		p = info->data[n].data;
 		while ( p && *p && *p!='|' ) {
-			if ( *p!=' ' && *p!='\t' ) {
-				fprintf( fp, "%c", *p );
+			if ( format_opts & BIBOUT_STRICTKEY ) {
+				if ( isdigit(*p) || (*p>='A' && *p<='Z') ||
+				     (*p>='a' && *p<='z' ) )
+					fprintf( fp, "%c", *p );
+			}
+			else {
+				if ( *p!=' ' && *p!='\t' ) {
+					fprintf( fp, "%c", *p );
+				}
 			}
 			p++;
 		}
@@ -199,6 +206,40 @@ output_element( FILE *fp, char *tag, char *data, int format_opts )
 
 	if ( format_opts & BIBOUT_BRACKETS ) fprintf( fp, "}" );
 	else fprintf( fp, "\"" );
+}
+
+static void
+output_and_use( FILE *fp, fields *info, int n, char *outtag, int format_opts )
+{
+	output_element( fp, outtag, info->data[n].data, format_opts );
+	fields_setused( info, n );
+}
+
+static void
+output_simple( FILE *fp, fields *info, char *intag, char *outtag, 
+		int format_opts )
+{
+	int n = fields_find( info, intag, -1 );
+	if ( n!=-1 ) {
+		output_and_use( fp, info, n, outtag, format_opts );
+/*
+		output_element( fp, outtag, info->data[n].data, format_opts );
+		fields_setused( info, n );
+*/
+	}
+}
+
+static void
+output_simpleall( FILE *fp, fields *info, char *intag, char *outtag,
+		int format_opts )
+{
+	int i;
+	for ( i=0; i<info->nfields; ++i ) {
+		if ( strcasecmp( info->tag[i].data, intag ) ) continue;
+		output_and_use( fp, info, i, outtag, format_opts );
+/*		output_element( fp, outtag, info->data[i].data, format_opts );
+		fields_setused( info, i );*/
+	}
 }
 
 static void
@@ -359,26 +400,45 @@ output_pages( FILE *fp, fields *info, unsigned long refnum, int format_opts )
 	newstr_free( &pages );
 }
 
-static void
-output_simple( FILE *fp, fields *info, char *intag, char *outtag, 
-		int format_opts )
-{
-	int n = fields_find( info, intag, -1 );
-	if ( n!=-1 ) {
-		output_element( fp, outtag, info->data[n].data, format_opts );
-		fields_setused( info, n );
-	}
-}
+/*
+ * from Tim Hicks:
+ * I'm no expert on bibtex, but those who know more than I on our mailing 
+ * list suggest that 'issue' isn't a recognised key for bibtex and 
+ * therefore that bibutils should be aliasing IS to number at some point in 
+ * the conversion.
+ *
+ * Therefore prefer outputting issue/number as number and only keep
+ * a distinction if both issue and number are present for a particular
+ * reference.
+ */
 
 static void
-output_simpleall( FILE *fp, fields *info, char *intag, char *outtag,
-		int format_opts )
+output_issue_number( FILE *fp, fields *info, int format_opts )
 {
-	int i;
-	for ( i=0; i<info->nfields; ++i ) {
-		if ( strcasecmp( info->tag[i].data, intag ) ) continue;
-		output_element( fp, outtag, info->data[i].data, format_opts );
-		fields_setused( info, i );
+	int nissue  = fields_find( info, "ISSUE", -1 );
+	int nnumber = fields_find( info, "NUMBER", -1 );
+	if ( nissue!=-1 && nnumber!=-1 ) {
+		output_and_use( fp, info, nissue,  "issue",  format_opts );
+		output_and_use( fp, info, nnumber, "number", format_opts );
+/*		output_element( fp, "issue", info->data[nissue].data, 
+				format_opts );
+		fields_setused( info, nissue );
+		output_element( fp, "number", info->data[nnumber].data, 
+				format_opts );
+		fields_setused( info, nnumber );*/
+	} else if ( nissue!=-1 ) {
+		output_and_use( fp, info, nissue, "number", format_opts );
+/*
+		output_element( fp, "number", info->data[nissue].data, 
+				format_opts );
+		fields_setused( info, nissue );*/
+	} else if ( nnumber!=-1 ) {
+		output_and_use( fp, info, nnumber, "number", format_opts );
+/*
+		output_element( fp, "number", info->data[nnumber].data, 
+				format_opts );
+		fields_setused( info, nnumber );
+*/
 	}
 }
 
@@ -389,7 +449,7 @@ bibtexout_write( fields *info, FILE *fp, int format_opts, unsigned long refnum )
 	fields_clearused( info );
 	type = bibtexout_type( info, "", refnum );
 	output_type( fp, type, format_opts );
-	output_citekey( fp, info, refnum );
+	output_citekey( fp, info, refnum, format_opts );
 	output_people( fp, info, refnum, "AUTHOR", "AUTHOR:CORP", "AUTHOR:ASIS", "author", 0,
 		format_opts );
 	output_people( fp, info, refnum, "EDITOR", "EDITOR:CORP", "EDITOR:ASIS", "editor", -1,
@@ -424,8 +484,9 @@ bibtexout_write( fields *info, FILE *fp, int format_opts, unsigned long refnum )
 	output_simple( fp, info, "PUBLISHER", "publisher", format_opts );
 	output_simple( fp, info, "ADDRESS", "address", format_opts );
 	output_simple( fp, info, "VOLUME", "volume", format_opts );
-	output_simple( fp, info, "ISSUE", "issue", format_opts );
-	output_simple( fp, info, "NUMBER", "number", format_opts );
+	output_issue_number( fp, info, format_opts );
+/*	output_simple( fp, info, "ISSUE", "issue", format_opts );
+	output_simple( fp, info, "NUMBER", "number", format_opts );s*/
 	output_pages( fp, info, refnum, format_opts );
 	output_simpleall( fp, info, "KEYWORD", "keywords", format_opts );
 	output_simple( fp, info, "CONTENTS", "contents", format_opts );

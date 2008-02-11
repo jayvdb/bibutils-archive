@@ -1,7 +1,7 @@
 /*
  * newstr_conv.c
  *
- * Copyright (c) Chris Putnam 1999-2007
+ * Copyright (c) Chris Putnam 1999-2008
  *
  * Source code released under the GPL
  *
@@ -15,7 +15,6 @@
 #include <ctype.h>
 #include <limits.h>
 #include "newstr.h"
-#include "is_ws.h"
 #include "latex.h"
 #include "entities.h"
 #include "utf8.h"

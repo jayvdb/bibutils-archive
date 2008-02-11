@@ -1,7 +1,7 @@
 /*
  * bibutils.c
  *
- * Copyright (c) Chris Putnam 2005-7
+ * Copyright (c) Chris Putnam 2005-8
  *
  * Source code released under the GPL
  *
@@ -26,6 +26,7 @@
 #include "risout.h"
 #include "modsout.h"
 #include "wordout.h"
+#include "adsout.h"
 #include "newstr_conv.h"
 #include "is_ws.h"
 
@@ -481,6 +482,11 @@ rules_init( convert_rules *r, int mode )
 			r->footerf = NULL;
 			r->writef  = endout_write;
 			break;
+		case BIBL_ADSABSOUT:
+			r->headerf = NULL;
+			r->footerf = NULL;
+			r->writef  = adsout_write;
+			break;
 		case BIBL_RISIN:
 			r->readf    = risin_readf;
 			r->cleanf   = NULL;
@@ -609,6 +615,7 @@ singlerefname( fields *reffields, long nref, int mode )
 	if ( mode==BIBL_BIBTEXOUT ) strcpy( suffix, "bib" );
 	else if ( mode==BIBL_RISOUT ) strcpy( suffix, "ris" );
 	else if ( mode==BIBL_ENDNOTEOUT ) strcpy( suffix, "end" );
+	else if ( mode==BIBL_ADSABSOUT ) strcpy( suffix, "ads" );
 	found = fields_find( reffields, "REFNUM", 0 );
 	/* find new filename based on reference */
 	if ( found!=-1 ) {

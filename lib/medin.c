@@ -1,7 +1,7 @@
 /*
  * medin.c
  *
- * Copyright (c) Chris Putnam 2004-7
+ * Copyright (c) Chris Putnam 2004-8
  *
  * Program and source code released under the GPL
  *
@@ -70,26 +70,30 @@ medin_medlinedate( fields *info, char *string, int level )
 	char *p, *q;
 	newstr_init( &tmp );
 	/* extract year */
-	p = q = string;
-	while ( *q && !is_ws(*q) ) q++;
+	p = string;
+	q = skip_notws( string );
+/*	p = q = string;*/
+/*	while ( *q && !is_ws(*q) ) q++;*/
 	newstr_segcpy( &tmp, p, q );
 	fields_add( info, "PARTYEAR", tmp.data, level );
-	while ( is_ws(*q) ) q++;
+	q = skip_ws( q );
 	/* extract month */
 	if ( q ) {
 		p = q;
 		newstr_empty( &tmp );
-		while ( *q && !is_ws(*q) ) q++;
+		q = skip_notws( q );
+/*		while ( *q && !is_ws(*q) ) q++;*/
 		newstr_segcpy( &tmp, p, q );
 		newstr_findreplace( &tmp, "-", "/" );
 		fields_add( info, "PARTMONTH", tmp.data, level );
-		while ( is_ws(*q) ) q++;
+		q = skip_ws( q );
 	}
 	/* extract day */
 	if ( q ) {
 		p = q;
 		newstr_empty( &tmp );
-		while ( *q && !is_ws(*q) ) q++;
+		q = skip_notws( q );
+/*		while ( *q && !is_ws(*q) ) q++;*/
 		newstr_segcpy( &tmp, p, q );
 		fields_add( info, "PARTDAY", tmp.data, level );
 	}

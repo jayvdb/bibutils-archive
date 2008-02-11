@@ -1,7 +1,7 @@
 /*
  * endout.h
  *
- * Copyright (c) Chris Putnam 2005-7
+ * Copyright (c) Chris Putnam 2005-8
  */
 #ifndef ENDOUT_H
 #define ENDOUT_H

@@ -1,7 +1,7 @@
 /*
  * isiin.c
  *
- * Copyright (c) Chris Putnam 2004-7
+ * Copyright (c) Chris Putnam 2004-8
  *
  * Program and source code released under the GPL
  *
@@ -148,7 +148,7 @@ keyword_process( fields *info, char *newtag, char *p, int level )
 	newstr keyword;
 	newstr_init( &keyword );
 	while ( *p ) {
-		while ( is_ws( *p ) ) p++;
+		p = skip_ws( p );
 		while ( *p && *p!=';' ) newstr_addchar( &keyword, *p++ );
 		if ( keyword.len ) {
 			fields_add( info, newtag, keyword.data, level );

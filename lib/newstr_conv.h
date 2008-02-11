@@ -1,7 +1,7 @@
 /*
  * newstring_conv.h
  *
- * Copyright (c) Chris Putnam 1999-2007
+ * Copyright (c) Chris Putnam 1999-2008
  *
  * Source code released under the GPL
  *

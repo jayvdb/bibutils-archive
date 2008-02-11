@@ -1,7 +1,7 @@
 /*
  * copacin.c
  *
- * Copyright (c) Chris Putnam 2004-7
+ * Copyright (c) Chris Putnam 2004-8
  *
  * Program and source code released under the GPL
  *
@@ -114,7 +114,7 @@ copacin_processf( fields *copacin, char *p, char *filename, long nref )
 	newstr_init( &tag );
 	newstr_init( &data );
 	while ( *p ) {
-		while ( is_ws( *p ) ) p++;
+		p = skip_ws( p );
 		if ( copacin_istag( p ) ) {
 			p = copacin_addtag2( p, &tag, &data );
 			/* don't add empty strings */
@@ -144,8 +144,7 @@ copacin_addname( fields *info, char *tag, newstr *name, int level )
 		newstr_findreplace( name, "[Editor]", "" );
 		usetag = editor;
 	}
-	p = name->data;
-	while ( is_ws( *p ) ) p++;
+	p = skip_ws( name->data );
 	while ( *p && !is_ws( *p ) ) {
 		if ( *p==',' ) comma++;
 		p++;
@@ -159,7 +158,7 @@ copacin_addpage( fields *info, char *p, int level )
 {
 	newstr page;
 	newstr_init( &page );
-	while ( *p && is_ws(*p) ) p++;
+	p = skip_ws( p );
 	while ( *p && !is_ws(*p) && *p!='-' && *p!='\r' && *p!='\n' ) 
 		newstr_addchar( &page, *p++ );
 	if ( page.len>0 ) fields_add( info, "PAGESTART", page.data, level );
@@ -211,8 +210,9 @@ copacin_adddate( fields *info, char *tag, char *newtag, char *p, int level )
 			}
 		}
 		newstr_empty( &date );
-		while ( is_ws( *p ) ) p++;
-		while ( *p && *p!='\n' && *p!=',' ) newstr_addchar( &date, *p++ );
+		p = skip_ws( p );
+		while ( *p && *p!='\n' && *p!=',' )
+			newstr_addchar( &date, *p++ );
 		if ( date.len>0 && date.len<3 ) {
 			if ( part )
 				fields_add( info, "PARTDAY", date.data, level );

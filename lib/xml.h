@@ -1,7 +1,7 @@
 /*
  * xml.h
  *
- * Copyright (c) Chris Putnam 2004-7
+ * Copyright (c) Chris Putnam 2004-8
  *
  * Source code released under the GPL
  *
@@ -23,10 +23,6 @@ typedef struct xml {
 	xml_attrib *a;
 	struct xml *down;
 	struct xml *next;
-#ifdef COUNT_TRAVERSAL
-	int count;
-#endif
-
 } xml;
 
 extern void xml_init( xml *x );
@@ -37,6 +33,8 @@ extern int xml_tagexact( xml *node, char *s );
 extern int xml_tag_attrib( xml *node, char *s, char *attrib, char *value );
 extern void xml_free( xml *x );
 extern char * xml_tree( char *p, xml *onode );
+
+extern char *xml_pns; /* global Namespace */
 
 #endif
 

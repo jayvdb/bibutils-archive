@@ -43,13 +43,16 @@ help( void )
 	fprintf(stderr,"usage: %s xml_file > bibtex_file\n\n",progname);
         fprintf(stderr,"  xml_file can be replaced with file list or omitted to use as a filter\n\n");
 
-	fprintf(stderr,"  -h, --help     display this help\n");
-	fprintf(stderr,"  -v, --version  display version\n");
+	fprintf(stderr,"  -h, --help         display this help\n");
+	fprintf(stderr,"  -v, --version      display version\n");
 	fprintf(stderr,"  -fc, --finalcomma  add final comman to bibtex output\n");
 	fprintf(stderr,"  -sd, --singledash  use only one dash '-' instead of two '--' for page range\n" );
 	fprintf(stderr,"  -b, -brackets      use brackets, not quotation marks surrounding data\n");
 	fprintf(stderr,"  -w, --whitespace   use beautifying whitespace to output\n");
-	fprintf(stderr,"  -s, --single-refperfile one reference per output file\n");
+	fprintf(stderr,"  -sk, --strictkey   use only alphanumeric characters for bibtex key\n");
+	fprintf(stderr,"                     (overly strict, but may be useful for other bibtex readers\n");
+	fprintf(stderr,"  -s, --single-refperfile\n");
+	fprintf(stderr,"                     one reference per output file\n");
 	fprintf(stderr,"  --verbose          for verbose\n" );
 	fprintf(stderr,"  --debug            for debug output\n" );
 	fprintf(stderr,"\n");
@@ -85,6 +88,9 @@ process_args( int *argc, char *argv[], param *p )
 			subtract = 1;
 		} else if ( args_match( argv[i], "-w", "--whitespace" ) ) {
 			p->format_opts |= BIBOUT_WHITESPACE;
+			subtract = 1;
+		} else if ( args_match( argv[i], "-sk", "--strictkey" ) ) {
+			p->format_opts |= BIBOUT_STRICTKEY;
 			subtract = 1;
 		} else if ( args_match( argv[i], "-U", "--uppercase" ) ) {
 			p->format_opts |= BIBOUT_UPPERCASE;

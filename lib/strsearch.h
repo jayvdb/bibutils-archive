@@ -1,7 +1,7 @@
 /*
  * strsearch.h
  *
- * Copyright (c) Chris Putnam 1995-2007
+ * Copyright (c) Chris Putnam 1995-2008
  *
  * Source code released under the GPL
  *

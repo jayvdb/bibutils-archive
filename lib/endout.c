@@ -1,7 +1,7 @@
 /*
  * endout.c
  *
- * Copyright (c) Chris Putnam 2004-7
+ * Copyright (c) Chris Putnam 2004-8
  *
  * Program and source code released under the GPL
  *
@@ -215,7 +215,7 @@ output_pages( FILE *fp, fields *info )
 		if ( en!=-1 ) fprintf( fp, "%s", info->data[en].data );
 		fprintf( fp, "\n");
 	} else if ( ar!=-1 ) {
-		fprintf( fp, "%%P %s", info->data[ar].data );
+		fprintf( fp, "%%P %s\n", info->data[ar].data );
 	}
 }
 

@@ -1,7 +1,7 @@
 /*
  * is_ws.c
  *
- * Copyright (c) Chris Putnam 2003-7
+ * Copyright (c) Chris Putnam 2003-8
  *
  * Source code released under the GPL
  *
@@ -16,3 +16,20 @@ is_ws( char ch )
 	else return 0;
 }
 
+char *
+skip_ws( char *p )
+{
+	if ( p ) {
+		while ( is_ws( *p ) ) p++;
+	}
+	return p;
+}
+
+char *
+skip_notws( char *p )
+{
+	if ( p ) {
+		while ( *p && !is_ws( *p ) ) p++;
+	}
+	return p;
+}

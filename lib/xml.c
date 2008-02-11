@@ -1,7 +1,7 @@
 /*
  * xml.c
  *
- * Copyright (c) Chris Putnam 2004-5
+ * Copyright (c) Chris Putnam 2004-8
  *
  * Source code released under the GPL
  *
@@ -14,8 +14,7 @@
 #include "newstr.h"
 #include "xml.h"
 
-#define TRUE (1)
-#define FALSE (0)
+char *xml_pns = NULL;
 
 static xml_attrib *
 xmlattrib_new( void )
@@ -72,9 +71,6 @@ xml_init( xml *x )
 		fprintf(stderr,"xml_init: memory error.\n");
 		exit( EXIT_FAILURE );
 	}
-#ifdef COUNT_TRAVERSAL
-	x->count = 0;
-#endif
 }
 
 enum {
@@ -258,94 +254,91 @@ xml_draw( xml *x, int n )
 	if ( x->next ) xml_draw( x->next, n );
 }
 
-
-#define XML_BUFSIZE (512)
-
 char *
 xml_findstart( char *buffer, char *tag )
 {
-	char starttag[XML_BUFSIZE], *startptr, *p = NULL;
-	int length = strlen( tag );
-	if ( length < XML_BUFSIZE-4 ) {
-		sprintf( starttag, "<%s>", tag );
-		p = strsearch( buffer, starttag );
-		if ( !p ) {
-			sprintf( starttag, "<%s ",tag );
-			p = strsearch( buffer, starttag );
-		}
-	} else {
-		startptr = (char *) malloc( sizeof(char) * (length+4) );
-		if ( startptr ) {
-			sprintf( startptr, "<%s", tag );
-			p = strsearch( buffer, startptr );
-			free( startptr );
-		}
+	newstr starttag;
+	char *p;
+
+	newstr_init( &starttag );
+	newstr_addchar( &starttag, '<' );
+	newstr_strcat( &starttag, tag );
+	newstr_addchar( &starttag, ' ' );
+	p = strsearch( buffer, starttag.data );
+
+	if ( !p ) {
+		starttag.data[ starttag.len-1 ] = '>';
+		p = strsearch( buffer, starttag.data );
 	}
+
+	newstr_free( &starttag );
 	return p;
 }
 
 char *
 xml_findend( char *buffer, char *tag )
 {
-	char endtag[XML_BUFSIZE], *p = NULL;
-	int length = strlen( tag );
-	if ( length<XML_BUFSIZE-4 ) {
-		sprintf( endtag, "</%s>", tag );
-		p = strsearch( buffer, endtag );
-	} else {
-		char *endptr = (char *) malloc( sizeof(char) * (length+5) );
-		if ( endptr ) {
-			sprintf( endptr, "</%s>", tag );
-			p = strsearch( buffer, endptr );
-			free( endptr );
-		}
+	newstr endtag;
+	char *p;
+
+	newstr_init( &endtag );
+	newstr_strcpy( &endtag, "</" );
+	if ( xml_pns ) {
+		newstr_strcat( &endtag, xml_pns );
+		newstr_addchar( &endtag, ':' );
 	}
+	newstr_strcat( &endtag, tag );
+	newstr_addchar( &endtag, '>' );
+
+	p = strsearch( buffer, endtag.data );
+
 	if ( p && *p ) {
 		if ( *p ) p++;  /* skip <random_tag></end> combo */
 		while ( *p && *(p-1)!='>' ) p++;
 	}
+
+	newstr_free( &endtag );
 	return p;
 }
 
 int
 xml_tagexact( xml *node, char *s )
 {
-	unsigned int slen = strlen( s );
-
-/*#ifdef COUNT_TRAVERSAL
-	node->count++;
-	fprintf( stderr, "xml_tagexact checking node tag='%s' value='%s' %d for tag='%s'\n",node->tag->data,node->value->data,node->count,s);
-#endif*/
-	if ( node->tag->len==slen && !strcasecmp( node->tag->data, s ) ) {
-/*#ifdef COUNT_TRAVERSAL
-		node->count++;
-#endif*/
-		return 1;
+	newstr tag;
+	int found = 0;
+	if ( xml_pns ) {
+		newstr_init( &tag );
+		newstr_strcpy( &tag, xml_pns );
+		newstr_addchar( &tag, ':' );
+		newstr_strcat( &tag, s );
+		if ( node->tag->len==tag.len &&
+				!strcasecmp( node->tag->data, tag.data ) )
+			found = 1;
+		newstr_free( &tag );
+	} else {
+		if ( node->tag->len==strlen( s ) && 
+				!strcasecmp( node->tag->data, s ) )
+			found = 1;
 	}
-	return 0;
+	return found;
 }
 
 int
 xml_tag_attrib( xml *node, char *s, char *attrib, char *value )
 {
 	xml_attrib *na = node->a;
-	int i, nattrib = 0;
-	if ( !na ) return 0;
-	else nattrib = na->attrib.n;
+	int i;
 
-#ifdef COUNT_TRAVERSAL
-	node->count++;
-	fprintf( stderr, "xml_tag_attrib checking node tag='%s' value='%s' %d for attrib='%s' value='%s'\n",node->tag->data,node->value->data,node->count,attrib,value);
-#endif
-	if ( node->tag->len!=strlen(s) || strcasecmp( node->tag->data, s ) )
-		return 0;
-	for ( i=0; i<nattrib; ++i ) {
+	if ( !na || !xml_tagexact( node, s ) ) return 0;
+
+	for ( i=0; i<na->attrib.n; ++i ) {
 		if ( !na->attrib.str[i].data || !na->value.str[i].data )
 			continue;
 		if ( !strcasecmp( na->attrib.str[i].data, attrib ) &&
 		     !strcasecmp( na->value.str[i].data, value ) )
 			return 1;
 	}
+
 	return 0;
 }
 
@@ -364,19 +357,3 @@ xml_getattrib( xml *node, char *attrib )
 	return ns;
 }
 
-#ifdef COUNT_TRAVERSAL
-void
-xml_reporttraversal( xml *node, int depth )
-{
-	int i;
-	for ( i=0; i<depth; ++i ) fprintf(stderr,"  ");
-	fprintf(stderr,"node: " );
-	if ( node->tag && node->tag->data ) 
-		fprintf(stderr,"tag='%s' ",node->tag->data );
-	if ( node->value && node->value->data ) 
-		fprintf(stderr,"value='%s' ", node->value->data);
-	fprintf(stderr,"%d\n", node->count);
-	if ( node->down ) xml_reporttraversal( node->down, depth+1 );
-	if ( node->next ) xml_reporttraversal( node->next, depth );
-}
-#endif

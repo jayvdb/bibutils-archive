@@ -1,7 +1,7 @@
 /*
  * ristypes.c
  *
- * Copyright (c) Chris Putnam 2003-7
+ * Copyright (c) Chris Putnam 2003-8
  *
  * Program and source code released under the GPL
  *
@@ -39,7 +39,7 @@ static lookups generic[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_MAIN },
@@ -50,14 +50,14 @@ static lookups generic[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*user defined */
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*misc */
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN }, /*user defined */
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN }, /*misc */
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 };
 
 static lookups article[] = {
@@ -86,7 +86,7 @@ static lookups article[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_HOST },
@@ -96,14 +96,14 @@ static lookups article[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "TYPE|ARTICLE",           ALWAYS, LEVEL_MAIN },
 	{ "  ", "ISSUANCE|continuing",    ALWAYS, LEVEL_HOST },
 	{ "  ", "RESOURCE|text",          ALWAYS, LEVEL_MAIN },
@@ -138,7 +138,7 @@ static lookups magarticle[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_HOST },
@@ -148,14 +148,14 @@ static lookups magarticle[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "ISSUANCE|continuing",    ALWAYS, LEVEL_HOST },
 	{ "  ", "RESOURCE|text",          ALWAYS, LEVEL_MAIN },
 	{ "  ", "GENRE|periodical",       ALWAYS, LEVEL_HOST },
@@ -190,7 +190,7 @@ static lookups newsarticle[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_HOST },
@@ -200,14 +200,14 @@ static lookups newsarticle[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "TYPE|NEWSARTICLE",       ALWAYS, LEVEL_MAIN },
 	{ "  ", "ISSUANCE|continuing",    ALWAYS, LEVEL_HOST },
 	{ "  ", "RESOURCE|text",          ALWAYS, LEVEL_MAIN },
@@ -228,11 +228,11 @@ static lookups book[] = {
 	{ "T1", "TITLE",        TITLE,   LEVEL_MAIN },
 	{ "T2", "SHORTTITLE",   SIMPLE,  LEVEL_HOST },
 	{ "T3", "TITLE",        SIMPLE,  LEVEL_SERIES },
-	{ "JO", "JOURNAL",      SIMPLE,  LEVEL_MAIN },
-	{ "JA", "JOURNAL",      SIMPLE,  LEVEL_MAIN },
-	{ "JF", "JOURNAL",      SIMPLE,  LEVEL_MAIN },
-	{ "J1", "JOURNAL",      SIMPLE,  LEVEL_MAIN },
-	{ "J2", "JOURNAL",      SIMPLE,  LEVEL_HOST },
+	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },
+	{ "JA", "TITLE",        SIMPLE,  LEVEL_HOST },
+	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },
+	{ "J1", "TITLE",        SIMPLE,  LEVEL_HOST },
+	{ "J2", "TITLE",        SIMPLE,  LEVEL_HOST },
 	{ "VL", "VOLUME",       SIMPLE,  LEVEL_MAIN },
 	{ "VO", "VOLUME",       SIMPLE,  LEVEL_MAIN },
 	{ "IS", "ISSUE",        SIMPLE,  LEVEL_MAIN },
@@ -240,7 +240,7 @@ static lookups book[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_MAIN },
@@ -251,14 +251,14 @@ static lookups book[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "ISSUANCE|monographic",  ALWAYS, LEVEL_MAIN },
 	{ "  ", "GENRE|book",    ALWAYS, LEVEL_MAIN },
 	{ "  ", "RESOURCE|text", ALWAYS, LEVEL_MAIN }
@@ -285,7 +285,7 @@ static lookups inbook[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_HOST },
@@ -296,14 +296,14 @@ static lookups inbook[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "GENRE|book",    ALWAYS, LEVEL_HOST },
 	{ "  ", "ISSUANCE|monographic",  ALWAYS, LEVEL_HOST },
 	{ "  ", "RESOURCE|text", ALWAYS, LEVEL_MAIN }
@@ -335,7 +335,7 @@ static lookups conference[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_HOST },
@@ -346,14 +346,14 @@ static lookups conference[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "TYPE|CONFERENCE",       ALWAYS, LEVEL_MAIN },
 	{ "  ", "RESOURCE|text",                ALWAYS, LEVEL_MAIN },
 	{ "  ", "GENRE|conference publication", ALWAYS, LEVEL_HOST }
@@ -385,7 +385,7 @@ static lookups statute[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_MAIN },
@@ -396,14 +396,14 @@ static lookups statute[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "TYPE|STATUTE",          ALWAYS, LEVEL_MAIN },
 	{ "  ", "RESOURCE|text",         ALWAYS, LEVEL_MAIN },
 	{ "  ", "GENRE|legislation",     ALWAYS, LEVEL_MAIN }
@@ -435,7 +435,7 @@ static lookups hearing[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_MAIN },
@@ -446,14 +446,14 @@ static lookups hearing[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "TYPE|HEARING",          ALWAYS, LEVEL_MAIN },
 	{ "  ", "GENRE|hearing",         ALWAYS, LEVEL_MAIN }
 };
@@ -484,7 +484,7 @@ static lookups cases[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_MAIN },
@@ -495,14 +495,14 @@ static lookups cases[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "TYPE|CASE",          ALWAYS, LEVEL_MAIN },
 	{ "  ", "GENRE|legal case and case notes", ALWAYS, LEVEL_MAIN }
 };
@@ -533,7 +533,7 @@ static lookups communication[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_MAIN },
@@ -544,14 +544,14 @@ static lookups communication[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "M1", "GENRE",        SIMPLE,  LEVEL_MAIN },
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "TYPE|ARTICLE",           ALWAYS, LEVEL_MAIN },
 	{ "  ", "GENRE|communication",    ALWAYS, LEVEL_MAIN }
 };
@@ -582,7 +582,7 @@ static lookups thesis[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_MAIN },
@@ -593,14 +593,14 @@ static lookups thesis[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*user defined */
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*misc */
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN }, /*user defined */
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN }, /*misc */
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "TYPE|THESIS",  ALWAYS,  LEVEL_MAIN },
 	{ "  ", "RESOURCE|text",ALWAYS,  LEVEL_MAIN },
 	{ "  ", "GENRE|theses", ALWAYS,  LEVEL_MAIN },
@@ -632,7 +632,7 @@ static lookups report[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_MAIN },
@@ -643,14 +643,14 @@ static lookups report[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*user defined */
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*misc */
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN }, /*user defined */
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN }, /*misc */
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "TYPE|REPORT",  ALWAYS,  LEVEL_MAIN },
 	{ "  ", "RESOURCE|text",ALWAYS,  LEVEL_MAIN },
 	{ "  ", "GENRE|report", ALWAYS,  LEVEL_MAIN }
@@ -682,7 +682,7 @@ static lookups abstract[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_MAIN },
@@ -693,14 +693,14 @@ static lookups abstract[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*user defined */
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*misc */
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN }, /*user defined */
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN }, /*misc */
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "GENRE|abstract or summary", ALWAYS,  LEVEL_MAIN }
 };
 
@@ -730,7 +730,7 @@ static lookups program[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_MAIN },
@@ -741,14 +741,14 @@ static lookups program[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*user defined */
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*misc */
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN }, /*user defined */
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN }, /*misc */
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "RESOURCE|software, multimedia", ALWAYS, LEVEL_MAIN }
 };
 
@@ -778,7 +778,7 @@ static lookups patent[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_MAIN },
@@ -789,14 +789,14 @@ static lookups patent[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*user defined */
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*misc */
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN }, /*user defined */
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN }, /*misc */
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
         { "  ", "RESOURCE|text", ALWAYS, LEVEL_MAIN },
         { "  ", "GENRE|patent", ALWAYS, LEVEL_MAIN }
 };
@@ -827,7 +827,7 @@ static lookups electric[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_MAIN },
@@ -838,14 +838,14 @@ static lookups electric[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*user defined */
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*misc */
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN }, /*user defined */
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN }, /*misc */
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
         { " ",  "RESOURCE|software, multimedia",    ALWAYS, LEVEL_MAIN },
         { " ",  "GENRE|electronic",       ALWAYS, LEVEL_MAIN },
 };
@@ -876,7 +876,7 @@ static lookups pamphlet[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_MAIN },
@@ -887,14 +887,14 @@ static lookups pamphlet[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*user defined */
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*misc */
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN }, /*user defined */
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN }, /*misc */
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
         { " ",  "RESOURCE|text",    ALWAYS, LEVEL_MAIN },
         { " ",  "GENRE|pamphlet",       ALWAYS, LEVEL_MAIN },
 };
@@ -925,7 +925,7 @@ static lookups unpublished[] = {
 	{ "SP", "PAGESTART",    SIMPLE,  LEVEL_MAIN },
 	{ "EP", "PAGEEND",      SIMPLE,  LEVEL_MAIN },
 	{ "AB", "ABSTRACT",     SIMPLE,  LEVEL_MAIN },
-	{ "N1", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "N1", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "N2", "ABSTRACT",     SIMPLE,  LEVEL_MAIN }, 
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },
 	{ "PB", "PUBLISHER",    SIMPLE,  LEVEL_MAIN },
@@ -936,14 +936,14 @@ static lookups unpublished[] = {
 	{ "RP", "REPRINTSTATUS",SIMPLE,  LEVEL_MAIN },
 	{ "UR", "URL",          SIMPLE,  LEVEL_MAIN },
 	{ "ID", "REFNUM",       SIMPLE,  LEVEL_MAIN },
-	{ "U1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*user defined */
-	{ "U2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "U3", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U4", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "U5", "NOTES",        SIMPLE,  LEVEL_MAIN },
-	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN }, /*misc */
-	{ "M2", "NOTES",        SIMPLE,  LEVEL_MAIN }, /* put in "notes" */
-	{ "M3", "NOTES",        SIMPLE,  LEVEL_MAIN },
+	{ "U1", "NOTES",        NOTES,   LEVEL_MAIN }, /*user defined */
+	{ "U2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "U3", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U4", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "U5", "NOTES",        NOTES,   LEVEL_MAIN },
+	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN }, /*misc */
+	{ "M2", "NOTES",        NOTES,   LEVEL_MAIN }, /* put in "notes" */
+	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
         { " ",         "RESOURCE|text",   ALWAYS, LEVEL_MAIN },
         { " ",         "GENRE|unpublished",      ALWAYS, LEVEL_MAIN }
 };

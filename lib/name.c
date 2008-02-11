@@ -3,7 +3,7 @@
  *
  * mangle names w/ and w/o commas
  *
- * Copyright (c) Chris Putnam 2004-7
+ * Copyright (c) Chris Putnam 2004-8
  *
  * Source code released under the GPL
  *
@@ -88,7 +88,7 @@ name_nocomma( char *start, newstr *outname )
 	}
 	last = p;
 
-	while ( is_ws( *p ) ) p++;
+	p = skip_ws( p );
 
 	/* look for upper and lower case in last name */
 	check_case( p, end+1, &uplast, &lowlast );
@@ -143,7 +143,7 @@ name_comma( char *p, newstr *outname )
 		newstr_addchar( outname, *p++ );
 
 	if ( *p==',' ) p++;
-	while ( *p && is_ws( *p ) ) p++;
+	p = skip_ws( p );
 
 	q = p;
 	while ( *q ) q++;
@@ -289,9 +289,7 @@ name_add( fields *info, char *tag, char *q, int level )
 
 	while ( *q ) {
 
-		/* strip leading whitespace */
-		while ( is_ws( *q ) ) q++;
-		start = q;
+		start = q = skip_ws( q );
 
 		/* strip tailing whitespace and commas */
 		while ( *q && *q!='|' ) q++;
@@ -302,8 +300,11 @@ name_add( fields *info, char *tag, char *q, int level )
 		for ( p=start; p<=end; p++ )
 			newstr_addchar( &inname, *p );
 
-		name_process( info, tag, level, &inname );
-		newstr_empty( &inname );
+		/* keep "names" like " , " from coredumping program */
+		if ( inname.len ) {
+			name_process( info, tag, level, &inname );
+			newstr_empty( &inname );
+		}
 
 		if ( *q=='|' ) q++;
 	}

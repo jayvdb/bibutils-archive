@@ -1,6 +1,65 @@
 
 BIBUTILS
 
+3.40
+
+MODSIN
++ Fix crash where placeTerm tag doesn't have attribute (Thanks to
+  Martin-Michael Schoenbeck for identifying the problem and submitting
+  an initial patch).
++ Properly handle the 'mods:' namespace (Thanks to Martin-Michael
+  Schoenbeck for identifying the problem and submitting an 
+  initial patch).
++ Fix bug where multiple roleTerms confused role assignment.
+
+RIS2XML
++ Oxford journal RIS output is now putting DOI information in the N1
+  field; recognize this (Thanks to Richard Mathar for letting me know).
+
+XML2ADS
++ New converter for the ADS format submitted by Richard Mathar.
+
+XML2BIB
++ Bias the program to output issue/number tags as 'number' first
+  and use 'issue' only in cases where both issue and number have
+  been defined.
++ Add '-sk' '--strictkey' option that only outputs alphanumeric
+  characters in the bibtex reference names (this is overly strict,
+  but may be useful in some cases to automatically avoid problems 
+  with other bibtex parsers)
+
+XML2END
++ Fix missing return for articles with article numbers rather than
+  page numbers
+
+XML2WORDBIB
++ Rename "xml2word" to avoid confusion with other programs that work
+  on Word documents, not Word bibliographies
+
+
+3.39
+10/24/07
+
+NAME MANGLING
++ Fix crash caused by specifically malformed name fields
+
+3.38
+10/10/07
+
+BIB2XML
++ Fix crash when bibtex citation key is blank (introduced in 3.37)
+
+END2XML
++ Fix handling of total pages
++ Fix handling of conference name
+
+ENDX2XML
++ Fix handling of total pages
++ Fix handling of conference name
++ Fix bug where reference would skip if the starting record tag was
+  split by the input buffer
+
+
 3.37
 8/20/07
 MODSOUT

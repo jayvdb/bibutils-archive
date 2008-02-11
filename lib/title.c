@@ -3,7 +3,7 @@
  *
  * process titles into title/subtitle pairs for MODS
  *
- * Copyright (c) Chris Putnam 2004-5
+ * Copyright (c) Chris Putnam 2004-8
  *
  * Source code released under the GPL
  *
@@ -33,7 +33,7 @@ title_process( fields *info, char *tag, char *data, int level )
 		if ( *q=='?' ) newstr_addchar( &title, '?' );
 /*		q += 2;*/
 		q++;
-		while ( is_ws( *q ) ) q++;
+		q = skip_ws( q );
 		while ( *q ) newstr_addchar( &subtitle, *q++ );
 	}
 

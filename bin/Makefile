@@ -6,7 +6,7 @@ CFLAGS     = -I ../lib
 LIBDIR     = -L../lib
 LIBS       = -lbibprogs -lbibutils 
 PROGS      = bib2xml copac2xml end2xml endx2xml isi2xml med2xml ris2xml \
-             xml2bib xml2end xml2isi xml2ris xml2word modsclean
+             xml2ads xml2bib xml2end xml2isi xml2ris xml2wordbib modsclean
 
 all: $(PROGS)
 
@@ -31,6 +31,9 @@ med2xml : med2xml.o ../lib/libbibprogs.a ../lib/libbibutils.a
 ris2xml : ris2xml.o ../lib/libbibprogs.a ../lib/libbibutils.a
 	$(CC) ris2xml.o $(LIBDIR) $(LIBS) -o $@
 
+xml2ads : xml2ads.o ../lib/libbibprogs.a ../lib/libbibutils.a
+	$(CC) xml2ads.o $(LIBDIR) $(LIBS) -o $@
+
 xml2bib : xml2bib.o ../lib/libbibprogs.a ../lib/libbibutils.a
 	$(CC) xml2bib.o $(LIBDIR) $(LIBS) -o $@
 
@@ -43,8 +46,8 @@ xml2isi : xml2isi.o ../lib/libbibprogs.a ../lib/libbibutils.a
 xml2ris : xml2ris.o ../lib/libbibprogs.a ../lib/libbibutils.a
 	$(CC) xml2ris.o $(LIBDIR) $(LIBS) -o $@
 
-xml2word : xml2word.o ../lib/libbibprogs.a ../lib/libbibutils.a
-	$(CC) xml2word.o $(LIBDIR) $(LIBS) -o $@
+xml2wordbib : xml2wordbib.o ../lib/libbibprogs.a ../lib/libbibutils.a
+	$(CC) xml2wordbib.o $(LIBDIR) $(LIBS) -o $@
 
 modsclean : modsclean.o ../lib/libbibprogs.a ../lib/libbibutils.a
 	$(CC) modsclean.o $(LIBDIR) $(LIBS) -o $@

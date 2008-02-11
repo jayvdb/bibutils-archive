@@ -1,7 +1,7 @@
 /*
  * risin.h
  *
- * Copyright (c) Chris Putnam 2003-7
+ * Copyright (c) Chris Putnam 2003-8
  *
  * Program and source code released under the GPL
  *

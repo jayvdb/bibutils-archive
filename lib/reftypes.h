@@ -1,7 +1,7 @@
 /*
  * reftypes.h
  *
- * Copyright (c) Chris Putnam 2003-7
+ * Copyright (c) Chris Putnam 2003-8
  *
  * Source code released under the GPL
  *
@@ -19,6 +19,7 @@
 #define ALWAYS      (7)
 #define BIBTEX_URL  (8)
 #define ISI_KEYWORD (9)
+#define NOTES       (10)
 
 typedef struct {
 	char *oldstr;

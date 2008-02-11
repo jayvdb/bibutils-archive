@@ -1,7 +1,7 @@
 /*
  * bibl.h
  *
- * Copyright (c) Chris Putnam 2005-7
+ * Copyright (c) Chris Putnam 2005-8
  *
  */
 #ifndef BIBL_H

@@ -1,7 +1,7 @@
 /*
  * newstr.c
  *
- * Copyright (c) Chris Putnam 1999-2007
+ * Copyright (c) Chris Putnam 1999-2008
  *
  * Source code released under the GPL
  *
@@ -51,11 +51,19 @@ newstr_initalloc( newstr *s, unsigned long minsize )
 newstr *
 newstr_new( void )
 {
-	newstr *s;
-	s = (newstr *) malloc( sizeof( *s ) );
-	if ( s ) 
+	newstr *s = (newstr *) malloc( sizeof( *s ) );
+	if ( s )
 		newstr_initalloc( s, newstr_initlen );
 	return s;
+}
+
+newstr *
+newstr_strdup( char *s1 )
+{
+	newstr *s2 = newstr_new();
+	if ( s2 )
+		newstr_strcpy( s2, s1 );
+	return s2;
 }
 
 /* newstr_empty()
@@ -93,7 +101,7 @@ newstr_realloc( newstr *s, unsigned long minsize )
 	size = 2 * s->dim;
 	if (size < minsize) size = minsize;
 	newptr = (char *) realloc( s->data, sizeof( *(s->data) )*size );
-	if (newptr==NULL) {
+	if ( !newptr ) {
 		fprintf(stderr,"Error.  Cannot reallocate memory (%ld bytes) in newstr_realloc.\n", sizeof(*(s->data))*size);
 		exit(1);
 	}
@@ -115,15 +123,14 @@ newstr_free( newstr *s )
 	s->data = NULL;
 }
 
-void 
-newstr_realloc(newstr *s, unsigned long minsize)
+static void 
+newstr_realloc( newstr *s, unsigned long minsize )
 {
 	char *newptr;
 	unsigned long size, i;
 	assert( s );
 	size = 2 * s->dim;
-	if ( size < minsize )
-		size = minsize;
+	if ( size < minsize ) size = minsize;
 	newptr = (char *) malloc( sizeof( *(s->data) ) * size );
 	if ( !newptr ) {
 		fprintf( stderr, "Error.  Cannot reallocate memory (%d bytes)"
@@ -154,7 +161,8 @@ newstr_addchar( newstr *s, char newchar )
 void 
 newstr_fprintf( FILE *fp, newstr *s )
 {
-    if ( s && s->data ) fprintf( fp, "%s", s->data );
+	assert( s );
+	if ( s->data ) fprintf( fp, "%s", s->data );
 }
 
 void
@@ -207,7 +215,7 @@ newstr_segcat( newstr *s, char *startat, char *endat )
 		newstr_initalloc( s, seglength+1 );
 	else {
 		if ( s->len + seglength + 1 > s->dim )
-			newstr_realloc(s, s->len + seglength+1);
+			newstr_realloc( s, s->len + seglength+1 );
 	}
 	q = &(s->data[s->len]);
 	p = startat;
@@ -221,9 +229,9 @@ newstr_newstrcpy( newstr *s, newstr *old )
 {
 	assert( s && old );
 	if ( !old->data || !old->dim ) {
-		s->dim = 0;
-		if ( s->data ) s->data[0]='\0';
+		s->len = 0;
 		/* modify for NEWSTR_PARANOIA */
+		if ( s->data ) s->data[0]='\0';
 	} else newstr_strcpy( s, old->data );
 }
 
@@ -249,25 +257,24 @@ newstr_strcpy( newstr *s, char *addstr )
 void
 newstr_segcpy( newstr *s, char *startat, char *endat )
 {
-	size_t seglength;
+	size_t n;
 	char *p, *q;
 
 	assert( s && startat && endat );
 	assert( ((size_t) startat) <= ((size_t) endat) );
 
-	seglength=(size_t) endat - (size_t) startat;
-	if ( seglength==0 ) return;
-	if (s->data==NULL || s->dim==0)
-		newstr_initalloc( s, seglength+1 );
+	n = (size_t) endat - (size_t) startat;
+	if ( !s->data || !s->dim )
+		newstr_initalloc( s, n+1 );
 	else {
-		if ( seglength+1 > s->dim )
-			newstr_realloc( s, seglength+1 );
+		if ( n+1 > s->dim )
+			newstr_realloc( s, n+1 );
 	}
 	q = s->data;
 	p = startat;
 	while ( *p && p!=endat ) *q++ = *p++;
 	*q = '\0';
-	s->len = seglength;
+	s->len = n;
 }
 
 void
@@ -306,7 +313,7 @@ newstr_findreplace( newstr *s, char *find, char *replace )
 	char *p;
 	int n = 0;
 
-	assert ( s && find );
+	assert( s && find );
 	if ( !s->data || !s->dim ) return n;
 	if ( !replace ) replace = empty;
 

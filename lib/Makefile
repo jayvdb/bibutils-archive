@@ -15,7 +15,8 @@ INPUT_OBJS    = bibtexin.o bibtypes.o \
 		modsin.o modstypes.o \
 		risin.o ristypes.o \
 		reftypes.o
-OUTPUT_OBJS   = bibtexout.o endout.o isiout.o modsout.o risout.o wordout.o
+OUTPUT_OBJS   = bibtexout.o endout.o isiout.o modsout.o risout.o wordout.o \
+		adsout.o
 BIBUTILS_OBJS = $(SIMPLE_OBJS) $(NEWSTR_OBJS) $(CONTAIN_OBJS) \
 	$(INPUT_OBJS) $(OUTPUT_OBJS) name.o title.o bibl.o serialno.o bibutils.o
 

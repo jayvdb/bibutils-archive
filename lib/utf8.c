@@ -1,7 +1,7 @@
 /*
  * utf8.c
  *
- * Copyright (c) Chris Putnam 2004-5
+ * Copyright (c) Chris Putnam 2004-8
  *
  * Source code released under the GPL
  *

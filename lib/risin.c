@@ -1,7 +1,7 @@
 /*
  * risin.c
  *
- * Copyright (c) Chris Putnam 2003-7
+ * Copyright (c) Chris Putnam 2003-8
  *
  * Program and source code released under the GPL
  *
@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "is_ws.h"
+#include <ctype.h>
 #include "newstr.h"
 #include "newstr_conv.h"
 #include "lists.h"
@@ -94,14 +94,6 @@ risin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, newstr
 	*fcharset = CHARSET_UNKNOWN;
 	return haveref;
 }
-/*
- * risprocess.c
- *
- * Copyright (c) Chris Putnam 2003-5
- *
- * Program and source code released under the GPL
- *
- */
 
 static char*
 process_line2( newstr *tag, newstr *data, char *p )
@@ -159,6 +151,39 @@ risin_processf( fields *risin, char *p, char *filename, long nref )
 	newstr_free( &tag );
 	newstr_free( &data );
 	return 1;
+}
+
+static int
+string_is_doi( newstr *data )
+{
+	if ( data->len < 8 ) return 0;
+	if ( isdigit(data->data[0]) && isdigit(data->data[1]) && 
+	     data->data[2]=='.' && isdigit(data->data[3]) &&
+	     isdigit(data->data[4]) && isdigit(data->data[5]) &&
+	     isdigit(data->data[6]) && data->data[7]=='/' )
+		return 1;
+	if ( data->len < 11 ) return 0;
+	if ( tolower(data->data[0])=='d' && tolower(data->data[1])=='o' &&
+	     tolower(data->data[2])=='i' && data->data[3]==':' &&
+	     isdigit(data->data[4]) && isdigit(data->data[5]) && 
+	     data->data[6]=='.' && isdigit(data->data[7]) &&
+	     isdigit(data->data[8]) && isdigit(data->data[9]) &&
+	     isdigit(data->data[10]) && data->data[11]=='/' )
+		return 2;
+	return 0;
+}
+
+/* oxfordjournals hide the DOI in the NOTES N1 field */
+static void
+notes_add( fields *info, char *tag, newstr *s, int level )
+{
+	int doi = string_is_doi( s );
+	if ( doi==1 )
+		fields_add( info, "DOI", s->data, level );
+	else if ( doi==2 )
+		fields_add( info, "DOI", &(s->data[4]), level );
+	else
+		fields_add( info, tag, s->data, level );
 }
 
 static void
@@ -246,6 +271,8 @@ risin_convertf( fields *risin, fields *info, int reftype, int verbose, variants 
 			adddate( info, newtag, d->data, level );
 		else if ( process==SERIALNO )
 			addsn( info, d->data, level );
+		else if ( process==NOTES )
+			notes_add( info, newtag, d, level );
 		else { /* do nothing */ }
 	}
 	/* look for thesis-type hint */

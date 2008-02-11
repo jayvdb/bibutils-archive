@@ -1,7 +1,7 @@
 /*
  * newstring.h
  *
- * Copyright (c) Chris Putnam 1999-2007
+ * Copyright (c) Chris Putnam 1999-2008
  *
  * Source code released under the GPL
  *
@@ -10,15 +10,18 @@
 #ifndef NEWSTR_H
 #define NEWSTR_H
 
+#include <stdio.h>
+
 typedef struct newstr {
 	char *data;
 	unsigned long dim;
 	unsigned long len;
 }  newstr;
 
-newstr *newstr_new   ( void ); 
+newstr *newstr_new      ( void ); 
 void newstr_init        ( newstr *string );
 void newstr_free        ( newstr *string );
+newstr *newstr_strdup   ( char *buf );
 void newstr_addchar     ( newstr *string, char newchar );
 void newstr_strcat      ( newstr *string, char *addstr );
 void newstr_segcat      ( newstr *string, char *startat, char *endat );

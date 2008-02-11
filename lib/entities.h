@@ -1,7 +1,7 @@
 /*
  * entities.h
  *
- * Copyright (c) Chris Putnam 2003-7
+ * Copyright (c) Chris Putnam 2003-8
  *
  * Source code released under the GPL
  */

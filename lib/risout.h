@@ -1,7 +1,7 @@
 /*
  * risout.h
  *
- * Copyright (c) Chris Putnam 2005-7
+ * Copyright (c) Chris Putnam 2005-8
  *
  */
 #ifndef RISOUT_H

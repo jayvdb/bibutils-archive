@@ -1,7 +1,7 @@
 /*
  * endtypes.c
  *
- * Copyright (c) Chris Putnam 2003-7
+ * Copyright (c) Chris Putnam 2003-8
  *
  * Program and source code released under the GPL
  *
@@ -172,7 +172,7 @@ static lookups book[] = {
 	{ "%I", "PUBLISHER", SIMPLE,    LEVEL_MAIN }, 
 	{ "%V", "VOLUME" ,   SIMPLE,    LEVEL_MAIN },
 	{ "%6", "NUMVOLUMES",SIMPLE,    LEVEL_MAIN },
-	{ "%P", "NUMBEROFPAGES", SIMPLE,LEVEL_MAIN },
+	{ "%P", "TOTALPAGES", SIMPLE,LEVEL_MAIN },
 	{ "%7", "EDITION",   SIMPLE,    LEVEL_MAIN },
 	{ "%?", "TRANSLATOR",PERSON,    LEVEL_MAIN },
 	{ "%!", "SHORTTITLE",TITLE,     LEVEL_MAIN },
@@ -252,7 +252,7 @@ static lookups editedbook[] = {
 	{ "%I", "PUBLISHER", SIMPLE,    LEVEL_MAIN }, 
 	{ "%V", "VOLUME" ,   SIMPLE,    LEVEL_MAIN },
 	{ "%6", "NUMVOLUMES",SIMPLE,    LEVEL_HOST },
-	{ "%P", "NUMBEROFPAGES", SIMPLE,LEVEL_MAIN },
+	{ "%P", "TOTALPAGES", SIMPLE,LEVEL_MAIN },
 	{ "%7", "EDITION",   SIMPLE,    LEVEL_MAIN },
 	{ "%?", "TRANSLATOR",PERSON,    LEVEL_MAIN },
 	{ "%!", "SHORTTITLE",TITLE,     LEVEL_MAIN },
@@ -349,7 +349,7 @@ static lookups proceedings[] = {
 	{ "%D", "YEAR",      SIMPLE,  LEVEL_HOST },
 	{ "%T", "TITLE" ,    TITLE,   LEVEL_MAIN },
 	{ "%E", "EDITOR",    PERSON,  LEVEL_MAIN },
-	{ "%B", "CONFERENCE_NAME", SIMPLE,  LEVEL_MAIN }, 
+	{ "%B", "TITLE",     SIMPLE,  LEVEL_HOST }, 
 	{ "%C", "ADDRESS",   SIMPLE,  LEVEL_MAIN },
 	{ "%I", "PUBLISHER", SIMPLE,  LEVEL_MAIN }, 
 	{ "%V", "VOLUME" ,   SIMPLE,  LEVEL_MAIN },
@@ -357,7 +357,7 @@ static lookups proceedings[] = {
 	{ "%N", "NUMBER",    SIMPLE,  LEVEL_MAIN },
 	{ "%P", "PAGES",     PAGES,   LEVEL_MAIN },
 	{ "%Y", "EDITOR",    PERSON,  LEVEL_HOST }, /* SERIES_EDITOR */
-	{ "%S", "TITLE",     TITLE,   LEVEL_HOST }, /* SERIES_TITLE */
+	{ "%S", "TITLE",     TITLE,   LEVEL_HOST+1 }, /* SERIES_TITLE */
 	{ "%7", "EDITION",   SIMPLE,  LEVEL_HOST },
 	{ "%8", "MONTH", DATE,    LEVEL_MAIN },
 	{ "%!", "SHORTTITLE",TITLE,   LEVEL_MAIN },
@@ -801,6 +801,53 @@ static lookups lawcase[] = {
 	{ "  ", "GENRE|legal case and case notes", ALWAYS, LEVEL_MAIN }
 };
 
+static lookups chart[] = {
+	{ "%0", "TYPE",      TYPE,   LEVEL_MAIN },
+	{ "%A", "AUTHOR",    PERSON, LEVEL_MAIN },
+	{ "%D", "YEAR",      SIMPLE, LEVEL_MAIN },
+	{ "%T", "TITLE" ,    TITLE,  LEVEL_MAIN },
+	{ "%J", "TITLE",     TITLE,  LEVEL_HOST }, /* for refer formats */
+	{ "%E", "2ND_AUTHOR",PERSON, LEVEL_MAIN },
+	{ "%B", "2ND_TITLE", SIMPLE, LEVEL_MAIN },
+	{ "%C", "ADDRESS",   SIMPLE, LEVEL_MAIN },
+	{ "%I", "PUBLISHER", SIMPLE, LEVEL_MAIN }, 
+	{ "%V", "VOLUME" ,   SIMPLE, LEVEL_MAIN },
+	{ "%6", "NUMVOLUMES",SIMPLE, LEVEL_HOST },
+	{ "%N", "NUMBER",    SIMPLE, LEVEL_MAIN },
+	{ "%P", "PAGES",        PAGES,  LEVEL_MAIN },
+	{ "%&", "SECTION",      SIMPLE, LEVEL_MAIN },
+	{ "%Y", "3RD_AUTHOR",   PERSON, LEVEL_MAIN },
+	{ "%S", "3RD_TITLE",    SIMPLE, LEVEL_MAIN },
+	{ "%7", "EDITION",      SIMPLE, LEVEL_MAIN },
+	{ "%8", "MONTH",    DATE,   LEVEL_MAIN },
+	{ "%9", "GENRE",        SIMPLE, LEVEL_MAIN },
+	{ "%?", "SUB_AUTHOR",   PERSON, LEVEL_MAIN }, /* subsidiary-authors */
+	{ "%!", "SHORTTITLE",   TITLE,  LEVEL_MAIN },
+	{ "%@", "SERIALNUM", SERIALNO,  LEVEL_MAIN },
+	{ "%(", "ORIGINALPUB",  SIMPLE, LEVEL_MAIN },
+	{ "%)", "REPRINTEDITION",SIMPLE,LEVEL_MAIN },
+	{ "%*", "REVIEWEDITEM", SIMPLE, LEVEL_MAIN },
+	{ "%1", "CUSTOM1",      SIMPLE, LEVEL_MAIN },
+	{ "%2", "CUSTOM2",      SIMPLE, LEVEL_MAIN },
+	{ "%3", "CUSTOM3",      SIMPLE, LEVEL_MAIN },
+	{ "%4", "CUSTOM4",      SIMPLE, LEVEL_MAIN },
+	{ "%#", "CUSTOM5",      SIMPLE, LEVEL_MAIN },
+	{ "%$", "CUSTOM6",      SIMPLE, LEVEL_MAIN },
+	{ "%M", "ACCESSNUM",    SIMPLE, LEVEL_MAIN },
+	{ "%L", "CALLNUMBER",   SIMPLE, LEVEL_MAIN },
+	{ "%F", "REFNUM",       SIMPLE, LEVEL_MAIN },
+	{ "%K", "KEYWORD",      SIMPLE, LEVEL_MAIN }, 
+	{ "%X", "ABSTRACT",     SIMPLE, LEVEL_MAIN },
+	{ "%O", "NOTES",        SIMPLE, LEVEL_MAIN },
+	{ "%U", "URL",          SIMPLE, LEVEL_MAIN },
+	{ "%Z", "NOTES",        SIMPLE, LEVEL_MAIN },
+	{ "%W", "PHYSICALLOC",  SIMPLE, LEVEL_MAIN },  /* physical location */
+	{ "%+", "AUTHORADDRESS",SIMPLE, LEVEL_MAIN },
+	{ "  ", "GENRE|chart",  ALWAYS, LEVEL_MAIN }
+};
+
+
+
 /* order is important....."Book" matches "Book" and "Book Section", hence
  * "Book Section must come first */
 
@@ -827,18 +874,19 @@ variants end_all[] = {
 	{"Hearing", &(hearing[0]), sizeof(hearing)/sizeof(lookups)},
 	{"Bill", &(bill[0]), sizeof(bill)/sizeof(lookups)},
 	{"Statute", &(statute[0]), sizeof(statute)/sizeof(lookups)},
-	{"Case", &(lawcase[0]), sizeof(lawcase)/sizeof(lookups)}
+	{"Case", &(lawcase[0]), sizeof(lawcase)/sizeof(lookups)},
+	{"Chart or Table", &(chart[0]), sizeof(chart)/sizeof(lookups)}
 };
 
 
 int end_nall = sizeof( end_all ) / sizeof( variants );
 
-#ifdef NOCOMPILE
+#if 0
 int
 get_reftype( char *p, long refnum )
 {
 	int i;
-	while ( is_ws( *p ) ) p++;
+	p = skip_ws( p );
 	for ( i=0; i<nall; ++i ) {
 		if ( !strncasecmp( all[i].type, p, strlen(all[i].type)) ){
 /*			fprintf( stderr,"SUCCESS strncasecmp('%s', '%s', %d )\n", all[i].type,p,strlen(all[i].type)); */

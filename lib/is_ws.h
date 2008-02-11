@@ -1,7 +1,7 @@
 /*
  * is_ws.h
  *
- * Copyright (c) Chris Putnam 2003-7
+ * Copyright (c) Chris Putnam 2003-8
  *
  * Source code released under the GPL
  *
@@ -10,6 +10,8 @@
 #define IS_WS_H
 
 extern int is_ws( char ch );
+extern char *skip_ws( char *p );
+extern char *skip_notws( char *p );
 
 #endif
 
