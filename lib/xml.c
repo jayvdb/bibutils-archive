@@ -21,8 +21,8 @@ xmlattrib_new( void )
 {
 	xml_attrib *a = (xml_attrib *) malloc( sizeof( xml_attrib ) );
 	if ( a ) {
-		lists_init( &(a->attrib) );
-		lists_init( &(a->value) );
+		list_init( &(a->attrib) );
+		list_init( &(a->value) );
 	}
 	return a;
 }
@@ -30,15 +30,15 @@ xmlattrib_new( void )
 static void
 xmlattrib_add( xml_attrib *a, char *attrib, char *value  )
 {
-	lists_add( &(a->attrib), attrib );
-	lists_add( &(a->value), value );
+	list_add( &(a->attrib), attrib );
+	list_add( &(a->value), value );
 }
 
 static void
 xmlattrib_free( xml_attrib *a )
 {
-	lists_free( &(a->attrib) );
-	lists_free( &(a->value ) );
+	list_free( &(a->attrib) );
+	list_free( &(a->value ) );
 }
 
 static xml *

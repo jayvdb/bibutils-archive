@@ -12,7 +12,6 @@
 #include "is_ws.h"
 #include "newstr.h"
 #include "newstr_conv.h"
-#include "lists.h"
 #include "fields.h"
 #include "name.h"
 #include "title.h"
@@ -20,8 +19,6 @@
 #include "reftypes.h"
 #include "endin.h"
 
-extern lists asis;
-extern lists corps;
 extern char progname[];
 
 /* Endnote tag definition:

@@ -15,17 +15,17 @@
 #include "newstr.h"
 #include "newstr_conv.h"
 #include "fields.h"
-#include "lists.h"
+#include "list.h"
 #include "name.h"
 #include "title.h"
 #include "reftypes.h"
 #include "bibtexin.h"
 
-extern lists asis;
-extern lists corps;
+extern list asis;
+extern list corps;
 
-lists find    = { 0, 0, NULL };
-lists replace = { 0, 0, NULL };
+list find    = { 0, 0, 0, NULL };
+list replace = { 0, 0, 0, NULL };
 
 /*
  * readf can "read too far", so we store this information in line, thus
@@ -160,10 +160,10 @@ bibtex_addstring( char *p )
 	p = skip_ws( p );
 	if ( *p=='(' || *p=='{' ) p++;
 	p = process_bibtexline( p, &s1, &s2 );
-	lists_add( &find, s1.data );
+	list_add( &find, s1.data );
 	newstr_findreplace( &s2, "\\ ", " " );
 	bibtex_cleantoken( &s2 );
-	lists_add( &replace, s2.data );
+	list_add( &replace, s2.data );
 	newstr_free( &s1 );
 	newstr_free( &s2 );
 }
@@ -191,7 +191,7 @@ bibtex_removeprotection( newstr *data )
 }
 
 static void
-bibtex_split( lists *tokens, newstr *s )
+bibtex_split( list *tokens, newstr *s )
 {
 	newstr currtok;
 	int nquotes = 0, nbrackets = 0;
@@ -209,13 +209,13 @@ bibtex_split( lists *tokens, newstr *s )
 			nbrackets--;
 			newstr_addchar( &currtok, '}' );
 		} else if ( s->data[i]=='#' && !nquotes && !nbrackets ) {
-			lists_add( tokens, currtok.data );
+			list_add( tokens, currtok.data );
 			newstr_empty( &currtok );
 		} else if ( !is_ws( s->data[i] ) || nquotes || nbrackets ) {
 			newstr_addchar( &currtok, s->data[i] );
 		}
 	}
-	if ( currtok.len ) lists_add( tokens, currtok.data );
+	if ( currtok.len ) list_add( tokens, currtok.data );
 	for ( i=0; i<tokens->n; ++i ) {
 		newstr_trimendingws( &(tokens->str[i]) );
 	}
@@ -359,9 +359,10 @@ bibtex_addtitleurl( fields *info, newstr *in )
 static void
 bibtex_cleandata( newstr *s, fields *info )
 {
-	lists tokens = { 0, 0, NULL };
+	list tokens;
 	int i;
 	if ( !s->len ) return;
+	list_init( &tokens );
 	bibtex_split( &tokens, s );
 	for ( i=0; i<tokens.n; ++i ) {
 		if ( !bibtex_protected( &(tokens.str[i] ) ) ) {
@@ -379,7 +380,7 @@ bibtex_cleandata( newstr *s, fields *info )
 			bibtex_removeprotection( &(tokens.str[i]));
 		newstr_strcat( s, tokens.str[i].data ); 
 	}
-	lists_free( &tokens );
+	list_free( &tokens );
 }
 
 static long

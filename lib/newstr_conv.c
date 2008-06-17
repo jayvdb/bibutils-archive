@@ -163,8 +163,8 @@ write_unicode( newstr *s, unsigned int ch, int charsetout, int latexout,
 		int utf8out, int xmlout )
 {
 	unsigned int c;
-	if ( latexout ) addlatexchar( s, ch, xmlout, utf8out );
-	else if ( utf8out ) addutf8char( s, ch, xmlout, utf8out );
+	if ( utf8out ) addutf8char( s, ch, xmlout, utf8out );
+	else if ( latexout ) addlatexchar( s, ch, xmlout, utf8out );
 	else {
 		c = lookupuni( charsetout, ch );
 		if ( xmlout ) addxmlchar( s, c );

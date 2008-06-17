@@ -1,11 +1,11 @@
 #CC = gcc -Wall 
 #RANLIB = echo
 
-BIB_OBJS = bbl.o fields.o lists.o name.o title.o reftypes.o
+BIB_OBJS = bbl.o fields.o list.o name.o title.o reftypes.o
 
 SIMPLE_OBJS   = is_ws.o strsearch.o charsets.o
 NEWSTR_OBJS   = newstr.o newstr_conv.o entities.o latex.o utf8.o
-CONTAIN_OBJS  = fields.o lists.o xml.o xml_encoding.o
+CONTAIN_OBJS  = fields.o list.o xml.o xml_encoding.o
 INPUT_OBJS    = bibtexin.o bibtypes.o \
 		copacin.o copactypes.o \
 		endin.o endtypes.o \

@@ -12,14 +12,14 @@
 #include <string.h>
 #include "newstr.h"
 #include "newstr_conv.h"
-#include "lists.h"
+#include "list.h"
 #include "bibl.h"
 #include "bibutils.h"
 #include "modsout.h"
 #include "bibprogs.h"
 
-extern lists corps;
-extern lists asis;
+extern list corps;
+extern list asis;
 
 static void
 args_tellversion( char *progname )
@@ -66,7 +66,7 @@ args_match( char *check, char *shortarg, char *longarg )
 }
 
 static void
-args_namelist( int argc, char *argv[], int i, char *progname, lists *names,
+args_namelist( int argc, char *argv[], int i, char *progname, list *names,
 		char *shortarg, char *longarg )
 {
 	if ( i+1 >= argc ) {
@@ -74,7 +74,7 @@ args_namelist( int argc, char *argv[], int i, char *progname, lists *names,
 			"the file\n", progname, shortarg, longarg );
 		exit( EXIT_FAILURE );
 	} else {
-		if ( !lists_fill( names, argv[i+1] ) ) {
+		if ( !list_fill( names, argv[i+1] ) ) {
 			fprintf( stderr, "%s: warning problems reading '%s', "
 				"obtained %d elements\n", progname, 
 				argv[i+1], names->n );

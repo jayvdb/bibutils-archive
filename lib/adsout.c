@@ -157,7 +157,7 @@ output_title( FILE *fp, fields *info, char * full, char *sub, char *endtag, int 
 			fprintf( fp, " p. %s", info->data[ar].data );
 		}
 		if ( en!=-1 ) {
-			fprintf( fp, "--%s", info->data[en].data );
+			fprintf( fp, "-%s", info->data[en].data );
 		}
 
 		fprintf( fp, "\n" );
@@ -214,19 +214,38 @@ output_pages( FILE *fp, fields *info )
 	}
 }
 
-static void
-output_date( FILE *fp, fields *info, int level )
+static int
+get_year( fields *info, int level )
 {
 	int year = fields_find( info, "YEAR", level );
-	int month = fields_find( info, "MONTH", level );
-	if ( year==-1 ) year = fields_find( info, "PARTYEAR", level );
-	if ( year!=-1 )
-	{
-		if ( month==-1 )
-			month = fields_find( info, "PARTMONTH", level );
-		if ( month==-1 )
-			month = 0;
-		fprintf( fp, "%%D %02d/%s\n", month, info->data[year].data );
+	if ( year==-1 )
+		year = fields_find( info, "PARTYEAR", level );
+	return year;
+}
+
+static int
+get_month( fields *info, int level )
+{
+	int imonth, month;
+	imonth = fields_find( info, "MONTH", level );
+	if ( imonth==-1 )
+		imonth = fields_find( info, "PARTMONTH", level );
+	if ( imonth==-1 )
+		month = 0;
+	else
+		month = atoi( info->data[month].data );
+	return month;
+}
+
+static void
+output_date( FILE *fp, fields *info, char *entag, int level )
+{
+	int year, month;
+	year = get_year( info, level );
+	if ( year!=-1 ) {
+		month = get_month( info, level );
+		fprintf( fp, "%s %02d/%s\n", entag, month, 
+			info->data[year].data );
 	}
 }
 
@@ -339,6 +358,25 @@ output_easy( FILE *fp, fields *info, char *tag, char *entag, int level )
 		fprintf( fp, "%s %s\n", entag, info->data[n].data );
 }
 
+static void
+output_keys( FILE *fp, fields *info, char *tag, char *entag, int level )
+{
+	int i, n, nkeys = 0;
+	n = fields_find( info, tag, level );
+	if ( n!=-1 ) {
+		fprintf( fp, "%s ", entag );
+		for ( i=0; i<info->nfields; ++i ) {
+			if ( level!=-1 && info->level[i]!=level ) continue;
+			if ( !strcmp( info->tag[i].data, tag ) ) {
+				fprintf( fp, "%s", info->data[i].data );
+				if ( nkeys ) fprintf( fp, ", " );
+				nkeys++;
+			}
+		}
+		fprintf( fp, "\n" );
+	}
+}
+
 void
 adsout_write( fields *info, FILE *fp, int format_opts, unsigned long refnam)
 {
@@ -346,22 +384,22 @@ adsout_write( fields *info, FILE *fp, int format_opts, unsigned long refnam)
 	fields_clearused( info );
 	type = get_type( info );
 
-	output_title( fp, info, "JOURNAL", "TITLE", "%T", 0 );
 
 	output_people( fp, info, "AUTHOR", "%A", 0 );
 	output_people( fp, info, "EDITOR", "%E", -1 );
+	output_easy( fp, info, "TITLE", "%T", -1 );
 
 	if ( type==TYPE_ARTICLE || type==TYPE_MAGARTICLE )
 		output_title( fp, info, "TITLE", "SUBTITLE", "%J", 1 );
 
-	output_date( fp, info, -1 );
+	output_date( fp, info, "%D", -1 );
 	output_easy( fp, info, "VOLUME", "%V", -1 );
 	output_easy( fp, info, "ISSUE", "%N", -1 );
 	output_easy( fp, info, "NUMBER", "%N", -1 );
 	output_easy( fp, info, "LANGUAGE", "%M", -1 );
 	output_easyall( fp, info, "NOTES", "%X", -1 );
 	output_easy( fp, info, "ABSTRACT", "%B", -1 );
-	output_easyall( fp, info, "KEYWORD", "%K", -1 );
+	output_keys( fp, info, "KEYWORD", "%K", -1 );
 	output_easyall( fp, info, "URL", "%U", -1 ); 
 	output_pages( fp, info );
 	output_easyall( fp, info, "DOI", "%Y", -1 );

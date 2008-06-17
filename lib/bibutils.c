@@ -338,7 +338,7 @@ generate_citekey( fields *info, int nref )
 }
 
 static void
-resolve_citekeys( bibl *b, lists *citekeys, int *dup )
+resolve_citekeys( bibl *b, list *citekeys, int *dup )
 {
 	char abc[]="abcdefghijklmnopqrstuvwxyz";
 	newstr tmp;
@@ -351,7 +351,8 @@ resolve_citekeys( bibl *b, lists *citekeys, int *dup )
 		nsame = 0;
 		for ( j=i; j<citekeys->n; ++j ) {
 			if ( dup[j]!=i ) continue;
-			newstr_strcpy( &tmp, citekeys->str[j].data );
+/*			newstr_strcpy( &tmp, citekeys->str[j].data ); */
+			newstr_newstrcpy( &tmp, &(citekeys->str[j]) );
 			ntmp = nsame;
 			while ( ntmp >= 26 ) {
 				newstr_addchar( &tmp, 'a' );
@@ -363,14 +364,15 @@ resolve_citekeys( bibl *b, lists *citekeys, int *dup )
 			dup[j] = -1;
 			n = fields_find( b->ref[j], "REFNUM", -1 );
 			if ( n!=-1 )
-				newstr_strcpy( &((b->ref[j])->data[n]), tmp.data);
+				newstr_newstrcpy(&((b->ref[j])->data[n]),&tmp);
+/*				newstr_strcpy( &((b->ref[j])->data[n]), tmp.data);*/
 		}
 	}
 	newstr_free( &tmp );
 }
 
 static void
-get_citekeys( bibl *b, lists *citekeys )
+get_citekeys( bibl *b, list *citekeys )
 {
 	fields *info;
 	int i, n;
@@ -378,13 +380,13 @@ get_citekeys( bibl *b, lists *citekeys )
 		info = b->ref[i];
 		n = fields_find( info, "REFNUM", -1 );
 		if ( n==-1 ) n = generate_citekey( info, i );
-		if ( n!=-1 ) lists_add( citekeys, info->data[n].data );
-		else lists_add( citekeys, "" );
+		if ( n!=-1 ) list_add( citekeys, info->data[n].data );
+		else list_add( citekeys, "" );
 	}
 }
 
 static int 
-dup_citekeys( bibl *b, lists *citekeys )
+dup_citekeys( bibl *b, list *citekeys )
 {
 	int i, j, *dup, ndup=0;
 	dup = ( int * ) malloc( sizeof( int ) * citekeys->n );
@@ -409,11 +411,11 @@ dup_citekeys( bibl *b, lists *citekeys )
 static void
 uniqueify_citekeys( bibl *b )
 {
-	lists citekeys;
-	lists_init( &citekeys );
+	list citekeys;
+	list_init( &citekeys );
 	get_citekeys( b, &citekeys );
 	dup_citekeys( b, &citekeys );
-	lists_free( &citekeys );
+	list_free( &citekeys );
 }
 
 static int 
@@ -432,7 +434,6 @@ convert_ref( bibl *bin, char *fname, bibl *bout, convert_rules *r, param *p )
 		else reftype = 0;
 		r->convertf( rin, rout, reftype, p->verbose, r->all, r->nall );
 		if ( r->all ) process_alwaysadd( rout, reftype, r );
-/*		if ( p->verbose>1 ) */
 		if ( p->verbose ) 
 			bibl_verbose1( rout, rin, fname, i+1 );
 		bibl_addref( bout, rout );

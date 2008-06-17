@@ -12,16 +12,12 @@
 #include "is_ws.h"
 #include "newstr.h"
 #include "newstr_conv.h"
-#include "lists.h"
 #include "name.h"
 #include "title.h"
 #include "fields.h"
 #include "reftypes.h"
 #include "serialno.h"
 #include "copacin.h"
-
-extern lists asis;
-extern lists corps;
 
 /* Endnote-Refer/Copac tag definition:
     character 1 = alphabetic character

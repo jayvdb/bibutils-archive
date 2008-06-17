@@ -1,7 +1,35 @@
 
 BIBUTILS
 
+3.41
+6/16/08
+
+BUILD
++ Fix bug in makedeb.csh
++ Fix site-specific compiler definition for SunOS5 target.
++ Add Linux x86_64 target for configuration.
+
+MODSIN
++ Fix NULL pointer dereference for "detail" elements lacking a type
+  attribute.  (Noticed and hunted down by Thomas Fischer.)
+
+RIS2XML
++ Fix bug where "AB  - " with a newline before the abstract was
+  not recognized as an abstracted.  (Reported by Thomas Braun
+  and Richard Mathar.)
+
+XML2ADS
++ Updates from Richard Mathar fixing R-tag output, merging keywords,
+  fixing date, adding title, and replacing double dash.
++ Update journals to current list from:
+  http://adsabs.harvard.edu/abs_doc/journals1.html
+
+XML2BIB
++ Fix character priority so unicode/utf8 takes precedence over latex
+  (Patch from Luc Pardon)
+
 3.40
+2/10/08
 
 MODSIN
 + Fix crash where placeTerm tag doesn't have attribute (Thanks to

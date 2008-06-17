@@ -9,12 +9,12 @@
 #ifndef XML_H
 #define XML_H
 
-#include "lists.h"
+#include "list.h"
 #include "newstr.h"
 
 typedef struct xml_attrib {
-	lists attrib;
-	lists value;
+	list attrib;
+	list value;
 } xml_attrib;
 
 typedef struct xml {

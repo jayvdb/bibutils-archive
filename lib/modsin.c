@@ -45,7 +45,7 @@ modsin_detail( xml *node, fields *info, int level )
 			newstr_toupper( &type );
 		}
 		modsin_detailr( node->down, &value );
-		if ( !strcasecmp( type.data, "PAGE" ) ) {
+		if ( type.data && !strcasecmp( type.data, "PAGE" ) ) {
 			fields_add( info, "PAGESTART", value.data, level );
 		} else fields_add( info, type.data, value.data, level );
 		newstr_free( &type );
@@ -204,147 +204,6 @@ modsin_asis_corp_r( xml *node, newstr *name, newstr *role )
 }
 
 static void
-modsin_asis_corp( xml *node, fields *info, int level, convert *roles_convert,
-		int nroles )
-{
-	newstr name, role;
-/*	int i, found;*/
-	int found;
-	xml *dnode = node->down;
-	if ( dnode ) {
-		newstr_init( &name );
-		newstr_init( &role );
-		modsin_asis_corp_r( dnode, &name, &role );
-		if ( role.len ) {
-			found = modsin_rolesmatch( roles_convert, nroles,
-				&role );
-#if 0
-			found = -1;
-			for ( i=0; i<nroles; ++i ) {
-				if ( !strcasecmp( role.data, roles_convert[i].mods ) )
-					found = i;
-			}
-#endif
-			if ( found!=-1 ) {
-				fields_add( info, roles_convert[found].internal, name.data, level );
-			} else {
-				fields_add( info, role.data, name.data, level );
-			}
-		}
-		else fields_add( info, roles_convert[0].internal, name.data, 
-			level );
-		newstr_free( &name );
-		newstr_free( &role );
-	}
-}
-
-static void
-modsin_asis( xml *node, fields *info, int level )
-{
-	convert roles_convert[] = {
-		{ "author",              "AUTHOR:ASIS" },
-		{ "creator",             "AUTHOR:ASIS" },
-		{ "editor",              "EDITOR:ASIS" },
-		{ "degree grantor",      "DEGREEGRANTOR:ASIS" },
-		{ "organizer of meeting","ORGANIZER:ASIS" },
-		{ "patent holder",       "ASSIGNEE:ASIS" }
-	};
-	int nroles = sizeof( roles_convert ) / sizeof( roles_convert[0] );
-	modsin_asis_corp( node, info, level, roles_convert, nroles );
-}
-
-static void
-modsin_corp( xml *node, fields *info, int level )
-{
-	convert roles_convert[] = {
-		{ "author",              "AUTHOR:CORP" },
-		{ "creator",             "AUTHOR:CORP" },
-		{ "editor",              "EDITOR:CORP" },
-		{ "degree grantor",      "DEGREEGRANTOR:CORP" },
-		{ "organizer of meeting","ORGANIZER:CORP" },
-		{ "patent holder",       "ASSIGNEE:CORP" }
-	};
-	int nroles = sizeof( roles_convert ) / sizeof( roles_convert[0] );
-	modsin_asis_corp( node, info, level, roles_convert, nroles );
-}
-
-#if 0
-static void
-modsin_asis( xml *node, fields *info, int level )
-{
-	convert roles_convert[] = {
-		{ "author",              "AUTHOR:ASIS" },
-		{ "creator",             "AUTHOR:ASIS" },
-		{ "editor",              "EDITOR:ASIS" },
-		{ "degree grantor",      "DEGREEGRANTOR:ASIS" },
-		{ "organizer of meeting","ORGANIZER:ASIS" },
-		{ "patent holder",       "ASSIGNEE:ASIS" }
-	};
-	newstr name, role;
-	int i, found;
-	int nroles = sizeof( roles_convert ) / sizeof( roles_convert[0] );
-	xml *dnode = node->down;
-	if ( dnode ) {
-		newstr_init( &name );
-		newstr_init( &role );
-		modsin_asis_corp_r( dnode, &name, &role );
-		if ( role.len ) {
-			found = -1;
-			for ( i=0; i<nroles; ++i ) {
-				if ( !strcasecmp( role.data, roles_convert[i].mods ) )
-					found = i;
-			}
-			if ( found!=-1 ) {
-				fields_add( info, roles_convert[found].internal, name.data, level );
-			} else {
-				fields_add( info, role.data, name.data, level );
-			}
-		}
-		else fields_add( info, "AUTHOR:ASIS", name.data, level );
-		newstr_free( &name );
-		newstr_free( &role );
-	}
-}
-
-static void
-modsin_corp( xml *node, fields *info, int level )
-{
-	convert roles_convert[] = {
-		{ "author",              "AUTHOR:CORP" },
-		{ "creator",             "AUTHOR:CORP" },
-		{ "editor",              "EDITOR:CORP" },
-		{ "degree grantor",      "DEGREEGRANTOR:CORP" },
-		{ "organizer of meeting","ORGANIZER:CORP" },
-		{ "patent holder",       "ASSIGNEE:CORP" }
-	};
-	newstr name, role;
-	int i, found;
-	int nroles = sizeof( roles_convert ) / sizeof( roles_convert[0] );
-	xml *dnode = node->down;
-	if ( dnode ) {
-		newstr_init( &name );
-		newstr_init( &role );
-		modsin_asis_corp_r( dnode, &name, &role );
-		if ( role.len ) {
-			found = -1;
-			for ( i=0; i<nroles; ++i ) {
-				if ( !strcasecmp( role.data, roles_convert[i].mods ) )
-					found = i;
-			}
-			if ( found!=-1 ) {
-				fields_add( info, roles_convert[found].internal, name.data, level );
-			} else {
-				fields_add( info, role.data, name.data, level );
-			}
-		}
-		else fields_add( info, "AUTHOR:CORP", name.data, level );
-		newstr_free( &name );
-		newstr_free( &role );
-	}
-}
-#endif
-
-static void
 modsin_personr( xml *node, newstr *name, newstr *roles )
 {
 	if ( xml_tagexact( node, "namePart" ) ) {
@@ -364,6 +223,63 @@ modsin_personr( xml *node, newstr *name, newstr *roles )
 	}
 	if ( node->down ) modsin_personr( node->down, name, roles );
 	if ( node->next ) modsin_personr( node->next, name, roles );
+}
+
+static void
+modsin_asis_corp( xml *node, fields *info, int level, convert *roles_convert,
+		int nroles )
+{
+	newstr name, roles;
+	int n;
+	xml *dnode = node->down;
+	if ( dnode ) {
+		newstr_init( &name );
+		newstr_init( &roles );
+		modsin_asis_corp_r( dnode, &name, &roles );
+		if ( roles.len ) {
+			n = modsin_rolesmatch( roles_convert, nroles, &roles );
+			if ( n!=-1 ) {
+				fields_add( info, roles_convert[n].internal, 
+					name.data, level );
+			} else {
+				fields_add( info, roles.data, name.data, level);
+			}
+		}
+		else fields_add( info, roles_convert[0].internal, name.data, 
+			level );
+		newstr_free( &name );
+		newstr_free( &roles );
+	}
+}
+
+static void
+modsin_asis( xml *node, fields *info, int level )
+{
+	convert roles_convert[] = {
+		{ "author",              "AUTHOR:ASIS" },
+		{ "creator",             "AUTHOR:ASIS" },
+		{ "editor",              "EDITOR:ASIS" },
+		{ "degree grantor",      "DEGREEGRANTOR:ASIS" },
+		{ "organizer of meeting","ORGANIZER:ASIS" },
+		{ "patent holder",       "ASSIGNEE:ASIS" }
+	};
+	int nroles = sizeof( roles_convert ) / sizeof( roles_convert[0] );
+	modsin_asis_corp( node, info, level, roles_convert, nroles );
+}
+
+static void
+modsin_corp( xml *node, fields *info, int level )
+{
+	convert roles_convert[] = {
+		{ "author",              "AUTHOR:CORP" },
+		{ "creator",             "AUTHOR:CORP" },
+		{ "editor",              "EDITOR:CORP" },
+		{ "degree grantor",      "DEGREEGRANTOR:CORP" },
+		{ "organizer of meeting","ORGANIZER:CORP" },
+		{ "patent holder",       "ASSIGNEE:CORP" }
+	};
+	int nroles = sizeof( roles_convert ) / sizeof( roles_convert[0] );
+	modsin_asis_corp( node, info, level, roles_convert, nroles );
 }
 
 static void

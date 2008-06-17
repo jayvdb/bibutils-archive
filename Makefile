@@ -3,11 +3,11 @@ CC = CC="cc -Wall"
 RANLIB=RANLIB="ranlib"
 INSTALLDIR=/usr/local/bin
 
-VERSION=3.40
+VERSION=3.41
 DATE=
 
 PROGRAMS=bib2xml ris2xml end2xml endx2xml med2xml isi2xml copac2xml \
-	xml2bib xml2end xml2isi xml2ris xml2word modsclean
+	xml2ads xml2bib xml2end xml2isi xml2ris xml2wordbib modsclean
 
 all : FORCE
 	cd lib; make -k $(CC) -k $(RANLIB) -k VERSION="$(VERSION)" -k DATE="$(DATE)"; cd ..

@@ -12,17 +12,12 @@
 #include <ctype.h>
 #include "newstr.h"
 #include "newstr_conv.h"
-#include "lists.h"
 #include "fields.h"
 #include "name.h"
 #include "title.h"
 #include "serialno.h"
 #include "reftypes.h"
 #include "risin.h"
-
-extern lists asis;
-extern lists corps;
-
 
 /* RIS definition of a tag is strict:
     character 1 = uppercase alphabetic character
@@ -53,7 +48,8 @@ readmore( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line )
 }
 
 int
-risin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, newstr *reference, int *fcharset )
+risin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, 
+		newstr *reference, int *fcharset )
 {
 	int haveref = 0, inref = 0, readtoofar = 0;
 	char *p;
@@ -132,8 +128,9 @@ risin_processf( fields *risin, char *p, char *filename, long nref )
 	while ( *p ) {
 		if ( risin_istag( p ) ) {
 		p = process_line( &tag, &data, p );
-		/* no anonymous or empty fields allowed */
-		if ( tag.len && data.len )
+		/* no anonymous fields allowed */
+/*		if ( tag.len && data.len )*/
+		if ( tag.len )
 			fields_add( risin, tag.data, data.data, 0 );
 		} else {
 			p = process_line2( &tag, &data, p );

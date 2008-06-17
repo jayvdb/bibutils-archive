@@ -15,8 +15,7 @@ char progname[] = "med2xml";
 char help1[] =  "Converts a Medline XML file into MODS XML\n\n";
 char help2[] = "medline_file";
 
-lists asis  = { 0, 0, NULL };
-lists corps = { 0, 0, NULL };
+list asis, corps;
 
 int
 main( int argc, char *argv[] )
@@ -25,6 +24,10 @@ main( int argc, char *argv[] )
 	param p;
 	bibl b;
 	int err, i;
+
+	list_init( &asis );
+	list_init( &corps );
+
 	bibl_init( &b );
 	bibl_initparams( &p, BIBL_MEDLINEIN, BIBL_MODSOUT );
 	tomods_processargs( &argc, argv, &p, progname, help1, help2 );

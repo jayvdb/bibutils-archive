@@ -16,12 +16,8 @@
 #include "name.h"
 #include "title.h"
 #include "serialno.h"
-#include "lists.h"
 #include "reftypes.h"
 #include "isiin.h"
-
-extern lists asis;
-extern lists corps;
 
 /* ISI definition of a tag is strict:
  *   char 1 = uppercase alphabetic character

@@ -25,6 +25,8 @@ set UNAME = `uname -a`
 if ( ` echo $UNAME | grep Linux | wc | awk '{print $1;}' ` == 1 ) then
 	if ( ` echo $UNAME | grep 'i[3456]86' | wc | awk '{print $1};'` == 1 ) then
 		set type = "Linux_x86"
+	else if ( ` echo $UNAME | grep 'x86_64' | wc | awk '{print $1};'` == 1 ) then
+		set type = "Linux_x86_64"
 	else
 		set type = "Linux_Unknown"
 	endif
@@ -82,6 +84,12 @@ if ( $type == "Linux_x86" ) then
 	sed 's/REPLACE_RANLIB/RANLIB="ranlib"/' | \
 	sed "s|REPLACE_INSTALLDIR|${INSTALLDIR}|" | \
 	sed 's/REPLACE_POSTFIX/_i386/' > $OUTPUT_FILE
+else if ( $type == "Linux_x86_64" ) then
+	cat $INPUT_FILE | \
+	sed 's/REPLACE_CC/CC="cc -Wall"/' | \
+	sed 's/REPLACE_RANLIB/RANLIB="ranlib"/' | \
+	sed "s|REPLACE_INSTALLDIR|${INSTALLDIR}|" | \
+	sed 's/REPLACE_POSTFIX/_i386/' > $OUTPUT_FILE
 else if ( $type == "Linux_Unknown" ) then
 	cat $INPUT_FILE | \
 	sed 's/REPLACE_CC/CC="cc -Wall"/' | \
@@ -109,7 +117,7 @@ else if ( $type == "MacOSX_ppc" || $type == "MacOSX_intel" || \
 	sed 's/REPLACE_POSTFIX/_osx/' > $OUTPUT_FILE
 else if ( $type == "SunOS5" ) then
 	cat $INPUT_FILE | \
-	sed 's|REPLACE_CC|CC="/tsri/SunOS5/SunWorkShop/SUNWspro/bin/cc"|' | \
+	sed 's|REPLACE_CC|CC="gcc"|' | \
 	sed 's/REPLACE_RANLIB/RANLIB="echo Skipping ranlib"/' | \
 	sed "s|REPLACE_INSTALLDIR|${INSTALLDIR}|" | \
 	sed 's/REPLACE_POSTFIX/_sunos5/' > $OUTPUT_FILE

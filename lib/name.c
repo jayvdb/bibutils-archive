@@ -14,7 +14,7 @@
 #include "is_ws.h"
 #include "newstr.h"
 #include "fields.h"
-#include "lists.h"
+#include "list.h"
 #include "name.h"
 
 static void
@@ -171,8 +171,8 @@ name_comma( char *p, newstr *outname )
 	}
 }
 
-extern lists asis;
-extern lists corps;
+extern list asis;
+extern list corps;
 
 /* Determine if name is of type "corporate" or if it
  * should be added "as-is"; both should not be mangled.
@@ -192,17 +192,17 @@ name_determine_flags( int *ctf, int *clf, int *atf, int *alf, char *tag, char *d
 	int asis_tag_flag = 0, asis_list_flag = 0;
 
 	if ( strstr( tag, ":CORP" ) ) corp_tag_flag = 1;
-	else if ( lists_find( &corps, data ) != -1 )
+	else if ( list_find( &corps, data ) != -1 )
 		corp_list_flag = 1;
 
 	if ( strstr( tag, ":ASIS" ) ) {
 		asis_tag_flag = 1;
-		if ( lists_find( &corps, data ) != -1 )
+		if ( list_find( &corps, data ) != -1 )
 			corp_list_flag = 1;
 	} else {
-		if ( lists_find( &corps, data ) != -1 )
+		if ( list_find( &corps, data ) != -1 )
 			corp_list_flag = 1;
-		else if ( lists_find( &asis, data ) != -1 )
+		else if ( list_find( &asis, data ) != -1 )
 			asis_list_flag = 1;
 	}
 

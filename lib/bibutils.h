@@ -8,7 +8,7 @@
 #define BIBUTILS_H
 
 #include <stdio.h>
-#include "lists.h"
+#include "list.h"
 #include "bibl.h"
 
 #define BIBL_OK           (0)
