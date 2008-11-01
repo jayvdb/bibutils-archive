@@ -126,4 +126,13 @@ utf8_decode( char *s, unsigned int *pi )
 	return c;
 }
 
+void
+utf8_writebom( FILE *outptr )
+{
+	int i, nc;
+	unsigned char code[6];
+	nc = utf8_encode( 0xFEFF, code );
+	for ( i=0; i<nc; ++i )
+		fprintf(outptr,"%c",code[i]);
+}
 

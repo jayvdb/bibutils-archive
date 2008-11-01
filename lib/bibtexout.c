@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include "newstr.h"
 #include "strsearch.h"
+#include "utf8.h"
 #include "xml.h"
 #include "fields.h"
 #include "bibl.h"
@@ -505,3 +506,8 @@ bibtexout_write( fields *info, FILE *fp, int format_opts, unsigned long refnum )
 	fflush( fp );
 }
 
+void
+bibtexout_writeheader( FILE *outptr, param *p )
+{
+	if ( p->utf8bom ) utf8_writebom( outptr );
+}

@@ -7,7 +7,11 @@
 #ifndef ISIOUT_H
 #define ISIOUT_H
 
-extern void isi_write( fields *info, FILE *fp, int format_opts, 
+#include <stdio.h>
+#include "bibutils.h"
+
+extern void isiout_write( fields *info, FILE *fp, int format_opts, 
 		unsigned long refnum );
+extern void isiout_writeheader( FILE *outptr, param *p );
 
 #endif

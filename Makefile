@@ -3,8 +3,8 @@ CC = CC="cc -Wall"
 RANLIB=RANLIB="ranlib"
 INSTALLDIR=/usr/local/bin
 
-VERSION=3.41
-DATE=
+VERSION=3.42
+DATE=10/31/08
 
 PROGRAMS=bib2xml ris2xml end2xml endx2xml med2xml isi2xml copac2xml \
 	xml2ads xml2bib xml2end xml2isi xml2ris xml2wordbib modsclean

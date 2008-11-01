@@ -9,10 +9,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "utf8.h"
 #include "newstr.h"
 #include "strsearch.h"
 #include "fields.h"
 #include "bibutils.h"
+#include "isiout.h"
 
 enum {
         TYPE_UNKNOWN = 0,
@@ -176,7 +178,7 @@ output_verbose( fields *info, unsigned long refnum )
 }
 
 void
-isi_write( fields *info, FILE *fp, int format_opts, unsigned long refnum )
+isiout_write( fields *info, FILE *fp, int format_opts, unsigned long refnum )
 {
         int type = get_type( info );
 
@@ -243,5 +245,8 @@ isi_write( fields *info, FILE *fp, int format_opts, unsigned long refnum )
         fflush( fp );
 }
 
-
-
+void
+isiout_writeheader( FILE *outptr, param *p )
+{
+	if ( p->utf8bom ) utf8_writebom( outptr );
+}

@@ -1,5 +1,5 @@
 /*
- * tomods.c
+ * bibprogs.c
  *
  * Copyright (c) Chris Putnam 2004-8
  *
@@ -42,7 +42,8 @@ args_help( char *progname, char *help1, char *help2 )
 			"omitted to use as a filter\n\n", help2 );
 
 	fprintf(stderr,"  -i, --input-encoding      map character encoding\n");
-	fprintf(stderr,"  -u, --unicode-characters  directly write unicode (and not xml entities)\n");
+	fprintf(stderr,"  -u, --unicode-characters  DEFAULT: directly write unicode (and not xml entities)\n");
+	fprintf(stderr,"  -x, --xml-characters      write xml entities and not direclty unicode\n");
 	fprintf(stderr,"  -un,--unicode-no-bom      as -u, but don't write byte order mark\n");
 	fprintf(stderr,"  -s, --single-refperfile   one reference per output file\n");
 	fprintf(stderr,"  -d, --drop-key            don't put key in MODS ID field\n");
@@ -83,7 +84,7 @@ args_namelist( int argc, char *argv[], int i, char *progname, list *names,
 }
 
 int
-args_charset( char *charset_name, int *charset, int *utf8 )
+args_charset( char *charset_name, int *charset, unsigned char *utf8 )
 {
 	if ( !strcasecmp( charset_name, "unicode" ) || 
 	     !strcasecmp( charset_name, "utf8" ) ) {
@@ -98,7 +99,7 @@ args_charset( char *charset_name, int *charset, int *utf8 )
 }
 
 void
-args_encoding( int argc, char *argv[], int i, int *charset, int *utf8, char *progname )
+args_encoding( int argc, char *argv[], int i, int *charset, unsigned char *utf8, char *progname )
 {
 	if ( i+1 >= argc ) {
 		fprintf( stderr, "%s: error -i (--input-encoding) takes "
@@ -132,48 +133,53 @@ tomods_processargs( int *argc, char *argv[], param *p, char *progname,
 			args_tellversion( progname );
 			exit( EXIT_SUCCESS );
 		} else if ( args_match( argv[i], "-a", "--add-refcount" ) ) {
-			subtract = 1;
 			p->addcount = 1;
-		} else if ( args_match(argv[i], NULL, "--verbose" ) ) {
 			subtract = 1;
+		} else if ( args_match(argv[i], NULL, "--verbose" ) ) {
 			/* --debug + --verbose = --debug */
 			if ( p->verbose<1 ) p->verbose = 1;
 			p->format_opts |= BIBL_FORMAT_VERBOSE;
-		} else if ( args_match(argv[i], NULL, "--debug" ) ) {
 			subtract = 1;
+		} else if ( args_match(argv[i], NULL, "--debug" ) ) {
 			p->verbose = 3;
 			p->format_opts |= BIBL_FORMAT_VERBOSE;
+			subtract = 1;
 		} else if ( args_match( argv[i], "-d", "--drop-key" ) ) {
-			subtract = 1;
 			p->format_opts |= MODSOUT_DROPKEY;
-		} else if ( args_match( argv[i], "-s", "--single-refperfile" )){
 			subtract = 1;
+		} else if ( args_match( argv[i], "-s", "--single-refperfile" )){
 			p->singlerefperfile = 1;
+			subtract = 1;
 		} else if ( args_match( argv[i], "-u", "--unicode-characters")){
 			p->utf8out = 1;
-			p->format_opts |= MODSOUT_BOM;
+			p->utf8bom = 1;
 			p->charsetout = BIBL_CHARSET_UNICODE;
 			p->charsetout_src = BIBL_SRC_USER;
 			subtract = 1;
 		} else if ( args_match( argv[i], "-un", "--unicode-no-bom")){
 			p->utf8out = 1;
-			subtract = 1;
+			p->utf8bom = 0;
 			p->charsetout = BIBL_CHARSET_UNICODE;
 			p->charsetout_src = BIBL_SRC_USER;
+			subtract = 1;
+		} else if ( args_match( argv[i], "-x", "--xml-entities" ) ) {
+			p->utf8out = 0;
+			p->utf8bom = 0;
+			p->xmlout = 1;
+			subtract = 1;
 		} else if ( args_match( argv[i], "-c", "--corporation-file")){
-			subtract = 2;
 			args_namelist( *argc, argv, i, progname, &corps,
 				"-c", "--corporation-file" );
-/*			args_corps( *argc, argv, i, progname ); */
-		} else if ( args_match( argv[i], "-as", "--asis")) {
 			subtract = 2;
+		} else if ( args_match( argv[i], "-as", "--asis")) {
 			args_namelist( *argc, argv, i, progname, &asis,
 				"-as", "--asis" );
-		} else if ( args_match( argv[i], "-i", "--input-encoding" ) ) {
 			subtract = 2;
+		} else if ( args_match( argv[i], "-i", "--input-encoding" ) ) {
 			args_encoding( *argc, argv, i, &(p->charsetin),
 				&(p->utf8in), progname );
 			p->charsetin_src = BIBL_SRC_USER;
+			subtract = 2;
 		}
 		if ( subtract ) {
 			for ( j=i+subtract; j<*argc; j++ ) {

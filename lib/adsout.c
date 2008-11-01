@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "utf8.h"
 #include "newstr.h"
 #include "strsearch.h"
 #include "fields.h"
@@ -406,5 +407,11 @@ adsout_write( fields *info, FILE *fp, int format_opts, unsigned long refnam)
 	output_Rtag( fp, info, "%R", type );
 	fprintf( fp, "\n" );
 	fflush( fp );
+}
+
+void
+adsout_writeheader( FILE *outptr, param *p )
+{
+	if ( p->utf8bom ) utf8_writebom( outptr );
 }
 

@@ -60,10 +60,13 @@ addutf8char( newstr *s, unsigned int ch, int xmlout, int utf8out )
 	unsigned char code[6];
 	int nc, i;
 	if ( xmlout ) {
-		if ( ch==60 ) { newstr_strcat( s, "&lt;" ); return; }
-		else if ( ch==62 ) { newstr_strcat( s, "&gt;" ); return; }
+		/* These are the five minimal predefined entites in XML */
+		if ( ch==34 ) { newstr_strcat( s, "&quot;" ); return; }
 		else if ( ch==38 ) { newstr_strcat( s, "&amp;" ); return; }
-		else if ( ch > 127 && !utf8out )
+		else if ( ch==39 ) { newstr_strcat( s, "&apos;" ); return; }
+		else if ( ch==60 ) { newstr_strcat( s, "&lt;" ); return; }
+		else if ( ch==62 ) { newstr_strcat( s, "&gt;" ); return; }
+		else if ( ch > 127 && xmlout > 1 )
 			{ addentity( s, ch ); return; }
 	}
 	nc = utf8_encode( ch, code );

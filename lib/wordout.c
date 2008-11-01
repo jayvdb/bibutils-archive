@@ -107,7 +107,8 @@ get_type( fields *info )
 		if ( !strcasecmp( genre, "periodical" ) ||
 		     !strcasecmp( genre, "academic journal" ) )
 			type = TYPE_ARTICLE;
-		else if ( !strcasecmp( genre, "book" ) ) {
+		else if ( !strcasecmp( genre, "book" ) ||
+			!strcasecmp( genre, "collection" ) ) {
 			if ( info->level[i]==0 ) type = TYPE_BOOK;
 			else type = TYPE_INBOOK;
 		}
@@ -508,20 +509,10 @@ wordout_write( fields *info, FILE *outptr, int format_opts,
 	fflush( outptr );
 }
 
-static void
-writebom( FILE *outptr )
-{
-	int i, nc;
-	unsigned char code[6];
-	nc = utf8_encode( 0xFEFF, code );
-	for ( i=0; i<nc; ++i )
-		fprintf(outptr,"%c",code[i]);
-}
-
 void
-wordout_writeheader( FILE *outptr, int format )
+wordout_writeheader( FILE *outptr, param *p )
 {
-	if ( format & WORDOUT_BOM ) writebom( outptr );
+	if ( p->utf8bom ) utf8_writebom( outptr );
 	fprintf(outptr,"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 	fprintf(outptr,"<b:Sources SelectedStyle=\"\" "
 		"xmlns:b=\"http://schemas.openxmlformats.org/officeDocument/2006/bibliography\" "

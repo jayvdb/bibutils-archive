@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "utf8.h"
 #include "newstr.h"
 #include "strsearch.h"
 #include "fields.h"
@@ -341,5 +342,11 @@ endout_write( fields *info, FILE *fp, int format_opts, unsigned long refnum )
 	output_pages( fp, info );
 	fprintf( fp, "\n" );
 	fflush( fp );
+}
+
+void
+endout_writeheader( FILE *outptr, param *p )
+{
+	if ( p->utf8bom ) utf8_writebom( outptr );
 }
 

@@ -796,20 +796,10 @@ modsout_write( fields *info, FILE *outptr, int format_opts,
 	fflush( outptr );
 }
 
-static void
-modsout_writebom( FILE *outptr )
-{
-	int i, nc;
-	unsigned char code[6];
-	nc = utf8_encode( 0xFEFF, code );
-	for ( i=0; i<nc; ++i )
-		fprintf(outptr,"%c",code[i]);
-}
-
 void
-modsout_writeheader( FILE *outptr, int format )
+modsout_writeheader( FILE *outptr, param *p )
 {
-	if ( format & MODSOUT_BOM ) modsout_writebom( outptr );
+	if ( p->utf8bom ) utf8_writebom( outptr );
 	fprintf(outptr,"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 	fprintf(outptr,"<modsCollection xmlns=\"http://www.loc.gov/mods/v3\">\n");
 }

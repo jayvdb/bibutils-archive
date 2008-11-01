@@ -11,13 +11,13 @@
 
 /* format-specific options */
 #define MODSOUT_DROPKEY (2)
-#define MODSOUT_BOM     (4)
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "bibl.h"
+#include "bibutils.h"
 
-extern void modsout_writeheader( FILE *outptr, int unicode );
+extern void modsout_writeheader( FILE *outptr, param *p );
 extern void modsout_writefooter( FILE *outptr );
 extern void modsout_write( fields *info, FILE *outptr,
 	int format_opts, unsigned long numrefs );

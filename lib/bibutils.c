@@ -36,7 +36,7 @@ typedef struct convert_rules {
 	void (*cleanf)(bibl*);
 	int  (*typef) (fields*,char*,int,variants*,int);
 	void (*convertf)(fields*,fields*,int,int,variants*,int);
-	void (*headerf)(FILE*,int);
+	void (*headerf)(FILE*,param*);
 	void (*footerf)(FILE*);
 	void (*writef)(fields*,FILE*,int,unsigned long);
 	variants *all;
@@ -55,6 +55,7 @@ bibl_initparams( param *p, int readmode, int writemode )
 	p->latexout         = 0;
 	p->utf8in           = 0;
 	p->utf8out          = 0;
+	p->utf8bom          = 0;
 	p->xmlout           = 0;
 	p->verbose          = 0;
 	p->addcount         = 0;
@@ -84,10 +85,14 @@ bibl_initparams( param *p, int readmode, int writemode )
 	if ( writemode == BIBL_BIBTEXOUT ) {
 		p->latexout = 1;
 	} else if ( writemode == BIBL_MODSOUT ) {
-		if ( !p->utf8out ) p->xmlout = 1;
+		/* default to UTF8 Unicode with BOM written */
 		p->charsetout = BIBL_CHARSET_UNICODE;
+		p->utf8out = 1;
+		p->utf8bom = 1;
+		p->xmlout = 1;
 	} else if ( writemode == BIBL_WORD2007OUT ) {
-		if ( !p->utf8out ) p->xmlout = 1;
+		if ( !p->utf8out ) p->xmlout = 3;
+		else p->xmlout = 1;
 		p->charsetout = BIBL_CHARSET_UNICODE;
 	} else p->xmlout = 0;
 
@@ -456,7 +461,7 @@ rules_init( convert_rules *r, int mode )
 			r->nall     = bibtex_nall;
 			break;
 		case BIBL_BIBTEXOUT:
-			r->headerf = NULL;
+			r->headerf = bibtexout_writeheader;
 			r->footerf = NULL;
 			r->writef  = bibtexout_write;
 			break;
@@ -479,12 +484,12 @@ rules_init( convert_rules *r, int mode )
 			r->nall     = end_nall;
 			break;
 		case BIBL_ENDNOTEOUT:
-			r->headerf = NULL;
+			r->headerf = endout_writeheader;
 			r->footerf = NULL;
 			r->writef  = endout_write;
 			break;
 		case BIBL_ADSABSOUT:
-			r->headerf = NULL;
+			r->headerf = adsout_writeheader;
 			r->footerf = NULL;
 			r->writef  = adsout_write;
 			break;
@@ -498,7 +503,7 @@ rules_init( convert_rules *r, int mode )
 			r->nall     = ris_nall;
 			break;
 		case BIBL_RISOUT:
-			r->headerf = NULL;
+			r->headerf = risout_writeheader;
 			r->footerf = NULL;
 			r->writef  = risout_write;
 			break;
@@ -512,9 +517,9 @@ rules_init( convert_rules *r, int mode )
 			r->nall     = isi_nall;
 			break;
 		case BIBL_ISIOUT:
-			r->headerf  = NULL;
+			r->headerf  = isiout_writeheader;
 			r->footerf  = NULL;
-			r->writef   = isi_write;
+			r->writef   = isiout_write;
 			break;
 		case BIBL_COPACIN:
 			r->readf    = copacin_readf;
@@ -644,12 +649,12 @@ output_bibl( FILE *fp, bibl *b, convert_rules *r, param *p, int mode )
 {
 	long i;
 	if ( !p->singlerefperfile && r->headerf )
-		r->headerf( fp, p->format_opts );
+		r->headerf( fp, p );
 	for ( i=0; i<b->nrefs; ++i ) {
 		if ( p->singlerefperfile ) { 
 			fp = singlerefname( b->ref[i], i, mode );
 			if ( fp ) {
-				if ( r->headerf ) r->headerf(fp,p->format_opts);
+				if ( r->headerf ) r->headerf( fp, p );
 			} else return BIBL_ERR_CANTOPEN;
 		}
 		r->writef( b->ref[i], fp, p->format_opts, i );
@@ -669,6 +674,7 @@ bibl_setwriteparams( param *np, param *op, int mode )
 	if ( !op ) bibl_initparams( np, 0, mode );
 	else {
 		np->utf8out = op->utf8out;
+		np->utf8bom = op->utf8bom;
 		np->charsetout = op->charsetout;
 		np->charsetout_src = op->charsetout_src;
 		np->latexout = op->latexout;

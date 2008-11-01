@@ -1,6 +1,47 @@
 
 BIBUTILS
 
+3.42
+
+MODSOUT
++ Change default to UTF8 unicode characters written directly (not
+  via XML entities) and writing BOM.  Add command-line switch
+  -x or --xml-entities to write XML entities instead to BIB2XML
+  END2XML ENDX2XML MED2XML RIS2XML, etc.
+
+XML2ADS
++ Fix unicode output to add Byte Order Mark by default
++ Add -nb or --no-bom switch to turn off Byte Order Mark for unicode if
+  the user doesn't want it
+  
+XML2BIB
++ For users who want the bibtex file format, but not the latex encryption
+  of characters, add -nl or --no-latex to command-line switches
++ Fix unicode output to add Byte Order Mark by default
++ Add -nb or --no-bom switch to turn off Byte Order Mark for unicode if
+  the user doesn't want it
+
+XML2END
++ Fix unicode output to add Byte Order Mark by default
++ Add -nb or --no-bom switch to turn off Byte Order Mark for unicode if
+  the user doesn't want it
+
+XML2ISI
++ Fix unicode output to add Byte Order Mark by default
++ Add -nb or --no-bom switch to turn off Byte Order Mark for unicode if
+  the user doesn't want it
+
+XML2RIS
++ Fix unicode output to add Byte Order Mark by default
++ Add -nb or --no-bom switch to turn off Byte Order Mark for unicode if
+  the user doesn't want it
+
+XML2WORD2007
++ Add -nb or --no-bom switch to turn off Byte Order Mark for unicode if
+  the user doesn't want it
++ Fix the recognition of incollection items as book sections.
+
+
 3.41
 6/16/08
 

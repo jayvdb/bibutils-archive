@@ -31,7 +31,6 @@ title_process( fields *info, char *tag, char *data, int level )
 		p = data;
 		while ( p!=q ) newstr_addchar( &title, *p++ );
 		if ( *q=='?' ) newstr_addchar( &title, '?' );
-/*		q += 2;*/
 		q++;
 		q = skip_ws( q );
 		while ( *q ) newstr_addchar( &subtitle, *q++ );

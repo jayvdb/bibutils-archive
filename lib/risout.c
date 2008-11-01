@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "utf8.h"
 #include "newstr.h"
 #include "strsearch.h"
 #include "fields.h"
@@ -400,5 +401,11 @@ for ( i=0; i<info->nfields; ++i )
 	output_thesishint( fp, type );
 	fprintf( fp, "ER  - \n" );
 	fflush( fp );
+}
+
+void
+risout_writeheader( FILE *outptr, param *p )
+{
+	if ( p->utf8bom ) utf8_writebom( outptr );
 }
 

@@ -6,6 +6,10 @@
 #ifndef BIBTEXOUT_H
 #define BIBTEXOUT_H
 
+#include <stdio.h>
+#include "fields.h"
+#include "bibutils.h"
+
 /* bibtexout output options */
 #define BIBOUT_FINALCOMMA (2)
 #define BIBOUT_SINGLEDASH (4)
@@ -16,5 +20,7 @@
 
 extern void bibtexout_write( fields *info, FILE *fp, int format_opts, 
 		unsigned long refnum );
+extern void bibtexout_writeheader( FILE *outptr, param *p );
+
 
 #endif
