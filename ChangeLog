@@ -1,7 +1,23 @@
 
 BIBUTILS
 
+3.43
+11/24/08
+
+BIB2XML
++ Fix recognition of em-dash by placing it before en-dash in conversion
+  list.
++ Add -nl or --no-latex to prevent conversion of latex character
+  combinations
+
+BIBUTILS
++ Move "list.h" include from bibutils.h to bibutils.c
+
+MODSOUT
++ Ensure that bibutils handles records with empty MODS attributes
+
 3.42
+10/31/08
 
 MODSOUT
 + Change default to UTF8 unicode characters written directly (not

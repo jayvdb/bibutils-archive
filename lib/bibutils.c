@@ -33,7 +33,7 @@
 typedef struct convert_rules {
 	int  (*readf)(FILE*,char*,int,int*,newstr*,newstr*,int*);
 	int  (*processf)(fields*,char*,char*,long);
-	void (*cleanf)(bibl*);
+	void (*cleanf)(bibl*,param*);
 	int  (*typef) (fields*,char*,int,variants*,int);
 	void (*convertf)(fields*,fields*,int,int,variants*,int);
 	void (*headerf)(FILE*,param*);
@@ -385,8 +385,10 @@ get_citekeys( bibl *b, list *citekeys )
 		info = b->ref[i];
 		n = fields_find( info, "REFNUM", -1 );
 		if ( n==-1 ) n = generate_citekey( info, i );
-		if ( n!=-1 ) list_add( citekeys, info->data[n].data );
-		else list_add( citekeys, "" );
+		if ( n!=-1 && info->data[n].data )
+			list_add( citekeys, info->data[n].data );
+		else
+			list_add( citekeys, "" );
 	}
 }
 
@@ -429,7 +431,7 @@ convert_ref( bibl *bin, char *fname, bibl *bout, convert_rules *r, param *p )
 	fields *rin, *rout;
 	long i;
 	int reftype;
-	if ( r->cleanf ) r->cleanf( bin );
+	if ( r->cleanf ) r->cleanf( bin, p );
 	for ( i=0; i<bin->nrefs; ++i ) {
 		rin = bin->ref[i];
 		rout = fields_new();

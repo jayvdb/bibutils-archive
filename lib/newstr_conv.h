@@ -14,6 +14,7 @@
 
 #define CHARSET_UNKNOWN (-1)
 #define CHARSET_UNICODE (-2)
+#define CHARSET_GB18030 (-3)
 #define CHARSET_DEFAULT (66)  /* Latin-1/ISO8859-1 */
 
 extern int get_charset( char *name );

@@ -260,8 +260,8 @@ static struct latex_chars latex_chars[] = {
    { 8261, "{\\textlquill}", "\\textlquill", "" },         /* Left quill &#x2045; */
    { 8262, "{\\textrquill}", "\\textrquill", "" },         /* Right quill &#x2046; */
 
-   { 8211, "--",      "{\\textendash}", "\\textendash" },     /* En-dash &#x2013; */
    { 8212, "---",     "{\\textemdash}", "\\textemdash" },     /* Em-dash &#x2014; */
+   { 8211, "--",      "{\\textendash}", "\\textendash" },     /* En-dash &#x2013; */
    { 8230, "\\ldots", "{\\textellipsis}", "\\textellipsis" },   /* Ellipsis &#x2026; */
 
    { 8194, "\\enspace", "\\hspace{.5em}", "" }, /* En-space &#x2002; */

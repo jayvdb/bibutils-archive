@@ -3,8 +3,8 @@ CC = REPLACE_CC
 RANLIB=REPLACE_RANLIB
 INSTALLDIR=REPLACE_INSTALLDIR
 
-VERSION=3.42
-DATE=10/31/08
+VERSION=3.43
+DATE=11/24/08
 
 PROGRAMS=bib2xml ris2xml end2xml endx2xml med2xml isi2xml copac2xml \
 	xml2ads xml2bib xml2end xml2isi xml2ris xml2wordbib modsclean

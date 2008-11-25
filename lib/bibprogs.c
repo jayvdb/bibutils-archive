@@ -45,6 +45,7 @@ args_help( char *progname, char *help1, char *help2 )
 	fprintf(stderr,"  -u, --unicode-characters  DEFAULT: directly write unicode (and not xml entities)\n");
 	fprintf(stderr,"  -x, --xml-characters      write xml entities and not direclty unicode\n");
 	fprintf(stderr,"  -un,--unicode-no-bom      as -u, but don't write byte order mark\n");
+	fprintf(stderr,"  -nl,--no-latex            do not convert latex-style character combinations\n");
 	fprintf(stderr,"  -s, --single-refperfile   one reference per output file\n");
 	fprintf(stderr,"  -d, --drop-key            don't put key in MODS ID field\n");
 	fprintf(stderr,"  -c, --corporation-file    specify file of corporation names\n");
@@ -90,6 +91,9 @@ args_charset( char *charset_name, int *charset, unsigned char *utf8 )
 	     !strcasecmp( charset_name, "utf8" ) ) {
 		*charset = BIBL_CHARSET_UNICODE;
 		*utf8 = 1;
+	} else if ( !strcasecmp( charset_name, "gb18030" ) ) {
+		*charset = BIBL_CHARSET_GB18030;
+		*utf8 = 0;
 	} else {
 		*charset = get_charset( charset_name );
 		*utf8 = 0;
@@ -161,6 +165,9 @@ tomods_processargs( int *argc, char *argv[], param *p, char *progname,
 			p->utf8bom = 0;
 			p->charsetout = BIBL_CHARSET_UNICODE;
 			p->charsetout_src = BIBL_SRC_USER;
+			subtract = 1;
+		} else if ( args_match( argv[i], "-nl", "--no-latex" ) ) {
+			p->latexin = 0;
 			subtract = 1;
 		} else if ( args_match( argv[i], "-x", "--xml-entities" ) ) {
 			p->utf8out = 0;

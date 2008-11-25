@@ -121,8 +121,10 @@ process_bibtexline( char *p, newstr *tag, newstr *data )
 }
 
 static void
-bibtex_cleantoken( newstr *s )
+bibtex_cleantoken( newstr *s, param *p )
 {
+
+	if ( p && p->latexin==0 ) return;
 
 	/* 'textcomp' annotations */
 	newstr_findreplace( s, "\\textit", "" );
@@ -160,10 +162,13 @@ bibtex_addstring( char *p )
 	p = skip_ws( p );
 	if ( *p=='(' || *p=='{' ) p++;
 	p = process_bibtexline( p, &s1, &s2 );
-	list_add( &find, s1.data );
 	newstr_findreplace( &s2, "\\ ", " " );
-	bibtex_cleantoken( &s2 );
-	list_add( &replace, s2.data );
+	bibtex_cleantoken( &s2, NULL );
+	if ( s1.data ) {
+		list_add( &find, s1.data );
+		if ( s2.data ) list_add( &replace, s2.data );
+		else list_add( &replace, "" );
+	}
 	newstr_free( &s1 );
 	newstr_free( &s2 );
 }
@@ -209,7 +214,7 @@ bibtex_split( list *tokens, newstr *s )
 			nbrackets--;
 			newstr_addchar( &currtok, '}' );
 		} else if ( s->data[i]=='#' && !nquotes && !nbrackets ) {
-			list_add( tokens, currtok.data );
+			if ( currtok.len ) list_add( tokens, currtok.data );
 			newstr_empty( &currtok );
 		} else if ( !is_ws( s->data[i] ) || nquotes || nbrackets ) {
 			newstr_addchar( &currtok, s->data[i] );
@@ -357,7 +362,7 @@ bibtex_addtitleurl( fields *info, newstr *in )
 }
 
 static void
-bibtex_cleandata( newstr *s, fields *info )
+bibtex_cleandata( newstr *s, fields *info, param *p )
 {
 	list tokens;
 	int i;
@@ -371,7 +376,7 @@ bibtex_cleandata( newstr *s, fields *info )
 			if (!strncasecmp(tokens.str[i].data,"\\href{", 6)) {
 				bibtex_addtitleurl( info, &(tokens.str[i]) );
 			}
-			bibtex_cleantoken( &(tokens.str[i]) );
+			bibtex_cleantoken( &(tokens.str[i]), p );
 		}
 	}
 	newstr_empty( s );
@@ -440,14 +445,14 @@ bibtexin_crossref( bibl *bin )
 }
 
 static void
-bibtexin_cleanref( fields *bibin )
+bibtexin_cleanref( fields *bibin, param *p )
 {
 	newstr *t, *d;
 	int i;
 	for ( i=0; i<bibin->nfields; ++i ) {
 		t = &( bibin->tag[i] );
 		d = &( bibin->data[i] );
-		bibtex_cleandata( d, bibin );
+		bibtex_cleandata( d, bibin, p );
 		if ( !strsearch( t->data, "AUTHORS" ) ) {
 			newstr_findreplace( d, "\n", " " );
 			newstr_findreplace( d, "\r", " " );
@@ -462,11 +467,11 @@ bibtexin_cleanref( fields *bibin )
 }
 
 void
-bibtexin_cleanf( bibl *bin )
+bibtexin_cleanf( bibl *bin, param *p )
 {
 	long i;
         for ( i=0; i<bin->nrefs; ++i )
-		bibtexin_cleanref( bin->ref[i] );
+		bibtexin_cleanref( bin->ref[i], p );
 	bibtexin_crossref( bin );
 }
 

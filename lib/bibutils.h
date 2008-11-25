@@ -44,6 +44,7 @@
 
 #define BIBL_CHARSET_UNKNOWN (-1)
 #define BIBL_CHARSET_UNICODE (-2)
+#define BIBL_CHARSET_GB18030 (-3)
 #define BIBL_CHARSET_DEFAULT (66)  /* Latin-1/ISO8859-1 */
 
 #define BIBL_SRC_DEFAULT (0)  /* value from program default */

@@ -30,8 +30,10 @@ xmlattrib_new( void )
 static void
 xmlattrib_add( xml_attrib *a, char *attrib, char *value  )
 {
-	list_add( &(a->attrib), attrib );
-	list_add( &(a->value), value );
+	if ( attrib ) list_add( &(a->attrib), attrib );
+	else list_add( &(a->attrib), "" );
+	if ( value ) list_add( &(a->value), value );
+	else list_add( &(a->value), "" );
 }
 
 static void

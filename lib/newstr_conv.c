@@ -18,6 +18,7 @@
 #include "latex.h"
 #include "entities.h"
 #include "utf8.h"
+/* #include "gb18030.h" */
 #include "newstr_conv.h"
 
 #include "charsets.h"
@@ -54,25 +55,57 @@ addentity( newstr *s, unsigned int ch )
 	newstr_strcat( s, buf );
 }
 
+/* These are the five minimal predefined entites in XML */
+static int
+minimalxmlchars( newstr *s, unsigned int ch )
+{
+	if ( ch==34 ) { newstr_strcat( s, "&quot;" ); return 1; }
+	else if ( ch==38 ) { newstr_strcat( s, "&amp;" ); return 1; }
+	else if ( ch==39 ) { newstr_strcat( s, "&apos;" ); return 1; }
+	else if ( ch==60 ) { newstr_strcat( s, "&lt;" ); return 1; }
+	else if ( ch==62 ) { newstr_strcat( s, "&gt;" ); return 1; }
+	return 0;
+}
+
+static void
+addxmlchar( newstr *s, unsigned int ch )
+{
+	if ( minimalxmlchars( s, ch ) ) return;
+	if ( ch > 127 ) addentity( s, ch );
+	else newstr_addchar( s, ch );
+}
+
 static void
 addutf8char( newstr *s, unsigned int ch, int xmlout, int utf8out )
 {
 	unsigned char code[6];
 	int nc, i;
 	if ( xmlout ) {
-		/* These are the five minimal predefined entites in XML */
-		if ( ch==34 ) { newstr_strcat( s, "&quot;" ); return; }
-		else if ( ch==38 ) { newstr_strcat( s, "&amp;" ); return; }
-		else if ( ch==39 ) { newstr_strcat( s, "&apos;" ); return; }
-		else if ( ch==60 ) { newstr_strcat( s, "&lt;" ); return; }
-		else if ( ch==62 ) { newstr_strcat( s, "&gt;" ); return; }
-		else if ( ch > 127 && xmlout > 1 )
+		if ( minimalxmlchars( s, ch ) ) return;
+		if ( ch > 127 && xmlout > 1 )
 			{ addentity( s, ch ); return; }
 	}
 	nc = utf8_encode( ch, code );
 	for ( i=0; i<nc; ++i )
 		newstr_addchar( s, code[i] );
 }
+
+#if 0
+static void
+addgb18030char( newstr *s, unsigned int ch, int xmlout, int utf8out )
+{
+	unsigned char code[4];
+	int nc, i;
+	if ( xmlout ) {
+		if ( minimalxmlchars( s, ch ) ) return;
+		if ( ch > 127 && xmlout > 1 )
+			{ addentity( s, ch ); return; }
+	}
+	nc = gb18030_encode( ch, code );
+	for ( i=0; i<nc; ++i )
+		newstr_addchar( s, code[i] );
+}
+#endif
 
 static void
 addlatexchar( newstr *s, unsigned int ch, int xmlout, int utf8out )
@@ -88,16 +121,6 @@ addlatexchar( newstr *s, unsigned int ch, int xmlout, int utf8out )
 	} else {
 		newstr_strcat( s, buf );
 	}
-}
-
-static void
-addxmlchar( newstr *s, unsigned int ch )
-{
-	if ( ch==60 )        newstr_strcat ( s, "&lt;" ); 
-	else if ( ch==62 )   newstr_strcat ( s, "&gt;" );
-	else if ( ch==38 )   newstr_strcat ( s, "&amp;" );
-	else if ( ch > 127 ) addentity( s, ch );
-	else                 newstr_addchar( s, ch );
 }
 
 static unsigned int
@@ -143,15 +166,21 @@ get_unicode( newstr *s, unsigned int *pi, int charsetin, int latexin, int utf8in
 {
 	unsigned int ch;
 	int unicode = 0, err = 0;
-	if ( xmlin && s->data[*pi]=='&' ) 
+	if ( xmlin && s->data[*pi]=='&' ) {
 		ch = decode_entity( s->data, pi, &unicode, &err );
-	else if ( latexin ) {
-		/* Must handle bibtex files in UTF8 */
+	} else if ( charsetin==CHARSET_GB18030 ) {
+		ch = ( unsigned int ) s->data[*pi];
+/*		ch = gb18030_decode( s->data, pi );*/
+		unicode = 1;
+	} else if ( latexin ) {
+		/* Must handle bibtex files in UTF8/Unicode */
 		if ( utf8in && ( s->data[*pi] & 128 ) ) {
 			ch = utf8_decode( s->data, pi );
+			unicode = 1;
 		} else ch = latex2char( s->data, pi, &unicode );
 	}
-	else if ( utf8in ) ch = utf8_decode( s->data, pi );
+	else if ( utf8in )
+		ch = utf8_decode( s->data, pi );
 	else {
 		ch = (unsigned int) s->data[*pi];
 		*pi = *pi + 1;
@@ -168,6 +197,7 @@ write_unicode( newstr *s, unsigned int ch, int charsetout, int latexout,
 	unsigned int c;
 	if ( utf8out ) addutf8char( s, ch, xmlout, utf8out );
 	else if ( latexout ) addlatexchar( s, ch, xmlout, utf8out );
+/*	else if ( charsetout==CHARSET_GB18030 ) addgb18030char( s, ch, xmlout, utf8out );*/
 	else {
 		c = lookupuni( charsetout, ch );
 		if ( xmlout ) addxmlchar( s, c );
