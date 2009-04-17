@@ -1,40 +1,22 @@
 /*
  * xml2end.c
  *
- * Copyright (c) Chris Putnam 2004
+ * Copyright (c) Chris Putnam 2004-8
  *
  * Program and source code released under the GPL
  *
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include "newstr.h"
-#include "list.h"
-#include "strsearch.h"
-#include "bibl.h"
 #include "bibutils.h"
-#include "bibprogs.h"
 #include "endout.h"
-
-char  progname[] = "xml2end";
-list asis, corps;
-
-void
-tellversion( void )
-{
-	extern char bibutils_version[];
-	extern char bibutils_date[];
-	fprintf( stderr, "%s, ", progname );
-	fprintf( stderr, "bibutils suite version %s date %s\n",
-		bibutils_version, bibutils_date );
-}
+#include "args.h"
+#include "bibprog.h"
 
 void
-help( void )
+help( char *progname )
 {
-	tellversion();
+	args_tellversion( progname );
 	fprintf(stderr,"Converts an XML intermediate reference file into a pre-EndNote format\n\n");
 
 	fprintf(stderr,"usage: %s xml_file > endnote_file\n\n",progname);
@@ -50,36 +32,6 @@ help( void )
 	fprintf(stderr,"http://www.scripps.edu/~cdputnam/software/bibutils for more details\n\n");
 }
 
-
-/* Must process charset info first so switches are order independent */
-void
-process_charsets( int *argc, char *argv[], param *p )
-{
-	int i, j, subtract;
-	i = 1;
-	while ( i<*argc ) {
-		subtract = 0;
-		if ( args_match( argv[i], "-i", "--input-encoding" ) ) {
-			args_encoding( *argc, argv, i, &(p->charsetin), 
-					&(p->utf8in), progname );
-			p->charsetin_src = BIBL_SRC_USER;
-			subtract = 2;
-		} else if ( args_match( argv[i], "-o", "--output-encoding" ) ) {
-			args_encoding( *argc, argv, i, &(p->charsetout),
-					&(p->utf8out), progname );
-			if ( p->charsetout==BIBL_CHARSET_UNICODE )
-				p->utf8bom = 1;
-			p->charsetout_src = BIBL_SRC_USER;
-			subtract = 2;
-		}
-		if ( subtract ) {
-			for ( j=i+subtract; j<*argc; ++j )
-				argv[j-subtract] = argv[j];
-			*argc -= subtract;
-		} else i++;
-	}
-}
-
 void
 process_args( int *argc, char *argv[], param *p )
 {
@@ -88,10 +40,10 @@ process_args( int *argc, char *argv[], param *p )
 	while ( i<*argc ) {
 		subtract = 0;
 		if ( args_match( argv[i], "-h", "--help" ) ) {
-			help();
+			help( p->progname );
 			exit( EXIT_SUCCESS );
 		} else if ( args_match( argv[i], "-v", "--version" ) ) {
-			tellversion();
+			args_tellversion( p->progname );
 			exit( EXIT_SUCCESS );
 		} else if ( args_match( argv[i], "-s", "--single-refperfile")){
 			p->singlerefperfile = 1;
@@ -114,48 +66,15 @@ process_args( int *argc, char *argv[], param *p )
 	}
 }
 
-
 int 
 main( int argc, char *argv[] )
 {
-	FILE *fp;
 	param p;
-	bibl b;
-	int err, i;
-
-	list_init( &asis );
-	list_init( &corps );
-
-	bibl_init( &b );
-	bibl_initparams( &p, BIBL_MODSIN, BIBL_ENDNOTEOUT );
-	process_charsets( &argc, argv, &p );
+	bibl_initparams( &p, BIBL_MODSIN, BIBL_ENDNOTEOUT, "xml2end" );
+	process_charsets( &argc, argv, &p, 1, 1 );
 	process_args( &argc, argv, &p );
-
-	if (argc==1) {
-		err = bibl_read( &b, stdin, "stdin", BIBL_MODSIN, &p );
-		if ( err ) bibl_reporterr( err );
-	} else {
-		for ( i=1; i<argc; ++i ) {
-			fp = fopen(argv[i],"r");
-			if ( fp ) {
-				err = bibl_read( &b,fp,argv[i],BIBL_MODSIN,&p);
-				fclose( fp );
-				if ( err ) bibl_reporterr( err );
-			} else {
-				fprintf( stderr, "%s: cannot open %s\n",
-					progname, argv[i]);
-			}
-		}
-	}
-	bibl_write( &b, stdout, BIBL_ENDNOTEOUT, &p );
-	fflush( stdout );
-
-	fprintf( stderr, "%s: Processed %ld references.\n", progname, b.nrefs);
-	fflush( stderr );
-
-	bibl_free( &b );
-
+	bibprog( argc, argv, &p );
+	bibl_freeparams( &p );
 	return EXIT_SUCCESS;
 }
-
 

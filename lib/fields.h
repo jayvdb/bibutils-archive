@@ -13,6 +13,8 @@
 #define LEVEL_HOST (1)
 #define LEVEL_SERIES (2)
 
+#define LEVEL_ORIG (-2)
+
 #include "newstr.h"
 
 typedef struct {

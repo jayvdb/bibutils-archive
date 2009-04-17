@@ -167,22 +167,13 @@ endxmlin_titles( xml *node, fields *info )
  *      title CDATA #IMPLIED
  * >
  *
- * Don't use endxmlin_data() as we need to add these as names...
  */
-
 void
-endxmlin_contributor( xml *node, fields *info, char *int_tag )
+endxmlin_contributor( xml *node, fields *info, char *int_tag, int level )
 {
-	if ( node->down && xml_tagexact( node->down, "author" ) ) {
-		endxmlin_contributor( node->down, info, int_tag );
-	} else if ( node->down && xml_tagexact( node->down, "style" ) ) {
-		endxmlin_contributor( node->down, info, int_tag );
-	} else {
-		if ( node->value && node->value->len )
-			fields_add( info, int_tag, node->value->data, 0 );
-	}
+	endxmlin_data( node, int_tag, info, level );
 	if ( node->next )
-		endxmlin_contributor( node->next, info, int_tag );
+		endxmlin_contributor( node->next, info, int_tag, level );
 }
 
 static void
@@ -198,7 +189,7 @@ endxmlin_contributors( xml *node, fields *info )
 	int i, n = sizeof( contrib ) / sizeof ( contrib[0] );
 	for ( i=0; i<n; ++i ) {
 		if ( xml_tagexact( node, contrib[i].attrib ) && node->down )
-			endxmlin_contributor( node->down, info, contrib[i].internal );
+			endxmlin_contributor( node->down, info, contrib[i].internal, 0 );
 	}
 	if ( node->next )
 		endxmlin_contributors( node->next, info );

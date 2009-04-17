@@ -22,8 +22,6 @@ typedef struct convert {
 	int  code;
 } convert;
 
-extern char progname[];
-
 enum {
 	TYPE_UNKNOWN = 0,
 	TYPE_ARTICLE,
@@ -116,7 +114,7 @@ get_type( fields *info )
 /*                        if ( level==0 ) type=TYPE_PROCEEDINGS;*/
                         /*else */ type = TYPE_INPROCEEDINGS;
                 }
-		else if ( !strcasecmp( genre, "theses" ) ) {
+		else if ( !strcasecmp( genre, "thesis" ) ) {
                         if ( type==TYPE_UNKNOWN ) type=TYPE_THESIS;
                 } else if ( !strcasecmp( genre, "Ph.D. thesis" ) )
                         type = TYPE_PHDTHESIS;
@@ -301,9 +299,9 @@ output_names( fields *info, FILE *outptr, int level )
 		{ "3RD_AUTHOR:CORP","author",     NAME_CORP },
 		{ "SUB_AUTHOR",   "author",       NAME },
 		{ "SUB_AUTHOR:ASIS","author",     NAME_ASIS },
-		{ "COMMITTEE",         "author",  NAME_CORP },
-		{ "COURT",             "author",  NAME_CORP },
-		{ "LEGISLATIVEBODY",   "author",  NAME_CORP }
+		{ "COMMITTEE:CORP",    "author",  NAME_CORP },
+		{ "COURT:CORP",        "author",  NAME_CORP },
+		{ "LEGISLATIVEBODY:CORP",   "author",  NAME_CORP }
 	};
 	int nauthors = sizeof( authors ) / sizeof( convert );
 
@@ -481,31 +479,15 @@ output_citeparts( fields *info, FILE *outptr, int level, int max, int type )
 }
 
 void
-wordout_write( fields *info, FILE *outptr, int format_opts, 
-	unsigned long numrefs )
+wordout_write( fields *info, FILE *outptr, param *p, unsigned long numrefs )
 {
 	int max = fields_maxlevel( info );
 	int type = get_type( info );
-/*	int i, dropkey = ( format_opts & WORDOUT_DROPKEY );*/
 
 	fprintf( outptr, "<b:Source>\n" );
 	output_citeparts( info, outptr, -1, max, type );
-
-/*
-	for ( i=0; i<info->nfields; ++i ) {
-		if ( !info->used[i] ) {
-			fprintf( stderr, "%s warning: ref %ld "
-				"unused tag: '%s' "
-				"value: '%s' level: %d\n", 
-				progname,
-				numrefs+1,
-				info->tag[i].data, 
-				info->data[i].data, info->level[i] );
-		}
-	}
-*/
-
 	fprintf( outptr, "</b:Source>\n" );
+
 	fflush( outptr );
 }
 

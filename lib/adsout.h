@@ -11,8 +11,8 @@
 #include <stdio.h>
 #include "bibutils.h"
 
-extern void adsout_write( fields *info, FILE *fp, int format_opts,
-		unsigned long refnam );
+extern void adsout_write( fields *info, FILE *fp, param *p,
+		unsigned long refnum );
 extern void adsout_writeheader( FILE *outptr, param *p );
 
 #endif

@@ -202,6 +202,7 @@ medin_abstract( xml *node, fields *info )
  *    <Author>
  *        <LastName>Barondeau</LastName>
  *        <ForeName>David P</ForeName>
+ *        ( or <FirstName>David P</FirstName> )
  *        <Initials>DP</Initials>
  *    </Author>
  * </AuthorList>
@@ -216,7 +217,8 @@ medin_author( xml *node, newstr *name )
 			newstr_prepend( name, node->value->data );
 		}
 		else newstr_strcat( name, node->value->data );
-	} else if ( xml_tagexact( node, "ForeName" ) ) {
+	} else if ( xml_tagexact( node, "ForeName" ) || 
+	            xml_tagexact( node, "FirstName" ) ) {
 		p = node->value->data;
 		while ( p && *p ) {
 			if ( name->len ) newstr_addchar( name, '|' );

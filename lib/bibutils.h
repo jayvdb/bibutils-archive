@@ -7,9 +7,13 @@
 #ifndef BIBUTILS_H
 #define BIBUTILS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #include <stdio.h>
-#include "list.h"
 #include "bibl.h"
+#include "list.h"
 
 #define BIBL_OK           (0)
 #define BIBL_ERR_BADINPUT (-1)
@@ -25,7 +29,8 @@
 #define BIBL_ISIIN        (BIBL_FIRSTIN+5)
 #define BIBL_MEDLINEIN    (BIBL_FIRSTIN+6)
 #define BIBL_ENDNOTEXMLIN (BIBL_FIRSTIN+7)
-#define BIBL_LASTIN       (BIBL_FIRSTIN+7)
+#define BIBL_BIBLATEXIN   (BIBL_FIRSTIN+8)
+#define BIBL_LASTIN       (BIBL_FIRSTIN+8)
 
 #define BIBL_FIRSTOUT     (200)
 #define BIBL_MODSOUT      (BIBL_FIRSTOUT)
@@ -55,6 +60,9 @@ typedef unsigned char uchar;
 
 typedef struct param {
 
+	int readformat;
+	int writeformat;
+
 	int charsetin;
 	uchar charsetin_src; /*BIBL_SRC_DEFAULT, BIBL_SRC_FILE, BIBL_SRC_USER*/
 	uchar latexin;
@@ -74,12 +82,27 @@ typedef struct param {
 	uchar verbose;
 	uchar singlerefperfile;
 
+	list asis;  /* Names that shouldn't be mangled */
+	list corps; /* Names that shouldn't be mangled-MODS corporation type */
+
+	char *progname;
+
 } param;
 
-extern void bibl_initparams( param *p, int readmode, int writemode );
-extern int bibl_read( bibl *b, FILE *fp, char *filename, int mode, param *p );
-extern int bibl_write( bibl *b, FILE *fp, int mode, param *p );
+extern void bibl_initparams( param *p, int readmode, int writemode,
+	char *progname );
+extern void bibl_freeparams( param *p );
+extern void bibl_readasis( param *p, char *filename );
+extern void bibl_addtoasis( param *p, char *entry );
+extern void bibl_readcorps( param *p, char *filename );
+extern void bibl_addtocorps( param *p, char *entry );
+extern int bibl_read( bibl *b, FILE *fp, char *filename, param *p );
+extern int bibl_write( bibl *b, FILE *fp, param *p );
 extern void bibl_reporterr( int err );
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif
 

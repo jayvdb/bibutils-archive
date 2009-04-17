@@ -26,7 +26,7 @@ static lookups generic[] = {
 	{ "PD-", "DESCRIPTION",SIMPLE, LEVEL_MAIN }, /* physical description */
 	{ "DT-", "TYPE",      SIMPLE, LEVEL_MAIN },
 	{ "LA-", "LANGUAGE",  SIMPLE, LEVEL_MAIN },
-	{ "IS-", "SERIALNUM", SERIALNO, LEVEL_MAIN },
+	{ "IS-", "SERIALNUMBER", SERIALNO, LEVEL_MAIN },
 	{ "NT-", "NOTES",     SIMPLE, LEVEL_MAIN },
 	{ "KW-", "KEYWORD",   SIMPLE, LEVEL_MAIN },
 	{ "UL-", "URL",       SIMPLE, LEVEL_MAIN },
@@ -36,8 +36,12 @@ static lookups generic[] = {
 /* order is important....."Book" matches "Book" and "Book Section", hence
  * "Book Section must come first */
 
+#define ORIG(a) ( &(a[0]) )
+#define SIZE(a) ( sizeof( a ) / sizeof( lookups ) )
+#define REFTYPE(a,b) { a, ORIG(b), SIZE(b) }
+
 variants copac_all[] = {
-	{"Generic", &(generic[0]), sizeof(generic)/sizeof(lookups)},
+	REFTYPE( "Generic", generic ),
 };
 
 

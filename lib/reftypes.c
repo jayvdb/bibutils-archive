@@ -13,19 +13,17 @@
 #include "fields.h"
 #include "reftypes.h"
 
-extern char progname[];
-
 int
-get_reftype( char *p, long refnum, variants *all, int nall, char *tag )
+get_reftype( char *p, long refnum, char *progname, variants *all, int nall, char *tag )
 {
 	int i;
 	p = skip_ws( p );
 	for ( i=0; i<nall; ++i )
 		if ( !strncasecmp( all[i].type, p, strlen(all[i].type) ) ) 
 			return i;
-	fprintf( stderr, "%s warning: "
-		"Did not recognize type '%s' of refnum %ld (%s).\n"
-		"\tDefaulting to article.\n", progname, p, refnum, tag );
+	if ( progname ) fprintf( stderr, "%s: ", progname );
+	fprintf( stderr, "Did not recognize type '%s' of refnum %ld (%s).\n"
+		"\tDefaulting to article.\n", p, refnum, tag );
 	return 0;
 }
 

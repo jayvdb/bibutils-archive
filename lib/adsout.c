@@ -88,7 +88,7 @@ get_type( fields *info )
 		if ( type==TYPE_UNKNOWN ) {
 			if ( !strcasecmp( data, "periodical" ) )
 				type = TYPE_ARTICLE;
-			else if ( !strcasecmp( data, "theses" ) )
+			else if ( !strcasecmp( data, "thesis" ) )
 				type = TYPE_THESIS;
 			else if ( !strcasecmp( data, "book" ) ) {
 				if ( info->level[i]==0 ) type = TYPE_BOOK;
@@ -171,14 +171,14 @@ output_person( FILE *fp, char *p )
 	int nseps = 0, nch;
 	while ( *p ) {
 		nch = 0;
+		if ( nseps==1 ) fprintf( fp, "," );
 		if ( nseps ) fprintf( fp, " " );
 		while ( *p && *p!='|' ) {
 			fprintf( fp, "%c", *p++ );
 			nch++;
 		}
 		if ( *p=='|' ) p++;
-		if ( nseps==0 ) fprintf( fp, "," );
-		else if ( nch==1 ) fprintf( fp, "." );
+		if ( nseps!=0 && nch==1 ) fprintf( fp, "." );
 		nseps++;
 	}
 }
@@ -225,17 +225,28 @@ get_year( fields *info, int level )
 }
 
 static int
+mont2mont( const char *m )
+{
+	static char *monNames[]= { "jan", "feb", "mar", "apr", "may", 
+			"jun", "jul", "aug", "sep", "oct", "nov", "dec" };
+	int i;
+	if ( isdigit( m[0] ) ) return atoi( m );
+        else {
+		for ( i=0; i<12; i++ ) {
+			if ( !strncasecmp( m, monNames[i], 3 ) ) return i+1;
+		}
+	}
+        return 0;
+}
+
+static int
 get_month( fields *info, int level )
 {
-	int imonth, month;
-	imonth = fields_find( info, "MONTH", level );
-	if ( imonth==-1 )
-		imonth = fields_find( info, "PARTMONTH", level );
-	if ( imonth==-1 )
-		month = 0;
-	else
-		month = atoi( info->data[month].data );
-	return month;
+	int n;
+	n = fields_find( info, "MONTH", level );
+	if ( n==-1 ) n = fields_find( info, "PARTMONTH", level );
+	if ( n==-1 ) return 0;
+	else return mont2mont( info->data[n].data ); 
 }
 
 static void
@@ -334,7 +345,7 @@ output_Rtag( FILE *fp, fields *info, char * entag, int type )
 	}
 
 	/** A */
-	ch = get_firstinitial( info );
+        ch = toupper( get_firstinitial( info ) );
 	if ( ch!='\0' ) out[18] = ch;
 
 	fprintf( fp, "%s %s\n", entag, out );
@@ -369,8 +380,8 @@ output_keys( FILE *fp, fields *info, char *tag, char *entag, int level )
 		for ( i=0; i<info->nfields; ++i ) {
 			if ( level!=-1 && info->level[i]!=level ) continue;
 			if ( !strcmp( info->tag[i].data, tag ) ) {
-				fprintf( fp, "%s", info->data[i].data );
 				if ( nkeys ) fprintf( fp, ", " );
+				fprintf( fp, "%s", info->data[i].data );
 				nkeys++;
 			}
 		}
@@ -379,12 +390,11 @@ output_keys( FILE *fp, fields *info, char *tag, char *entag, int level )
 }
 
 void
-adsout_write( fields *info, FILE *fp, int format_opts, unsigned long refnam)
+adsout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 {
 	int type;
 	fields_clearused( info );
 	type = get_type( info );
-
 
 	output_people( fp, info, "AUTHOR", "%A", 0 );
 	output_people( fp, info, "EDITOR", "%E", -1 );
@@ -404,6 +414,7 @@ adsout_write( fields *info, FILE *fp, int format_opts, unsigned long refnam)
 	output_easyall( fp, info, "URL", "%U", -1 ); 
 	output_pages( fp, info );
 	output_easyall( fp, info, "DOI", "%Y", -1 );
+        fprintf( fp, "%%W PHY\n%%G AUTHOR\n" );
 	output_Rtag( fp, info, "%R", type );
 	fprintf( fp, "\n" );
 	fflush( fp );

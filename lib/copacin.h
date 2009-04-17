@@ -12,12 +12,13 @@
 #include "newstr.h"
 #include "fields.h"
 #include "reftypes.h"
+#include "bibutils.h"
 
 extern int copacin_readf( FILE *fp, char *buf, int bufsize, int *bufpos,
 		newstr *line, newstr *reference, int *fcharset );
 extern int copacin_processf( fields *copacin, char *p, char *filename, 
 		long nref );
-extern void copacin_convertf( fields *copacin, fields *info, int reftype, int verbose, variants *all, int nall );
+extern void copacin_convertf( fields *copacin, fields *info, int reftype, param *p, variants *all, int nall );
 
 extern variants copac_all[];
 extern int copac_nall;

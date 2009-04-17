@@ -18,6 +18,7 @@
 #include "name.h"
 #include "reftypes.h"
 #include "modstypes.h"
+#include "marc.h"
 
 static char modsns[]="mods";
 
@@ -26,7 +27,7 @@ modsin_detailr( xml *node, newstr *value )
 {
 	if ( node->value && node->value->len ) {
 		if ( value->len ) newstr_addchar( value, ' ' );
-		newstr_strcat( value, node->value->data );
+		newstr_newstrcat( value, node->value );
 	}
 	if ( node->down ) modsin_detailr( node->down, value );
 	if ( node->next ) modsin_detailr( node->next, value );
@@ -128,10 +129,15 @@ modsin_page( xml *node, fields *info, int level )
 static void
 modsin_titler( xml *node, newstr *title, newstr *subtitle )
 {
-	if ( xml_tagexact( node, "title" ) )
-		newstr_strcat( title, node->value->data );
-	else if ( xml_tagexact( node, "subTitle" ) )
-		newstr_strcat( subtitle, node->value->data );
+	if ( xml_tagexact( node, "title" ) ) {
+		if ( title->len ) {
+			newstr_strcat( title, " : " );
+			newstr_newstrcat( title, node->value );
+		} else {
+			newstr_newstrcat( title, node->value );
+		}
+	} else if ( xml_tagexact( node, "subTitle" ) )
+		newstr_newstrcat( subtitle, node->value );
 	if ( node->down ) modsin_titler( node->down, title, subtitle );
 	if ( node->next ) modsin_titler( node->next, title, subtitle );
 }
@@ -197,7 +203,7 @@ modsin_asis_corp_r( xml *node, newstr *name, newstr *role )
 		newstr_newstrcpy( name, node->value );
 	else if ( xml_tagexact( node, "roleTerm" ) ) {
 		if ( role->len ) newstr_addchar( role, '|' );
-		newstr_strcat( role, node->value->data );
+		newstr_newstrcat( role, node->value );
 	}
 	if ( node->down ) modsin_asis_corp_r( node->down, name, role );
 	if ( node->next ) modsin_asis_corp_r( node->next, name, role );
@@ -219,7 +225,7 @@ modsin_personr( xml *node, newstr *name, newstr *roles )
 		}
 	} else if ( xml_tagexact( node, "roleTerm" ) ) {
 		if ( roles->len ) newstr_addchar( roles, '|' );
-		newstr_strcat( roles, node->value->data );
+		newstr_newstrcat( roles, node->value );
 	}
 	if ( node->down ) modsin_personr( node->down, name, roles );
 	if ( node->next ) modsin_personr( node->next, name, roles );
@@ -333,7 +339,7 @@ modsin_placeterm( xml *node, fields *info, int level, int school )
 			type = xml_getattrib( node, "authority" );
 			if ( type && type->len ) newstr_newstrcpy(&s, type);
 			newstr_addchar( &s, '|' );
-			newstr_strcat( &s, node->value->data );
+			newstr_newstrcat( &s, node->value );
 			fields_add( info, addresscode_tag, s.data, level );
 			newstr_free( &s );
 		}
@@ -358,11 +364,11 @@ modsin_origininfor( xml *node, fields *info, int level, newstr *pub, newstr *add
 	if ( xml_tagexact( node, "dateIssued" ) )
 		modsin_date( node, info, level, 0 );
 	else if ( xml_tagexact( node, "publisher" ) )
-		newstr_strcat( pub, node->value->data );
+		newstr_newstrcat( pub, node->value );
 	else if ( xml_tagexact( node, "edition" ) )
-		newstr_strcat( ed, node->value->data );
+		newstr_newstrcat( ed, node->value );
 	else if ( xml_tagexact( node, "issuance" ) )
-		newstr_strcat( iss, node->value->data );
+		newstr_newstrcat( iss, node->value );
 	else if ( xml_tagexact( node, "place" ) )
 		modsin_placer( node, info, level, 0 );
 	if ( node->down )
@@ -381,7 +387,8 @@ modsin_origininfo( xml *node, fields *info, int level )
 		newstr_init( &addcode );
 		newstr_init( &edition );
 		newstr_init( &issuance );
-		modsin_origininfor( node->down, info, level, &publisher, &address, &addcode, &edition, &issuance );
+		modsin_origininfor( node->down, info, level, &publisher, 
+				&address, &addcode, &edition, &issuance );
 		if ( publisher.len )
 			fields_add( info, "PUBLISHER", publisher.data, level );
 		if ( address.len )
@@ -429,30 +436,6 @@ modsin_id1( xml *node, fields *info, int level )
 static void
 modsin_genre( xml *node, fields *info, int level )
 {
-       char *marc[] = { "abstract or summary", "art original",
-		"art reproduction", "atlas", "autobiography",
-		"bibliography", "book", "catalog", "chart", "comic strip",
-		"conference publication", "database", "dictionary",
-		"diorama", "directory", "discography", "drama",
-		"encyclopedia", "essay", "festschrift", "fiction",
-		"filmography", "filmstrip", "flash card", "folktale",
-		"font", "game", "government publication", "graphic",
-		"globe", "handbook", "history", "humor, satire",
-		"index", "instruction", "interview", "kit",
-		"language instruction", "law report or digest",
-		"legal article", "legal case and case notes", "legislation",
-		"letter", "loose-leaf", "map", "memoir", "microscope slide",
-		"model", "motion picture", "multivolume monograph",
-		"newspaper", "novel", "numeric data",
-		"online system or service", "patent", "periodical",
-		"picture", "poetry", "programmed text", "realia",
-		"rehersal", "remote sensing image", "reporting",
-		"review", "series", "short story", "slide", "sound",
-		"speech", "statistics", "survey of literature",
-		"technical drawing", "technical report", "theses",
-		"toy", "transparency", "treaty", "videorecording",
-		"web site"
-	};
 	char *added[] = { "manuscript", "academic journal", "magazine",
 		"hearing", "report", "Ph.D. thesis", "Masters thesis",
 		"Diploma thesis", "Doctoral thesis", "Habilitation thesis",
@@ -460,14 +443,10 @@ modsin_genre( xml *node, fields *info, int level )
 		"teletype", "airtel", "memo", "e-mail communication",
 		"press release", "television broadcast", "electronic"
 	};
-	int nmarc = sizeof( marc ) / sizeof( char* );
 	int nadded = sizeof( added ) /sizeof( char *);
 	int j, ismarc = 0, isadded = 0;
 	if ( node->value && node->value->len ) {
-		for ( j=0; j<nmarc && ismarc==0; ++j ) {
-			if ( !strcasecmp( node->value->data, marc[j] ) )
-				ismarc = 1;
-		}
+		if ( marc_findgenre( node->value->data )!=-1 ) ismarc = 1;
 		for ( j=0; j<nadded && ismarc==0 && isadded==0; ++j ) {
 			if ( !strcasecmp( node->value->data, added[j] ) )
 				isadded = 1;
@@ -730,7 +709,7 @@ modsin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line,
 	newstr_init( &tmp );
 
 	do {
-		if ( line->data ) newstr_strcat( &tmp, line->data );
+		if ( line->data ) newstr_newstrcat( &tmp, line );
 		if ( tmp.data ) {
 			m = xml_getencoding( &tmp );
 			if ( m!=CHARSET_UNKNOWN ) file_charset = m;

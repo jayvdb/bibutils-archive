@@ -1,6 +1,64 @@
 
 BIBUTILS
 
+4.1
+
+BIBLATEX2XML
++ Lots of bug fixes
+
+BUILD
++ Try to make changes to bin/Makefile to fix problem on FreeBSD.  Still
+  awaiting feedback to see if problem is solved.
+
+END2XML
++ Handle DOI placed in %1 custom field by Wiley
+
+RIS2XML
++ Add pattern matching for new DOI output by Science Direct
+
+XML2ADS
++ Fix putting comma after the first keyword (thanks to Richard Mathar)
+
+4.0
+
+BIBLATEX2XML
++ Initial alpha version of the program -- mapping certain fields to MODS
+  hasn't been done yet.
+
+BUILD
++ Move files/functions around so all of the code necessary to support
+  the converters but not part of the bibutils libraries are in the
+  bin subdirectory.
+
+CHARSET CONVERSION
++ add partial recognition of Chinese GB18030 character set (containing 
+  the GBK superset)
++ Revert 3.41 patch from Luc Pardon default that made unicode/utf8 take
+  precedence over latex now that -nl, --no-latex flag is available
+
+END2XML
++ support %G language tag
++ support %H translator tag
+
+ENDX2XML
++ fix bug caused by style tags in author fields
+
+LIBRARY HANDLING
++ Remove requirement for defining lists for "as-is" and "corporation" names
+  to be read from the file -- embed in the param structure instead (help
+  for Haskell bindings)
++ Modify the library API so that input and output formats are stored in
+  struct param and do not need to be repeated in bibl_read() and bibl_write()
+  calls.
+
+XML2BIB
++ Turn off latex encoding if we're using the GB18030 character set.
+
+XML2END
++ support %G language tag
++ support %H translator tag
++ add better support for MARC-authority genre tags
+
 3.43
 11/24/08
 
@@ -9,9 +67,6 @@ BIB2XML
   list.
 + Add -nl or --no-latex to prevent conversion of latex character
   combinations
-
-BIBUTILS
-+ Move "list.h" include from bibutils.h to bibutils.c
 
 MODSOUT
 + Ensure that bibutils handles records with empty MODS attributes

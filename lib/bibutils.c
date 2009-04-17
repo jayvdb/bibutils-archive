@@ -13,6 +13,7 @@
 /* internal includes */
 #include "reftypes.h"
 #include "bibtexin.h"
+#include "biblatexin.h"
 #include "bibtexout.h"
 #include "copacin.h"
 #include "endin.h"
@@ -34,18 +35,20 @@ typedef struct convert_rules {
 	int  (*readf)(FILE*,char*,int,int*,newstr*,newstr*,int*);
 	int  (*processf)(fields*,char*,char*,long);
 	void (*cleanf)(bibl*,param*);
-	int  (*typef) (fields*,char*,int,variants*,int);
-	void (*convertf)(fields*,fields*,int,int,variants*,int);
+	int  (*typef) (fields*,char*,int,param*,variants*,int);
+	void (*convertf)(fields*,fields*,int,param*,variants*,int);
 	void (*headerf)(FILE*,param*);
 	void (*footerf)(FILE*);
-	void (*writef)(fields*,FILE*,int,unsigned long);
+	void (*writef)(fields*,FILE*,param*,unsigned long);
 	variants *all;
 	int  nall;
 } convert_rules;
 
 void
-bibl_initparams( param *p, int readmode, int writemode )
+bibl_initparams( param *p, int readmode, int writemode, char *progname )
 {
+	p->readformat       = readmode;
+	p->writeformat      = writemode;
 	p->format_opts      = 0;
 	p->charsetin        = BIBL_CHARSET_DEFAULT;
 	p->charsetin_src    = BIBL_SRC_DEFAULT;
@@ -62,7 +65,13 @@ bibl_initparams( param *p, int readmode, int writemode )
 	p->singlerefperfile = 0;
 	p->output_raw       = 0;	/* keep MODS tags for output filter */
 
-	if ( readmode == BIBL_BIBTEXIN ) {
+	list_init( &(p->asis) );
+	list_init( &(p->corps) );
+
+	if ( !progname ) p->progname = NULL;
+	else p->progname = strdup( progname );
+
+	if ( readmode == BIBL_BIBTEXIN || readmode == BIBL_BIBLATEXIN ) {
 		p->latexin = 1;
 	} else if ( readmode == BIBL_MODSIN ) {
 		p->xmlin = 1;
@@ -96,6 +105,88 @@ bibl_initparams( param *p, int readmode, int writemode )
 		p->charsetout = BIBL_CHARSET_UNICODE;
 	} else p->xmlout = 0;
 
+}
+
+void
+bibl_freeparams( param *p )
+{
+	list_free( &(p->asis) );
+	list_free( &(p->corps) );
+	if ( p->progname ) free( p->progname );
+}
+
+static void
+bibl_readlist( list *pl, char *progname, char *filename )
+{
+	if ( !list_fill( pl, filename ) ) {
+		fprintf( stderr, "%s: warning problems reading '%s' "
+			"obtained %d elements\n", progname, filename,
+			pl->n );
+	}
+}
+
+void
+bibl_readasis( param *p, char *filename )
+{
+	bibl_readlist( &(p->asis), p->progname, filename );
+}
+
+void
+bibl_readcorps( param *p, char *filename )
+{
+	bibl_readlist( &(p->corps), p->progname, filename );
+}
+
+static void
+bibl_addtolist( list *pl, char *entry )
+{
+	list_add( pl, entry );
+}
+
+void
+bibl_addtoasis( param *p, char *entry )
+{
+	bibl_addtolist( &(p->asis), entry );
+}
+
+void
+bibl_addtocorps( param *p, char *entry )
+{
+	bibl_addtolist( &(p->corps), entry );
+}
+
+static void
+bibl_duplicateparams( param *np, param *op )
+{
+	list_init( &(np->asis) );
+	list_init( &(np->corps) );
+	list_copy( &(np->asis), &(op->asis ) );
+	list_copy( &(np->corps), &(op->corps ) );
+	
+	if ( !op->progname ) np->progname = NULL;
+	else np->progname = strdup( op->progname );
+
+	np->readformat = op->readformat;
+	np->writeformat = op->writeformat;
+
+	np->charsetin = op->charsetin;
+	np->charsetin_src = op->charsetin_src;
+	np->utf8in = op->utf8in;
+	np->latexin = op->latexin;
+	np->xmlin = op->xmlin;
+
+	np->charsetout = op->charsetout;
+	np->charsetout_src = op->charsetout_src;
+	np->utf8out = op->utf8out;
+	np->utf8bom = op->utf8bom;
+	np->latexout = op->latexout;
+	np->xmlout = op->xmlout;
+
+	np->verbose = op->verbose;
+	np->format_opts = op->format_opts;
+	np->addcount = op->addcount;
+	np->output_raw = op->output_raw;
+	np->singlerefperfile = op->singlerefperfile;
 }
 
 void
@@ -356,7 +447,6 @@ resolve_citekeys( bibl *b, list *citekeys, int *dup )
 		nsame = 0;
 		for ( j=i; j<citekeys->n; ++j ) {
 			if ( dup[j]!=i ) continue;
-/*			newstr_strcpy( &tmp, citekeys->str[j].data ); */
 			newstr_newstrcpy( &tmp, &(citekeys->str[j]) );
 			ntmp = nsame;
 			while ( ntmp >= 26 ) {
@@ -370,7 +460,6 @@ resolve_citekeys( bibl *b, list *citekeys, int *dup )
 			n = fields_find( b->ref[j], "REFNUM", -1 );
 			if ( n!=-1 )
 				newstr_newstrcpy(&((b->ref[j])->data[n]),&tmp);
-/*				newstr_strcpy( &((b->ref[j])->data[n]), tmp.data);*/
 		}
 	}
 	newstr_free( &tmp );
@@ -437,9 +526,9 @@ convert_ref( bibl *bin, char *fname, bibl *bout, convert_rules *r, param *p )
 		rout = fields_new();
 		if ( !rout ) return BIBL_ERR_MEMERR;
 		if ( r->typef ) 
-			reftype = r->typef( rin, fname, i+1, r->all, r->nall );
+			reftype = r->typef( rin, fname, i+1, p, r->all, r->nall );
 		else reftype = 0;
-		r->convertf( rin, rout, reftype, p->verbose, r->all, r->nall );
+		r->convertf( rin, rout, reftype, p, r->all, r->nall );
 		if ( r->all ) process_alwaysadd( rout, reftype, r );
 		if ( p->verbose ) 
 			bibl_verbose1( rout, rin, fname, i+1 );
@@ -463,9 +552,18 @@ rules_init( convert_rules *r, int mode )
 			r->nall     = bibtex_nall;
 			break;
 		case BIBL_BIBTEXOUT:
-			r->headerf = bibtexout_writeheader;
-			r->footerf = NULL;
-			r->writef  = bibtexout_write;
+			r->headerf  = bibtexout_writeheader;
+			r->footerf  = NULL;
+			r->writef   = bibtexout_write;
+			break;
+		case BIBL_BIBLATEXIN:
+			r->readf    = biblatexin_readf;
+			r->processf = biblatexin_processf;
+			r->cleanf   = biblatexin_cleanf;
+			r->typef    = biblatexin_typef;
+			r->convertf = biblatexin_convertf;
+			r->all      = biblatex_all;
+			r->nall     = biblatex_nall;
 			break;
 		case BIBL_ENDNOTEIN:
 			r->readf    = endin_readf;
@@ -566,20 +664,27 @@ rules_init( convert_rules *r, int mode )
 }
 
 static void
-bibl_setreadparams( param *np, param *op, int mode )
+bibl_setreadparams( param *np, param *op )
 {
-	if ( !op ) bibl_initparams( np, mode, 0 );
-	else {
-		np->latexin = op->latexin;
-		np->utf8in = op->utf8in;
-		np->xmlin = op->xmlin;
-		np->charsetin = op->charsetin;
-		np->charsetin_src = op->charsetin_src;
-		np->verbose = op->verbose;
-		np->format_opts = op->format_opts;
-		np->addcount = op->addcount;
-		np->output_raw = op->output_raw;
-	}
+	bibl_duplicateparams( np, op );
+/*
+	list_init( &(np->asis) );
+	list_init( &(np->corps) );
+	if ( !op->progname ) np->progname = NULL;
+	else np->progname = strdup( op->progname );
+	np->readformat = op->readformat;
+	np->writeformat = op->writeformat;
+	np->latexin = op->latexin;
+	np->utf8in = op->utf8in;
+	np->xmlin = op->xmlin;
+	np->charsetin = op->charsetin;
+	np->charsetin_src = op->charsetin_src;
+	np->verbose = op->verbose;
+	np->format_opts = op->format_opts;
+	np->addcount = op->addcount;
+	np->output_raw = op->output_raw;
+	list_copy( &(np->asis), &(op->asis) );
+	list_copy( &(np->corps), &(op->corps) );*/
 	np->utf8out = 1;
 	np->charsetout = BIBL_CHARSET_UNICODE;
 	np->charsetout_src = BIBL_SRC_DEFAULT;
@@ -588,15 +693,20 @@ bibl_setreadparams( param *np, param *op, int mode )
 }
 
 int
-bibl_read( bibl *b, FILE *fp, char *filename, int mode, param *p )
+bibl_read( bibl *b, FILE *fp, char *filename, param *p )
 {
 	convert_rules r;
 	param lp;
 	bibl bin;
-	if ( !b || !fp || bibl_illegalinmode( mode ) ) return BIBL_ERR_BADINPUT;
-	bibl_setreadparams( &lp, p, mode );
+
+	if ( !b ) return BIBL_ERR_BADINPUT;
+	if ( !fp ) return BIBL_ERR_BADINPUT;
+	if ( !p ) return BIBL_ERR_BADINPUT;
+	if ( bibl_illegalinmode( p->readformat ) ) return BIBL_ERR_BADINPUT;
+
+	bibl_setreadparams( &lp, p );
 	bibl_init( &bin );
-	rules_init( &r, mode );
+	rules_init( &r, p->readformat );
 	read_ref( fp, &bin, filename, &r, &lp );
 	if ( !lp.output_raw || ( lp.output_raw & BIBL_RAW_WITHCHARCONVERT ) )
 		bibl_fixcharsets( &bin, &lp );
@@ -609,6 +719,7 @@ bibl_read( bibl *b, FILE *fp, char *filename, int mode, param *p )
 	if ( !lp.output_raw || ( lp.output_raw & BIBL_RAW_WITHMAKEREFID ) )
 		bibl_checkrefid( b, &lp );
 	bibl_free( &bin );
+
 	return BIBL_OK;
 }
 
@@ -647,46 +758,51 @@ singlerefname( fields *reffields, long nref, int mode )
 }
 
 static int
-output_bibl( FILE *fp, bibl *b, convert_rules *r, param *p, int mode )
+output_bibl( FILE *fp, bibl *b, convert_rules *r, param *p )
 {
 	long i;
-	if ( !p->singlerefperfile && r->headerf )
-		r->headerf( fp, p );
+	if ( !p->singlerefperfile && r->headerf ) r->headerf( fp, p );
 	for ( i=0; i<b->nrefs; ++i ) {
 		if ( p->singlerefperfile ) { 
-			fp = singlerefname( b->ref[i], i, mode );
+			fp = singlerefname( b->ref[i], i, p->writeformat );
 			if ( fp ) {
 				if ( r->headerf ) r->headerf( fp, p );
 			} else return BIBL_ERR_CANTOPEN;
 		}
-		r->writef( b->ref[i], fp, p->format_opts, i );
+		r->writef( b->ref[i], fp, p, i );
 		if ( p->singlerefperfile ) {
 			if ( r->footerf ) r->footerf( fp );
 			fclose( fp );
 		}
 	}
-	if ( !p->singlerefperfile && r->footerf ) 
-		r->footerf( fp );
+	if ( !p->singlerefperfile && r->footerf ) r->footerf( fp );
 	return 1;
 }
 
 static void
-bibl_setwriteparams( param *np, param *op, int mode )
+bibl_setwriteparams( param *np, param *op )
 {
-	if ( !op ) bibl_initparams( np, 0, mode );
-	else {
-		np->utf8out = op->utf8out;
-		np->utf8bom = op->utf8bom;
-		np->charsetout = op->charsetout;
-		np->charsetout_src = op->charsetout_src;
-		np->latexout = op->latexout;
-		np->xmlout = op->xmlout;
-		np->verbose = op->verbose;
-		np->format_opts = op->format_opts;
-		np->addcount = op->addcount;
-		np->output_raw = op->output_raw;
-		np->singlerefperfile = op->singlerefperfile;
-	}
+	bibl_duplicateparams( np, op );
+/*
+	list_init( &(np->asis) );
+	list_init( &(np->corps) );
+	list_copy( &(np->asis), &(op->asis ) );
+	list_copy( &(np->corps), &(op->corps ) );
+	if ( !op->progname ) np->progname = NULL;
+	else np->progname = strdup( op->progname );
+	np->readformat = op->readformat;
+	np->writeformat = op->writeformat;
+	np->utf8out = op->utf8out;
+	np->utf8bom = op->utf8bom;
+	np->charsetout = op->charsetout;
+	np->charsetout_src = op->charsetout_src;
+	np->latexout = op->latexout;
+	np->xmlout = op->xmlout;
+	np->verbose = op->verbose;
+	np->format_opts = op->format_opts;
+	np->addcount = op->addcount;
+	np->output_raw = op->output_raw;
+	np->singlerefperfile = op->singlerefperfile;*/
 	np->xmlin = 0;
 	np->latexin = 0;
 	np->utf8in = 1;
@@ -695,16 +811,21 @@ bibl_setwriteparams( param *np, param *op, int mode )
 }
 
 int
-bibl_write( bibl *b, FILE *fp, int mode, param *p )
+bibl_write( bibl *b, FILE *fp, param *p )
 {
 	convert_rules r;
 	param lp;
-	if ( !b || bibl_illegaloutmode( mode ) ) return BIBL_ERR_BADINPUT;
+
+	if ( !b ) return BIBL_ERR_BADINPUT;
+	if ( !p ) return BIBL_ERR_BADINPUT;
+	if ( bibl_illegaloutmode( p->writeformat ) ) return BIBL_ERR_BADINPUT;
 	if ( !fp && ( !p || !p->singlerefperfile ) ) return BIBL_ERR_BADINPUT;
-	rules_init( &r, mode );
-	bibl_setwriteparams( &lp, p, mode );
+
+	rules_init( &r, p->writeformat );
+	bibl_setwriteparams( &lp, p );
 	bibl_fixcharsets( b, &lp );
-	output_bibl( fp, b, &r, &lp, mode );
+	output_bibl( fp, b, &r, &lp );
+
 	return BIBL_OK;
 }
 

@@ -150,35 +150,13 @@ risin_processf( fields *risin, char *p, char *filename, long nref )
 	return 1;
 }
 
-static int
-string_is_doi( newstr *data )
-{
-	if ( data->len < 8 ) return 0;
-	if ( isdigit(data->data[0]) && isdigit(data->data[1]) && 
-	     data->data[2]=='.' && isdigit(data->data[3]) &&
-	     isdigit(data->data[4]) && isdigit(data->data[5]) &&
-	     isdigit(data->data[6]) && data->data[7]=='/' )
-		return 1;
-	if ( data->len < 11 ) return 0;
-	if ( tolower(data->data[0])=='d' && tolower(data->data[1])=='o' &&
-	     tolower(data->data[2])=='i' && data->data[3]==':' &&
-	     isdigit(data->data[4]) && isdigit(data->data[5]) && 
-	     data->data[6]=='.' && isdigit(data->data[7]) &&
-	     isdigit(data->data[8]) && isdigit(data->data[9]) &&
-	     isdigit(data->data[10]) && data->data[11]=='/' )
-		return 2;
-	return 0;
-}
-
 /* oxfordjournals hide the DOI in the NOTES N1 field */
 static void
 notes_add( fields *info, char *tag, newstr *s, int level )
 {
-	int doi = string_is_doi( s );
-	if ( doi==1 )
-		fields_add( info, "DOI", s->data, level );
-	else if ( doi==2 )
-		fields_add( info, "DOI", &(s->data[4]), level );
+	int doi = is_doi( s->data );
+	if ( doi!=-1 )
+		fields_add( info, "DOI", &(s->data[doi]), level );
 	else
 		fields_add( info, tag, s->data, level );
 }
@@ -223,7 +201,7 @@ adddate( fields *info, char *tag, char *p, int level )
 }
 
 int
-risin_typef( fields *risin, char *filename, int nref, variants *all, int nall )
+risin_typef( fields *risin, char *filename, int nref, param *p, variants *all, int nall )
 {
 	char *refnum = "";
 	int n, reftype, nreftype;
@@ -231,15 +209,24 @@ risin_typef( fields *risin, char *filename, int nref, variants *all, int nall )
 	nreftype = fields_find( risin, "ID", 0 );
 	if ( nreftype!=-1 ) refnum = risin[n].data->data;
 	if ( n!=-1 )
-		reftype = get_reftype( (risin[n].data)->data, nref, all, nall,
-			refnum );
+		reftype = get_reftype( (risin[n].data)->data, nref, p->progname,
+			all, nall, refnum );
 	else
-		reftype = get_reftype( "", nref, all, nall, refnum ); /*default */
+		reftype = get_reftype( "", nref, p->progname, all, nall, refnum ); /*default */
 	return reftype;
 }
 
+static void
+risin_report_notag( param *p, char *tag )
+{
+	if ( p->verbose && strcmp( tag, "TY" ) ) {
+		if ( p->progname ) fprintf( stderr, "%s: ", p->progname );
+		fprintf( stderr, "Did not identify RIS tag '%s'\n", tag );
+	}
+}
+
 void
-risin_convertf( fields *risin, fields *info, int reftype, int verbose, variants *all, int nall )
+risin_convertf( fields *risin, fields *info, int reftype, param *p, variants *all, int nall )
 {
 	newstr *t, *d;
 	int process, level, i, n;
@@ -249,10 +236,7 @@ risin_convertf( fields *risin, fields *info, int reftype, int verbose, variants 
 		d = &( risin->data[i] );
 		n = process_findoldtag( t->data, reftype, all, nall );
 		if ( n==-1 ) {
-			if ( verbose && strcmp(t->data,"TY") ) {
-				fprintf( stderr, "Did not identify RIS tag "
-					"'%s'\n", t->data );
-			}
+			risin_report_notag( p, t->data );
 			continue;
 		}
 		process = ((all[reftype]).tags[n]).processingtype;
@@ -261,7 +245,8 @@ risin_convertf( fields *risin, fields *info, int reftype, int verbose, variants 
 		if ( process==SIMPLE )
 			fields_add( info, newtag, d->data, level );
 		else if ( process==PERSON )
-			name_add( info, newtag, d->data, level );
+			name_add( info, newtag, d->data, level, &(p->asis), 
+					&(p->corps) );
 		else if ( process==TITLE )
 			title_process( info, newtag, d->data, level );
 		else if ( process==DATE )

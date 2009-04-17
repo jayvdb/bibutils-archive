@@ -178,18 +178,18 @@ output_verbose( fields *info, unsigned long refnum )
 }
 
 void
-isiout_write( fields *info, FILE *fp, int format_opts, unsigned long refnum )
+isiout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 {
         int type = get_type( info );
 
-	if ( format_opts & BIBL_FORMAT_VERBOSE )
+	if ( p->format_opts & BIBL_FORMAT_VERBOSE )
 		output_verbose( info, refnum );
 
         output_type( fp, type );
 	output_people( fp, info, "AUTHOR", "AU", 0 );
-/*	output_people( fp, info, "AUTHOR:CORP", "AU", 0 );
-	output_people( fp, info, "AUTHOR:ASIS", "AU", 0 );
-        output_people( fp, info, "AUTHOR", "A2", 1 );
+	output_easy( fp, info, "AUTHOR:CORP", "AU", 0 );
+	output_easy( fp, info, "AUTHOR:ASIS", "AU", 0 );
+/*      output_people( fp, info, "AUTHOR", "A2", 1 );
         output_people( fp, info, "AUTHOR:CORP", "A2", 1 );
         output_people( fp, info, "AUTHOR:ASIS", "A2", 1 );
         output_people( fp, info, "AUTHOR", "A3", 2 );

@@ -12,11 +12,13 @@
 #define NAME_H
 
 #include "newstr.h"
+#include "list.h"
 #include "fields.h"
 
 extern void name_nocomma( char *start, newstr *outname );
 extern void name_comma( char *p, newstr *outname );
-extern void name_add( fields *info, char *tag, char *q, int level );
+extern void name_add( fields *info, char *tag, char *q, int level,
+	list *asis, list *corps );
 
 
 #endif

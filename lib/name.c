@@ -171,9 +171,6 @@ name_comma( char *p, newstr *outname )
 	}
 }
 
-extern list asis;
-extern list corps;
-
 /* Determine if name is of type "corporate" or if it
  * should be added "as-is"; both should not be mangled.
  *
@@ -186,23 +183,23 @@ extern list corps;
  * priority
  */
 static void
-name_determine_flags( int *ctf, int *clf, int *atf, int *alf, char *tag, char *data )
+name_determine_flags( int *ctf, int *clf, int *atf, int *alf, char *tag, char *data, list *asis, list *corps )
 {
 	int corp_tag_flag = 0, corp_list_flag = 0;
 	int asis_tag_flag = 0, asis_list_flag = 0;
 
 	if ( strstr( tag, ":CORP" ) ) corp_tag_flag = 1;
-	else if ( list_find( &corps, data ) != -1 )
+	else if ( list_find( corps, data ) != -1 )
 		corp_list_flag = 1;
 
 	if ( strstr( tag, ":ASIS" ) ) {
 		asis_tag_flag = 1;
-		if ( list_find( &corps, data ) != -1 )
+		if ( list_find( corps, data ) != -1 )
 			corp_list_flag = 1;
 	} else {
-		if ( list_find( &corps, data ) != -1 )
+		if ( list_find( corps, data ) != -1 )
 			corp_list_flag = 1;
-		else if ( list_find( &asis, data ) != -1 )
+		else if ( list_find( asis, data ) != -1 )
 			asis_list_flag = 1;
 	}
 
@@ -217,12 +214,12 @@ name_determine_flags( int *ctf, int *clf, int *atf, int *alf, char *tag, char *d
  * return 0 on a name to mangle
  */
 static int
-name_nomangle( char *tag, char *data, newstr *newtag )
+name_nomangle( char *tag, char *data, newstr *newtag, list *asis, list *corps )
 {
-	int corp_tag_flag = 0, corp_list_flag = 0;
-	int asis_tag_flag = 0, asis_list_flag = 0;
+	int corp_tag_flag, corp_list_flag;
+	int asis_tag_flag, asis_list_flag;
 	name_determine_flags( &corp_tag_flag, &corp_list_flag,
-		&asis_tag_flag, &asis_list_flag, tag, data );
+		&asis_tag_flag, &asis_list_flag, tag, data, asis, corps );
 	if ( corp_tag_flag || corp_list_flag || asis_tag_flag || asis_list_flag ) {
 		newstr_strcpy( newtag, tag );
 		if ( corp_tag_flag ) { /* do nothing else */
@@ -240,12 +237,13 @@ name_nomangle( char *tag, char *data, newstr *newtag )
 }
 
 static void
-name_process( fields *info, char *tag, int level, newstr *inname )
+name_process( fields *info, char *tag, int level, newstr *inname, list *asis,
+	list *corps )
 {
 	newstr newtag, outname;
 	newstr_init( &newtag );
 	newstr_init( &outname );
-	if ( name_nomangle( tag, inname->data, &newtag ) ) {
+	if ( name_nomangle( tag, inname->data, &newtag, asis, corps ) ) {
 		fields_add( info, newtag.data, inname->data, level );
 	} else {
 		newstr_findreplace( inname, ".", ". " );
@@ -278,7 +276,7 @@ name_process( fields *info, char *tag, int level, newstr *inname )
  */
 
 void
-name_add( fields *info, char *tag, char *q, int level )
+name_add( fields *info, char *tag, char *q, int level, list *asis, list *corps )
 {
 	newstr inname;
 	char *p, *start, *end;
@@ -302,7 +300,7 @@ name_add( fields *info, char *tag, char *q, int level )
 
 		/* keep "names" like " , " from coredumping program */
 		if ( inname.len ) {
-			name_process( info, tag, level, &inname );
+			name_process( info, tag, level, &inname, asis, corps );
 			newstr_empty( &inname );
 		}
 

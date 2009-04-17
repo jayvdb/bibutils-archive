@@ -603,7 +603,7 @@ static lookups thesis[] = {
 	{ "M3", "NOTES",        NOTES,   LEVEL_MAIN },
 	{ "  ", "TYPE|THESIS",  ALWAYS,  LEVEL_MAIN },
 	{ "  ", "RESOURCE|text",ALWAYS,  LEVEL_MAIN },
-	{ "  ", "GENRE|theses", ALWAYS,  LEVEL_MAIN },
+	{ "  ", "GENRE|thesis", ALWAYS,  LEVEL_MAIN },
 };
 
 static lookups report[] = {
@@ -948,28 +948,32 @@ static lookups unpublished[] = {
         { " ",         "GENRE|unpublished",      ALWAYS, LEVEL_MAIN }
 };
 
+#define ORIG(a) ( &(a[0]) )
+#define SIZE(a) ( sizeof( a ) / sizeof( lookups ) )
+#define REFTYPE(a,b) { a, ORIG(b), SIZE(b) }
+
 variants ris_all[] = {
-	{ "STD",  &(generic[0]), sizeof(generic)/sizeof(lookups)},
-	{ "GEN",  &(generic[0]), sizeof(generic)/sizeof(lookups)},
-	{ "JOUR", &(article[0]), sizeof(article)/sizeof(lookups)},
-	{ "MGZN", &(magarticle[0]), sizeof(magarticle)/sizeof(lookups)},
-	{ "BOOK", &(book[0]), sizeof(book)/sizeof(lookups)},
-	{ "CHAP", &(inbook[0]), sizeof(inbook)/sizeof(lookups)},
-	{ "CONF", &(conference[0]), sizeof(conference)/sizeof(lookups)},
-	{ "STAT", &(statute[0]), sizeof(statute)/sizeof(lookups)},
-	{ "HEAR", &(hearing[0]), sizeof(hearing)/sizeof(lookups)},
-	{ "CASE", &(cases[0]), sizeof(cases)/sizeof(lookups)},
-	{ "NEWS", &(newsarticle[0]), sizeof(newsarticle)/sizeof(lookups)},
-	{ "MPCT", &(generic[0]), sizeof(generic)/sizeof(lookups)},
-	{ "PCOMM", &(communication[0]), sizeof(communication)/sizeof(lookups)},
-	{ "PAMP", &(pamphlet[0]), sizeof(pamphlet)/sizeof(lookups)},
-	{ "ELEC", &(electric[0]), sizeof(electric)/sizeof(lookups)},
-	{ "THES", &(thesis[0]), sizeof(thesis)/sizeof(lookups)},
-	{ "RPRT", &(report[0]), sizeof(report)/sizeof(lookups)},
-	{ "ABST", &(abstract[0]), sizeof(abstract)/sizeof(lookups)},
-	{ "COMP", &(program[0]), sizeof(program)/sizeof(lookups)},
-	{ "PAT",  &(patent[0]), sizeof(patent)/sizeof(lookups)},
-	{ "UNPB", &(unpublished[0]), sizeof(unpublished)/sizeof(lookups)},
+	REFTYPE( "STD", generic ),
+	REFTYPE( "GEN", generic ),
+	REFTYPE( "JOUR", article ),
+	REFTYPE( "MGZN", magarticle ),
+	REFTYPE( "BOOK", book ),
+	REFTYPE( "CHAP", inbook ),
+	REFTYPE( "CONF", conference ),
+	REFTYPE( "STAT", statute ),
+	REFTYPE( "HEAR", hearing ),
+	REFTYPE( "CASE", cases ),
+	REFTYPE( "NEWS", newsarticle ),
+	REFTYPE( "MPCT", generic ),
+	REFTYPE( "PCOMM", communication ),
+	REFTYPE( "PAMP", pamphlet ),
+	REFTYPE( "ELEC", electric ),
+	REFTYPE( "THES", thesis ),
+	REFTYPE( "RPRT", report ),
+	REFTYPE( "ABST", abstract ),
+	REFTYPE( "COMP", program ),
+	REFTYPE( "PAT", patent ),
+	REFTYPE( "UNPB", unpublished ),
 };
 
 int ris_nall = sizeof( ris_all ) / sizeof( variants );

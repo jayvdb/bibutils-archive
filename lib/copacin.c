@@ -12,6 +12,7 @@
 #include "is_ws.h"
 #include "newstr.h"
 #include "newstr_conv.h"
+#include "list.h"
 #include "name.h"
 #include "title.h"
 #include "fields.h"
@@ -132,7 +133,8 @@ copacin_processf( fields *copacin, char *p, char *filename, long nref )
  * editors seem to be stuck in as authors with the tag "[Editor]" in it
  */
 static void
-copacin_addname( fields *info, char *tag, newstr *name, int level )
+copacin_addname( fields *info, char *tag, newstr *name, int level, list *asis,
+	list *corps )
 {
 	char *usetag = tag, editor[]="EDITOR", *p;
 	int comma = 0;
@@ -146,7 +148,7 @@ copacin_addname( fields *info, char *tag, newstr *name, int level )
 		p++;
 	}
 	if ( !comma && is_ws( *p ) ) *p = ',';
-	name_add( info, usetag, name->data, level );
+	name_add( info, usetag, name->data, level, asis, corps );
 }
 
 static void
@@ -219,8 +221,17 @@ copacin_adddate( fields *info, char *tag, char *newtag, char *p, int level )
 	newstr_free( &date );
 }
 
+static void
+copacin_report_notag( param *p, char *tag )
+{
+	if ( p->verbose ) {
+		if ( p->progname ) fprintf( stderr, "%s: ", p->progname );
+		fprintf( stderr, "Cannot find tag '%s'\n", tag );
+	}
+}
+
 void
-copacin_convertf( fields *copacin, fields *info, int reftype, int verbose, variants *all, int nall )
+copacin_convertf( fields *copacin, fields *info, int reftype, param *p, variants *all, int nall )
 {
 	newstr *t, *d;
 	int  process, level, i, n;
@@ -230,9 +241,7 @@ copacin_convertf( fields *copacin, fields *info, int reftype, int verbose, varia
 		d = &( copacin->data[i] );
 		n = process_findoldtag( t->data, reftype, all, nall );
 		if ( n==-1 ) {
-			if ( verbose ) 
-				fprintf( stderr, "Cannot find tag '%s'\n",
-					t->data );
+			copacin_report_notag( p, t->data );
 			continue;
 		}
 		process = ((all[reftype]).tags[n]).processingtype;
@@ -244,7 +253,8 @@ copacin_convertf( fields *copacin, fields *info, int reftype, int verbose, varia
 		else if ( process==TITLE )
 			title_process( info, newtag, d->data, level );
 		else if ( process==PERSON )
-			copacin_addname( info, newtag, d, level );
+			copacin_addname( info, newtag, d, level, &(p->asis), 
+					&(p->corps) );
 		else if ( process==DATE )
 			copacin_adddate(info,all[reftype].
 					tags[i].oldstr,newtag,d->data,level);

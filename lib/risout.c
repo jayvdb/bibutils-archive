@@ -18,31 +18,31 @@
 
 enum { 
 	TYPE_UNKNOWN,
-	TYPE_STD,             /* standard/generic */
-	TYPE_ARTICLE,
-	TYPE_INBOOK,
-	TYPE_BOOK,
-	TYPE_CONF,            /* conference */
-	TYPE_STAT,            /* statute */
-	TYPE_HEAR,            /* hearing */
-	TYPE_CASE,            /* case */
-	TYPE_NEWS,            /* newspaper */
-	TYPE_MPCT,        
-	TYPE_PCOMM,           /* personal communication */
-	TYPE_PAMP,            /* pamphlet */
-	TYPE_ELEC,            /* electronic */
-	TYPE_THESIS,        
-	TYPE_REPORT,        
-	TYPE_MASTERSTHESIS,
-	TYPE_PHDTHESIS,
-	TYPE_DIPLOMATHESIS,
-	TYPE_DOCTORALTHESIS,
-	TYPE_HABILITATIONTHESIS,
-	TYPE_MAGARTICLE,
-	TYPE_ABSTRACT,
-	TYPE_PATENT,
-	TYPE_PROGRAM,
-	TYPE_UNPUBLISHED,
+	TYPE_STD,                /* standard/generic */
+	TYPE_ABSTRACT,           /* abstract */
+	TYPE_ARTICLE,            /* article */
+	TYPE_BOOK,               /* book */
+	TYPE_CASE,               /* case */
+	TYPE_INBOOK,             /* chapter */
+	TYPE_CONF,               /* conference */
+	TYPE_ELEC,               /* electronic */
+	TYPE_HEAR,               /* hearing */
+	TYPE_MAGARTICLE,         /* magazine article */
+	TYPE_NEWS,               /* newspaper */
+	TYPE_MPCT,               /* mpct */
+	TYPE_PAMP,               /* pamphlet */
+	TYPE_PATENT,             /* patent */
+	TYPE_PCOMM,              /* personal communication */
+	TYPE_PROGRAM,            /* program */
+	TYPE_REPORT,             /* report */
+	TYPE_STATUTE,            /* statute */
+	TYPE_THESIS,             /* thesis */
+	TYPE_MASTERSTHESIS,      /* thesis */
+	TYPE_PHDTHESIS,          /* thesis */
+	TYPE_DIPLOMATHESIS,      /* thesis */
+	TYPE_DOCTORALTHESIS,     /* thesis */
+	TYPE_HABILITATIONTHESIS, /* thesis */
+	TYPE_UNPUBLISHED,        /* unpublished */
 };
 
 typedef struct match_type {
@@ -61,7 +61,7 @@ get_type_genre( fields *info )
 		{ "magazine",                  TYPE_MAGARTICLE },
 		{ "conference publication",    TYPE_CONF },
 		{ "newspaper",                 TYPE_NEWS },
-		{ "legislation",               TYPE_STAT },
+		{ "legislation",               TYPE_STATUTE },
 		{ "communication",             TYPE_PCOMM },
 		{ "hearing",                   TYPE_HEAR },
 		{ "electronic",                TYPE_ELEC },
@@ -95,7 +95,7 @@ get_type_genre( fields *info )
 		if ( type==TYPE_UNKNOWN ) {
 			if ( !strcasecmp( data, "periodical" ) )
 				type = TYPE_ARTICLE;
-			else if ( !strcasecmp( data, "theses" ) )
+			else if ( !strcasecmp( data, "thesis" ) )
 				type = TYPE_THESIS;
 			else if ( !strcasecmp( data, "book" ) ) {
 				if ( info->level[i]==0 ) type=TYPE_BOOK;
@@ -158,37 +158,52 @@ get_type( fields *info )
 }
 
 static void
-output_type( FILE *fp, int type )
+output_type( FILE *fp, int type, param *p )
 {
+	match_type tyout[] = {
+		{ "STD",  TYPE_STD },
+		{ "ABST", TYPE_ABSTRACT },
+		{ "JOUR", TYPE_ARTICLE },
+		{ "BOOK", TYPE_BOOK },
+		{ "CASE", TYPE_CASE },
+		{ "CHAP", TYPE_INBOOK },
+		{ "CONF", TYPE_CONF },
+		{ "ELEC", TYPE_ELEC },
+		{ "HEAR", TYPE_HEAR },
+		{ "MGZN", TYPE_MAGARTICLE },
+		{ "NEWS", TYPE_NEWS },
+		{ "MPCT", TYPE_MPCT },
+		{ "PAMP", TYPE_PAMP },
+		{ "PAT",  TYPE_PATENT },
+		{ "PCOMM",TYPE_PCOMM },
+		{ "COMP", TYPE_PROGRAM },
+		{ "RPRT", TYPE_REPORT },
+		{ "STAT", TYPE_STATUTE },
+		{ "THES", TYPE_THESIS },
+		{ "THES", TYPE_MASTERSTHESIS },
+		{ "THES", TYPE_PHDTHESIS },
+		{ "THES", TYPE_DIPLOMATHESIS },
+		{ "THES", TYPE_DOCTORALTHESIS },
+		{ "THES", TYPE_HABILITATIONTHESIS },
+		{ "UNPB", TYPE_UNPUBLISHED }
+	};
+	int ntyout = sizeof( tyout ) / sizeof( tyout[0] );
+	int i, found;
+
 	fprintf( fp, "TY  - " );
-	switch ( type ) {
-		case TYPE_STD: fprintf( fp, "STD\n" ); break;
-		case TYPE_ARTICLE: fprintf( fp, "JOUR\n" ); break;
-		case TYPE_BOOK: fprintf( fp, "BOOK\n" ); break;
-		case TYPE_INBOOK: fprintf( fp, "CHAP\n" ); break;
-		case TYPE_CONF: fprintf( fp, "CONF\n" ); break;
-		case TYPE_STAT: fprintf( fp, "STAT\n" ); break;
-		case TYPE_HEAR: fprintf( fp, "HEAR\n" ); break;
-		case TYPE_CASE: fprintf( fp, "CASE\n" ); break;
-		case TYPE_NEWS: fprintf( fp, "NEWS\n" ); break;
-		case TYPE_MPCT: fprintf( fp, "MPCT\n" ); break;
-		case TYPE_PCOMM: fprintf( fp, "PCOMM\n" ); break;
-		case TYPE_PAMP: fprintf( fp, "PAMP\n" ); break;
-		case TYPE_ELEC: fprintf( fp, "ELEC\n" ); break;
-		case TYPE_THESIS:
-		case TYPE_PHDTHESIS:
-		case TYPE_MASTERSTHESIS:
-		case TYPE_DIPLOMATHESIS:
-		case TYPE_DOCTORALTHESIS:
-		case TYPE_HABILITATIONTHESIS:
-				fprintf( fp, "THES\n" ); break;
-		case TYPE_REPORT: fprintf( fp, "RPRT\n" ); break;
-		case TYPE_MAGARTICLE: fprintf( fp, "MGZN\n" ); break;
-		case TYPE_ABSTRACT: fprintf( fp, "ABST\n" ); break;
-		case TYPE_PATENT: fprintf( fp, "PAT\n" ); break;
-		case TYPE_PROGRAM: fprintf( fp, "COMP\n" ); break;
-		case TYPE_UNPUBLISHED: fprintf( fp, "UNPB\n" ); break;
+	found = 0;
+	for ( i=0; i<ntyout && !found ; ++i ) {
+		if ( tyout[i].type == type ) {
+			fprintf( fp, "%s", tyout[i].name );
+			found = 1;
+		}
 	}
+	if ( !found ) {
+		if ( p->progname ) fprintf( stderr, "%s: ", p->progname );
+		fprintf( stderr, "Internal Error: Cannot identify type %d\n",
+			type );
+	}
+	fprintf( fp, "\n" );
 }
 
 static void
@@ -197,14 +212,14 @@ output_person ( FILE *fp, char *p )
 	int nseps = 0, nch;
 	while ( *p ) {
 		nch = 0;
+		if ( nseps==1 ) fprintf( fp, "," );
 		if ( nseps ) fprintf( fp, " " );
 		while ( *p && *p!='|' ) {
 			fprintf( fp, "%c", *p++ );
 			nch++;
 		}
 		if ( *p=='|' ) p++;
-		if ( nseps==0 ) fprintf( fp, "," );
-		else if ( nch==1 ) fprintf( fp, "." ); 
+		if ( nseps!=0 && nch==1 ) fprintf( fp, "." ); 
 		nseps++;
 	}
 }
@@ -342,36 +357,30 @@ output_easyall( FILE *fp, fields *info, long refnum, char *tag, char *ristag, in
 {
 	int i;
 	for ( i=0; i<info->nfields; ++i ) {
+		if ( level!=-1 && level!=info->level[i] ) continue;
 		if ( !strcmp( info->tag[i].data, tag ) )
 			fprintf( fp, "%s  - %s\n", ristag, info->data[i].data );
 	}
 }
 
 void
-risout_write( fields *info, FILE *fp, int format_opts, unsigned long refnum )
+risout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 {
 	int type;
-/*
-{ int i;
-fprintf(stderr,"REF----\n");
-for ( i=0; i<info->nfields; ++i )
-	fprintf(stderr,"\t'%s'\t'%s'\t%d\n",info->tag[i].data,info->data[i].data,info->level[i]);
-}
-*/
 	type = get_type( info );
-	output_type( fp, type );
+	output_type( fp, type, p );
 	output_people( fp, info, refnum, "AUTHOR", "AU", 0 );
-	output_people( fp, info, refnum, "AUTHOR:CORP", "AU", 0 );
-	output_people( fp, info, refnum, "AUTHOR:ASIS", "AU", 0 );
+	output_easyall( fp, info, refnum, "AUTHOR:CORP", "AU", 0 );
+	output_easyall( fp, info, refnum, "AUTHOR:ASIS", "AU", 0 );
 	output_people( fp, info, refnum, "AUTHOR", "A2", 1 );
-	output_people( fp, info, refnum, "AUTHOR:CORP", "A2", 1 );
-	output_people( fp, info, refnum, "AUTHOR:ASIS", "A2", 1 );
+	output_easyall( fp, info, refnum, "AUTHOR:CORP", "A2", 1 );
+	output_easyall( fp, info, refnum, "AUTHOR:ASIS", "A2", 1 );
 	output_people( fp, info, refnum, "AUTHOR", "A3", 2 );
-	output_people( fp, info, refnum, "AUTHOR:CORP", "A3", 2 );
-	output_people( fp, info, refnum, "AUTHOR:ASIS", "A3", 2 );
+	output_easyall( fp, info, refnum, "AUTHOR:CORP", "A3", 2 );
+	output_easyall( fp, info, refnum, "AUTHOR:ASIS", "A3", 2 );
 	output_people( fp, info, refnum, "EDITOR", "ED", -1 );
-	output_people( fp, info, refnum, "EDITOR:CORP", "ED", -1 );
-	output_people( fp, info, refnum, "EDITOR:ASIS", "ED", -1 );
+	output_easyall( fp, info, refnum, "EDITOR:CORP", "ED", -1 );
+	output_easyall( fp, info, refnum, "EDITOR:ASIS", "ED", -1 );
 	output_date( fp, info, refnum );
 	output_title( fp, info, "TI", 0 );
 	output_abbrtitle( fp, info, "T2", -1 );

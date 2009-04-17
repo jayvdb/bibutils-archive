@@ -76,14 +76,17 @@ static lookups book[] = {
 	{ "language",     "LANGUAGE",  SIMPLE, LEVEL_MAIN },
 	{ "location",     "LOCATION",  SIMPLE, LEVEL_MAIN },
 	{ "note",         "NOTES",     SIMPLE, LEVEL_MAIN },
-	{ "key",          "BIBKEY",       SIMPLE, LEVEL_MAIN },
+	{ "type",         "TYPE",      SIMPLE, LEVEL_MAIN },
+	{ "key",          "BIBKEY",    SIMPLE, LEVEL_MAIN },
 	{ "ftp",          "URL",       BIBTEX_URL, LEVEL_MAIN },
 	{ "url",          "URL",       BIBTEX_URL, LEVEL_MAIN },
+	{ "address"       "ADDRESS",   SIMPLE, LEVEL_MAIN },
 	{ "howpublished", "URL",       BIBTEX_URL, LEVEL_MAIN },
 	{ "doi",          "DOI",       SIMPLE, LEVEL_MAIN },
 	{ "refnum",       "REFNUM",    SIMPLE, LEVEL_MAIN },
 	{ "crossref",     "CROSSREF",  SIMPLE, LEVEL_MAIN },
 	{ "keywords",     "KEYWORD",   SIMPLE, LEVEL_MAIN },
+	{ "refnum",       "REFNUM",    SIMPLE, LEVEL_MAIN },
 	{ " ",            "TYPE|BOOK",     ALWAYS, LEVEL_MAIN },
 	{ " ",            "RESOURCE|text", ALWAYS, LEVEL_MAIN },
 	{ " ",            "ISSUANCE|monographic", ALWAYS, LEVEL_MAIN },
@@ -344,7 +347,7 @@ static lookups phds[] = {
 	{ "keywords",     "KEYWORD",   SIMPLE, LEVEL_MAIN },
 	{ " ",         "TYPE|THESIS",   ALWAYS, LEVEL_MAIN },
 	{ " ",         "RESOURCE|text", ALWAYS, LEVEL_MAIN },
-	{ " ",         "GENRE|theses",  ALWAYS, LEVEL_MAIN },
+	{ " ",         "GENRE|thesis",  ALWAYS, LEVEL_MAIN },
 	{ " ",         "GENRE|Ph.D. thesis",  ALWAYS, LEVEL_MAIN }
 };
 
@@ -373,7 +376,7 @@ static lookups masters[] = {
 	{ "keywords",     "KEYWORD",   SIMPLE, LEVEL_MAIN },
 	{ " ",         "TYPE|THESIS",   ALWAYS, LEVEL_MAIN },
 	{ " ",         "RESOURCE|text", ALWAYS, LEVEL_MAIN },
-	{ " ",         "GENRE|theses",  ALWAYS, LEVEL_MAIN },
+	{ " ",         "GENRE|thesis",  ALWAYS, LEVEL_MAIN },
 	{ " ",         "GENRE|Masters thesis",  ALWAYS, LEVEL_MAIN }
 };
 
@@ -512,6 +515,7 @@ static lookups patent[] = {
 	{ "keywords",     "KEYWORD",   SIMPLE, LEVEL_MAIN },
 	{ " ",         "RESOURCE|text",   ALWAYS, LEVEL_MAIN },
 	{ " ",         "TYPE|PATENT",    ALWAYS, LEVEL_MAIN },
+	{ " ",         "GENRE|patent",    ALWAYS, LEVEL_MAIN },
 };
 
 /*
@@ -576,26 +580,29 @@ static lookups misc[] = {
 	{ " ",         "TYPE|MISC",       ALWAYS, LEVEL_MAIN },
 };
 
+#define ORIG(a) ( &(a[0]) )
+#define SIZE(a) ( sizeof( a ) / sizeof( lookups ) )
+#define REFTYPE(a,b) { a, ORIG(b), SIZE(b) }
+
 variants bibtex_all[] = {
-	{ "article", &(article[0]), sizeof(article)/sizeof(lookups)},
-	{ "book", &(book[0]), sizeof(book)/sizeof(lookups)},
-	{ "booklet", &(book[0]), sizeof(book)/sizeof(lookups)},
-	{ "inbook", &(inbook[0]), sizeof(inbook)/sizeof(lookups)},
-	{ "proceedings", &(proceedings[0]), sizeof(proceedings)/sizeof(lookups)},
-	{ "inproceedings", &(inproceedings[0]), sizeof(inproceedings)/sizeof(lookups)},
-	{ "inconference", &(inproceedings[0]), sizeof(inproceedings)/sizeof(lookups)},
-	{ "incollection", &(incollection[0]), sizeof(incollection)/sizeof(lookups)},
-	{ "phdthesis", &(phds[0]), sizeof(phds)/sizeof(lookups)},
-	{ "mastersthesis", &(masters[0]), sizeof(masters)/sizeof(lookups)},
-	{ "report", &(report[0]), sizeof(report)/sizeof(lookups)},
-	{ "techreport", &(report[0]), sizeof(report)/sizeof(lookups)},
-	{ "manual", &(manual[0]), sizeof(manual)/sizeof(lookups)},
-	{ "unpublished", &(unpublished[0]), sizeof(unpublished)/sizeof(lookups)},
-	{ "periodical", &(periodical[0]), sizeof(periodical)/sizeof(lookups)},
-	{ "electronic", &(electronic[0]), sizeof(electronic)/sizeof(lookups)},
-	{ "patent", &(patent[0]), sizeof(patent)/sizeof(lookups)},
-	{ "standard", &(standard[0]), sizeof(standard)/sizeof(lookups)},
-	{ "misc", &(misc[0]), sizeof(misc)/sizeof(lookups)}
+	REFTYPE( "article", article ),
+	REFTYPE( "booklet", book ),
+	REFTYPE( "book", book ),
+	REFTYPE( "electronic", electronic ),
+	REFTYPE( "inbook", inbook ),
+	REFTYPE( "incollection", incollection ),
+	REFTYPE( "inconference", inproceedings ),
+	REFTYPE( "inproceedings", inproceedings ),
+	REFTYPE( "manual", manual ),
+	REFTYPE( "mastersthesis", masters ),
+	REFTYPE( "misc", misc ),
+	REFTYPE( "patent", patent ),
+	REFTYPE( "phdthesis", phds ),
+	REFTYPE( "periodical", periodical ),
+	REFTYPE( "proceedings", proceedings ),
+	REFTYPE( "standard", standard ),
+	REFTYPE( "techreport", report ),
+	REFTYPE( "unpublished", unpublished ),
 };
 
 int bibtex_nall = sizeof( bibtex_all ) / sizeof( variants );

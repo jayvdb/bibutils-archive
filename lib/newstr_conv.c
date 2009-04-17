@@ -18,7 +18,7 @@
 #include "latex.h"
 #include "entities.h"
 #include "utf8.h"
-/* #include "gb18030.h" */
+#include "gb18030.h"
 #include "newstr_conv.h"
 
 #include "charsets.h"
@@ -90,7 +90,6 @@ addutf8char( newstr *s, unsigned int ch, int xmlout, int utf8out )
 		newstr_addchar( s, code[i] );
 }
 
-#if 0
 static void
 addgb18030char( newstr *s, unsigned int ch, int xmlout, int utf8out )
 {
@@ -105,7 +104,6 @@ addgb18030char( newstr *s, unsigned int ch, int xmlout, int utf8out )
 	for ( i=0; i<nc; ++i )
 		newstr_addchar( s, code[i] );
 }
-#endif
 
 static void
 addlatexchar( newstr *s, unsigned int ch, int xmlout, int utf8out )
@@ -169,8 +167,7 @@ get_unicode( newstr *s, unsigned int *pi, int charsetin, int latexin, int utf8in
 	if ( xmlin && s->data[*pi]=='&' ) {
 		ch = decode_entity( s->data, pi, &unicode, &err );
 	} else if ( charsetin==CHARSET_GB18030 ) {
-		ch = ( unsigned int ) s->data[*pi];
-/*		ch = gb18030_decode( s->data, pi );*/
+		ch = gb18030_decode( s->data, pi );
 		unicode = 1;
 	} else if ( latexin ) {
 		/* Must handle bibtex files in UTF8/Unicode */
@@ -195,10 +192,13 @@ write_unicode( newstr *s, unsigned int ch, int charsetout, int latexout,
 		int utf8out, int xmlout )
 {
 	unsigned int c;
-	if ( utf8out ) addutf8char( s, ch, xmlout, utf8out );
-	else if ( latexout ) addlatexchar( s, ch, xmlout, utf8out );
-/*	else if ( charsetout==CHARSET_GB18030 ) addgb18030char( s, ch, xmlout, utf8out );*/
-	else {
+	if ( latexout ) {
+		addlatexchar( s, ch, xmlout, utf8out );
+	} else if ( utf8out ) {
+		addutf8char( s, ch, xmlout, utf8out );
+	} else if ( charsetout==CHARSET_GB18030 ) {
+		addgb18030char( s, ch, xmlout, utf8out );
+	} else {
 		c = lookupuni( charsetout, ch );
 		if ( xmlout ) addxmlchar( s, c );
 		else newstr_addchar( s, c );

@@ -19,22 +19,23 @@ typedef struct newstr {
 }  newstr;
 
 newstr *newstr_new      ( void ); 
-void newstr_init        ( newstr *string );
-void newstr_free        ( newstr *string );
+void newstr_init        ( newstr *s );
+void newstr_free        ( newstr *s );
 newstr *newstr_strdup   ( char *buf );
-void newstr_addchar     ( newstr *string, char newchar );
-void newstr_strcat      ( newstr *string, char *addstr );
-void newstr_segcat      ( newstr *string, char *startat, char *endat );
-void newstr_prepend     ( newstr *string, char *addstr );
-void newstr_strcpy      ( newstr *string, char *addstr );
+void newstr_addchar     ( newstr *s, char newchar );
+void newstr_strcat      ( newstr *s, char *addstr );
+void newstr_newstrcat   ( newstr *s, newstr *old );
+void newstr_segcat      ( newstr *s, char *startat, char *endat );
+void newstr_prepend     ( newstr *s, char *addstr );
+void newstr_strcpy      ( newstr *s, char *addstr );
 void newstr_newstrcpy   ( newstr *s, newstr *old );
-void newstr_segcpy      ( newstr *string, char *startat, char *endat );
-void newstr_segdel      ( newstr *string, char *startat, char *endat );
-void newstr_fprintf     ( FILE *fp, newstr *string );
+void newstr_segcpy      ( newstr *s, char *startat, char *endat );
+void newstr_segdel      ( newstr *s, char *startat, char *endat );
+void newstr_fprintf     ( FILE *fp, newstr *s );
 int  newstr_fget        ( FILE *fp, char *buf, int bufsize, int *pbufpos,
                           newstr *outs );
-int  newstr_findreplace ( newstr *string, char *find, char *replace );
-void newstr_empty       ( newstr *string );
+int  newstr_findreplace ( newstr *s, char *find, char *replace );
+void newstr_empty       ( newstr *s );
 void newstr_toupper     ( newstr *s );
 void newstr_trimendingws( newstr *s );
 void newstr_swapstrings ( newstr *s1, newstr *s2 );

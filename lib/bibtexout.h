@@ -18,7 +18,7 @@
 #define BIBOUT_UPPERCASE (32)
 #define BIBOUT_STRICTKEY (64)
 
-extern void bibtexout_write( fields *info, FILE *fp, int format_opts, 
+extern void bibtexout_write( fields *info, FILE *fp, param *p, 
 		unsigned long refnum );
 extern void bibtexout_writeheader( FILE *outptr, param *p );
 

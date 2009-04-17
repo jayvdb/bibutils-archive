@@ -156,7 +156,7 @@ keyword_process( fields *info, char *newtag, char *p, int level )
 }
 
 int
-isiin_typef( fields *isiin, char *filename, int nref, variants *all, int nall )
+isiin_typef( fields *isiin, char *filename, int nref, param *p, variants *all, int nall )
 {
 	char *refnum = "";
 	int n, reftype, nrefnum;
@@ -164,15 +164,15 @@ isiin_typef( fields *isiin, char *filename, int nref, variants *all, int nall )
 	nrefnum = fields_find ( isiin, "UT", 0 );
 	if ( nrefnum!=-1 ) refnum = isiin->data[nrefnum].data;
 	if ( n!=-1 )
-		reftype = get_reftype( (isiin->data[n]).data, nref, all, nall, refnum );
+		reftype = get_reftype( (isiin->data[n]).data, nref, p->progname, all, nall, refnum );
 	else
-		reftype = get_reftype( "", nref, all, nall, refnum ); /* default */
+		reftype = get_reftype( "", nref, p->progname, all, nall, refnum ); /* default */
 	return reftype;
 }
 
 /* pull off authors first--use AF before AU */
 static void
-isiin_addauthors( fields *isiin, fields *info, int reftype, variants *all, int nall )
+isiin_addauthors( fields *isiin, fields *info, int reftype, variants *all, int nall, list *asis, list *corps )
 {
 	newstr *t, *d;
 	char *newtag, *authortype, use_af[]="AF", use_au[]="AU";
@@ -192,18 +192,28 @@ isiin_addauthors( fields *isiin, fields *info, int reftype, variants *all, int n
 		n = process_findoldtag( authortype, reftype, all, nall );
 		level = ((all[reftype]).tags[n]).level;
 		newtag = all[reftype].tags[n].newstr;
-		name_add( info, newtag, d->data, level );
+		name_add( info, newtag, d->data, level, asis, corps );
+	}
+}
+
+static void
+isiin_report_notag( param *p, char *tag )
+{
+	if ( p->verbose && strcmp( tag, "PT" ) ) {
+		if ( p->progname ) fprintf( stderr, "%s: ", p->progname );
+		fprintf( stderr, "Did not identify ISI tag '%s'\n", tag );
 	}
 }
 
 void
-isiin_convertf( fields *isiin, fields *info, int reftype, int verbose, variants *all, int nall )
+isiin_convertf( fields *isiin, fields *info, int reftype, param *p, variants *all, int nall )
 {
 	newstr *t, *d;
 	int process, level, i, n;
 	char *newtag;
 
-	isiin_addauthors( isiin, info, reftype, all, nall );
+	isiin_addauthors( isiin, info, reftype, all, nall, &(p->asis), 
+			&(p->corps) );
 
 	for ( i=0; i<isiin->nfields; ++i ) {
 		t = &( isiin->tag[i] );
@@ -212,11 +222,7 @@ isiin_convertf( fields *isiin, fields *info, int reftype, int verbose, variants 
 		d = &( isiin->data[i] );
 		n = process_findoldtag( t->data, reftype, all, nall );
 		if ( n==-1 ) {
-			if ( verbose && strcmp( t->data, "PT" ) ) {
-				fprintf( stderr, "Did not identify ISI tag '" );
-				fprintf( stderr, "%s", t->data );
-				fprintf( stderr, "'\n" );
-			}
+			isiin_report_notag( p, t->data );
 			continue;
 		}
 		process = ((all[reftype]).tags[n]).processingtype;
@@ -225,7 +231,8 @@ isiin_convertf( fields *isiin, fields *info, int reftype, int verbose, variants 
 		if ( process == SIMPLE || process == DATE )
 			fields_add( info, newtag, d->data, level );
 		else if ( process == PERSON )
-			name_add( info, newtag, d->data, level );
+			name_add( info, newtag, d->data, level, &(p->asis), 
+					&(p->corps) );
 		else if ( process == TITLE )
 			title_process( info, newtag, d->data, level );
 		else if ( process == ISI_KEYWORD )

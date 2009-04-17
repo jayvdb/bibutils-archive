@@ -33,8 +33,10 @@
       <holder>Christopher Putnam (Software and Manual)</holder>
     </copyright>
     <legalnotice>
+      <para>
       This manual page is distributed under the terms of version 2 of 
       the GNU General Public License.
+      </para>
     </legalnotice>
     &dhdate;
   </refentryinfo>
@@ -423,7 +425,7 @@
           <seglistitem>
             <seg>-sk</seg>
             <seg>--strictkey</seg>
-            <seg>only use alphanumeric characters for bibtex citation keys</sg>
+            <seg>only use alphanumeric characters for bibtex citation keys</seg>
           </seglistitem>
 	</segmentedlist>
 	</refsect3>

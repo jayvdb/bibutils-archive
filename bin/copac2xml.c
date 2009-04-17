@@ -1,54 +1,27 @@
 /*
  * copac2xml.c
  *
- * Copyright (c) Chris Putnam 2004-5
+ * Copyright (c) Chris Putnam 2004-8
  *
  * Program and source code released under the GPL
  *
  */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "bibutils.h"
-#include "bibprogs.h"
+#include "tomods.h"
+#include "bibprog.h"
 
-char progname[] = "copac2xml";
 char help1[] = "Converts a Copac reference file into MODS XML\n\n";
 char help2[] = "copac_file";
-
-list asis, corps;
 
 int 
 main( int argc, char *argv[] )
 {
-	FILE *fp;
 	param p;
-	bibl b;
-	int err, i;
-
-	list_init( &asis );
-	list_init( &corps );
-
-	bibl_init( &b );
-	bibl_initparams( &p, BIBL_COPACIN, BIBL_MODSOUT );
-	tomods_processargs( &argc, argv, &p, progname, help1, help2 );
-	if ( argc<2 ) {
-		err = bibl_read( &b, stdin, "stdin", BIBL_COPACIN, &p );
-		if ( err ) bibl_reporterr( err ); 
-	} else {
-		for ( i=1; i<argc; ++i ) {
-			fp = fopen( argv[i], "r" );
-			if ( fp ) {
-				err = bibl_read(&b,fp,argv[i],BIBL_COPACIN,&p);
-				if ( err ) bibl_reporterr( err );
-				fclose( fp );
-			}
-		}
-	}
-	bibl_write( &b, stdout, BIBL_MODSOUT, &p );
-	fflush( stdout );
-	fprintf( stderr, "%s: Processed %ld references.\n", progname, b.nrefs );
-	bibl_free( &b );
+	bibl_initparams( &p, BIBL_COPACIN, BIBL_MODSOUT, "copac2xml" );
+	tomods_processargs( &argc, argv, &p, help1, help2 );
+	bibprog( argc, argv, &p );
+	bibl_freeparams( &p );
 	return EXIT_SUCCESS;
 }
- 

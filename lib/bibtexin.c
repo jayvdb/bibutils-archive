@@ -21,9 +21,6 @@
 #include "reftypes.h"
 #include "bibtexin.h"
 
-extern list asis;
-extern list corps;
-
 list find    = { 0, 0, 0, NULL };
 list replace = { 0, 0, 0, NULL };
 
@@ -402,7 +399,19 @@ bibtexin_findref( bibl *bin, char *citekey )
 }
 
 static void
-bibtexin_crossref( bibl *bin )
+bibtexin_nocrossref( bibl *bin, long i, int n, param *p )
+{
+	int n1 = fields_find( bin->ref[i], "REFNUM", -1 );
+	if ( p->progname ) fprintf( stderr, "%s: ", p->progname );
+	fprintf( stderr, "Cannot find cross-reference '%s'",
+			bin->ref[i]->data[n].data );
+	if ( n1!=-1 ) fprintf( stderr, " for reference '%s'\n",
+			bin->ref[i]->data[n1].data );
+	fprintf( stderr, "\n" );
+}
+
+static void
+bibtexin_crossref( bibl *bin, param *p )
 {
 	char booktitle[] = "booktitle";
 	long i, j, ncross;
@@ -413,14 +422,7 @@ bibtexin_crossref( bibl *bin )
 		if ( n==-1 ) continue;
 		ncross = bibtexin_findref( bin, bin->ref[i]->data[n].data );
 		if ( ncross==-1 ) {
-			int n1 = fields_find( bin->ref[i], "REFNUM", -1 );
-			fprintf( stderr, "Cannot find cross-reference '%s'",
-				bin->ref[i]->data[n].data);
-			if ( n1!=-1 )
-				fprintf( stderr, " for reference '%s'\n",
-					bin->ref[i]->data[n1].data );
-			fprintf( stderr, "\n" );
-			
+			bibtexin_nocrossref( bin, i, n, p );
 			continue;
 		}
 		ntype = fields_find( bin->ref[i], "TYPE", -1 );
@@ -472,7 +474,7 @@ bibtexin_cleanf( bibl *bin, param *p )
 	long i;
         for ( i=0; i<bin->nrefs; ++i )
 		bibtexin_cleanref( bin->ref[i], p );
-	bibtexin_crossref( bin );
+	bibtexin_crossref( bin, p );
 }
 
 /*
@@ -482,10 +484,11 @@ bibtexin_cleanf( bibl *bin, param *p )
  * and add names
  */
 static void
-process_names( fields *info, char *tag, newstr *data, int level )
+process_names( fields *info, char *tag, newstr *data, int level, list *asis,
+	list *corps )
 {
 	newstr_findreplace( data, " and ", "|" );
-	name_add( info, tag, data->data, level );
+	name_add( info, tag, data->data, level, asis, corps );
 }
 
 static void
@@ -528,8 +531,8 @@ process_url( fields *info, char *p, int level )
 }
 
 int
-bibtexin_typef( fields *bibin, char *filename, int nrefs, variants *all, 
-		int nall )
+bibtexin_typef( fields *bibin, char *filename, int nrefs, param *p,
+		variants *all, int nall )
 {
 	char *refnum = "";
 	int reftype, n, nrefnum;
@@ -539,10 +542,10 @@ bibtexin_typef( fields *bibin, char *filename, int nrefs, variants *all,
 	if ( n!=-1 )
 		/* figure out type */
 		reftype = get_reftype( (bibin->data[n]).data, nrefs,
-			all, nall, refnum );
+			p->progname, all, nall, refnum );
 	else
 		/* no type info, go for default */
-		reftype = get_reftype( "", nrefs, all, nall, refnum );
+		reftype = get_reftype( "", nrefs, p->progname, all, nall, refnum );
 	return reftype;
 }
 
@@ -555,8 +558,17 @@ report( fields *info )
 			info->data[i].data);
 }
 
+static void
+bibtexin_notag( param *p, char *tag )
+{
+	if ( p->verbose && strcmp( tag, "TYPE" ) ) {
+		if ( p->progname ) fprintf( stderr, "%s: ", p->progname );
+		fprintf( stderr, "Cannot find tag '%s'\n", tag );
+	}
+}
+
 void
-bibtexin_convertf( fields *bibin, fields *info, int reftype, int verbose,
+bibtexin_convertf( fields *bibin, fields *info, int reftype, param *p,
 		variants *all, int nall )
 {
 	newstr *t, *d;
@@ -570,10 +582,7 @@ bibtexin_convertf( fields *bibin, fields *info, int reftype, int verbose,
 		t = &( bibin->tag[i] );
 		n = process_findoldtag( t->data, reftype, all, nall );
 		if ( n==-1 ) {
-			if ( verbose && strcmp(t->data,"TYPE") ) {
-				fprintf( stderr, "Cannot find tag '%s'\n", 
-					t->data );
-			}
+			bibtexin_notag( p, t->data );
 			continue;
 		}
 		process = ((all[reftype]).tags[n]).processingtype;
@@ -585,12 +594,13 @@ bibtexin_convertf( fields *bibin, fields *info, int reftype, int verbose,
 		else if ( process==TITLE )
 			title_process( info, "TITLE", d->data, level);
 		else if ( process==PERSON )
-			process_names( info, newtag, d, level);
+			process_names( info, newtag, d, level, &(p->asis), 
+					&(p->corps) );
 		else if ( process==PAGES )
 			process_pages( info, d, level);
 		else if ( process==BIBTEX_URL )
 			process_url( info, d->data, level );
 	}
-	if ( verbose ) report( info );
+	if ( p->verbose ) report( info );
 }
 

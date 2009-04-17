@@ -176,21 +176,40 @@ newstr_prepend( newstr *s, char *addstr )
 	s->data[ s->len ] = '\0';
 }
 
-void 
+static inline void
+newstr_strcat_ensurespace( newstr *s, unsigned long n )
+{
+	unsigned long m = s->len + n + 1;
+	if ( !s->data || !s->dim )
+		newstr_initalloc( s, m );
+	else if ( s->len + n + 1 > s->dim )
+		newstr_realloc( s, m );
+}
+
+static inline void 
+newstr_strcat_internal( newstr *s, char *addstr, unsigned long n )
+{
+	newstr_strcat_ensurespace( s, n );
+	strncat( &(s->data[s->len]), addstr, n );
+	s->len += n;
+	s->data[s->len]='\0';
+}
+
+void
+newstr_newstrcat( newstr *s, newstr *old )
+{
+	assert ( s && old );
+	if ( !old->data ) return;
+	else newstr_strcat_internal( s, old->data, old->len );
+}
+
+void
 newstr_strcat( newstr *s, char *addstr )
 {
-	unsigned long lenaddstr;
+	unsigned long n;
 	assert( s && addstr );
-	lenaddstr = strlen( addstr );
-	if ( !s->data || !s->dim ) 
-		newstr_initalloc( s, lenaddstr+1 );
-	else {
-		if ( s->len + lenaddstr + 1 > s->dim )
-			newstr_realloc( s, s->len + lenaddstr + 1 );
-	}
-	strncpy( &(s->data[s->len]), addstr, lenaddstr );
-	s->len += lenaddstr;
-	s->data[s->len]='\0';
+	n = strlen( addstr );
+	newstr_strcat_internal( s, addstr, n );
 }
 
 void
@@ -217,16 +236,17 @@ newstr_segcat( newstr *s, char *startat, char *endat )
 }
 
 static inline void
-newstr_strcpy_ensurespace( newstr *s, int n )
+newstr_strcpy_ensurespace( newstr *s, unsigned long n )
 {
+	unsigned long m = n + 1;
 	if ( !s->data || !s->dim )
-		newstr_initalloc( s, n+1 );
+		newstr_initalloc( s, m );
 	else if ( n+1 > s->dim ) 
-		newstr_realloc( s, n+1 );
+		newstr_realloc( s, m );
 }
 
 static inline void
-newstr_strcpy_internal( newstr *s, char *p, int n )
+newstr_strcpy_internal( newstr *s, char *p, unsigned long n )
 {
 	newstr_strcpy_ensurespace( s, n );
 	strcpy( s->data, p );

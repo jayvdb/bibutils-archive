@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include "bibutils.h"
 
-extern void risout_write( fields *info, FILE *fp, int format_opts, 
+extern void risout_write( fields *info, FILE *fp, param *p,
 		unsigned long refnum );
 extern void risout_writeheader( FILE *outptr, param *p );
 

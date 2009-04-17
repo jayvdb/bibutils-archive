@@ -60,7 +60,7 @@ output_citekey( FILE *fp, fields *info, unsigned long refnum, int format_opts )
 }
 
 static int
-bibtexout_type( fields *info, char *filename, int refnum )
+bibtexout_type( fields *info, char *filename, int refnum, param *p )
 {
 	char *genre;
 	int type = TYPE_UNKNOWN, i, maxlevel, n, level;
@@ -91,7 +91,7 @@ bibtexout_type( fields *info, char *filename, int refnum )
 		else if ( !strcasecmp( genre, "book" ) ) {
 			if ( level==0 ) type=TYPE_BOOK;
 			else type=TYPE_INBOOK;
-		} else if ( !strcasecmp( genre, "theses" ) ) {
+		} else if ( !strcasecmp( genre, "thesis" ) ) {
 			if ( type==TYPE_UNKNOWN ) type=TYPE_PHDTHESIS;
 		} else if ( !strcasecmp( genre, "Ph.D. thesis" ) )
 			type = TYPE_PHDTHESIS;
@@ -115,8 +115,9 @@ bibtexout_type( fields *info, char *filename, int refnum )
 		maxlevel = fields_maxlevel( info );
 		if ( maxlevel > 0 ) type = TYPE_INBOOK;
 		else {
-			fprintf( stderr, "xml2bib warning: cannot identify "
-				"TYPE in reference %d ",refnum+1 );
+			if ( p->progname ) fprintf( stderr, "%s: ", p->progname );
+			fprintf( stderr, "Cannot identify TYPE "
+				"in reference %d ", refnum+1 );
 			n = fields_find( info, "REFNUM", -1 );
 			if ( n!=-1 ) 
 				fprintf( stderr, " %s", info->data[n].data);
@@ -249,14 +250,14 @@ add_person( newstr *s, char *p )
 	int nseps = 0, nch;
 	while ( *p ) {
 		nch = 0;
+		if ( nseps==1 ) newstr_addchar( s, ',' );
 		if ( nseps ) newstr_addchar( s, ' ' );
 		while ( *p && *p!='|' ) {
 			newstr_addchar( s, *p++ );
 			nch++;
 		}
 		if ( *p=='|' ) p++;
-		if ( nseps==0 ) newstr_addchar( s, ',' );
-		else if ( nch==1 ) newstr_addchar( s, '.' );
+		if ( nseps!=0 && nch==1 ) newstr_addchar( s, '.' );
 		nseps++;
 	}
 }
@@ -444,64 +445,65 @@ output_issue_number( FILE *fp, fields *info, int format_opts )
 }
 
 void
-bibtexout_write( fields *info, FILE *fp, int format_opts, unsigned long refnum )
+bibtexout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 {
 	int type;
 	fields_clearused( info );
-	type = bibtexout_type( info, "", refnum );
-	output_type( fp, type, format_opts );
-	output_citekey( fp, info, refnum, format_opts );
+	type = bibtexout_type( info, "", refnum, p );
+	output_type( fp, type, p->format_opts );
+	output_citekey( fp, info, refnum, p->format_opts );
 	output_people( fp, info, refnum, "AUTHOR", "AUTHOR:CORP", "AUTHOR:ASIS", "author", 0,
-		format_opts );
+		p->format_opts );
 	output_people( fp, info, refnum, "EDITOR", "EDITOR:CORP", "EDITOR:ASIS", "editor", -1,
-		format_opts );
-	output_people( fp, info, refnum, "TRANSLATOR", "TRANSLATOR:CORP", "TRANSLATOR:ASIS", "translator", -1, format_opts );
+		p->format_opts );
+	output_people( fp, info, refnum, "TRANSLATOR", "TRANSLATOR:CORP", "TRANSLATOR:ASIS", "translator", -1, p->format_opts );
 
 	/* item=main level title */
 	if ( type==TYPE_INBOOK )
-		output_title( fp, info, refnum, "chapter", 0, format_opts );
+		output_title( fp, info, refnum, "chapter", 0, p->format_opts );
 	else
-		output_title( fp, info, refnum, "title", 0, format_opts );
+		output_title( fp, info, refnum, "title", 0, p->format_opts );
 
 	/* item=host level title */
 	if ( type==TYPE_ARTICLE )
-		output_title( fp, info, refnum, "journal", 1, format_opts );
+		output_title( fp, info, refnum, "journal", 1, p->format_opts );
 	else if ( type==TYPE_INBOOK ) {
-		output_title( fp, info, refnum, "title", 1, format_opts );
-		output_title( fp, info, refnum, "series", 2, format_opts );
+		output_title( fp, info, refnum, "title", 1, p->format_opts );
+		output_title( fp, info, refnum, "series", 2, p->format_opts );
 	}
 	else if ( type==TYPE_INPROCEEDINGS || type==TYPE_INCOLLECTION ) {
-		output_title( fp, info, refnum, "booktitle", 1, format_opts );
-		output_title( fp, info, refnum, "series", 2, format_opts );
+		output_title( fp, info, refnum, "booktitle", 1, p->format_opts );
+		output_title( fp, info, refnum, "series", 2, p->format_opts );
 	}
 	else if ( type==TYPE_PHDTHESIS || type==TYPE_MASTERSTHESIS ) {
-		output_title( fp, info, refnum, "series", 1, format_opts );
+		output_title( fp, info, refnum, "series", 1, p->format_opts );
 	}
 	else if ( type==TYPE_BOOK || type==TYPE_COLLECTION || type==TYPE_PROCEEDINGS )
-		output_title( fp, info, refnum, "series", 1, format_opts );
+		output_title( fp, info, refnum, "series", 1, p->format_opts );
 
-	output_date( fp, info, refnum, format_opts );
-	output_simple( fp, info, "EDITION", "edition", format_opts );
-	output_simple( fp, info, "PUBLISHER", "publisher", format_opts );
-	output_simple( fp, info, "ADDRESS", "address", format_opts );
-	output_simple( fp, info, "VOLUME", "volume", format_opts );
-	output_issue_number( fp, info, format_opts );
-/*	output_simple( fp, info, "ISSUE", "issue", format_opts );
-	output_simple( fp, info, "NUMBER", "number", format_opts );s*/
-	output_pages( fp, info, refnum, format_opts );
-	output_simpleall( fp, info, "KEYWORD", "keywords", format_opts );
-	output_simple( fp, info, "CONTENTS", "contents", format_opts );
-	output_simple( fp, info, "ABSTRACT", "abstract", format_opts );
-	output_simple( fp, info, "LOCATION", "location", format_opts );
-	output_simple( fp, info, "DEGREEGRANTOR", "school", format_opts );
-	output_simple( fp, info, "DEGREEGRANTOR:ASIS", "school", format_opts );
-	output_simple( fp, info, "DEGREEGRANTOR:CORP", "school", format_opts );
-	output_simpleall( fp, info, "NOTES", "note", format_opts );
-	output_simple( fp, info, "ISBN", "isbn", format_opts );
-	output_simple( fp, info, "ISSN", "issn", format_opts );
-	output_simple( fp, info, "DOI", "doi", format_opts );
-	output_simpleall( fp, info, "URL", "url", format_opts );
-	if ( format_opts & BIBOUT_FINALCOMMA ) fprintf( fp, "," );
+	output_date( fp, info, refnum, p->format_opts );
+	output_simple( fp, info, "EDITION", "edition", p->format_opts );
+	output_simple( fp, info, "PUBLISHER", "publisher", p->format_opts );
+	output_simple( fp, info, "ADDRESS", "address", p->format_opts );
+	output_simple( fp, info, "VOLUME", "volume", p->format_opts );
+	output_issue_number( fp, info, p->format_opts );
+/*	output_simple( fp, info, "ISSUE", "issue", p->format_opts );
+	output_simple( fp, info, "NUMBER", "number", p->format_opts );s*/
+	output_pages( fp, info, refnum, p->format_opts );
+	output_simpleall( fp, info, "KEYWORD", "keywords", p->format_opts );
+	output_simple( fp, info, "CONTENTS", "contents", p->format_opts );
+	output_simple( fp, info, "ABSTRACT", "abstract", p->format_opts );
+	output_simple( fp, info, "LOCATION", "location", p->format_opts );
+	output_simple( fp, info, "DEGREEGRANTOR", "school", p->format_opts );
+	output_simple( fp, info, "DEGREEGRANTOR:ASIS", "school", p->format_opts );
+	output_simple( fp, info, "DEGREEGRANTOR:CORP", "school", p->format_opts );
+	output_simpleall( fp, info, "NOTES", "note", p->format_opts );
+	output_simple( fp, info, "ISBN", "isbn", p->format_opts );
+	output_simple( fp, info, "ISSN", "issn", p->format_opts );
+	output_simple( fp, info, "DOI", "doi", p->format_opts );
+	output_simpleall( fp, info, "URL", "url", p->format_opts );
+	output_simple( fp, info, "LANGUAGE", "language", p->format_opts );
+	if ( p->format_opts & BIBOUT_FINALCOMMA ) fprintf( fp, "," );
 	fprintf( fp, "\n}\n\n" );
 	fflush( fp );
 }

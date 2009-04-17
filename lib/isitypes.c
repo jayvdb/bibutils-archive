@@ -177,29 +177,18 @@ static lookups bookinseries[] = {
 	{ " ",      "GENRE|collection",       ALWAYS, LEVEL_MAIN }
 };
 
-
+#define ORIG(a) ( &(a[0]) )
+#define SIZE(a) ( sizeof( a ) / sizeof( lookups ) )
+#define REFTYPE(a,b) { a, ORIG(b), SIZE(b) }
 
 variants isi_all[] = {
-	{ "Journal", &(article[0]), sizeof(article)/sizeof(lookups)},
-	{ "J", &(article[0]), sizeof(article)/sizeof(lookups)},
-	{ "Book", &(book[0]), sizeof(book)/sizeof(lookups)},
-	{ "B", &(book[0]), sizeof(book)/sizeof(lookups)},
-	{ "Chapter", &(inbook[0]), sizeof(inbook)/sizeof(lookups)},
-	{ "S", &(bookinseries[0]), sizeof(bookinseries)/sizeof(lookups)},
+	REFTYPE( "Journal", article ),
+	REFTYPE( "J", article ),
+	REFTYPE( "Book", book ),
+	REFTYPE( "B", book ),
+	REFTYPE( "Chapter", inbook ),
+	REFTYPE( "S", bookinseries ),
 };
 
 int isi_nall = sizeof( isi_all ) / sizeof( variants );
 
-#ifdef NOCOMPILE
-int
-get_reftype( char *p, long refnum )
-{
-	int i;
-	p = skip_ws( p );
-	for ( i=0; i<nall; ++i )
-		if ( strncasecmp( all[i].type, p, strlen(all[i].type) ) == 0 ) return i;
-	fprintf( stderr, "Warning: Did not recognize '%s' of refnum %ld, defaulting to article.\n",
-		p, refnum );
-	return 0;
-}
-#endif

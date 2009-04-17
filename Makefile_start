@@ -3,15 +3,15 @@ CC = REPLACE_CC
 RANLIB=REPLACE_RANLIB
 INSTALLDIR=REPLACE_INSTALLDIR
 
-VERSION=3.43
-DATE=11/24/08
+VERSION=4.1
+DATE=12/21/08
 
 PROGRAMS=bib2xml ris2xml end2xml endx2xml med2xml isi2xml copac2xml \
 	xml2ads xml2bib xml2end xml2isi xml2ris xml2wordbib modsclean
 
 all : FORCE
-	cd lib; make -k $(CC) -k $(RANLIB) -k VERSION="$(VERSION)" -k DATE="$(DATE)"; cd ..
-	cd bin; make -k $(CC); cd ..
+	cd lib; make -k $(CC) -k $(RANLIB); cd ..
+	cd bin; make -k $(CC) -k VERSION="$(VERSION)" -k DATE="$(DATE)"; cd ..
 
 clean: FORCE
 	cd lib     ; make clean ; cd ..
@@ -22,16 +22,17 @@ realclean: FORCE
 	cd lib     ; make realclean ; cd ..
 	cd bin     ; make realclean ; cd ..
 	cd test    ; make realclean ; cd ..
-	rm -rf update
+	rm -rf update lib/bibutils.pc
 
 test: all FORCE
 	cd lib    ; make test; cd ..
 	cd bin    ; make test; cd ..
 
 install: all FORCE
-	@for p in ${PROGRAMS}; \
-		do ( cp bin/$$p ${INSTALLDIR}/$$p ); \
-	done
+	sed 's/VERSION/${VERSION}/g' packageconfig_start > lib/bibutils.pc
+#	@for p in ${PROGRAMS}; \
+#		do ( cp bin/$$p ${INSTALLDIR}/$$p ); \
+#	done
 
 package: all FORCE
 	csh -f maketgz.csh ${VERSION} ${POSTFIX}

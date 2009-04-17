@@ -19,8 +19,6 @@
 #include "reftypes.h"
 #include "endin.h"
 
-extern char progname[];
-
 /* Endnote tag definition:
     character 1 = '%'
     character 2 = alphabetic character or digit
@@ -264,25 +262,78 @@ adddate( fields *info, char *tag, char *newtag, char *p, int level )
 	newstr_free( &date );
 }
 
+/* Endnote defaults if no %0
+ *
+ * if %J & %V - journal article
+ * if %B - book section
+ * if %R & !%T - report
+ * if %I & !%B & !%J & !%R - book
+ * if !%B & !%J & !%R & !%I - journal article
+ */
 int
-endin_typef( fields *endin, char *filename, int nrefs, variants *all,
+endin_typef( fields *endin, char *filename, int nrefs, param *p, variants *all,
 		int nall )
 {
 	char *refnum = "";
-	int n, reftype, nrefnum;
+	int n, reftype, nrefnum, nj, nv, nb, nr, nt, ni;
 	n = fields_find( endin, "%0", 0 );
 	nrefnum = fields_find( endin, "%F", 0 );
 	if ( nrefnum!=-1 ) refnum = endin->data[nrefnum].data;
 	if ( n!=-1 )
-		reftype = get_reftype( endin->data[n].data, nrefs, all, nall,
-			refnum );
-	else
-		reftype = get_reftype( "", nrefs, all, nall, refnum ); /* default */
+		reftype = get_reftype( endin->data[n].data, nrefs, p->progname,
+			all, nall, refnum );
+	else {
+		nj = fields_find( endin, "%J", 0 );
+		nv = fields_find( endin, "%V", 0 );
+		nb = fields_find( endin, "%B", 0 );
+		nr = fields_find( endin, "%R", 0 );
+		nt = fields_find( endin, "%T", 0 );
+		ni = fields_find( endin, "%I", 0 );
+		if ( nj!=-1 && nv!=-1 ) {
+			reftype = get_reftype( "Journal Article", nrefs,
+					p->progname, all, nall, refnum );
+		} else if ( nb!=-1 ) {
+			reftype = get_reftype( "Book Section", nrefs,
+					p->progname, all, nall, refnum );
+		} else if ( nr!=-1 && nt==-1 ) {
+			reftype = get_reftype( "Report", nrefs,
+					p->progname, all, nall, refnum );
+		} else if ( ni!=-1 && nb==-1 && nj==-1 && nr==-1 ) {
+			reftype = get_reftype( "Book", nrefs,
+					p->progname, all, nall, refnum );
+		} else if ( nb==-1 && nj==-1 && nr==-1 && ni==-1 ) {
+			reftype = get_reftype( "Journal Article", nrefs,
+					p->progname, all, nall, refnum );
+		} else {
+			reftype = get_reftype( "", nrefs, p->progname, 
+					all, nall, refnum ); /* default */
+		}
+	}
 	return reftype;
 }
 
+static void
+endin_notag( param *p, char *tag, char *data )
+{
+	if ( p->verbose ) {
+		if ( p->progname ) fprintf( stderr, "%s: ", p->progname );
+		fprintf( stderr, "Cannot find tag '%s'='%s'\n", tag, data );
+	}
+}
+
+/* Wiley EndNote download has DOI's in "%1" tag */
+static void
+addnotes( fields *info, char *tag, char *data, int level )
+{
+	int doi = is_doi( data );
+	if ( doi!=-1 )
+		fields_add( info, "DOI", &(data[doi]), level );
+	else
+		fields_add( info, tag, data, level );
+}
+
 void
-endin_convertf( fields *endin, fields *info, int reftype, int verbose, variants *all, int nall )
+endin_convertf( fields *endin, fields *info, int reftype, param *p, variants *all, int nall )
 {
 	newstr *d;
 	int  i, level, n, process;
@@ -303,9 +354,7 @@ endin_convertf( fields *endin, fields *info, int reftype, int verbose, variants 
 		}
 		n = process_findoldtag( t, reftype, all, nall );
 		if ( n==-1 ) {
-			if ( verbose )
-				fprintf( stderr, "%s: Cannot find tag '%s'='%s'\n",
-					progname, t, d->data );
+			endin_notag( p, t, d->data );
 			continue;
 		}
 		process = ((all[reftype]).tags[n]).processingtype;
@@ -319,13 +368,16 @@ endin_convertf( fields *endin, fields *info, int reftype, int verbose, variants 
 		else if ( process==TITLE )
 			title_process( info, newtag, d->data, level );
 		else if ( process==PERSON )
-			name_add( info, newtag, d->data, level );
+			name_add( info, newtag, d->data, level, &(p->asis), 
+					&(p->corps) );
 		else if ( process==DATE )
 			adddate( info, t, newtag,d->data,level);
 		else if ( process==PAGES )
 			addpage( info, d->data, level );
 		else if ( process==SERIALNO )
 			addsn( info, d->data, level );
+		else if ( process==NOTES )
+			addnotes( info, newtag, d->data, level );
 		else {
 /*				fprintf(stderr,"%s: internal error -- illegal process %d\n", r->progname, process );
 */

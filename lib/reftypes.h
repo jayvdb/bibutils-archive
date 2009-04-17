@@ -34,7 +34,7 @@ typedef struct {
 	int     ntags;
 } variants;
 
-extern int get_reftype( char *p, long refnum, variants *all, int nall, char *tag );
+extern int get_reftype( char *q, long refnum, char *progname, variants *all, int nall, char *tag );
 extern int process_findoldtag( char *oldtag, int reftype, variants all[], int nall );
 
 

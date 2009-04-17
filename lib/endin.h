@@ -12,11 +12,12 @@
 #include "newstr.h"
 #include "fields.h"
 #include "reftypes.h"
+#include "bibutils.h"
 
 extern int endin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, newstr *reference, int *fcharset );
 extern int endin_processf( fields *endin, char *p, char *filename, long nref );
-extern int endin_typef( fields *endin, char *filename, int nrefs, variants *all, int nall );
-extern void endin_convertf( fields *endin, fields *info, int reftype, int verbose, variants *all, int nall );
+extern int endin_typef( fields *endin, char *filename, int nrefs, param *p, variants *all, int nall );
+extern void endin_convertf( fields *endin, fields *info, int reftype, param *p, variants *all, int nall );
 
 extern variants end_all[];
 extern int end_nall;

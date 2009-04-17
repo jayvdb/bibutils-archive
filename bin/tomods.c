@@ -1,38 +1,24 @@
 /*
- * bibprogs.c
+ * tomods.c
  *
- * Copyright (c) Chris Putnam 2004-8
+ * Copyright (c) 2004-8
  *
  * Program and source code released under the GPL
  *
  */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "newstr.h"
-#include "newstr_conv.h"
 #include "list.h"
 #include "bibl.h"
-#include "bibutils.h"
 #include "modsout.h"
-#include "bibprogs.h"
-
-extern list corps;
-extern list asis;
-
-static void
-args_tellversion( char *progname )
-{
-	extern char bibutils_version[];
-	extern char bibutils_date[];
-	fprintf( stderr, "%s, ", progname );
-	fprintf( stderr, "bibutils suite version %s date %s\n", 
-		bibutils_version, bibutils_date );
-}
+#include "bibutils.h"
+#include "tomods.h"
+#include "args.h"
+#include "bibprog.h"
 
 static void
-args_help( char *progname, char *help1, char *help2 )
+args_tomods_help( char *progname, char *help1, char *help2 )
 {
 	args_tellversion( progname );
 	fprintf(stderr,"%s", help1 );
@@ -59,82 +45,33 @@ args_help( char *progname, char *help1, char *help2 )
 			"for more details\n\n");
 }
 
-int
-args_match( char *check, char *shortarg, char *longarg )
-{
-	if ( shortarg && !strcmp( check, shortarg ) ) return 1;
-	if ( longarg  && !strcmp( check, longarg  ) ) return 1;
-	return 0;
-}
-
 static void
-args_namelist( int argc, char *argv[], int i, char *progname, list *names,
-		char *shortarg, char *longarg )
+args_namelist( int argc, char *argv[], int i, char *progname, char *shortarg, 
+		char *longarg )
 {
 	if ( i+1 >= argc ) {
 		fprintf( stderr, "%s: error %s (%s) takes the argument of "
 			"the file\n", progname, shortarg, longarg );
 		exit( EXIT_FAILURE );
-	} else {
-		if ( !list_fill( names, argv[i+1] ) ) {
-			fprintf( stderr, "%s: warning problems reading '%s', "
-				"obtained %d elements\n", progname, 
-				argv[i+1], names->n );
-		}
-	}
-}
-
-int
-args_charset( char *charset_name, int *charset, unsigned char *utf8 )
-{
-	if ( !strcasecmp( charset_name, "unicode" ) || 
-	     !strcasecmp( charset_name, "utf8" ) ) {
-		*charset = BIBL_CHARSET_UNICODE;
-		*utf8 = 1;
-	} else if ( !strcasecmp( charset_name, "gb18030" ) ) {
-		*charset = BIBL_CHARSET_GB18030;
-		*utf8 = 0;
-	} else {
-		*charset = get_charset( charset_name );
-		*utf8 = 0;
-	}
-	if ( *charset == BIBL_CHARSET_UNKNOWN ) return 0;
-	else return 1;
-}
-
-void
-args_encoding( int argc, char *argv[], int i, int *charset, unsigned char *utf8, char *progname )
-{
-	if ( i+1 >= argc ) {
-		fprintf( stderr, "%s: error -i (--input-encoding) takes "
-				"the argument of the character set type\n",
-				progname );
-		list_charsets( stderr );
-		exit( EXIT_FAILURE );
-	} else {
-		if ( !args_charset( argv[i+1], charset, utf8 ) ) {
-			fprintf( stderr, "%s: character encoding lookup "
-					"failed.\n", progname );
-			list_charsets( stderr );
-		}
 	}
 }
 
 void
-tomods_processargs( int *argc, char *argv[], param *p, char *progname,
+tomods_processargs( int *argc, char *argv[], param *p,
 	char *help1, char *help2 )
 {
 	int i, j, subtract;
+	process_charsets( argc, argv, p, 1, 0 );
 	i = 0;
 	while ( i<*argc ) {
 		subtract = 0;
 		if ( args_match( argv[i], "-h", "--help" ) ) {
 			subtract = 1;
-			args_help( progname, help1, help2 );
+			args_tomods_help( p->progname, help1, help2 );
 			exit( EXIT_SUCCESS );
 		} else if ( args_match( argv[i], "-v", "--version" ) ) {
 			subtract = 1;
-			args_tellversion( progname );
+			args_tellversion( p->progname );
 			exit( EXIT_SUCCESS );
 		} else if ( args_match( argv[i], "-a", "--add-refcount" ) ) {
 			p->addcount = 1;
@@ -175,17 +112,14 @@ tomods_processargs( int *argc, char *argv[], param *p, char *progname,
 			p->xmlout = 1;
 			subtract = 1;
 		} else if ( args_match( argv[i], "-c", "--corporation-file")){
-			args_namelist( *argc, argv, i, progname, &corps,
+			args_namelist( *argc, argv, i, p->progname,
 				"-c", "--corporation-file" );
+			bibl_readcorps( p, argv[i+1] );
 			subtract = 2;
 		} else if ( args_match( argv[i], "-as", "--asis")) {
-			args_namelist( *argc, argv, i, progname, &asis,
+			args_namelist( *argc, argv, i, p->progname,
 				"-as", "--asis" );
-			subtract = 2;
-		} else if ( args_match( argv[i], "-i", "--input-encoding" ) ) {
-			args_encoding( *argc, argv, i, &(p->charsetin),
-				&(p->utf8in), progname );
-			p->charsetin_src = BIBL_SRC_USER;
+			bibl_readasis( p, argv[i+1] );
 			subtract = 2;
 		}
 		if ( subtract ) {
@@ -196,3 +130,4 @@ tomods_processargs( int *argc, char *argv[], param *p, char *progname,
 		} else i++;
 	}
 }
+
