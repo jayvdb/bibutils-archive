@@ -1,7 +1,7 @@
 /*
  * risin.c
  *
- * Copyright (c) Chris Putnam 2003-8
+ * Copyright (c) Chris Putnam 2003-2009
  *
  * Program and source code released under the GPL
  *
@@ -17,6 +17,7 @@
 #include "title.h"
 #include "serialno.h"
 #include "reftypes.h"
+#include "doi.h"
 #include "risin.h"
 
 /* RIS definition of a tag is strict:

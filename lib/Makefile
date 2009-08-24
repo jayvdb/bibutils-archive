@@ -1,9 +1,9 @@
 #CC = gcc -Wall 
 #RANLIB = echo
 
-BIB_OBJS = bbl.o fields.o list.o name.o title.o reftypes.o
+BIB_OBJS = bbl.o fields.o list.o name.o title.o doi.o reftypes.o
 
-SIMPLE_OBJS   = is_ws.o is_doi.o strsearch.o charsets.o
+SIMPLE_OBJS   = is_ws.o strsearch.o charsets.o
 NEWSTR_OBJS   = newstr.o newstr_conv.o entities.o latex.o utf8.o gb18030.o
 CONTAIN_OBJS  = fields.o list.o xml.o xml_encoding.o
 INPUT_OBJS    = bibtexin.o bibtextypes.o \
@@ -15,11 +15,12 @@ INPUT_OBJS    = bibtexin.o bibtextypes.o \
 		medin.o \
 		modsin.o modstypes.o marc.o \
 		risin.o ristypes.o \
+		ebiin.o wordin.o \
 		reftypes.o
 OUTPUT_OBJS   = bibtexout.o endout.o isiout.o modsout.o risout.o wordout.o \
 		adsout.o
 BIBUTILS_OBJS = $(SIMPLE_OBJS) $(NEWSTR_OBJS) $(CONTAIN_OBJS) \
-	$(INPUT_OBJS) $(OUTPUT_OBJS) name.o title.o bibl.o serialno.o bibutils.o
+	$(INPUT_OBJS) $(OUTPUT_OBJS) name.o title.o doi.o bibl.o serialno.o bibutils.o
 
 all:  libbibutils.a
 

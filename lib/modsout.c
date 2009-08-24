@@ -1,7 +1,7 @@
 /*
  * modsout.c
  *
- * Copyright (c) Chris Putnam 2003-8
+ * Copyright (c) Chris Putnam 2003-2009
  *
  * Source code released under the GPL
  *
@@ -40,16 +40,6 @@ output_tab1( FILE *outptr, int level, char *tag )
 	fprintf( outptr, "%s", tag );
 }
 
-#if 0
-static void
-output_tab2( FILE *outptr, int level, char *tag, char *data, int cr )
-{
-	output_tab0( outptr, level );
-	fprintf( outptr, "<%s>%s</%s>", tag, data, tag );
-	if ( cr ) fprintf( outptr, "\n" );
-}
-#endif
-
 static void
 output_tab2_attrib( FILE *outptr, int level, char *tag, char *data, 
 	char *attrib, char *type, int cr )
@@ -79,19 +69,6 @@ output_fill2( FILE *outptr, int level, char *tag, fields *info, int n, int cr )
 		fields_setused( info, n );
 	}
 }
-
-#if 0
-static void
-output_fill2_attrib( FILE *outptr, int level, char *tag, char *attrib, char *type,
-	fields *info, int n, int cr )
-{
-	if ( n!=-1 ) {
-		output_tab2_attrib( outptr, level, tag, info->data[n].data, 
-			attrib, type, cr );
-		fields_setused( info, n );
-	}
-}
-#endif
 
 static void
 output_fill4( FILE *outptr, int level, char *tag, char *aname, char *avalue,
@@ -254,9 +231,9 @@ output_names( fields *info, FILE *outptr, int level )
 static int
 output_finddateissued( fields *info, int level, int pos[3] )
 {
-	char      *src_names[] = { "YEAR", "MONTH", "DAY" };
-	char      *alt_names[] = { "PARTYEAR", "PARTMONTH", "PARTDAY" };
-	int       i, found = -1, ntypes = 3;
+	char      *src_names[] = { "YEAR", "MONTH", "DAY", "DATE" };
+	char      *alt_names[] = { "PARTYEAR", "PARTMONTH", "PARTDAY", "PARTDATE" };
+	int       i, found = -1, ntypes = 4;
 
 	for ( i=0; i<ntypes; ++i ) {
 		pos[i] = fields_find( info, src_names[i], level );
@@ -279,10 +256,9 @@ output_finddateissued( fields *info, int level, int pos[3] )
 }
 
 static void
-output_dateissued( fields *info, FILE *outptr, int level, int pos[3] )
+output_datepieces( fields *info, FILE *outptr, int pos[4] )
 {
 	int nprinted = 0, i;
-	output_tab1( outptr, increment_level(level,1), "<dateIssued>" );
 	for ( i=0; i<3 && pos[i]!=-1; ++i ) {
 		if ( nprinted>0 ) fprintf( outptr, "-" );
 		if ( i>0 && info->data[pos[i]].len==1 )
@@ -290,6 +266,24 @@ output_dateissued( fields *info, FILE *outptr, int level, int pos[3] )
 		fprintf( outptr,"%s",info->data[pos[i]].data );
 		nprinted++;
 		fields_setused( info, pos[i] );
+	}
+}
+
+static void
+output_dateall( fields *info, FILE *outptr, int pos )
+{
+	fprintf( outptr, "%s", info->data[pos].data );
+	fields_setused( info, pos );
+}
+
+static void
+output_dateissued( fields *info, FILE *outptr, int level, int pos[4] )
+{
+	output_tab1( outptr, increment_level(level,1), "<dateIssued>" );
+	if ( pos[0]!=-1 || pos[1]!=-1 || pos[2]!=-1 ) {
+		output_datepieces( info, outptr, pos );
+	} else {
+		output_dateall( info, outptr, pos[3] );
 	}
 	fprintf( outptr, "</dateIssued>\n" );
 }
@@ -304,7 +298,7 @@ output_origin( fields *info, FILE *outptr, int level )
 		{ "edition",	"EDITION",	0 }
 	};
 	int n, ntypes = sizeof( origin ) / sizeof ( convert );
-	int found, datefound, pos[5], date[3];
+	int found, datefound, pos[5], date[4];
 
 	/* find all information to be outputted */
 	found = -1;
@@ -620,22 +614,31 @@ output_key( fields *info, FILE *outptr, int level )
 static void
 output_sn( fields *info, FILE *outptr, int level )
 {
-	char      *internal_names[] = { "ISBN", "LCCN", "ISSN", "REFNUM", 
-		"DOI" , "PUBMED", "MEDLINE", "PII", "ISIREFNUM", "ACCESSNUM" };
-	char      *mods_types[] = { "isbn", "lccn", "issn", "citekey", "doi",
-		"pubmed", "medline", "pii", "isi", "accessnum" };
-	int       n, ntypes = sizeof( internal_names ) / sizeof( char* );
+	convert sn_types[] = {
+		{ "isbn",      "ISBN",      0 },
+		{ "lccn",      "LCCN",      0 },
+		{ "issn",      "ISSN",      0 },
+		{ "citekey",   "REFNUM",    0 },
+		{ "doi",       "DOI",       0 },
+		{ "pubmed",    "PMID",      0 },
+		{ "medline",   "MEDLINE",   0 },
+		{ "pii",       "PII",       0 },
+		{ "arXiv",     "ARXIV",     0 },
+		{ "isi",       "ISIREFNUM", 0 },
+		{ "accessnum", "ACCESSNUM", 0 },
+	};
+	int n, ntypes = sizeof( sn_types ) / sizeof( sn_types[0] );
 	int       found, i;
 
 	found = fields_find ( info, "CALLNUMBER", level );
 	output_fill2( outptr, level, "classification", info, found, 1 );
 
 	for ( n=0; n<ntypes; ++n ) {
-		found = fields_find( info, internal_names[n], level );
+		found = fields_find( info, sn_types[n].internal, level );
 		if ( found==-1 ) continue;
 		output_tab0( outptr, level );
 		fprintf( outptr, "<identifier type=\"%s\">%s</identifier>\n",
-				mods_types[n],
+				sn_types[n].mods,
 				info->data[found].data
 		       );
 		fields_setused( info, found );

@@ -33,7 +33,7 @@ if ( ` echo $UNAME | grep Linux | wc | awk '{print $1;}' ` == 1 ) then
 endif
 if ( ` echo $UNAME | grep Darwin | wc | awk '{print $1;}' ` == 1 ) then
 	set type = "MacOSX_Unknown"
-	if ( ` echo $UNAME | grep 'powerpc' | wc | awk '{print $1};'` == 1 ) then
+	if ( ` echo $UNAME | grep -E 'powerpc|Power Macintosh' | wc | awk '{print $1};'` == 1 ) then
 		set type = "MacOSX_ppc"
 	endif
 	if ( ` echo $UNAME | grep 'i386' | wc | awk '{print $1}'` == 1 ) then
@@ -109,7 +109,7 @@ else if ( $type == "MacOSX_intel" && $universal_binary == "TRUE" ) then
 	sed "s|REPLACE_INSTALLDIR|${INSTALLDIR}|" | \
 	sed 's/REPLACE_POSTFIX/_osx_universal/' > $OUTPUT_FILE
 else if ( $type == "MacOSX_ppc" || $type == "MacOSX_intel" || \
-	$type == "MacOSX_unknown" ) then
+	$type == "MacOSX_Unknown" ) then
 	cat $INPUT_FILE | \
 	sed 's/REPLACE_CC/CC="cc -Wall"/' | \
 	sed 's/REPLACE_RANLIB/RANLIB="ranlib -s"/' | \

@@ -1,7 +1,7 @@
 /*
  * endxmlin.c
  *
- * Copyright (c) Chris Putnam 2006-8
+ * Copyright (c) Chris Putnam 2006-2009
  *
  * Program and source code released under the GPL
  */
@@ -343,6 +343,7 @@ endxmlin_record( xml *node, fields *info )
 		{ "label",  "%F" },
 		{ "auth-address", "%C" },
 		{ "auth-affiliation", "%C" },
+		{ "pub-location", "%C" },
 		{ "publisher", "%I" },
 		{ "abstract", "%X" },
 		{ "edition", "%7" },
@@ -381,7 +382,6 @@ endxmlin_record( xml *node, fields *info )
 	} else if ( xml_tagexact( node, "secondary-volume" ) ) {
 	} else if ( xml_tagexact( node, "secondary-issue" ) ) {
 	} else if ( xml_tagexact( node, "reprint-status" ) ) {
-	} else if ( xml_tagexact( node, "pub-location" ) ) {
 	} else if ( xml_tagexact( node, "orig-pub" ) ) {
 	} else if ( xml_tagexact( node, "report-id" ) ) {
 	} else if ( xml_tagexact( node, "coden" ) ) {

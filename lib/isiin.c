@@ -1,7 +1,7 @@
 /*
  * isiin.c
  *
- * Copyright (c) Chris Putnam 2004-8
+ * Copyright (c) Chris Putnam 2004-2009
  *
  * Program and source code released under the GPL
  *
@@ -73,10 +73,6 @@ isiin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, newstr
 		}
 		else {
 			newstr_empty( line );
-/*
-			fprintf( stderr, "%s warning: '%s' outside of tag\n",
-					r->progname, p );
-*/
 		}
 	}
 	*fcharset = CHARSET_UNKNOWN;

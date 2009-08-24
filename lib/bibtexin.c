@@ -1,7 +1,7 @@
 /*
  * bibtexin.c
  *
- * Copyright (c) Chris Putnam 2003-8
+ * Copyright (c) Chris Putnam 2003-2009
  *
  * Program and source code released under the GPL
  *
@@ -527,6 +527,8 @@ process_url( fields *info, char *p, int level )
 		fields_add( info, "URL", p+8, level );
 	else if ( !strncasecmp( p, "\\url", 4 ) )
 		fields_add( info, "URL", p+4, level );
+	else if ( !strncasecmp( p, "arXiv:", 6 ) )
+		fields_add( info, "ARXIV", p+6, level ); 
 	else fields_add( info, "URL", p, level );
 }
 

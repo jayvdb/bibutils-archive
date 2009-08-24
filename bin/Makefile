@@ -5,7 +5,7 @@
 CFLAGS     = -I ../lib
 LIBDIR     = -L../lib
 PROGS      = bib2xml biblatex2xml copac2xml end2xml endx2xml isi2xml med2xml \
-             ris2xml \
+             ris2xml ebi2xml wordbib2xml \
              xml2ads xml2bib xml2end xml2isi xml2ris xml2wordbib modsclean
 
 all: $(PROGS)
@@ -22,6 +22,9 @@ biblatex2xml : biblatex2xml.o bibprog.o tomods.o args.o ../lib/libbibutils.a
 copac2xml : copac2xml.o bibprog.o tomods.o args.o  ../lib/libbibutils.a
 	$(CC) $^ -o $@
 
+ebi2xml : ebi2xml.o bibprog.o tomods.o args.o ../lib/libbibutils.a
+	$(CC) $^ -o $@
+
 end2xml : end2xml.o bibprog.o tomods.o args.o ../lib/libbibutils.a
 	$(CC) $^ -o $@
 
@@ -32,6 +35,9 @@ isi2xml : isi2xml.o bibprog.o tomods.o args.o ../lib/libbibutils.a
 	$(CC) $^ -o $@
 
 med2xml : med2xml.o bibprog.o tomods.o args.o ../lib/libbibutils.a
+	$(CC) $^ -o $@
+
+wordbib2xml : wordbib2xml.o bibprog.o tomods.o args.o ../lib/libbibutils.a
 	$(CC) $^ -o $@
 
 ris2xml : ris2xml.o bibprog.o tomods.o args.o ../lib/libbibutils.a

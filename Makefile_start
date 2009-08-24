@@ -3,8 +3,8 @@ CC = REPLACE_CC
 RANLIB=REPLACE_RANLIB
 INSTALLDIR=REPLACE_INSTALLDIR
 
-VERSION=4.1
-DATE=12/21/08
+VERSION=4.3
+DATE=07/31/09
 
 PROGRAMS=bib2xml ris2xml end2xml endx2xml med2xml isi2xml copac2xml \
 	xml2ads xml2bib xml2end xml2isi xml2ris xml2wordbib modsclean
@@ -30,9 +30,9 @@ test: all FORCE
 
 install: all FORCE
 	sed 's/VERSION/${VERSION}/g' packageconfig_start > lib/bibutils.pc
-#	@for p in ${PROGRAMS}; \
-#		do ( cp bin/$$p ${INSTALLDIR}/$$p ); \
-#	done
+	@for p in ${PROGRAMS}; \
+		do ( cp bin/$$p ${INSTALLDIR}/$$p ); \
+	done
 
 package: all FORCE
 	csh -f maketgz.csh ${VERSION} ${POSTFIX}

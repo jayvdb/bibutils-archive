@@ -1,6 +1,74 @@
 
 BIBUTILS
 
+4.3
+7/31/09
+
+BIB2XML
++ Add support for recognizing howpublished = {arXiv:xxxx} entries
+
+LATEX
++ Fix bug for {\c{c}} output
+
+XML2END
++ Add support for Pubmed ID's (PMID) as %U http://www.ncbi.nlm.nih.gov/pubmed/...
++ Add support for arXiv identifiers as %U http://arxiv.org/abs/...
+
+XML2RIS
++ Add support for Pubmed ID's (PMID) as UR - http://www.ncbi.nlm.nih.gov/pubmed/..
++ Add support for arXiv identifiers as UR - http://arxiv.org/abs/...
++ Change abstract output from "AB" tag to "N2"
+
+XML2WORDBIB
++ Add support to handle inventors in patent type
++ Fix inappropriate output of empty author or editor lists
+
+4.2
+06/25/09
+
+BUILD
++ Add support for 'Power Macintosh' as MacOSX_ppc.  Thanks to Matthias
+  Steffens for the fix.
++ Fix additional MacOSX build bugs, thanks to David Sanson
+
+END2XML
++ Add %1 parsing to journal articles
++ Fix bug not recognizing %[ and elements as valid tags
++ Add support for Conference Paper
+
+ENDX2XML
++ Add support for pub-location tags
++ Add support for Conference Paper
+
+LATEX
++ Fix bug for {\AA} conversion, patch thanks to Joseph Barillari.
+
+MED2XML
++ Recognized medline entries from MEDLINE in addition to PUBMED.  Thanks to
+  Hamish McWilliam for providing useful information.
+
+MODSIN
++ Handle pages provided as list, patch thanks to Heiko Jansen
+
+NAME MANGLING
++ Handle hyphenated names better
++ Handle "et al." in name lists better
+
+XML2BIB
++ Add recognition of genre "article", patch thanks to Heiko Jansen
+
+XML2END
++ Add export of DOI as %U http://dx.doi.org/.... Thanks to Mattheis
+  Stevens for the report
+
+XML2RIS
++ Add export of DOI as UR  - http://dx.doi.org/....  Thanks to Mattheis
+  Stevens for the report
+
+XML2WORD
++ Add support for more types of sources.
+
+
 4.1
 
 BIBLATEX2XML
