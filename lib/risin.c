@@ -53,11 +53,21 @@ risin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line,
 		newstr *reference, int *fcharset )
 {
 	int haveref = 0, inref = 0, readtoofar = 0;
+	unsigned char *up;
 	char *p;
+	*fcharset = CHARSET_UNKNOWN;
 	while ( !haveref && readmore( fp, buf, bufsize, bufpos, line ) ) {
 		if ( !line->data || line->len==0 ) continue;
 		p = &( line->data[0] );
-		/* Each reference starts with 'TY  - ' && ends with 'ER  - ' */
+		/* Recognize UTF8 BOM */
+		up = (unsigned char * ) p;
+		if ( line->len > 2 && 
+				up[0]==0xEF && up[1]==0xBB && up[2]==0xBF ) {
+			*fcharset = CHARSET_UNICODE;
+			p += 3;
+		}
+		/* Each reference starts with 'TY  - ' && 
+		 * ends with 'ER  - ' */
 		if ( strncmp(p,"TY  - ",6)==0 ) {
 			if ( !inref ) {
 				inref = 1;
@@ -88,7 +98,6 @@ risin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line,
 		if ( !readtoofar ) newstr_empty( line );
 	}
 	if ( inref ) haveref = 1;
-	*fcharset = CHARSET_UNKNOWN;
 	return haveref;
 }
 
@@ -123,14 +132,12 @@ int
 risin_processf( fields *risin, char *p, char *filename, long nref )
 {
 	newstr tag, data;
-	newstr_init( &tag );
-	newstr_init( &data );
+	newstrs_init( &tag, &data, NULL );
 
 	while ( *p ) {
 		if ( risin_istag( p ) ) {
 		p = process_line( &tag, &data, p );
 		/* no anonymous fields allowed */
-/*		if ( tag.len && data.len )*/
 		if ( tag.len )
 			fields_add( risin, tag.data, data.data, 0 );
 		} else {
@@ -142,12 +149,10 @@ risin_processf( fields *risin, char *p, char *filename, long nref )
 				newstr_strcat( od, data.data );
 			}
 		}
-		newstr_empty( &tag );
-		newstr_empty( &data );
+		newstrs_empty( &tag, &data, NULL );
 	}
 
-	newstr_free( &tag );
-	newstr_free( &data );
+	newstrs_free( &tag, &data, NULL );
 	return 1;
 }
 
@@ -160,6 +165,15 @@ notes_add( fields *info, char *tag, newstr *s, int level )
 		fields_add( info, "DOI", &(s->data[doi]), level );
 	else
 		fields_add( info, tag, s->data, level );
+}
+
+/* scopus puts DOI in the DO or DI tag, but it needs cleaning */
+static void
+doi_add( fields *info, char *tag, newstr *s, int level )
+{
+	int doi = is_doi( s->data );
+	if ( doi!=-1 )
+		fields_add( info, "DOI", &(s->data[doi]), level );
 }
 
 static void
@@ -249,13 +263,16 @@ risin_convertf( fields *risin, fields *info, int reftype, param *p, variants *al
 			name_add( info, newtag, d->data, level, &(p->asis), 
 					&(p->corps) );
 		else if ( process==TITLE )
-			title_process( info, newtag, d->data, level );
+			title_process( info, newtag, d->data, level, 
+					p->nosplittitle );
 		else if ( process==DATE )
 			adddate( info, newtag, d->data, level );
 		else if ( process==SERIALNO )
 			addsn( info, d->data, level );
 		else if ( process==NOTES )
 			notes_add( info, newtag, d, level );
+		else if ( process==DOI )
+			doi_add( info, newtag, d, level );
 		else { /* do nothing */ }
 	}
 	/* look for thesis-type hint */

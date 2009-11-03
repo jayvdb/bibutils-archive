@@ -38,8 +38,7 @@ modsin_detail( xml *node, fields *info, int level )
 {
 	newstr type, value, *tp;
 	if ( node->down ) {
-		newstr_init( &type );
-		newstr_init( &value );
+		newstrs_init( &type, &value, NULL );
 		tp = xml_getattrib( node, "type" );
 		if ( tp ) {
 			newstr_newstrcpy( &type, tp );
@@ -49,8 +48,11 @@ modsin_detail( xml *node, fields *info, int level )
 		if ( type.data && !strcasecmp( type.data, "PAGE" ) ) {
 			fields_add( info, "PAGESTART", value.data, level );
 		} else fields_add( info, type.data, value.data, level );
+		newstrs_free( &type, &value, NULL );
+/*
 		newstr_free( &type );
 		newstr_free( &value );
+*/
 	}
 }
 
@@ -110,10 +112,7 @@ modsin_page( xml *node, fields *info, int level )
 {
 	newstr sp, ep, tp, lp;
 	if ( node->down ) {
-		newstr_init( &sp );
-		newstr_init( &ep );
-		newstr_init( &tp );
-		newstr_init( &lp );
+		newstrs_init( &sp, &ep, &tp, &lp, NULL );
 		modsin_pager( node->down, &sp, &ep, &tp, &lp );
 		if ( sp.len || ep.len ) {
 			if ( sp.len )
@@ -125,10 +124,7 @@ modsin_page( xml *node, fields *info, int level )
 		}
 		if ( tp.len )
 			fields_add( info, "TOTALPAGES", tp.data, level );
-		newstr_free( &sp );
-		newstr_free( &ep );
-		newstr_free( &tp );
-		newstr_free( &lp );
+		newstrs_free( &sp, &ep, &tp, &lp, NULL );
 	}
 }
 
@@ -154,8 +150,7 @@ modsin_title( xml *node, fields *info, int level )
 	newstr title, subtitle;
 	int abbr = xml_tag_attrib( node, "titleInfo", "type", "abbreviated" );
 	if ( node->down ) {
-		newstr_init( &title );
-		newstr_init( &subtitle );
+		newstrs_init( &title, &subtitle, NULL );
 		modsin_titler( node->down, &title, &subtitle );
 		if ( title.len ) {
 			if ( abbr ) 
@@ -169,8 +164,7 @@ modsin_title( xml *node, fields *info, int level )
 			else
 				fields_add( info, "SUBTITLE", subtitle.data, level );
 		}
-		newstr_free( &title );
-		newstr_free( &subtitle );
+		newstrs_free( &title, &subtitle, NULL );
 	}
 }
 
@@ -245,8 +239,7 @@ modsin_asis_corp( xml *node, fields *info, int level, convert *roles_convert,
 	int n;
 	xml *dnode = node->down;
 	if ( dnode ) {
-		newstr_init( &name );
-		newstr_init( &roles );
+		newstrs_init( &name, &roles, NULL );
 		modsin_asis_corp_r( dnode, &name, &roles );
 		if ( roles.len ) {
 			n = modsin_rolesmatch( roles_convert, nroles, &roles );
@@ -259,8 +252,7 @@ modsin_asis_corp( xml *node, fields *info, int level, convert *roles_convert,
 		}
 		else fields_add( info, roles_convert[0].internal, name.data, 
 			level );
-		newstr_free( &name );
-		newstr_free( &roles );
+		newstrs_free( &name, &roles, NULL );
 	}
 }
 
@@ -301,9 +293,7 @@ modsin_person( xml *node, fields *info, int level )
 	char *p;
 	xml *dnode = node->down;
 	if ( dnode ) {
-		newstr_init( &name );
-		newstr_init( &role );
-		newstr_init( &roles );
+		newstrs_init( &name, &role, &roles, NULL );
 		modsin_personr( dnode, &name, &roles );
 		/* no defined role, default to author */
 		if ( !roles.len ) newstr_strcpy( &roles, "author" );
@@ -319,9 +309,7 @@ modsin_person( xml *node, fields *info, int level )
 			if ( *p=='|' ) p++;
 			newstr_empty( &role );
 		}
-		newstr_free( &name );
-		newstr_free( &roles );
-		newstr_free( &role );
+		newstrs_free( &name, &role, &roles, NULL );
 	}
 }
 
@@ -388,11 +376,7 @@ modsin_origininfo( xml *node, fields *info, int level )
 {
 	newstr publisher, address, addcode, edition, issuance;
 	if ( node->down ) {
-		newstr_init( &publisher );
-		newstr_init( &address );
-		newstr_init( &addcode );
-		newstr_init( &edition );
-		newstr_init( &issuance );
+		newstrs_init( &publisher, &address, &addcode, &edition, &issuance, NULL );
 		modsin_origininfor( node->down, info, level, &publisher, 
 				&address, &addcode, &edition, &issuance );
 		if ( publisher.len )
@@ -405,11 +389,7 @@ modsin_origininfo( xml *node, fields *info, int level )
 			fields_add( info, "EDITION", edition.data, level );
 		if ( issuance.len ) 
 			fields_add( info, "ISSUANCE", issuance.data, level );
-		newstr_free( &publisher );
-		newstr_free( &address );
-		newstr_free( &addcode );
-		newstr_free( &edition );
-		newstr_free( &issuance );
+		newstrs_free( &publisher, &address, &addcode, &edition, &issuance, NULL );
 	}
 }
 
@@ -502,16 +482,23 @@ modsin_abstract( xml *node, fields *info, int level )
 static void
 modsin_locationr( xml *node, fields *info, int level )
 {
-	char url[]="URL", school[]="SCHOOL", loc[]="LOCATION", *tag=NULL;
-	if ( xml_tagexact( node, "url" ) ) {
+	char url[]="URL", school[]="SCHOOL", loc[]="LOCATION";
+	char fileattach[]="FILEATTACH", *tag=NULL;
+
+	if ( xml_tag_attrib( node, "url", "access", "raw object" ) ) {
+		tag = fileattach;
+	} else if ( xml_tagexact( node, "url" ) ) {
 		tag = url;
 	}
+
 	if ( xml_tag_attrib( node, "physicalLocation", "type", "school" ) ) {
 		tag = school;
 	} else if ( xml_tagexact( node, "physicalLocation" ) ) {
 		tag = loc;
 	}
+
 	if ( tag ) fields_add( info, tag, node->value->data, level );
+
 	if ( node->down ) modsin_locationr( node->down, info, level );
 	if ( node->next ) modsin_locationr( node->next, info, level );
 }

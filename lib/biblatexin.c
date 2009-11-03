@@ -260,8 +260,7 @@ static void
 process_cite( fields *bibin, char *p, char *filename, long nref )
 {
 	newstr tag, data;
-	newstr_init( &tag );
-	newstr_init( &data );
+	newstrs_init( &tag, &data, NULL );
 	p = process_biblatextype( p, &data );
 	if ( data.len ) fields_add( bibin, "TYPE", data.data, 0 );
 	if ( *p ) p = process_biblatexid ( p, &data );
@@ -272,11 +271,9 @@ process_cite( fields *bibin, char *p, char *filename, long nref )
 		/* no anonymous or empty fields allowed */
 		if ( tag.len && data.len )
 			fields_add( bibin, tag.data, data.data, 0 );
-		newstr_empty( &tag );
-		newstr_empty( &data );
+		newstrs_empty( &tag, &data, NULL );
 	}
-	newstr_free( &tag );
-	newstr_free( &data );
+	newstrs_free( &tag, &data, NULL );
 }
 
 int

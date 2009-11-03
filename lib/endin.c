@@ -59,7 +59,8 @@ endin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, newstr
 		/* Skip <feff> Unicode header information */
 		/* <feff> = ef bb bf */
 		up = (unsigned char* ) p;
-		if ( *up==239 && *(up+1)==187 && *(up+2)==191 ) {
+		if ( line->len > 2 && up[0]==0xEF && up[1]==0xBB &&
+				up[2]==0xBF ) {
 			*fcharset = CHARSET_UNICODE;
 			p += 3;
 		}
@@ -120,8 +121,7 @@ endin_processf( fields *endin, char *p, char *filename, long nref )
 {
 	newstr tag, data;
 	int n;
-	newstr_init( &tag );
-	newstr_init( &data );
+	newstrs_init( &tag, &data, NULL );
 	while ( *p ) {
 		if ( endin_istag( p ) ) {
 			p = process_endline( &tag, &data, p );
@@ -142,11 +142,9 @@ endin_processf( fields *endin, char *p, char *filename, long nref )
 			}
 			}
 		}
-		newstr_empty( &tag );
-		newstr_empty( &data );
+		newstrs_empty( &tag, &data, NULL );
 	}
-	newstr_free( &tag );
-	newstr_free( &data );
+	newstrs_free( &tag, &data, NULL );
 	return 1;
 }
 
@@ -178,6 +176,7 @@ addtype( fields *info, char *data, int level )
 		{ "HEARING", "HEARING" },
 		{ "STATUTE", "STATUTE" },
 		{ "CHART OR TABLE", "CHART" },
+		{ "WEB PAGE", "WEBPAGE" },
 	};
 	int  ntypes = sizeof( types ) / sizeof( lookups );
 	int  i, found=0;
@@ -273,18 +272,18 @@ adddate( fields *info, char *tag, char *newtag, char *p, int level )
  * if !%B & !%J & !%R & !%I - journal article
  */
 int
-endin_typef( fields *endin, char *filename, int nrefs, param *p, variants *all,
-		int nall )
+endin_typef( fields *endin, char *filename, int nrefs, param *p, 
+	variants *all, int nall )
 {
 	char *refnum = "";
 	int n, reftype, nrefnum, nj, nv, nb, nr, nt, ni;
 	n = fields_find( endin, "%0", 0 );
 	nrefnum = fields_find( endin, "%F", 0 );
 	if ( nrefnum!=-1 ) refnum = endin->data[nrefnum].data;
-	if ( n!=-1 )
-		reftype = get_reftype( endin->data[n].data, nrefs, p->progname,
-			all, nall, refnum );
-	else {
+	if ( n!=-1 ) {
+		reftype = get_reftype( endin->data[n].data, nrefs, 
+			p->progname, all, nall, refnum );
+	} else {
 		nj = fields_find( endin, "%J", 0 );
 		nv = fields_find( endin, "%V", 0 );
 		nb = fields_find( endin, "%B", 0 );
@@ -336,8 +335,7 @@ cleanup_wiley_author( fields *endin, int n )
 {	
 	newstr tmp, tmppart;
 	int i, nauthor = 0;
-	newstr_init( &tmp );
-	newstr_init( &tmppart );
+	newstrs_init( &tmp, &tmppart, NULL );
 	newstr_newstrcpy( &tmp, &( endin->data[n] ) );
 	i = 0;
 	while ( i<tmp.len ) {
@@ -355,8 +353,7 @@ cleanup_wiley_author( fields *endin, int n )
 		}
 		i++;
 	}
-	newstr_free( &tmppart );
-	newstr_free( &tmp );
+	newstrs_free( &tmp, &tmppart, NULL );
 }
 
 static void
@@ -431,7 +428,8 @@ endin_convertf( fields *endin, fields *info, int reftype, param *p, variants *al
 		else if ( process==TYPE )
 			addtype( info, d->data, level );
 		else if ( process==TITLE )
-			title_process( info, newtag, d->data, level );
+			title_process( info, newtag, d->data, level, 
+					p->nosplittitle );
 		else if ( process==PERSON )
 			name_add( info, newtag, d->data, level, 
 					&(p->asis), &(p->corps) );

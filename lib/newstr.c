@@ -13,6 +13,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
 #include <limits.h>
@@ -89,6 +90,20 @@ newstr_init( newstr *s )
 	s->data = NULL;
 }
 
+void
+newstrs_init( newstr *s, ... )
+{
+	newstr *s2;
+	va_list ap;
+	newstr_init( s );
+	va_start( ap, s );
+	do {
+		s2 = va_arg( ap, newstr * );
+		if ( s2 ) newstr_init( s2 );
+	} while ( s2 );
+	va_end( ap );
+}
+
 static void 
 newstr_initalloc( newstr *s, unsigned long minsize )
 {
@@ -128,6 +143,20 @@ newstr_free( newstr *s )
 }
 
 void
+newstrs_free( newstr *s, ... )
+{
+	newstr *s2;
+	va_list ap;
+	newstr_free( s );
+	va_start( ap, s );
+	do {
+		s2 = va_arg( ap, newstr * );
+		if ( s2 ) newstr_free( s2 );
+	} while ( s2 );
+	va_end( ap );
+}
+
+void
 newstr_empty( newstr *s )
 {
 	assert( s );
@@ -136,6 +165,20 @@ newstr_empty( newstr *s )
 		s->data[0] = '\0';
 	}
 	s->len = 0;
+}
+
+void
+newstrs_empty( newstr *s, ... )
+{
+	newstr *s2;
+	va_list ap;
+	newstr_empty( s );
+	va_start( ap, s );
+	do {
+		s2 = va_arg( ap, newstr * );
+		if ( s2 ) newstr_empty( s2 );
+	} while ( s2 );
+	va_end( ap );
 }
 
 void

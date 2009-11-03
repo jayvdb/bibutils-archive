@@ -44,9 +44,18 @@ isiin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, newstr
 {
 	int haveref = 0, inref = 0;
 	char *p;
+	*fcharset = CHARSET_UNKNOWN;
 	while ( !haveref && readmore( fp, buf, bufsize, bufpos, line ) ) {
 		if ( !line->data ) continue;
 		p = &(line->data[0]);
+		/* Recognize UTF8 BOM */
+		if ( line->len > 2 &&
+				(unsigned char)(p[0])==0xEF &&
+				(unsigned char)(p[1])==0xBB &&
+				(unsigned char)(p[2])==0xBF ) {
+			*fcharset = CHARSET_UNICODE;
+			p += 3;
+		}
 		/* Each reference ends with 'ER ' */
 		if ( isiin_istag( p ) ) {
 			if ( !strncmp( p, "FN ", 3 ) ) {
@@ -75,7 +84,6 @@ isiin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, newstr
 			newstr_empty( line );
 		}
 	}
-	*fcharset = CHARSET_UNKNOWN;
 	return haveref;
 }
 
@@ -103,11 +111,9 @@ isiin_processf( fields *isiin, char *p, char *filename, long nref )
 {
 	newstr tag, data;
 	int n;
-	newstr_init( &tag );
-	newstr_init( &data );
+	newstrs_init( &tag, &data, NULL );
 	while ( *p ) {
-		newstr_empty( &tag );
-		newstr_empty( &data );
+		newstrs_empty( &tag, &data, NULL );
 		p = process_isiline( &tag, &data, p );
 		if ( !data.len ) continue;
 		if ( (tag.len>1) && isiin_istag( tag.data ) ) {
@@ -129,8 +135,7 @@ isiin_processf( fields *isiin, char *p, char *filename, long nref )
 			}
 		}
 	}
-	newstr_free( &data );
-	newstr_free( &tag );
+	newstrs_free( &data, &tag, NULL );
 	return 1;
 }
 
@@ -230,7 +235,8 @@ isiin_convertf( fields *isiin, fields *info, int reftype, param *p, variants *al
 			name_add( info, newtag, d->data, level, &(p->asis), 
 					&(p->corps) );
 		else if ( process == TITLE )
-			title_process( info, newtag, d->data, level );
+			title_process( info, newtag, d->data, level, 
+					p->nosplittitle );
 		else if ( process == ISI_KEYWORD )
 			keyword_process( info, newtag, d->data, level );
 		else if ( process == SERIALNO )

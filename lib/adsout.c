@@ -412,6 +412,7 @@ adsout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 	output_easy( fp, info, "ABSTRACT", "%B", -1 );
 	output_keys( fp, info, "KEYWORD", "%K", -1 );
 	output_easyall( fp, info, "URL", "%U", -1 ); 
+	output_easyall( fp, info, "FILEATTACH", "%U", -1 ); 
 	output_pages( fp, info );
 	output_easyall( fp, info, "DOI", "%Y", -1 );
         fprintf( fp, "%%W PHY\n%%G AUTHOR\n" );

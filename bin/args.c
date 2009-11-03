@@ -32,13 +32,19 @@ args_match( char *check, char *shortarg, char *longarg )
 
 void
 args_encoding( int argc, char *argv[], int i, int *charset, 
-	unsigned char *utf8, char *progname )
+	unsigned char *utf8, char *progname, int inout )
 {
+	char *shortver[] = { "-i", "-o" };
+	char *longver[] = { "--input-encoding", "--output-encoding" };
 	if ( i+1 >= argc ) {
-		fprintf( stderr, "%s: error -i (--input-encoding) takes "
+		fprintf( stderr, "%s: error %s (%s) takes "
 				"the argument of the character set type\n",
-				progname );
+				progname, shortver[inout], longver[inout] );
+		fprintf( stderr, "UNICODE UTF-8: unicode OR utf8\n" );
+		fprintf( stderr, "CHINESE: gb18030\n" );
+		fprintf( stderr, "OTHERS:\n" );
 		list_charsets( stderr );
+		fprintf( stderr, "SPECIFY AS: -o CHARSETNAME\n" );
 		exit( EXIT_FAILURE );
 	} else {
 		if ( !args_charset( argv[i+1], charset, utf8 ) ) {
@@ -78,12 +84,12 @@ process_charsets( int *argc, char *argv[], param *p,
 		subtract = 0;
 		if ( use_input && args_match( argv[i], "-i", "--input-encoding" ) ) {
 			args_encoding( *argc, argv, i, &(p->charsetin), 
-					&(p->utf8in), p->progname );
+					&(p->utf8in), p->progname, 0 );
 			p->charsetin_src = BIBL_SRC_USER;
 			subtract = 2;
 		} else if ( use_output && args_match( argv[i], "-o", "--output-encoding" ) ) {
 			args_encoding( *argc, argv, i, &(p->charsetout),
-					&(p->utf8out), p->progname );
+					&(p->utf8out), p->progname, 1 );
 			if ( p->charsetout==BIBL_CHARSET_UNICODE )
 				p->utf8bom = 1;
 			if ( p->charsetout==BIBL_CHARSET_GB18030 )

@@ -184,7 +184,7 @@ name_comma( char *p, newstr *outname )
 	char *start_first, *end_first, *start_last, *end_last;
 
 	/** Last name **/
-	start_last = skip_ws( p );
+	start_last = end_last = skip_ws( p );
 	while ( *p && ( *p!=',' ) ) {
 		newstr_addchar( outname, *p++ );
 		end_last = p;

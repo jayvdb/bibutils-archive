@@ -440,6 +440,7 @@ risout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 	output_easy( fp, info, refnum, "ISSN", "SN", -1 );
 	output_easy( fp, info, refnum, "ISBN", "SN", -1 );
 	output_easyall( fp, info, refnum, "URL", "UR", -1 );
+	output_easyall( fp, info, refnum, "FILEATTACH", "L1", -1 );
 	output_doi( fp, info );
 	output_pmid( fp, info );
 	output_arxiv( fp, info );

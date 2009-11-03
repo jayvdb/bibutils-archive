@@ -36,6 +36,7 @@ args_tomods_help( char *progname, char *help1, char *help2 )
 	fprintf(stderr,"  -d, --drop-key            don't put key in MODS ID field\n");
 	fprintf(stderr,"  -c, --corporation-file    specify file of corporation names\n");
 	fprintf(stderr,"  -a, --asis                specify file of names that shouldn't be mangled\n");
+	fprintf(stderr,"  -nt, --nosplit-title      don't split titles into TITLE/SUBTITLE pairs\n");
 	fprintf(stderr,"  -h, --help                display this help\n");
 	fprintf(stderr,"  -v, --version             display version\n");
 	fprintf(stderr,"  --verbose                 report all warnings\n");
@@ -106,6 +107,9 @@ tomods_processargs( int *argc, char *argv[], param *p,
 		} else if ( args_match( argv[i], "-nl", "--no-latex" ) ) {
 			p->latexin = 0;
 			subtract = 1;
+		} else if ( args_match( argv[i], "-nt", "--nosplit-title" ) ){
+			p->nosplittitle = 1;
+			subtract = 1;
 		} else if ( args_match( argv[i], "-x", "--xml-entities" ) ) {
 			p->utf8out = 0;
 			p->utf8bom = 0;
@@ -127,7 +131,10 @@ tomods_processargs( int *argc, char *argv[], param *p,
 				argv[j-subtract] = argv[j];
 			}
 			*argc -= subtract;
-		} else i++;
+		} else {
+			if ( argv[i][0]=='-' ) fprintf( stderr, "Warning: Did not recognize potential command-line argument %s\n", argv[i] );
+			i++;
+		}
 	}
 }
 

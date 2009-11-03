@@ -1,6 +1,88 @@
 
 BIBUTILS
 
+4.6
+11/2/09
+
+BIB2XML
++ Fix inefficiency in latex2char() that gives roughly a 10x speed increase
+  in bib2xml.  Thanks to Stephan Washietl for the patch.
+
+NAME MANGLING
++ Fix bug with uninitalized pointer.  Thanks to David Bremner for patch.
+
+NEWSTRING
++ Add newstrs versions of various commands.
+
+
+4.5
+10/24/09
+
+BIB2XML
++ Identify and use byte-order-mark in UTF8-encoded files
++ Support file attachments with "pdf" tags (old JabRef), "sentelink" (Sente),
+  and "file" (new JabRef, Zotero, Mendeley).  (Thanks to Richard Karnesky)
+
+COPAC2XML
++ Identify and use byte-order-mark in UTF8-encoded files
+
+ISI2XML
++ Identify and use byte-order-mark in UTF8-encoded files
+
+RIS2XML
++ Add support for DOI tags DO and DI from Scopus (Thanks to Fred Howell)
++ Identify and use byte-order-mark in UTF8-encoded files
++ Add support for L1 file attachment tags (Thanks to Richard Karnesky)
+
+XML2ADS
++ Output file attachments as URLs
+
+XML2BIB
++ Add support for "file" file attachment tag in the JabRef/Mendeley/Zotero
+  format
+
+XML2END
++ Output file attachments as URLs
+
+XML2ISI
++ Output file attachments as URLs
+
+XML2RIS
++ Add support for L1 file attachment tags
+
+4.4
+10/05/2009
+
+BIB2XML
++ Add -nt --nosplit-title command line option to avoid splitting titles
+  with colons or question marks into title/subtitle MODS pairs
+
+COPAC2XML
++ Add -nt --nosplit-title command line option to avoid splitting titles
+  with colons or question marks into title/subtitle MODS pairs
+
+END2XML
++ Add -nt --nosplit-title command line option to avoid splitting titles
+  with colons or question marks into title/subtitle MODS pairs
++ Add support for electronic-source-num as potential location of DOI
++ Add support for language
+
+END2XML
++ Fix support for number field in report/book/book section/edited book
+  reference types
+
+ENDXML2XML
++ Support pdf-url in endnote XML file
+
+ISI2XML
++ Add -nt --nosplit-title command line option to avoid splitting titles
+  with colons or question marks into title/subtitle MODS pairs
+
+RIS2XML
++ Add -nt --nosplit-title command line option to avoid splitting titles
+  with colons or question marks into title/subtitle MODS pairs
+
+
 4.3
 7/31/09
 

@@ -226,10 +226,6 @@ output_simple( FILE *fp, fields *info, char *intag, char *outtag,
 	int n = fields_find( info, intag, -1 );
 	if ( n!=-1 ) {
 		output_and_use( fp, info, n, outtag, format_opts );
-/*
-		output_element( fp, outtag, info->data[n].data, format_opts );
-		fields_setused( info, n );
-*/
 	}
 }
 
@@ -241,9 +237,29 @@ output_simpleall( FILE *fp, fields *info, char *intag, char *outtag,
 	for ( i=0; i<info->nfields; ++i ) {
 		if ( strcasecmp( info->tag[i].data, intag ) ) continue;
 		output_and_use( fp, info, i, outtag, format_opts );
-/*		output_element( fp, outtag, info->data[i].data, format_opts );
-		fields_setused( info, i );*/
 	}
+}
+
+static void
+output_fileattach( FILE *fp, fields *info, int format_opts )
+{
+	newstr data;
+	int i;
+	newstr_init( &data );
+	for ( i=0; i<info->nfields; ++i ) {
+		if ( strcasecmp( info->tag[i].data, "FILEATTACH" ) ) continue;
+		newstr_strcpy( &data, "Description:" );
+		newstr_newstrcat( &data, &(info->data[i]) );
+		if ( strsearch( info->data[i].data, ".pdf" ) )
+			newstr_strcat( &data, ":PDF" );
+		else if ( strsearch( info->data[i].data, ".html" ) )
+			newstr_strcat( &data, ":HTML" );
+		else newstr_strcat( &data, ":TYPE" );
+		output_element( fp, "file", data.data, format_opts );
+		fields_setused( info, i );
+		newstr_empty( &data );
+	}
+	newstr_free( &data );
 }
 
 static void
@@ -532,6 +548,7 @@ bibtexout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 	output_simple( fp, info, "ISSN", "issn", p->format_opts );
 	output_simple( fp, info, "DOI", "doi", p->format_opts );
 	output_simpleall( fp, info, "URL", "url", p->format_opts );
+	output_fileattach( fp, info, p->format_opts );
 	output_arxiv( fp, info, p->format_opts );
 	output_pmid( fp, info, p->format_opts );
 	output_simple( fp, info, "LANGUAGE", "language", p->format_opts );

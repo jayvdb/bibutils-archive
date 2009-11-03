@@ -236,8 +236,7 @@ medin_pagination( xml *node, fields *info )
 	char *p;
 	int i;
 	if ( xml_tagexact( node, "MedlinePgn" ) && node->value ) {
-		newstr_init( &sp );
-		newstr_init( &ep );
+		newstrs_init( &sp, &ep, NULL );
 		p = xml_data( node );
 		while ( *p && *p!='-' )
 			newstr_addchar( &sp, *p++ );
@@ -253,8 +252,7 @@ medin_pagination( xml *node, fields *info )
 			} else
 				fields_add( info, "PAGEEND", ep.data, 1 );
 		}
-		newstr_free( &sp );
-		newstr_free( &ep );
+		newstrs_free( &sp, &ep, NULL );
 	}
 	if ( node->down ) medin_pagination( node->down, info );
 	if ( node->next ) medin_pagination( node->next, info );

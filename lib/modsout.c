@@ -81,6 +81,23 @@ output_fill4( FILE *outptr, int level, char *tag, char *aname, char *avalue,
 	}
 }
 
+/*
+ * Find the positions of all convert.internal tags and store the
+ * locations in convert.code.
+ *
+ * Return number of the tags found
+ */
+static int
+find_alltags( fields *info, convert *parts, int nparts, int level )
+{
+	int i, n=0;
+	for ( i=0; i<nparts; ++i ) {
+		parts[i].code = fields_find( info, parts[i].internal, level );
+		n += ( parts[i].code!=-1 );
+	}
+	return n;
+}
+
 static void
 output_title( fields *info, FILE *outptr, int level )
 {
@@ -122,8 +139,7 @@ output_name( FILE *outptr, char *p, int level )
 	newstr family, part;
 	int n=0;
 
-	newstr_init( &family );
-	newstr_init( &part );
+	newstrs_init( &family, &part, NULL );
 
 	while ( *p && *p!='|' ) newstr_addchar( &family, *p++ );
 	if ( *p=='|' ) p++;
@@ -153,8 +169,7 @@ output_name( FILE *outptr, char *p, int level )
 				family.data, 1 );
 	}
 
-	newstr_free( &part );
-	newstr_free( &family );
+	newstrs_free( &part, &family, NULL );
 }
 
 
@@ -353,55 +368,6 @@ output_toc( fields *info, FILE *outptr, int level )
 	output_fill2( outptr, level, "tableOfContents", info, n, 1 );
 }
 
-/* part date output
- *
- * <date>xxxx-xx-xx</date>
- *
- */
-static void
-output_partdate( fields *info, FILE *outptr, int level, int *wrote_header )
-{
-	convert parts[3] = {
-		{ "",	"PARTYEAR",                -1 },
-		{ "",	"PARTMONTH",               -1 },
-		{ "",	"PARTDAY",                 -1 },
-	};
-	int i, found = 0;
-	for ( i=0; i<3; ++i ) {
-		parts[i].code = fields_find( info, parts[i].internal, level );
-		found += ( parts[i].code!=-1 );
-	}
-	if ( !found ) return;
-
-	if ( !*wrote_header ) {
-		output_tab1( outptr, level, "<part>\n" );
-		*wrote_header = 1;
-	}
-
-	output_tab1( outptr, increment_level(level,1), "<date>" );
-
-	if ( parts[0].code!=-1 ) {
-		fprintf( outptr, "%s", info->data[ parts[0].code ].data);
-		fields_setused( info, parts[0].code );
-	}
-
-	if ( parts[1].code!=-1 ) {
-		if ( parts[0].code!=-1 ) fprintf( outptr, "-" );
-		else fprintf( outptr, "XXXX-" );
-		fprintf( outptr, "%s", info->data[parts[1].code].data );
-		fields_setused( info, parts[1].code );
-	}
-
-	if ( parts[2].code!=-1 ) {
-		if ( parts[1].code!=-1 ) fprintf( outptr, "-" );
-		else if ( parts[0].code!=-1 ) fprintf( outptr, "-XX-" );
-		fprintf( outptr, "%s", info->data[parts[2].code].data );
-		fields_setused( info, parts[2].code );
-	}
-
-	fprintf( outptr,"</date>\n");
-}
-
 /* detail output
  *
  * for example:
@@ -413,9 +379,9 @@ mods_output_detail( fields *info, FILE *outptr, int item, char *item_name,
 		int level )
 {
 	if ( item==-1 ) return;
-	output_tab0( outptr, increment_level(level,1) );
-	fprintf( outptr, "<detail type=\"%s\"><number>", item_name );
-	fprintf( outptr, "%s</number></detail>\n", info->data[item].data );
+	output_tab0( outptr, increment_level( level, 1 ) );
+	fprintf( outptr, "<detail type=\"%s\"><number>%s</number></detail>\n", 
+			item_name, info->data[item].data );
 	fields_setused( info, item );
 }
 
@@ -440,23 +406,73 @@ mods_output_extents( fields *info, FILE *outptr, int start, int end,
 }
 
 static void
-mods_output_partpages( fields *info, FILE *outptr, int level, int *wrote_header )
+try_output_partheader( FILE *outptr, int wrote_header, int level )
+{
+	if ( !wrote_header ) output_tab1( outptr, level, "<part>\n" );
+}
+
+static void
+try_output_partfooter( FILE *outptr, int wrote_header, int level )
+{
+	if ( wrote_header ) output_tab1( outptr, level, "</part>\n" );
+}
+
+/* part date output
+ *
+ * <date>xxxx-xx-xx</date>
+ *
+ */
+static int
+output_partdate( fields *info, FILE *outptr, int level, int wrote_header )
+{
+	convert parts[3] = {
+		{ "",	"PARTYEAR",                -1 },
+		{ "",	"PARTMONTH",               -1 },
+		{ "",	"PARTDAY",                 -1 },
+	};
+	int nparts = sizeof(parts)/sizeof(parts[0]);
+
+	if ( !find_alltags( info, parts, nparts, level ) ) return 0;
+
+	try_output_partheader( outptr, wrote_header, level );
+	output_tab1( outptr, increment_level(level,1), "<date>" );
+
+	if ( parts[0].code!=-1 ) {
+		fprintf( outptr, "%s", info->data[ parts[0].code ].data);
+		fields_setused( info, parts[0].code );
+	} else fprintf( outptr, "XXXX" );
+
+	if ( parts[1].code!=-1 ) {
+		fprintf( outptr, "-%s", info->data[parts[1].code].data );
+		fields_setused( info, parts[1].code );
+	}
+
+	if ( parts[2].code!=-1 ) {
+		if ( parts[1].code!=-1 ) fprintf( outptr, "-" );
+		else fprintf( outptr, "-XX-" );
+		fprintf( outptr, "%s", info->data[parts[2].code].data );
+		fields_setused( info, parts[2].code );
+	}
+
+	fprintf( outptr,"</date>\n");
+
+	return 1;
+}
+
+static int
+output_partpages( fields *info, FILE *outptr, int level, int wrote_header )
 {
 	convert parts[3] = {
 		{ "",  "PAGESTART",                -1 },
 		{ "",  "PAGEEND",                  -1 },
 		{ "",  "TOTALPAGES",               -1 }
 	};
-	int i, found = 0;
-	for ( i=0; i<3; ++i ) {
-		parts[i].code = fields_find( info, parts[i].internal, level );
-		found += ( parts[i].code!=-1 );
-	}
-	if ( !found ) return;
-	if ( !*wrote_header ) {
-		output_tab1( outptr, level, "<part>\n" );
-		*wrote_header = 1;
-	}
+	int nparts = sizeof(parts)/sizeof(parts[0]);
+
+	if ( !find_alltags( info, parts, nparts, level ) ) return 0;
+
+	try_output_partheader( outptr, wrote_header, level );
+
 	/* If PAGESTART or PAGEEND are  undefined */
 	if ( parts[0].code==-1 || parts[1].code==-1 ) {
 		if ( parts[0].code!=-1 )
@@ -474,10 +490,12 @@ mods_output_partpages( fields *info, FILE *outptr, int level, int *wrote_header 
 		mods_output_extents( info, outptr, parts[0].code, 
 			parts[1].code, parts[2].code, "page", level ); 
 	}
+
+	return 1;
 }
 
-static void
-output_partelement( fields *info, FILE *outptr, int level, int *wrote_header )
+static int
+output_partelement( fields *info, FILE *outptr, int level, int wrote_header )
 {
 	convert parts[] = {
 		{ "volume",          "VOLUME",          -1 },
@@ -488,32 +506,28 @@ output_partelement( fields *info, FILE *outptr, int level, int *wrote_header )
 		{ "session",         "SESSION",         -1 },
 		{ "articlenumber",   "ARTICLENUMBER",   -1 }
 	};
-	int i, nparts = sizeof( parts ) / sizeof( convert ), found = 0;
-	for ( i=0; i<nparts; ++i ) {
-		parts[i].code = fields_find( info, parts[i].internal, level );
-		found += ( parts[i].code!=-1 );
-	}
-	if ( !found ) return;
-	if ( !(*wrote_header) ) {
-		output_tab1( outptr, level, "<part>\n" );
-		*wrote_header = 1;
-	}
+	int i, nparts = sizeof( parts ) / sizeof( convert );
+
+	if ( !find_alltags( info, parts, nparts, level ) ) return 0;
+	try_output_partheader( outptr, wrote_header, level );
+
 	for ( i=0; i<nparts; ++i ) {
 		if ( parts[i].code==-1 ) continue;
-		mods_output_detail( info, outptr, parts[i].code, 
-			parts[i].mods, level );
+		mods_output_detail( info, outptr, parts[i].code, parts[i].mods,
+				level );
 	}
+
+	return 1;
 }
 
 static void
 output_part( fields *info, FILE *outptr, int level )
 {
-	int wrote_header = 0;
-	output_partdate( info, outptr, level, &wrote_header );
-	output_partelement( info, outptr, level, &wrote_header );
-	mods_output_partpages( info, outptr, level, &wrote_header );
-	if ( wrote_header )
-		output_tab1( outptr, level, "</part>\n" );
+	int wrote_hdr;
+	wrote_hdr  = output_partdate( info, outptr, level, 0 );
+	wrote_hdr += output_partelement( info, outptr, level, wrote_hdr );
+	wrote_hdr += output_partpages( info, outptr, level, wrote_hdr );
+	try_output_partfooter( outptr, wrote_hdr, level );
 }
 
 static void
@@ -659,9 +673,10 @@ output_url( fields *info, FILE *outptr, int level )
 {
 	int location = fields_find( info, "LOCATION", level );
 	int url = fields_find( info, "URL", level );
+	int fileattach = fields_find( info, "FILEATTACH", level );
 	int pdflink = fields_find( info, "PDFLINK", level );
 	int i;
-	if ( url==-1 && location==-1 && pdflink==-1 ) return;
+	if ( url==-1 && location==-1 && pdflink==-1 && fileattach==-1) return;
 	output_tab1( outptr, level, "<location>\n" );
 	for ( i=0; i<info->nfields; ++i ) {
 		if ( info->level[i]!=level ) continue;
@@ -670,6 +685,11 @@ output_url( fields *info, FILE *outptr, int level )
 		} else if ( !strcasecmp( info->tag[i].data, "PDFLINK" ) ) {
 			output_fill2( outptr, increment_level(level,1), "url",
 				/*"urlType", "pdf",*/ info, i, 1 );
+		} else if ( !strcasecmp( info->tag[i].data, "FILEATTACH" ) ){
+			output_tab0( outptr, increment_level(level,1) );
+			fprintf( outptr, "<url displayLabel=\"Electronic full text\" access=\"raw object\">" );
+			fprintf( outptr, " %s</url>\n", info->data[i].data );
+			fields_setused( info, i );
 		}
 	}
 	if ( location!=-1 )

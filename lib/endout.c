@@ -526,6 +526,7 @@ endout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 	output_easyall( fp, info, "NGENRE", "%9", -1 );
 	output_thesishint( fp, type );
 	output_easyall( fp, info, "URL", "%U", -1 ); 
+	output_easyall( fp, info, "FILEATTACH", "%U", -1 ); 
 	output_doi( fp, info );
 	output_pmid( fp, info );
 	output_arxiv( fp, info );

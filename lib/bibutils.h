@@ -70,6 +70,7 @@ typedef struct param {
 	uchar latexin;
 	uchar utf8in;
 	uchar xmlin;
+	uchar nosplittitle;
 
 	int charsetout;
 	uchar charsetout_src; /* BIBL_SRC_PROG, BIBL_SRC_USER */

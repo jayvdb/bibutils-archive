@@ -50,9 +50,18 @@ bibtexin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, new
 {
 	int haveref = 0;
 	char *p;
+	*fcharset = CHARSET_UNKNOWN;
 	while ( haveref!=2 && readmore( fp, buf, bufsize, bufpos, line ) ) {
 		if ( line->len == 0 ) continue; /* blank line */
 		p = &(line->data[0]);
+		/* Recognize UTF8 BOM */
+		if ( line->len > 2 && 
+				(unsigned char)(p[0])==0xEF &&
+				(unsigned char)(p[1])==0xBB &&
+				(unsigned char)(p[2])==0xBF ) {
+			*fcharset = CHARSET_UNICODE;
+			p += 3;
+		}
 		p = skip_ws( p );
 		if ( *p == '%' ) { /* commented out line */
 			newstr_empty( line );
@@ -66,7 +75,6 @@ bibtexin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, new
 		} else if ( !haveref ) newstr_empty( line );
 	
 	}
-	*fcharset = CHARSET_UNKNOWN;
 	return haveref;
 }
 
@@ -90,8 +98,19 @@ bibtex_item( char *p, newstr *s )
 			nbrackets--;
 			/*if ( nbrackets>0 )*/ newstr_addchar( s, *p );
 		} else {
+			/*
 			if ( s->len!=0 || ( s->len==0 && !is_ws( *p ) ) )
 				newstr_addchar( s, *p );
+			*/
+			if ( !is_ws( *p ) ) newstr_addchar( s, *p );
+			else {
+				if ( s->len!=0 && *p!='\n' && *p!='\r' )
+					newstr_addchar( s, *p );
+				else if ( s->len!=0 && (*p=='\n' || *p=='\r')) {
+					newstr_addchar( s, ' ' );
+					while ( is_ws( *(p+1) ) ) p++;
+				}
+			}
 		}
 		p++;
 	}
@@ -154,8 +173,7 @@ static void
 bibtex_addstring( char *p )
 {
 	newstr s1, s2;
-	newstr_init( &s1 );
-	newstr_init( &s2 );
+	newstrs_init( &s1, &s2, NULL );
 	p = skip_ws( p );
 	if ( *p=='(' || *p=='{' ) p++;
 	p = process_bibtexline( p, &s1, &s2 );
@@ -166,8 +184,7 @@ bibtex_addstring( char *p )
 		if ( s2.data ) list_add( &replace, s2.data );
 		else list_add( &replace, "" );
 	}
-	newstr_free( &s1 );
-	newstr_free( &s2 );
+	newstrs_free( &s1, &s2, NULL );
 }
 
 static int
@@ -298,8 +315,7 @@ static void
 process_cite( fields *bibin, char *p, char *filename, long nref )
 {
 	newstr tag, data;
-	newstr_init( &tag );
-	newstr_init( &data );
+	newstrs_init( &tag, &data, NULL );
 	p = process_bibtextype( p, &data );
 	if ( data.len ) fields_add( bibin, "TYPE", data.data, 0 );
 	if ( *p ) p = process_bibtexid ( p, &data );
@@ -310,11 +326,9 @@ process_cite( fields *bibin, char *p, char *filename, long nref )
 		/* no anonymous or empty fields allowed */
 		if ( tag.len && data.len )
 			fields_add( bibin, tag.data, data.data, 0 );
-		newstr_empty( &tag );
-		newstr_empty( &data );
+		newstrs_empty( &tag, &data, NULL );
 	}
-	newstr_free( &tag );
-	newstr_free( &data );
+	newstrs_free( &tag, &data, NULL );
 }
 
 static void
@@ -488,6 +502,7 @@ process_names( fields *info, char *tag, newstr *data, int level, list *asis,
 	list *corps )
 {
 	newstr_findreplace( data, " and ", "|" );
+	newstr_findreplace( data, "|and ", "|" );
 	name_add( info, tag, data->data, level, asis, corps );
 }
 
@@ -497,9 +512,7 @@ process_pages( fields *info, newstr *s, int level )
 	char *p, *q;
 	newstr sp, ep;
 
-	newstr_init( &sp );
-	newstr_init( &ep );
-
+	newstrs_init( &sp, &ep, NULL );
 	newstr_findreplace( s, " ", "" );
 
 	p = q = s->data;
@@ -516,8 +529,7 @@ process_pages( fields *info, newstr *s, int level )
 	if ( ep.len>0 )
 		fields_add( info, "PAGEEND", ep.data, level );
 
-	newstr_free(&sp);
-	newstr_free(&ep);
+	newstrs_free( &sp, &ep, NULL );
 }
 
 static void
@@ -529,7 +541,37 @@ process_url( fields *info, char *p, int level )
 		fields_add( info, "URL", p+4, level );
 	else if ( !strncasecmp( p, "arXiv:", 6 ) )
 		fields_add( info, "ARXIV", p+6, level ); 
+	else if ( !strncasecmp( p, "http://arxiv.org/abs/", 21 ) )
+		fields_add( info, "ARXIV", p+21, level );
 	else fields_add( info, "URL", p, level );
+}
+
+/*
+ * sentelink = {file://localhost/full/path/to/file.pdf,Sente,PDF}
+ */
+static void
+process_sente( fields *info, char *p, int level )
+{
+	newstr link;
+	newstr_init( &link );
+	while ( *p && *p!=',' ) newstr_addchar( &link, *p++ );
+	if ( link.len ) fields_add( info, "FILEATTACH", link.data, level );
+	newstr_free( &link );
+}
+
+/*
+ * file={Description:/full/path/to/file.pdf:PDF}
+ */
+static void
+process_file( fields *info, char *p, int level )
+{
+	newstr link;
+	newstr_init( &link );
+	while ( *p && *p!=':' ) p++;
+	if ( *p==':' ) p++;
+	while ( *p && *p!=':' ) newstr_addchar( &link, *p++ );
+	if ( link.len ) fields_add( info, "FILEATTACH", link.data, level );
+	newstr_free( &link );
 }
 
 int
@@ -594,7 +636,8 @@ bibtexin_convertf( fields *bibin, fields *info, int reftype, param *p,
 		if ( process==SIMPLE )
 			fields_add( info, newtag, d->data, level );
 		else if ( process==TITLE )
-			title_process( info, "TITLE", d->data, level);
+			title_process( info, "TITLE", d->data, level, 
+					p->nosplittitle );
 		else if ( process==PERSON )
 			process_names( info, newtag, d, level, &(p->asis), 
 					&(p->corps) );
@@ -602,6 +645,10 @@ bibtexin_convertf( fields *bibin, fields *info, int reftype, param *p,
 			process_pages( info, d, level);
 		else if ( process==BIBTEX_URL )
 			process_url( info, d->data, level );
+		else if ( process==BIBTEX_SENTE )
+			process_sente( info, d->data, level );
+		else if ( process==BIBTEX_FILE )
+			process_file( info, d->data, level );
 	}
 	if ( p->verbose ) report( info );
 }

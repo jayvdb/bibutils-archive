@@ -94,7 +94,10 @@ process_args( int *argc, char *argv[], param *p )
 			for ( j=i+subtract; j<*argc; ++j )
 				argv[j-subtract] = argv[j];
 			*argc -= subtract;
-		} else i++;
+		} else {
+			if ( argv[i][0]=='-' ) fprintf( stderr, "Warning did not recognize potential command-line option %s\n", argv[i] );
+			i++;
+		}
 	}
 }
 

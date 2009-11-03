@@ -33,6 +33,8 @@ extern void fields_free( fields *info );
 extern void fields_init( fields *info );
 extern fields *fields_new( void );
 extern int  fields_find( fields *info, char *searchtag, int level );
+extern int  fields_find_firstof( fields *info, char *tags[], int ntags, 
+		int level );
 extern int  fields_maxlevel( fields *info );
 extern void fields_clearused( fields *info );
 extern void fields_setused( fields *info, int n );

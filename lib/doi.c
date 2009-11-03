@@ -32,35 +32,6 @@ construct_url( char *prefix, newstr *id, newstr *id_url )
 	}
 }
 
-#if 0
-static void
-construct_pmid( newstr *pmid, newstr *pmid_url )
-{
-	char prefix[] = "http://www.ncbi.nlm.nih.gov/pubmed";
-	if ( !strncasecmp( pmid->data, "http:", 5 ) )
-		newstr_newstrcpy( pmid_url, pmid );
-	else {
-		newstr_strcpy( pmid_url, prefix );
-		if ( pmid->data[0]!='/' ) newstr_addchar( pmid_url, '/' );
-		newstr_newstrcat( pmid_url, pmid );
-	}
-}
-#endif
-#if 0
-static void
-construct_doi( newstr *doi, newstr *doi_url )
-{
-	char prefix[] = "http://dx.doi.org";
-	if ( !strncasecmp( doi->data, "http:", 5 ) )
-		newstr_newstrcpy( doi_url, doi );
-	else {
-		newstr_strcpy( doi_url, prefix );
-		if ( doi->data[0]!='/' ) newstr_addchar( doi_url, '/' );
-		newstr_newstrcat( doi_url, doi );
-	}
-}
-#endif
-
 static int
 url_exists( fields *info, char *urltag, newstr *doi_url )
 {
@@ -81,7 +52,6 @@ doi_to_url( fields *info, int n, char *urltag, newstr *doi_url )
 {
 	newstr_empty( doi_url );
 	construct_url( "http://dx.doi.org", &(info->data[n]), doi_url );
-//	construct_doi( &(info->data[n]), doi_url );
 	if ( url_exists( info, urltag, doi_url ) )
 		newstr_empty( doi_url );
 }
@@ -92,7 +62,6 @@ pmid_to_url( fields *info, int n, char *urltag, newstr *pmid_url )
 	newstr_empty( pmid_url );
 	construct_url( "http://www.ncbi.nlm.nih.gov/pubmed", &(info->data[n]),
 			pmid_url );
-//	construct_pmid( &(info->data[n]), pmid_url );
 	if ( url_exists( info, urltag, pmid_url ) )
 		newstr_empty( pmid_url );
 }
@@ -138,6 +107,7 @@ is_doi( char *s )
 {
 	if ( string_pattern( s, "##.####/", 0 ) ) return 0;
 	if ( string_pattern( s, "doi:##.####/", 0 ) ) return 4;
+	if ( string_pattern( s, "doi: ##.####/", 0 ) ) return 5;
 	if ( string_pattern( s, "doi: DOI: ##.####/", 0 ) ) return 10;
 	return -1;
 }

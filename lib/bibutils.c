@@ -63,6 +63,7 @@ bibl_initparams( param *p, int readmode, int writemode, char *progname )
 	p->utf8out          = 0;
 	p->utf8bom          = 0;
 	p->xmlout           = 0;
+	p->nosplittitle     = 0;
 	p->verbose          = 0;
 	p->addcount         = 0;
 	p->singlerefperfile = 0;
@@ -197,6 +198,7 @@ bibl_duplicateparams( param *np, param *op )
 	np->utf8bom = op->utf8bom;
 	np->latexout = op->latexout;
 	np->xmlout = op->xmlout;
+	np->nosplittitle = op->nosplittitle;
 
 	np->verbose = op->verbose;
 	np->format_opts = op->format_opts;
@@ -260,7 +262,7 @@ bibl_verbose1( fields *info, fields *orig, char *filename, long nrefs )
 		fprintf( stderr, "'%s'='%s' level=%d\n", orig->tag[i].data,
 				orig->data[i].data , orig->level[i]);
 	}
-	bibl_verbose2( info, filename, nrefs );
+	if ( info ) bibl_verbose2( info, filename, nrefs );
 }
 
 void
@@ -306,7 +308,7 @@ read_ref( FILE *fp, bibl *bin, char *filename, convert_rules *r, param *p )
 	newstr reference, line;
 	fields *ref;
 	char buf[256]="";
-	int nrefs = 0, bufpos = 0, fcharset;
+	int nrefs = 0, bufpos = 0, fcharset;/* = CHARSET_UNKNOWN;*/
 	newstr_init( &reference );
 	newstr_init( &line );
 	while ( r->readf( fp, buf, sizeof(buf), &bufpos, &line, &reference, &fcharset ) ) {
@@ -330,6 +332,7 @@ read_ref( FILE *fp, bibl *bin, char *filename, convert_rules *r, param *p )
 			}
 		}
 	}
+	if ( p->charsetin==CHARSET_UNICODE ) p->utf8in = 1;
 	newstr_free( &line );
 	newstr_free( &reference );
 	return BIBL_OK;
