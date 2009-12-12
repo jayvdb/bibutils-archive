@@ -248,7 +248,7 @@ output_fileattach( FILE *fp, fields *info, int format_opts )
 	newstr_init( &data );
 	for ( i=0; i<info->nfields; ++i ) {
 		if ( strcasecmp( info->tag[i].data, "FILEATTACH" ) ) continue;
-		newstr_strcpy( &data, "Description:" );
+		newstr_strcpy( &data, ":" );
 		newstr_newstrcat( &data, &(info->data[i]) );
 		if ( strsearch( info->data[i].data, ".pdf" ) )
 			newstr_strcat( &data, ":PDF" );

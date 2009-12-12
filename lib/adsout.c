@@ -397,7 +397,11 @@ adsout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 	type = get_type( info );
 
 	output_people( fp, info, "AUTHOR", "%A", 0 );
+	output_easyall( fp, info, "AUTHOR:ASIS", "%A", 0 );
+	output_easyall( fp, info, "AUTHOR:CORP", "%A", 0 );
 	output_people( fp, info, "EDITOR", "%E", -1 );
+	output_easyall( fp, info, "EDITOR:ASIS", "%E", -1 );
+	output_easyall( fp, info, "EDITOR:CORP", "%E", -1 );
 	output_easy( fp, info, "TITLE", "%T", -1 );
 
 	if ( type==TYPE_ARTICLE || type==TYPE_MAGARTICLE )

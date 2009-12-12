@@ -495,10 +495,10 @@ endout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 	else if ( type==TYPE_COMMUNICATION )
 		output_people( fp, info, "RECIPIENT", "%E", -1 );
 	else {
-		output_easy( fp, info, "AUTHOR:CORP", "%A", 0 );
-		output_easy( fp, info, "AUTHOR:ASIS", "%A", 0 );
-		output_easy( fp, info, "EDITOR:CORP", "%E", -1 );
-		output_easy( fp, info, "EDITOR:ASIS", "%E", -1 );
+		output_easyall( fp, info, "AUTHOR:CORP", "%A", 0 );
+		output_easyall( fp, info, "AUTHOR:ASIS", "%A", 0 );
+		output_easyall( fp, info, "EDITOR:CORP", "%E", -1 );
+		output_easyall( fp, info, "EDITOR:ASIS", "%E", -1 );
 	}
 	if ( type==TYPE_ARTICLE || type==TYPE_MAGARTICLE )
 		output_title( fp, info, "TITLE", "SUBTITLE", "%J", 1 );

@@ -1,6 +1,18 @@
 
 BIBUTILS
 
+4.7
+12/11/09
+
+XML2ADS
++ Fix not outputting multiple authors from "ASIS" and "CORP" categories.
+
+XML2END
++ Fix not outputting multiple authors from "ASIS" and "CORP" categories.
+
+XML2ISI
++ Fix not outputting multiple authors from "ASIS" and "CORP" categories.
+
 4.6
 11/2/09
 

@@ -301,7 +301,7 @@ modsin_person( xml *node, fields *info, int level )
 		while ( p && *p ) {
 			while ( p && *p && *p!='|' ) newstr_addchar(&role,*p++);
 			if ( !strcasecmp( role.data, "author" ) ||
-			     !strcasecmp( role.data, "creator" ) )
+			     !strcasecmp( role.data, "creator" ) ) 
 				fields_add( info, "AUTHOR", name.data, level );
 			else if ( !strcasecmp( role.data, "editor" ) )
 				fields_add( info, "EDITOR", name.data, level );

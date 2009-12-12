@@ -149,6 +149,17 @@ output_easy( FILE *fp, fields *info, char *tag, char *isitag, int level )
                 fprintf( fp, "%s %s\n", isitag, info->data[n].data );
 }
 
+static void
+output_easyall( FILE *fp, fields *info, char *tag, char *isitag, int level )
+{
+	int i;
+	for ( i=0; i<info->nfields; ++i ) {
+		if ( level!=-1 && info->level[i]!=level ) continue;
+		if ( strcasecmp( info->tag[i].data, tag ) ) continue;
+		fprintf( fp, "%s %s\n", isitag, info->data[i].data );
+	}
+}
+
 
 static void
 output_date( FILE *fp, fields *info )
@@ -187,8 +198,8 @@ isiout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 
         output_type( fp, type );
 	output_people( fp, info, "AUTHOR", "AU", 0 );
-	output_easy( fp, info, "AUTHOR:CORP", "AU", 0 );
-	output_easy( fp, info, "AUTHOR:ASIS", "AU", 0 );
+	output_easyall( fp, info, "AUTHOR:CORP", "AU", 0 );
+	output_easyall( fp, info, "AUTHOR:ASIS", "AU", 0 );
 /*      output_people( fp, info, "AUTHOR", "A2", 1 );
         output_people( fp, info, "AUTHOR:CORP", "A2", 1 );
         output_people( fp, info, "AUTHOR:ASIS", "A2", 1 );
@@ -237,11 +248,11 @@ isiout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
         output_easy( fp, info, "ABSTRACT", "AB", -1 );
         output_easy( fp, info, "ISSN", "SN", -1 );
         output_easy( fp, info, "ISBN", "SN", -1 );
-        output_easy( fp, info, "URL", "UR", -1 );
-        output_easy( fp, info, "FILEATTACH", "UR", -1 );
+        output_easyall( fp, info, "URL", "UR", -1 );
+        output_easyall( fp, info, "FILEATTACH", "UR", -1 );
         output_pubmed( fp, info, refnum );
-        output_easy( fp, info, "NOTES", "N1", -1 );
-        output_easy( fp, info, "REFNUM", "ID", -1 );*/
+        output_easyall( fp, info, "NOTES", "N1", -1 );
+        output_easyall( fp, info, "REFNUM", "ID", -1 );*/
         fprintf( fp, "ER\n\n" );
         fflush( fp );
 }
