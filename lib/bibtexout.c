@@ -544,6 +544,7 @@ bibtexout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 	output_simple( fp, info, "DEGREEGRANTOR:ASIS", "school", p->format_opts );
 	output_simple( fp, info, "DEGREEGRANTOR:CORP", "school", p->format_opts );
 	output_simpleall( fp, info, "NOTES", "note", p->format_opts );
+	output_simpleall( fp, info, "ANNOTE", "annote", p->format_opts );
 	output_simple( fp, info, "ISBN", "isbn", p->format_opts );
 	output_simple( fp, info, "ISSN", "issn", p->format_opts );
 	output_simple( fp, info, "DOI", "doi", p->format_opts );

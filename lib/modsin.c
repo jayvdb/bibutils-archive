@@ -473,6 +473,13 @@ modsin_note( xml *node, fields *info, int level )
 }
 
 static void
+modsin_annote( xml *node, fields *info, int level )
+{
+	if ( node->value && node->value->len )
+		fields_add( info, "ANNOTE", node->value->data, level );
+}
+
+static void
 modsin_abstract( xml *node, fields *info, int level )
 {
 	if ( node->value && node->value->len )
@@ -621,6 +628,8 @@ modsin_mods( xml *node, fields *info, int level )
 		modsin_date( node, info, level, 0 );
 	else if ( xml_tagexact( node, "note" ) )
 		modsin_note( node, info, level );
+	else if ( xml_tagexact( node, "bibtex-annote" ) )
+		modsin_annote( node, info, level );
 	else if ( xml_tagexact( node, "abstract" ) )
 		modsin_abstract( node, info, level );
 	else if ( xml_tagexact( node, "subject" ) )

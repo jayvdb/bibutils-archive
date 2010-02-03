@@ -1,6 +1,16 @@
 
 BIBUTILS
 
+4.8
+2/2/10
+
+BIB2XML
++ Handle bibtex annote tags
+
+XML2BIB
++ Handle bibtex annote tags
+
+
 4.7
 12/11/09
 

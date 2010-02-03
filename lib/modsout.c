@@ -582,8 +582,10 @@ output_abs( fields *info, FILE *outptr, int level )
 	output_fill2( outptr, level, "abstract", info, nabs, 1 );
 	for ( i=0; i<info->nfields; ++i ) {
 		if ( info->level[i]!=level ) continue;
-		if ( strcasecmp( info->tag[i].data, "NOTES" ) ) continue;
-		output_fill2( outptr, level, "note", info, i, 1 );
+		if ( !strcasecmp( info->tag[i].data, "NOTES" ) )
+			output_fill2( outptr, level, "note", info, i, 1 );
+		if ( !strcasecmp( info->tag[i].data, "ANNOTE" ) )
+			output_fill2( outptr, level, "bibtex-annote", info, i, 1 );
 	}
 }
 
