@@ -1,7 +1,7 @@
 /*
  * modsin.c
  *
- * Copyright (c) Chris Putnam 2004-2009
+ * Copyright (c) Chris Putnam 2004-2010
  *
  * Source code released under the GPL
  *
@@ -589,7 +589,8 @@ modsin_identifier( xml *node, fields *info, int level )
 		{ "pii",           "PII"          },
 		{ "isi",           "ISIREFNUM"    },
 		{ "serial number", "SERIALNUMBER" },
-		{ "accessnum",     "ACCESSNUM"    }
+		{ "accessnum",     "ACCESSNUM"    },
+		{ "jstor",         "JSTOR"        },
 	};
 	int i , n = sizeof( ids ) / sizeof( ids[0] );
 	if ( !node->value || !node->value->data ) return;

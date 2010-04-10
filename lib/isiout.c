@@ -1,7 +1,7 @@
 /*
  * isiout.c
  *
- * Copyright (c) Chris Putnam 2008-2009
+ * Copyright (c) Chris Putnam 2008-2010
  *
  * Source code released under the GPL
  */

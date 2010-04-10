@@ -1,7 +1,7 @@
 /*
  * risout.c
  *
- * Copyright (c) Chris Putnam 2003-2009
+ * Copyright (c) Chris Putnam 2003-2010
  *
  * Program and source code released under the GPL
  *
@@ -365,6 +365,21 @@ output_arxiv( FILE *fp, fields *info )
 }
 
 static void
+output_jstor( FILE *fp, fields *info )
+{
+	newstr jstor_url;
+	int i;
+	newstr_init( &jstor_url );
+	for ( i=0; i<info->nfields; ++i ) {
+		if ( strcmp( info->tag[i].data, "JSTOR" ) ) continue;
+		jstor_to_url( info, i, "URL", &jstor_url );
+		if ( jstor_url.len )
+			fprintf( fp, "UR  - %s\n", jstor_url.data );
+	}
+	newstr_free( &jstor_url );
+}
+
+static void
 output_thesishint( FILE *fp, int type )
 {
 	if ( type==TYPE_MASTERSTHESIS )
@@ -444,6 +459,7 @@ risout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 	output_doi( fp, info );
 	output_pmid( fp, info );
 	output_arxiv( fp, info );
+	output_jstor( fp, info );
 	output_easy( fp, info, refnum, "NOTES", "N1", -1 );
 	output_easy( fp, info, refnum, "REFNUM", "ID", -1 );
 	output_thesishint( fp, type );

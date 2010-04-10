@@ -1,7 +1,7 @@
 /*
  * bibutils.c
  *
- * Copyright (c) Chris Putnam 2005-2009
+ * Copyright (c) Chris Putnam 2005-2010
  *
  * Source code released under the GPL
  *
@@ -550,8 +550,8 @@ convert_ref( bibl *bin, char *fname, bibl *bout, convert_rules *r, param *p )
 		if ( r->typef ) 
 			reftype = r->typef( rin, fname, i+1, p, r->all, r->nall );
 		else reftype = 0;
-		r->convertf( rin, rout, reftype, p, r->all, r->nall );
 		if ( r->all ) process_alwaysadd( rout, reftype, r );
+		r->convertf( rin, rout, reftype, p, r->all, r->nall );
 		if ( p->verbose ) 
 			bibl_verbose1( rout, rin, fname, i+1 );
 		bibl_addref( bout, rout );

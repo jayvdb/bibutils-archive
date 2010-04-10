@@ -1,7 +1,7 @@
 /*
  * bibtexout.c
  *
- * Copyright (c) Chris Putnam 2003-2009
+ * Copyright (c) Chris Putnam 2003-2010
  *
  * Program and source code released under the GPL
  *
@@ -419,6 +419,20 @@ output_pmid( FILE *fp, fields *info, int format_opts )
 }
 
 static void
+output_jstor( FILE *fp, fields *info, int format_opts )
+{
+	int js = fields_find( info, "JSTOR", -1 );
+	if ( js!=-1 ) {
+		newstr jstor;
+		newstr_init( &jstor );
+		jstor_to_url( info, js, "URL", &jstor );
+		if ( jstor.len )
+			output_element( fp, "url", jstor.data, format_opts );
+		newstr_free( &jstor );
+	}
+}
+
+static void
 output_pages( FILE *fp, fields *info, unsigned long refnum, int format_opts )
 {
 	newstr pages;
@@ -552,6 +566,7 @@ bibtexout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 	output_fileattach( fp, info, p->format_opts );
 	output_arxiv( fp, info, p->format_opts );
 	output_pmid( fp, info, p->format_opts );
+	output_jstor( fp, info, p->format_opts );
 	output_simple( fp, info, "LANGUAGE", "language", p->format_opts );
 	if ( p->format_opts & BIBOUT_FINALCOMMA ) fprintf( fp, "," );
 	fprintf( fp, "\n}\n\n" );

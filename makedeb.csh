@@ -17,7 +17,7 @@
 # Then run dpkg on this to build a .deb package
 #
 
-if ( ( $2 != _osx ) && ( $2 != _i386 ) ) exit
+if ( ( $2 != _osx ) && ( $2 != _i386 ) && ( $2 != _amd64 ) ) exit
 
 set programs = ( biblatex2xml bib2xml copac2xml ebi2xml end2xml endx2xml isi2xml med2xml modsclean ris2xml wordbib2xml xml2ads xml2bib xml2end xml2isi xml2ris xml2wordbib )
 
@@ -34,6 +34,7 @@ set pkgdir = debian/DEBIAN
 # Build control file
 #
 if ( $2 == _i386 ) set arch = i386
+if ( $2 == _amd64 ) set arch = i386
 if ( $2 == _osx ) set arch = darwin-powerpc
 
 set cntrl = ${pkgdir}/control
@@ -68,6 +69,7 @@ echo "#\!/bin/sh" >! $postrm
 # Fink installs on MacOSX install to /sw/bin
 #
 if ( $2 == _i386 ) set binarydir = ${outdir}/usr/local/bin
+if ( $2 == _amd64 ) set binarydir = ${outdir}/usr/local/bin
 if ( $2 == _osx ) set binarydir = ${outdir}/sw/bin
 
 mkdir -p ${binarydir}

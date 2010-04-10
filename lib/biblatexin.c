@@ -1,7 +1,8 @@
 /*
  * biblatexin.c
  *
- * Copyright (c) Chris Putnam 2008-2009
+ * Copyright (c) Chris Putnam 2008-2010
+ * Copyright (c) Johannes Wilm 2010
  *
  * Program and source code released under the GPL
  *
@@ -262,7 +263,7 @@ process_cite( fields *bibin, char *p, char *filename, long nref )
 	newstr tag, data;
 	newstrs_init( &tag, &data, NULL );
 	p = process_biblatextype( p, &data );
-	if ( data.len ) fields_add( bibin, "TYPE", data.data, 0 );
+	if ( data.len ) fields_add( bibin, "INTERNAL_TYPE", data.data, 0 );
 	if ( *p ) p = process_biblatexid ( p, &data );
 	if ( data.len ) fields_add( bibin, "REFNUM", data.data, 0 );
 	newstr_empty( &data );
@@ -375,13 +376,13 @@ biblatexin_crossref( bibl *bin, param *p )
 #endif			
 			continue;
 		}
-		ntype = fields_find( bin->ref[i], "TYPE", -1 );
+		ntype = fields_find( bin->ref[i], "INTERNAL_TYPE", -1 );
 		type = bin->ref[i]->data[ntype].data;
 		fields_setused( bin->ref[i], n );
 /*		bin->ref[i]->used[n] = 1; */
 		for ( j=0; j<bin->ref[ncross]->nfields; ++j ) {
 			nt = bin->ref[ncross]->tag[j].data;
-			if ( !strcasecmp( nt, "TYPE" ) ) continue;
+			if ( !strcasecmp( nt, "INTERNAL_TYPE" ) ) continue;
 			if ( !strcasecmp( nt, "REFNUM" ) ) continue;
 			if ( !strcasecmp( nt, "TITLE" ) ) {
 				if ( !strcasecmp( type, "Inproceedings" ) ||
@@ -471,13 +472,83 @@ process_pages( fields *info, newstr *s, int level )
 }
 
 static void
-process_url( fields *info, char *p, int level )
+process_urlcore( fields *info, char *p, int level, char *default_tag )
 {
 	if ( !strncasecmp( p, "\\urllink", 8 ) )
 		fields_add( info, "URL", p+8, level );
 	else if ( !strncasecmp( p, "\\url", 4 ) )
 		fields_add( info, "URL", p+4, level );
-	else fields_add( info, "URL", p, level );
+	else if ( !strncasecmp( p, "arXiv:", 6 ) )
+		fields_add( info, "ARXIV", p+6, level ); 
+	else if ( !strncasecmp( p, "http://arxiv.org/abs/", 21 ) )
+		fields_add( info, "ARXIV", p+21, level );
+	else if ( !strncasecmp( p, "http:", 5 ) )
+		fields_add( info, "URL", p, level );
+	else fields_add( info, default_tag, p, level );
+}
+
+static void
+process_url( fields *info, char *p, int level )
+{
+	process_urlcore( info, p, level, "URL" );
+}
+
+static void
+process_howpublished( fields *info, char *p, int level )
+{
+        /* Some users put Diploma thesis in "type" */
+        if ( !strncasecmp( p, "Diplom", 6 ) )
+                fields_replace_or_add( info, "GENRE", "Diploma thesis", level );
+        else if ( !strncasecmp( p, "Habilitation", 13 ) )
+                fields_replace_or_add( info, "GENRE", "Habilitation thesis", level );
+        else 
+		process_urlcore( info, p, level, "DESCRIPTION" );
+}
+
+static void
+process_genre( fields *info, char *p, int level )
+{
+        /* Some users put Diploma thesis in "type" */
+        if ( !strncasecmp( p, "Diplom", 6 ) )
+                fields_replace_or_add( info, "GENRE", "Diploma thesis", level );
+        else if ( !strncasecmp( p, "Habilitation", 13 ) )
+                fields_replace_or_add( info, "GENRE", "Habilitation thesis", level );
+        else 
+		fields_add( info, "GENRE", p, level );
+}
+
+static void
+process_eprint( fields *bibin, fields *info, int level )
+{
+	int neprint, netype;
+	char *eprint = NULL, *etype = NULL;
+	neprint = fields_find( bibin, "eprint", -1 );
+	netype  = fields_find( bibin, "eprinttype", -1 );
+	if ( neprint!=-1 ) eprint = bibin->data[neprint].data;
+	if ( netype!=-1 ) etype = bibin->data[netype].data;
+fprintf(stderr,"process_eprint: neprint=%d netype=%d\n", neprint,netype );
+	if ( eprint && etype ) {
+		if ( !strncasecmp( etype, "arxiv", 5 ) )
+			fields_add( info, "ARXIV", eprint, level );
+		else if ( !strncasecmp( etype, "jstor", 5 ) )
+			fields_add( info, "JSTOR", eprint, level );
+		else if ( !strncasecmp( etype, "pubmed", 6 ) )
+			fields_add( info, "PMID", eprint, level );
+		else if ( !strncasecmp( etype, "medline", 7 ) )
+			fields_add( info, "MEDLINE", eprint, level );
+		else {
+			fields_add( info, "EPRINT", eprint, level );
+			fields_add( info, "EPRINTTYPE", etype, level );
+		}
+		fields_setused( bibin, neprint );
+		fields_setused( bibin, netype );
+	} else if ( eprint ) {
+		fields_add( info, "EPRINT", eprint, level );
+		fields_setused( bibin, neprint );
+	} else if ( etype ) {
+		fields_add( info, "EPRINTTYPE", etype, level );
+		fields_setused( bibin, netype );
+	}
 }
 
 int
@@ -486,7 +557,7 @@ biblatexin_typef( fields *bibin, char *filename, int nrefs, param *p,
 {
 	char *refnum = "";
 	int reftype, n, nrefnum;
-	n = fields_find( bibin, "TYPE", 0 );
+	n = fields_find( bibin, "INTERNAL_TYPE", 0 );
 	nrefnum = fields_find( bibin, "REFNUM", 0 );
 	if ( nrefnum!=-1 ) refnum = (bibin->data[nrefnum]).data;
 	if ( n!=-1 )
@@ -511,7 +582,7 @@ report( fields *info )
 static void
 biblatexin_notag( param *p, char *tag )
 {
-	if ( p->verbose && strcmp( tag, "TYPE" ) ) {
+	if ( p->verbose && strcmp( tag, "INTERNAL_TYPE" ) ) {
 		if ( p->progname ) fprintf( stderr, "%s: ", p->progname );
 		fprintf( stderr, " Cannot find tag '%s'\n", tag );
 	}
@@ -525,20 +596,27 @@ biblatexin_convertf( fields *bibin, fields *info, int reftype, param *p,
 	int process, level, i, n;
 	char *newtag;
 	for ( i=0; i<bibin->nfields; ++i ) {
+
+               /* skip ones already "used" such as successful crossref */
+                if ( bibin->used[i] ) continue;
+
+		/* skip ones with no data */
 		d = &( bibin->data[i] );
-		if ( d->len == 0 ) continue; /* skip ones with no data */
-		/* skip ones already "used" such as successful crossref */
-		if ( bibin->used[i] ) continue;
+		if ( d->len == 0 ) continue;
+
 		t = &( bibin->tag[i] );
 		n = process_findoldtag( t->data, reftype, all, nall );
 		if ( n==-1 ) {
 			biblatexin_notag( p, t->data );
 			continue;
 		}
+
 		process = ((all[reftype]).tags[n]).processingtype;
-		if ( process == ALWAYS ) continue; /* add these later */
+		if ( process == ALWAYS ) continue; /* added before */
+
 		level   = ((all[reftype]).tags[n]).level;
 		newtag  = ((all[reftype]).tags[n]).newstr;
+
 		if ( process==SIMPLE || process==TITLE )
 			fields_add( info, newtag, d->data, level );
 		else if ( process==PERSON )
@@ -546,8 +624,14 @@ biblatexin_convertf( fields *bibin, fields *info, int reftype, param *p,
 				&(p->corps) );
 		else if ( process==PAGES )
 			process_pages( info, d, level);
+		else if ( process==HOWPUBLISHED )
+			process_howpublished( info, d->data, level );
 		else if ( process==BIBTEX_URL )
 			process_url( info, d->data, level );
+		else if ( process==BIBTEX_GENRE )
+			process_genre( info, d->data, level );
+		else if ( process==BIBTEX_EPRINT )
+			process_eprint( bibin, info, level );
 	}
 	if ( p->verbose ) report( info );
 }

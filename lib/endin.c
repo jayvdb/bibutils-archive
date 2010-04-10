@@ -1,7 +1,7 @@
 /*
  * endin.c
  *
- * Copyright (c) Chris Putnam 2003-2009
+ * Copyright (c) Chris Putnam 2003-2010
  *
  * Program and source code released under the GPL
  *
@@ -183,14 +183,14 @@ addtype( fields *info, char *data, int level )
 	for ( i=0; i<ntypes; ++i ) {
 		if ( !strcasecmp( types[i].oldstr, data ) ) {
 			found = 1;
-			fields_add( info, "TYPE", types[i].newstr, level );
+			fields_add( info, "INTERNAL_TYPE", types[i].newstr, level );
 		}
 	}
 	if ( !found ) {
 		fprintf( stderr, "Did not identify reference type '%s'\n",
 			data );
 		fprintf( stderr, "Defaulting to journal article type\n");
-		fields_add( info, "TYPE", types[0].newstr, level );
+		fields_add( info, "INTERNAL_TYPE", types[0].newstr, level );
 	}
 }
 

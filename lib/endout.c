@@ -1,7 +1,7 @@
 /*
  * endout.c
  *
- * Copyright (c) Chris Putnam 2004-2009
+ * Copyright (c) Chris Putnam 2004-2010
  *
  * Program and source code released under the GPL
  *
@@ -406,6 +406,21 @@ output_arxiv( FILE *fp, fields *info )
 }
 
 static void
+output_jstor( FILE *fp, fields *info )
+{
+	newstr jstor_url;
+	int i;
+	newstr_init( &jstor_url );
+	for ( i=0; i<info->nfields; ++i ) {
+		if ( strcmp( info->tag[i].data, "JSTOR" ) ) continue;
+		jstor_to_url( info, i, "URL", &jstor_url );
+		if ( jstor_url.len )
+			fprintf( fp, "%%U %s\n", jstor_url.data );
+	}
+	newstr_free( &jstor_url );
+}
+
+static void
 output_year( FILE *fp, fields *info, int level )
 {
 	int year = fields_find( info, "YEAR", level );
@@ -530,6 +545,7 @@ endout_write( fields *info, FILE *fp, param *p, unsigned long refnum )
 	output_doi( fp, info );
 	output_pmid( fp, info );
 	output_arxiv( fp, info );
+	output_jstor( fp, info );
 	output_pages( fp, info );
 	fprintf( fp, "\n" );
 	fflush( fp );

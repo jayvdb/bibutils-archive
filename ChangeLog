@@ -1,6 +1,19 @@
 
 BIBUTILS
 
+4.9
+4/9/10
+
+BIBLATEX2XML
++ Many, many changes thanks to Johannes Wilms
+
+BIB2XML
++ Some improvements in thesis handling derived from biblatex2xml changes
+
+BUILD
++ Fix build for _x86_64 (amd64) (Thanks to patch from Colin Bell).
+
+
 4.8
 2/2/10
 
