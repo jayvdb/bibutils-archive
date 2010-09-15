@@ -1,7 +1,7 @@
 /*
  * xml2bib.c
  *
- * Copyright (c) Chris Putnam 2003-8
+ * Copyright (c) Chris Putnam 2003-2010
  *
  * Program and source code released under the GPL
  *
@@ -25,6 +25,7 @@ help( char *progname )
 
 	fprintf(stderr,"  -h, --help         display this help\n");
 	fprintf(stderr,"  -v, --version      display version\n");
+	fprintf(stderr,"  -at, --abbreviatedtitles  use abbreviated titles, if available\n");
 	fprintf(stderr,"  -fc, --finalcomma  add final comman to bibtex output\n");
 	fprintf(stderr,"  -sd, --singledash  use only one dash '-' instead of two '--' for page range\n" );
 	fprintf(stderr,"  -b, -brackets      use brackets, not quotation marks surrounding data\n");
@@ -76,6 +77,9 @@ process_args( int *argc, char *argv[], param *p )
 			subtract = 1;
 		} else if ( args_match( argv[i], "-U", "--uppercase" ) ) {
 			p->format_opts |= BIBOUT_UPPERCASE;
+			subtract = 1;
+		} else if ( args_match( argv[i], "-at", "--abbreviated-titles" ) ) {
+			p->format_opts |= BIBOUT_SHORTTITLE;
 			subtract = 1;
 		} else if ( args_match( argv[i], "-nl", "--no-latex" ) ) {
 			p->latexout = 0;

@@ -1,6 +1,34 @@
 
 BIBUTILS
 
+4.11
+
+BUILD
++ Include some "unused" flags like LDFLAGS so that people with particular build
+  environments can have these flags respected (from Gentoo 
+  http://bugs.gentoo.org/show_bug.cgi?id=336237)
++ Add test programs to "make test" protocol
+
+TEST
++ Fix some signedness issues (bit rot) in the test programs (from Mandriva
+  packager, Stéphane Téletchéa
+
+XML2BIB
++ Add command-line option  -at or --abbreviatedtitles to force xml2bib to
+  use abbreviated titles for journals (books and other host types), if present
+  in the MODS input
+
+
+4.10
+8/30/10
+
+BIBLATEX2XML
++ fix organization/event handling (thanks to Johannes Wilms)
+
+MODSIN
++ support the presence of the reference identifier/key in 
+  mods:recordInfo:recordIdentifier
+
 4.9
 4/9/10
 

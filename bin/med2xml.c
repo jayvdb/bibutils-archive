@@ -1,7 +1,7 @@
 /*
  * med2xml.c
  * 
- * Copyright (c) Chris Putnam 2004-8
+ * Copyright (c) Chris Putnam 2004-2010
  *
  * Source code and program released under the GPL
  *

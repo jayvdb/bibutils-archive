@@ -85,7 +85,7 @@
   <refsect1>
     <title>DESCRIPTION</title>
     <para>
-      The bibutils program set interconverts between various
+      The bibutils program set inter-converts between various
       bibliography formats using 
       <ulink url="http://www.loc.gov">Library of Congress</ulink>'s
       <ulink url="http://www.loc.gov/standards/mods/">Metadata Object

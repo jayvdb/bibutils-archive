@@ -1,7 +1,7 @@
 /*
  * bibprog.c
  *
- * Copyright (c) 2004-8
+ * Copyright (c) 2004-2010
  *
  * Program and source code released under the GPL
  *

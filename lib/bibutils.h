@@ -1,7 +1,7 @@
 /*
  * bibutils.h
  *
- * Copyright (c) Chris Putnam 2005-2009
+ * Copyright (c) Chris Putnam 2005-2010
  *
  */
 #ifndef BIBUTILS_H

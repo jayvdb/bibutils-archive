@@ -1,7 +1,9 @@
 /*
  * xml2wordbib.c
  *
- * Copyright 2007-8 C. Putnam
+ * Copyright (c) Chris Putnam 2007-2010
+ *
+ * Program and source code released under the GPL
  *
  */
 #include <stdio.h>

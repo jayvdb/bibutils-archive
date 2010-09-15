@@ -21,7 +21,7 @@
  * that the entire library is wrapped in <MedlineCitationSet>
  * or <PubmedArticle> tags...
  */
-static char *wrapper[] = { "MedlineCitationSet", "PubmedArticle" };
+static char *wrapper[] = { "PubmedArticle", "MedlineCitation" };
 static int nwrapper = sizeof( wrapper ) / sizeof( wrapper[0] );
 
 static char *
@@ -31,7 +31,7 @@ medin_findstartwrapper( char *buf, int *ntype )
 	int i;
 	for ( i=0; i<nwrapper && startptr==NULL; ++i ) {
 		startptr = xml_findstart( buf, wrapper[ i ] );
-		if ( startptr ) *ntype = i;
+		if ( startptr && *ntype==-1 ) *ntype = i;
 	}
 	return startptr;
 }
@@ -48,7 +48,7 @@ medin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, newstr
 {
 	newstr tmp;
 	char *startptr = NULL, *endptr;
-	int haveref = 0, inref = 0, file_charset = CHARSET_UNKNOWN, m, type = 1;
+	int haveref = 0, inref = 0, file_charset = CHARSET_UNKNOWN, m, type = -1;
 	newstr_init( &tmp );
 	while ( !haveref && newstr_fget( fp, buf, bufsize, bufpos, line ) ) {
 		if ( line->data ) {
@@ -208,6 +208,8 @@ static void
 medin_journal1( xml *node, fields *info )
 {
 	xml_convert c[] = {
+		{ "Title",    NULL, NULL, "TITLE",     1 },
+		{ "ISOAbbreviation", NULL, NULL, "SHORTTITLE", 1 },
 		{ "ISSN",     NULL, NULL, "ISSN",      1 },
 		{ "Volume",   NULL, NULL, "VOLUME",    1 },
 		{ "Issue",    NULL, NULL, "ISSUE",     1 },
@@ -277,6 +279,9 @@ medin_abstract( xml *node, fields *info )
  *        ( or <FirstName>David P</FirstName> )
  *        <Initials>DP</Initials>
  *    </Author>
+ *    <Author>
+ *        <CollectiveName>Organization</CollectiveName>
+ *    </Author>
  * </AuthorList>
  */
 static void
@@ -304,8 +309,15 @@ medin_author( xml *node, newstr *name )
 			if ( !is_ws(*p) ) newstr_addchar( name, *p++ );
 		}
 	}
-	if ( node->down ) medin_author( node->down, name );
 	if ( node->next ) medin_author( node->next, name );
+}
+
+static void
+medin_corpauthor( xml *node, newstr *name )
+{
+	if ( xml_tagexact( node, "CollectiveName" ) ) {
+		newstr_strcpy( name, xml_data( node ) );
+	} else if ( node->next ) medin_corpauthor( node->next, name );
 }
 
 static void
@@ -317,7 +329,13 @@ medin_authorlist( xml *node, fields *info )
 	while ( node ) {
 		if ( xml_tagexact( node, "Author" ) && node->down ) {
 			medin_author( node->down, &name );
-			if ( name.len ) fields_add(info,"AUTHOR",name.data,0);
+			if ( name.len ) {
+				fields_add(info,"AUTHOR",name.data,0);
+			} else {
+				medin_corpauthor( node->down, &name );
+				if ( name.len )
+					fields_add(info,"AUTHOR:CORP",name.data,0);
+			}
 			newstr_empty( &name );
 		}
 		node = node->next;
@@ -340,7 +358,7 @@ medin_authorlist( xml *node, fields *info )
 static void
 medin_journal2( xml *node, fields *info )
 {
-	if ( xml_tagwithdata( node, "MedlineTA" ) )
+	if ( xml_tagwithdata( node, "MedlineTA" ) && fields_find( info, "TITLE", 1 )==-1 )
 		fields_add( info, "TITLE", xml_data( node ), 1 );
 	if ( node->down ) medin_journal2( node->down, info );
 	if ( node->next ) medin_journal2( node->next, info );
@@ -413,12 +431,16 @@ medin_article( xml *node, fields *info )
 		medin_abstract( node->down, info );
 	else if ( xml_tagexact( node, "AuthorList" ) )
 		medin_authorlist( node, info );
+	else if ( xml_tagexact( node, "Affiliation" ) )
+		fields_add( info, "ADDRESS", xml_data( node ), 0 );
 	if ( node->next ) medin_article( node->next, info );
 }
 
 static void
 medin_medlinecitation( xml *node, fields *info )
 {
+	if ( xml_tagexact( node, "PMID" ) && node->value->data )
+		fields_add( info, "PMID", node->value->data, 0 );
 	if ( node->down ) {
 		if ( xml_tagexact( node, "Article" ) )
 			medin_article( node->down, info );
@@ -445,10 +467,14 @@ medin_pubmedarticle( xml *node, fields *info )
 static void
 medin_assembleref( xml *node, fields *info )
 {
-	if ( xml_tagexact( node, "PubmedArticle" ) ||
-	     xml_tagexact( node, "MedlineCitationSet" ) ) {
-		if ( node->down ) medin_pubmedarticle( node->down, info );
-	} else if ( node->down ) medin_assembleref( node->down, info );
+	if ( node->down ) {
+		if ( xml_tagexact( node, "PubmedArticle" ) )
+			medin_pubmedarticle( node->down, info );
+		else if ( xml_tagexact( node, "MedlineCitation" ) )
+			medin_medlinecitation( node->down, info );
+		else medin_assembleref( node->down, info );
+	}
+
 	if ( node->next ) medin_assembleref( node->next, info );
 	/* assume everything is a journal article */
 	if ( info->nfields ) {

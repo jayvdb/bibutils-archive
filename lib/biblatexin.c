@@ -77,7 +77,7 @@ biblatex_item( char *p, newstr *s )
 			if ( *p==',' || *p=='=' || *p=='}' || *p==')' )
 				goto out;
 		}
-		if ( *p=='\"' && *(p-1)!='\\') {
+		if ( *p=='\"' && *(p-1)!='\\' && nbrackets==0 ) {
 			nquotes = ( nquotes==0 );
 			newstr_addchar( s, *p );
 		} else if ( *p=='{' ) {

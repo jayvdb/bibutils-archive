@@ -15,11 +15,11 @@ int
 test_consistency( newstr *s, int numchars, char *fn )
 {
 	if ( strlen( s->data ) != s->len ) {
-		fprintf(stdout,"%s: failed consistancy check found %d, s->len=%ld\n",fn,strlen(s->data),s->len);
+		fprintf(stdout,"%s: failed consistancy check found %d, s->len=%ld\n",fn,(int)strlen(s->data),s->len);
 		return 1;
 	}
 	if ( strlen( s->data ) != numchars ) {
-		fprintf(stdout,"%s: failed consistancy check found %d, expected %d\n",fn,strlen(s->data),numchars);
+		fprintf(stdout,"%s: failed consistancy check found %d, expected %d\n",fn,(int)strlen(s->data),numchars);
 		return 1;
 	}
 	return 0;

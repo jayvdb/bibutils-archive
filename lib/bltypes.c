@@ -30,6 +30,7 @@ static lookups article[] = {
 	{ "journal",         "TITLE",        SIMPLE, LEVEL_HOST },
 	{ "journaltitle",    "TITLE",        SIMPLE, LEVEL_HOST },
 	{ "journalsubtitle", "SUBTITLE",     SIMPLE, LEVEL_HOST },
+	{ "shortjournal",    "SHORTTITLE",   SIMPLE, LEVEL_HOST },
 	{ "issuetitle",      "TITLE",        SIMPLE, LEVEL_SERIES }, /*WRONG*/
 	{ "issuesubtitle",   "SUBTITLE",     SIMPLE, LEVEL_SERIES }, /*WRONG*/
 	{ "language",        "LANGUAGE",     SIMPLE, LEVEL_MAIN },
@@ -614,7 +615,7 @@ static lookups proceedings[] = {
 	{ "note",            "NOTES",        SIMPLE, LEVEL_MAIN },
 	{ "annote",          "NOTES",        SIMPLE, LEVEL_MAIN },
 	{ "annotation",      "NOTES",        SIMPLE, LEVEL_MAIN },
-	{ "organization",    "ORGANIZATION", SIMPLE, LEVEL_MAIN },
+	{ "organization",    "ORGANIZER:CORP",SIMPLE, LEVEL_MAIN },
 	{ "publisher",       "PUBLISHER",    SIMPLE, LEVEL_MAIN },
 	{ "location",        "LOCATION",     SIMPLE, LEVEL_MAIN },
 	{ "isbn",            "ISBN",         SIMPLE, LEVEL_MAIN },

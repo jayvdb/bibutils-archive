@@ -196,7 +196,7 @@ output_names( fields *info, FILE *outptr, int level )
 	  { "redactor",      "REDACTOR",           NO_AUTHORITY   },
 	  { "reporter",      "REPORTER",           NO_AUTHORITY   },
 	  { "translator",    "TRANSLATOR",         MARC_AUTHORITY },
-	  { "event",         "EVENTTITLE",         NO_AUTHORITY   },
+	  { "event",         "EVENT",              NO_AUTHORITY   },
 	  { "author",        "2ND_AUTHOR",         MARC_AUTHORITY },
 	  { "author",        "3RD_AUTHOR",         MARC_AUTHORITY },
 	  { "author",        "SUB_AUTHOR",         MARC_AUTHORITY },

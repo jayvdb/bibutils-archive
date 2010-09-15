@@ -12,14 +12,14 @@ char version[] = "0.1";
 int
 test_decimal_entities1( void )
 {
-	unsigned int i, answer;
-	int failed = 0, pos, err, unicode = 0;
+	unsigned int i, answer, pos_in;
+	int failed = 0, err, unicode = 0;
 	char buf[512];
 	for ( i=0; i<10000; ++i ) {
-		pos = 0;
+		pos_in = 0;
 		err = 0;
 		sprintf( buf, "&#%u;*", i );
-		answer = decode_entity( buf, &pos, &unicode, &err );
+		answer = decode_entity( buf, &pos_in, &unicode, &err );
 		if ( err ) {
 			failed = 1;
 			printf("%s: Error test_decimal_entities received "
@@ -32,11 +32,11 @@ test_decimal_entities1( void )
 				"sent '%s' returned %u\n", 
 				progname, buf, answer );
 		}
-		if ( buf[pos]!='*' ) {
+		if ( buf[pos_in]!='*' ) {
 			failed = 1;
 			printf("%s: Error test_decimal_entities bad ending pos,"
 				"sent '%s' returned pointer to '%s'\n",
-				progname, buf, &(buf[pos]) );
+				progname, buf, &(buf[pos_in]) );
 		}
 	}
 	return failed;
@@ -45,14 +45,14 @@ test_decimal_entities1( void )
 int
 test_decimal_entities2( void )
 {
-	unsigned int i, answer;
-	int failed = 0, pos, err, unicode = 0;
+	unsigned int i, answer, pos_in;
+	int failed = 0, err, unicode = 0;
 	char buf[512];
 	for ( i=0; i<10000; ++i ) {
-		pos = 1;
+		pos_in = 1;
 		err = 0;
 		sprintf( buf, "&#%u;*", i );
-		answer = decode_entity( buf, &pos, &unicode, &err );
+		answer = decode_entity( buf, &pos_in, &unicode, &err );
 		if ( !err ) {
 			failed = 1;
 			printf("%s: Error test_decimal_entities should have "
@@ -61,10 +61,10 @@ test_decimal_entities2( void )
 		}
 	}
 	for ( i=0; i<1000; ++i ) {
-		pos = 0;
+		pos_in = 0;
 		err = 0;
 		sprintf( buf, "&#%u ;", i );
-		answer = decode_entity( buf, &pos, &unicode, &err );
+		answer = decode_entity( buf, &pos_in, &unicode, &err );
 		if ( !err ) {
 			failed = 1;
 			printf("%s: Error test_decimal_entities should have "
@@ -78,14 +78,14 @@ test_decimal_entities2( void )
 int
 test_hex_entities( void )
 {
-	unsigned int i, answer;
-	int failed = 0, pos, err, unicode = 0;
+	unsigned int i, answer, pos_in;
+	int failed = 0, err, unicode = 0;
 	char buf[512];
 	for ( i=0; i<10000; ++i ) {
-		pos = 0;
+		pos_in = 0;
 		err = 0;
 		sprintf( buf, "&#x%x;*", i );
-		answer = decode_entity( buf, &pos, &unicode, &err );
+		answer = decode_entity( buf, &pos_in, &unicode, &err );
 		if ( err ) {
 			failed = 1;
 			printf("%s: Error test_hex_entities received error, "
@@ -98,11 +98,11 @@ test_hex_entities( void )
 				"sent '%s' = %u returned %u\n", 
 				progname, buf, i, answer );
 		}
-		if ( buf[pos]!='*' ) {
+		if ( buf[pos_in]!='*' ) {
 			failed = 1;
 			printf("%s: Error test_decimal_entities bad ending pos,"
 				"sent '%s' returned pointer to '%s'\n",
-				progname, buf, &(buf[pos]) );
+				progname, buf, &(buf[pos_in]) );
 		}
 	}
 	return failed;

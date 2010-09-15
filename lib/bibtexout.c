@@ -325,8 +325,16 @@ static void
 output_title( FILE *fp, fields *info, unsigned long refnum, char *bibtag, int level, int format_opts )
 {
 	newstr title;
-	int n1 = fields_find( info, "TITLE", level );
-	int n2 = fields_find( info, "SUBTITLE", level );
+	int n1 = -1, n2 = -1;
+	/* Option is for short titles of journals */
+	if ( ( format_opts & BIBOUT_SHORTTITLE ) && level==1 ) {
+		n1 = fields_find( info, "SHORTTITLE", level );
+		n2 = fields_find( info, "SHORTSUBTITLE", level );
+	}
+	if ( n1==-1 ) {
+		n1 = fields_find( info, "TITLE", level );
+		n2 = fields_find( info, "SUBTITLE", level );
+	}
 	if ( n1!=-1 ) {
 		newstr_init( &title );
 		newstr_newstrcpy( &title, &(info->data[n1]) );

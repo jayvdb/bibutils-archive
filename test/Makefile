@@ -9,16 +9,16 @@ PROGS      = newstr_test entities_test utf8_test
 
 all: $(PROGS)
 
-entities_test : entities_test.o
-	$(CC) entities_test.o $(LIBDIR) $(LIBS) -o $@
+entities_test : entities_test.o ../lib/libbibutils.a
+	$(CC) $(LDFLAGS) $^ $(LOADLIBS) $(LDLIBS) -o $@
 
-utf8_test : utf8_test.o
-	$(CC) utf8_test.o $(LIBDIR) $(LIBS) -o $@
+utf8_test : utf8_test.o ../lib/libbibutils.a
+	$(CC) $(LDFLAGS) $^ $(LOADLIBS) $(LDLIBS) -o $@
 
-newstr_test : newstr_test.o
-	$(CC) newstr_test.o $(LIBDIR) $(LIBS) -o $@
+newstr_test : newstr_test.o ../lib/libbibutils.a
+	$(CC) $(LDFLAGS) $^ $(LOADLIBS) $(LDLIBS) -o $@
 
-test: entities_test newstr_test
+test: entities_test newstr_test FORCE
 	./newstr_test
 	./entities_test
 	./utf8_test
@@ -28,3 +28,5 @@ clean:
 
 realclean:
 	rm -f *.o core $(PROGS)
+
+FORCE:
