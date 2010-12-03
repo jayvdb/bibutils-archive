@@ -17,4 +17,6 @@ extern void adsout_write( fields *info, FILE *fp, param *p,
 		unsigned long refnum );
 extern void adsout_writeheader( FILE *outptr, param *p );
 
+extern void adsout_initparams( param *p, const char *progname );
+
 #endif

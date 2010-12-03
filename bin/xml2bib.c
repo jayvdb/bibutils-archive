@@ -8,10 +8,13 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include "bibtexout.h"
 #include "bibutils.h"
+#include "modsin.h"
+#include "bibtexout.h"
 #include "args.h"
 #include "bibprog.h"
+
+const char progname[] = "xml2bib";
 
 void
 help( char *progname )
@@ -87,6 +90,9 @@ process_args( int *argc, char *argv[], param *p )
 		} else if ( args_match( argv[i], "-nb", "--no-bom" ) ) {
 			p->utf8bom = 0;
 			subtract = 1;
+		} else if ( args_match( argv[i], "-d", "--drop-key" ) ) {
+			p->format_opts |= BIBOUT_DROPKEY;
+			subtract = 1;
 		} else if ( args_match( argv[i], "--verbose", "" ) ) {
 			p->verbose = 1;
 			subtract = 1;
@@ -109,7 +115,8 @@ int
 main( int argc, char *argv[] )
 {
 	param p;
-	bibl_initparams( &p, BIBL_MODSIN, BIBL_BIBTEXOUT, "xml2bib" );
+	modsin_initparams( &p, progname );
+	bibtexout_initparams( &p, progname );
 	process_charsets( &argc, argv, &p, 1, 1 );
 	process_args( &argc, argv, &p );
 	bibprog( argc, argv, &p );

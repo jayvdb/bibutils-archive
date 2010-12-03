@@ -16,6 +16,36 @@
 #include "xml_encoding.h"
 #include "ebiin.h"
 
+void
+ebiin_initparams( param *p, const char *progname )
+{
+	p->readformat       = BIBL_EBIIN;
+	p->charsetin        = BIBL_CHARSET_UNICODE;
+	p->charsetin_src    = BIBL_SRC_DEFAULT;
+	p->latexin          = 0;
+	p->xmlin            = 1;
+	p->utf8in           = 1;
+	p->nosplittitle     = 0;
+	p->verbose          = 0;
+	p->addcount         = 0;
+	p->output_raw       = BIBL_RAW_WITHMAKEREFID |
+	                      BIBL_RAW_WITHCHARCONVERT;
+
+	p->readf    = ebiin_readf;
+	p->processf = ebiin_processf;
+	p->cleanf   = NULL;
+	p->typef    = NULL;
+	p->convertf = NULL;
+	p->all      = NULL;
+	p->nall     = 0;
+
+	list_init( &(p->asis) );
+	list_init( &(p->corps) );
+
+	if ( !progname ) p->progname = NULL;
+	else p->progname = strdup( progname );
+}
+
 int
 ebiin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, newstr *reference, int *fcharset )
 {

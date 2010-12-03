@@ -19,6 +19,41 @@
 #include "reftypes.h"
 #include "modstypes.h"
 #include "marc.h"
+#include "bibutils.h"
+#include "modsin.h"
+
+void
+modsin_initparams( param *p, const char *progname )
+{
+
+	p->readformat       = BIBL_MODSIN;
+	p->format_opts      = 0;
+	p->charsetin        = BIBL_CHARSET_UNICODE;
+	p->charsetin_src    = BIBL_SRC_DEFAULT;
+	p->latexin          = 0;
+	p->utf8in           = 1;
+	p->xmlin            = 1;
+	p->nosplittitle     = 0;
+	p->verbose          = 0;
+	p->addcount         = 0;
+	p->singlerefperfile = 0;
+	p->output_raw       = BIBL_RAW_WITHMAKEREFID |
+	                      BIBL_RAW_WITHCHARCONVERT;
+
+	p->readf    = modsin_readf;
+	p->processf = modsin_processf;
+	p->cleanf   = NULL;
+	p->typef    = NULL;
+	p->convertf = NULL;
+	p->all      = NULL;
+	p->nall     = 0;
+
+	list_init( &(p->asis) );
+	list_init( &(p->corps) );
+
+	if ( !progname ) p->progname = NULL;
+	else p->progname = strdup( progname );
+}
 
 static char modsns[]="mods";
 

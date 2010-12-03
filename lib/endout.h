@@ -14,4 +14,7 @@ extern void endout_write( fields *info, FILE *fp, param *p,
 		unsigned long refnum );
 extern void endout_writeheader( FILE *outptr, param *p );
 
+extern void endout_initparams( param *p, const char *progname );
+
+
 #endif

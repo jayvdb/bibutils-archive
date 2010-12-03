@@ -21,6 +21,35 @@
 #include "reftypes.h"
 #include "biblatexin.h"
 
+void
+biblatexin_initparams( param *p, const char *progname )
+{
+	p->readformat       = BIBL_BIBLATEXIN;
+	p->charsetin        = BIBL_CHARSET_DEFAULT;
+	p->charsetin_src    = BIBL_SRC_DEFAULT;
+	p->latexin          = 1;
+	p->xmlin            = 0;
+	p->utf8in           = 0;
+	p->nosplittitle     = 0;
+	p->verbose          = 0;
+	p->addcount         = 0;
+	p->output_raw       = 0;
+
+	p->readf    = biblatexin_readf;
+	p->processf = biblatexin_processf;
+	p->cleanf   = biblatexin_cleanf;
+	p->typef    = biblatexin_typef;
+	p->convertf = biblatexin_convertf;
+	p->all      = biblatex_all;
+	p->nall     = biblatex_nall;
+
+	list_init( &(p->asis) );
+	list_init( &(p->corps) );
+
+	if ( !progname ) p->progname = NULL;
+	else p->progname = strdup( progname );
+}
+
 /*
  * readf can "read too far", so we store this information in line, thus
  * the next new text is in line, either from having read too far or

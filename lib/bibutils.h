@@ -90,6 +90,19 @@ typedef struct param {
 
 	char *progname;
 
+
+        int  (*readf)(FILE*,char*,int,int*,newstr*,newstr*,int*);
+        int  (*processf)(fields*,char*,char*,long);
+        void (*cleanf)(bibl*,struct param*);
+        int  (*typef) (fields*,char*,int,struct param*,variants*,int);
+        void (*convertf)(fields*,fields*,int,struct param*,variants*,int);
+        void (*headerf)(FILE*,struct param*);
+        void (*footerf)(FILE*);
+        void (*writef)(fields*,FILE*,struct param*,unsigned long);
+        variants *all;
+        int  nall;
+
+
 } param;
 
 extern void bibl_initparams( param *p, int readmode, int writemode,

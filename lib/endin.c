@@ -21,6 +21,35 @@
 #include "reftypes.h"
 #include "endin.h"
 
+void
+endin_initparams( param *p, const char *progname )
+{
+	p->readformat       = BIBL_ENDNOTEIN;
+	p->charsetin        = BIBL_CHARSET_DEFAULT;
+	p->charsetin_src    = BIBL_SRC_DEFAULT;
+	p->latexin          = 0;
+	p->xmlin            = 0;
+	p->utf8in           = 0;
+	p->nosplittitle     = 0;
+	p->verbose          = 0;
+	p->addcount         = 0;
+	p->output_raw       = 0;
+
+	p->readf    = endin_readf;
+	p->processf = endin_processf;
+	p->cleanf   = endin_cleanf;
+	p->typef    = endin_typef;
+	p->convertf = endin_convertf;
+	p->all      = end_all;
+	p->nall     = end_nall;
+
+	list_init( &(p->asis) );
+	list_init( &(p->corps) );
+
+	if ( !progname ) p->progname = NULL;
+	else p->progname = strdup( progname );
+}
+
 /* Endnote tag definition:
     character 1 = '%'
     character 2 = alphabetic character or digit (or other characters)

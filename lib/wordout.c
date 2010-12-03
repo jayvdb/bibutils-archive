@@ -16,6 +16,28 @@
 #include "utf8.h"
 #include "wordout.h"
 
+void
+wordout_initparams( param *p, const char *progname )
+{
+	p->writeformat      = BIBL_WORD2007OUT;
+	p->format_opts      = 0;
+	p->charsetout       = BIBL_CHARSET_UNICODE;
+	p->charsetout_src   = BIBL_SRC_DEFAULT;
+	p->latexout         = 0;
+	p->utf8out          = 0;
+	p->utf8bom          = 0;
+	if ( !p->utf8out ) p->xmlout = 3;
+	else p->xmlout = 1;
+	p->nosplittitle     = 0;
+	p->verbose          = 0;
+	p->addcount         = 0;
+	p->singlerefperfile = 0;
+
+	p->headerf = wordout_writeheader;
+	p->footerf = wordout_writefooter;
+	p->writef  = wordout_write;
+}
+
 typedef struct convert {
 	char oldtag[25];
 	char newtag[25];

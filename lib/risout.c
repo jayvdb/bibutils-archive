@@ -17,6 +17,27 @@
 #include "doi.h"
 #include "risout.h"
 
+void
+risout_initparams( param *p, const char *progname )
+{
+	p->writeformat      = BIBL_RISOUT;
+	p->format_opts      = 0;
+	p->charsetout       = BIBL_CHARSET_DEFAULT;
+	p->charsetout_src   = BIBL_SRC_DEFAULT;
+	p->latexout         = 0;
+	p->utf8out          = 0;
+	p->utf8bom          = 0;
+	p->xmlout           = 0;
+	p->nosplittitle     = 0;
+	p->verbose          = 0;
+	p->addcount         = 0;
+	p->singlerefperfile = 0;
+
+	p->headerf = risout_writeheader;
+	p->footerf = NULL;
+	p->writef  = risout_write;
+}
+
 enum { 
 	TYPE_UNKNOWN,
 	TYPE_STD,                /* standard/generic */

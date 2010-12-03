@@ -17,6 +17,27 @@
 #include "doi.h"
 #include "endout.h"
 
+void
+endout_initparams( param *p, const char *progname )
+{
+	p->writeformat      = BIBL_ENDNOTEOUT;
+	p->format_opts      = 0;
+	p->charsetout       = BIBL_CHARSET_DEFAULT;
+	p->charsetout_src   = BIBL_SRC_DEFAULT;
+	p->latexout         = 0;
+	p->utf8out          = 0;
+	p->utf8bom          = 0;
+	p->xmlout           = 0;
+	p->nosplittitle     = 0;
+	p->verbose          = 0;
+	p->addcount         = 0;
+	p->singlerefperfile = 0;
+
+	p->headerf = endout_writeheader;
+	p->footerf = NULL;
+	p->writef  = endout_write;
+}
+
 enum {
 	TYPE_UNKNOWN = 0,
 	TYPE_GENERIC,                     /* Generic */

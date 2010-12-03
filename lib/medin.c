@@ -15,6 +15,38 @@
 #include "xml.h"
 #include "xml_encoding.h"
 #include "medin.h"
+#include "bibutils.h"
+
+void
+medin_initparams( param *p, const char *progname )
+{
+	p->readformat       = BIBL_MEDLINEIN;
+	p->charsetin        = BIBL_CHARSET_UNICODE;
+	p->charsetin_src    = BIBL_SRC_DEFAULT;
+	p->latexin          = 0;
+	p->xmlin            = 1;
+	p->utf8in           = 1;
+	p->nosplittitle     = 0;
+	p->verbose          = 0;
+	p->addcount         = 0;
+	p->output_raw       = BIBL_RAW_WITHMAKEREFID |
+	                      BIBL_RAW_WITHCHARCONVERT;
+
+	p->readf    = medin_readf;
+	p->processf = medin_processf;
+	p->cleanf   = NULL;
+	p->typef    = NULL;
+/*	p->convertf = medin_convertf;*/
+	p->convertf = NULL;
+	p->all      = NULL;
+	p->nall     = 0;
+
+	list_init( &(p->asis) );
+	list_init( &(p->corps) );
+
+	if ( !progname ) p->progname = NULL;
+	else p->progname = strdup( progname );
+}
 
 /*
  * The only difference between MEDLINE and PUBMED in format is
@@ -142,35 +174,36 @@ medin_medlinedate( fields *info, char *string, int level )
 {
 	newstr tmp;
 	char *p, *q;
+
 	newstr_init( &tmp );
+
 	/* extract year */
 	p = string;
 	q = skip_notws( string );
-/*	p = q = string;*/
-/*	while ( *q && !is_ws(*q) ) q++;*/
 	newstr_segcpy( &tmp, p, q );
 	fields_add( info, "PARTYEAR", tmp.data, level );
 	q = skip_ws( q );
+
 	/* extract month */
 	if ( q ) {
 		p = q;
 		newstr_empty( &tmp );
 		q = skip_notws( q );
-/*		while ( *q && !is_ws(*q) ) q++;*/
 		newstr_segcpy( &tmp, p, q );
 		newstr_findreplace( &tmp, "-", "/" );
 		fields_add( info, "PARTMONTH", tmp.data, level );
 		q = skip_ws( q );
 	}
+
 	/* extract day */
 	if ( q ) {
 		p = q;
 		newstr_empty( &tmp );
 		q = skip_notws( q );
-/*		while ( *q && !is_ws(*q) ) q++;*/
 		newstr_segcpy( &tmp, p, q );
 		fields_add( info, "PARTDAY", tmp.data, level );
 	}
+
 	newstr_free( &tmp );
 }
 
@@ -208,15 +241,15 @@ static void
 medin_journal1( xml *node, fields *info )
 {
 	xml_convert c[] = {
-		{ "Title",    NULL, NULL, "TITLE",     1 },
+		{ "Title",           NULL, NULL, "TITLE",      1 },
 		{ "ISOAbbreviation", NULL, NULL, "SHORTTITLE", 1 },
-		{ "ISSN",     NULL, NULL, "ISSN",      1 },
-		{ "Volume",   NULL, NULL, "VOLUME",    1 },
-		{ "Issue",    NULL, NULL, "ISSUE",     1 },
-		{ "Year",     NULL, NULL, "PARTYEAR",  1 },
-		{ "Month",    NULL, NULL, "PARTMONTH", 1 },
-		{ "Day",      NULL, NULL, "PARTDAY",   1 },
-		{ "Language", NULL, NULL, "LANGUAGE",  1 },
+		{ "ISSN",            NULL, NULL, "ISSN",       1 },
+		{ "Volume",          NULL, NULL, "VOLUME",     1 },
+		{ "Issue",           NULL, NULL, "ISSUE",      1 },
+		{ "Year",            NULL, NULL, "PARTYEAR",   1 },
+		{ "Month",           NULL, NULL, "PARTMONTH",  1 },
+		{ "Day",             NULL, NULL, "PARTDAY",    1 },
+		{ "Language",        NULL, NULL, "LANGUAGE",   1 },
 	};
 	int nc = sizeof( c ) / sizeof( c[0] );;
 	if ( xml_hasdata( node ) && !medin_doconvert( node, info, c, nc ) ) {

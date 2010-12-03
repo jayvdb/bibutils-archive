@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "bibutils.h"
+#include "endin.h"
+#include "modsout.h"
 #include "tomods.h"
 #include "bibprog.h"
 
@@ -16,11 +18,14 @@ char help1[] = "Converts an Endnote reference file (refer format) "
 		"into MODS XML\n\n";
 char help2[] = "endnote_file";
 
+const char progname[] = "end2xml";
+
 int 
 main( int argc, char *argv[] )
 {
 	param p;
-	bibl_initparams( &p, BIBL_ENDNOTEIN, BIBL_MODSOUT, "end2xml" );
+	endin_initparams( &p, progname );
+	modsout_initparams( &p, progname );
 	tomods_processargs( &argc, argv, &p, help1, help2 );
 	bibprog( argc, argv, &p );
 	bibl_freeparams( &p );

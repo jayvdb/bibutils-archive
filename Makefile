@@ -1,10 +1,11 @@
-POSTFIX=_amd64
+POSTFIX="_amd64"
 CC = CC="cc -Wall"
 RANLIB=RANLIB="ranlib"
 INSTALLDIR=/usr/local/bin
+LIBINSTALLDIR=/usr/local/lib
 
-VERSION=4.11
-DATE=9/14/10
+VERSION=4.12
+DATE=10/10/10
 
 PROGRAMS=bib2xml ris2xml end2xml endx2xml med2xml isi2xml copac2xml \
 	biblatex2xml ebi2xml wordbib2xml \
@@ -30,6 +31,7 @@ test: all FORCE
 	cd bin    ; make test; cd ..
 
 install: all FORCE
+	cd lib ; make -k LIBINSTALLDIR=$(LIBINSTALLDIR) install; cd ..
 	sed 's/VERSION/${VERSION}/g' packageconfig_start > lib/bibutils.pc
 	@for p in ${PROGRAMS}; \
 		do ( cp bin/$$p ${INSTALLDIR}/$$p ); \

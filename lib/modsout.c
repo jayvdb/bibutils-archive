@@ -18,6 +18,27 @@
 #include "modstypes.h"
 #include "marc.h"
 
+void
+modsout_initparams( param *p, const char *progname )
+{
+	p->writeformat      = BIBL_MODSOUT;
+	p->format_opts      = 0;
+	p->charsetout       = BIBL_CHARSET_UNICODE;
+	p->charsetout_src   = BIBL_SRC_DEFAULT;
+	p->latexout         = 0;
+	p->utf8out          = 1;
+	p->utf8bom          = 1;
+	p->xmlout           = 1;
+	p->nosplittitle     = 0;
+	p->verbose          = 0;
+	p->addcount         = 0;
+	p->singlerefperfile = 0;
+
+	p->headerf = modsout_writeheader;
+	p->footerf = modsout_writefooter;
+	p->writef  = modsout_write;
+}
+
 static int
 increment_level( int level, int amt )
 {
@@ -855,3 +876,4 @@ modsout_writefooter( FILE *outptr )
 	fprintf(outptr,"</modsCollection>\n");
 	fflush( outptr );
 }
+

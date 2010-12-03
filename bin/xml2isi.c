@@ -9,9 +9,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "bibutils.h"
+#include "modsin.h"
 #include "isiout.h"
 #include "args.h"
 #include "bibprog.h"
+
+const char progname[] = "xml2isi";
 
 void
 help( char *progname )
@@ -73,7 +76,8 @@ int
 main(int argc, char *argv[])
 {
 	param p;
-	bibl_initparams( &p, BIBL_MODSIN, BIBL_ISIOUT, "xml2isi" );
+	modsin_initparams( &p, progname );
+	isiout_initparams( &p, progname );
 	process_charsets( &argc, argv, &p, 1, 1 );
 	process_args( &argc, argv, &p );
 	bibprog( argc, argv, &p );

@@ -20,6 +20,9 @@ extern int copacin_processf( fields *copacin, char *p, char *filename,
 		long nref );
 extern void copacin_convertf( fields *copacin, fields *info, int reftype, param *p, variants *all, int nall );
 
+extern void copacin_initparams( param *p, const char *progname );
+
+
 extern variants copac_all[];
 extern int copac_nall;
 
