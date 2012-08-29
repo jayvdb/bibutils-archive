@@ -1,7 +1,7 @@
 /*
  * endx2xml.c
  * 
- * Copyright (c) Chris Putnam 2006-2010
+ * Copyright (c) Chris Putnam 2006-2012
  *
  * Source code and program released under the GPL
  *

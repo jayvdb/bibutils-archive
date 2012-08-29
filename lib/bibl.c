@@ -1,7 +1,7 @@
 /*
  * bibl.c
  *
- * Copyright (c) Chris Putnam 2005-2010
+ * Copyright (c) Chris Putnam 2005-2012
  *
  * Source code released under the GPL
  *
@@ -75,7 +75,7 @@ bibl_copy( bibl *bout, bibl *bin )
 	for ( i=0; i<bin->nrefs; ++i ) {
 		refin = bin->ref[i];
 		refout = fields_new();
-		for ( j=0; j<refin->nfields; ++j ) {
+		for ( j=0; j<refin->n; ++j ) {
 			if ( refin->tag[j].data && refin->data[j].data )
 				fields_add( refout, refin->tag[j].data, 
 					refin->data[j].data, refin->level[j] );

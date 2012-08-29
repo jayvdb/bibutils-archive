@@ -6,11 +6,11 @@
   <!ENTITY dhfirstname "<firstname>David</firstname>">
   <!ENTITY dhsurname   "<surname>Bremner</surname>">
   <!-- Please adjust the date whenever revising the manpage. -->
-  <!ENTITY dhdate      "<date>February 10, 2008</date>">
+  <!ENTITY dhdate      "<date>December 10, 2010</date>">
   <!-- SECTION should be 1-8, maybe w/ subsection other parameters are
        allowed: see man(7), man(1). -->
   <!ENTITY dhsection   "<manvolnum>1</manvolnum>">
-  <!ENTITY dhemail     "<email>bremner@unb.ca</email>">
+  <!ENTITY dhemail     "<email>bremner@debian.org</email>">
   <!ENTITY dhusername  "David Bremner">
   <!ENTITY dhucpackage "<refentrytitle>BIBUTILS</refentrytitle>">
   <!ENTITY dhpackage   "bibutils">
@@ -18,14 +18,14 @@
   <!ENTITY debian      "<productname>Debian</productname>">
   <!ENTITY gnu         "<acronym>GNU</acronym>">
   <!ENTITY gpl         "&gnu; <acronym>GPL</acronym>">
-  <!ENTITY version	"3.40">
+  <!ENTITY version	"4.13">
 
   ]>
 <refentry>
   <refentryinfo>
     <address>&dhemail;</address>
     <copyright>
-      <year>2008</year>
+      <year>2010</year>
       <holder>&dhusername; (Manual)</holder>
     </copyright>
     <copyright>
@@ -109,11 +109,23 @@
       </seglistitem>
       <seglistitem>
         <seg>
+          <xref linkend="biblatex2xml" />
+        </seg>
+        <seg>convert biblatex to MODS</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>
           <xref linkend="copac2xml" />
         </seg>
         <seg>convert 
         <ulink url="http://copac.ac.uk/">COPAC</ulink>format
         references to MODS</seg>
+      </seglistitem>
+      <seglistitem>
+       <seg>
+         <xref linkend="ebi2xml" />
+       </seg>
+       <seg>convert EBI XML to MODS</seg>
       </seglistitem>
       <seglistitem>
         <seg>
@@ -145,6 +157,12 @@
           <xref linkend="ris2xml" />
         </seg>
         <seg>convert RIS format to MODS</seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>
+          <xref linkend="wordbib2xml" />
+        </seg>
+        <seg>convert Word2007 bibliography XML to MODS</seg>
       </seglistitem>
       </segmentedlist>
       </refsect2>
@@ -197,7 +215,29 @@
 	  as -u, but don't include a
 	  byte order mark 
 	</seg>
-    </seglistitem>
+      </seglistitem>
+      <seglistitem>
+        <seg>-x</seg>
+        <seg>--xml-entities</seg>
+        <seg>
+          encode unicode characters as XML entities (opposite of -u)
+        </seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>-nl</seg>
+        <seg>--no-latex</seg>
+        <seg>
+          do not convert latex-style character combinations
+        </seg>
+      </seglistitem>
+      <seglistitem>
+        <seg>-s</seg>
+        <seg>--single-refperfile</seg>
+        <seg>
+          one reference per output file
+        </seg>
+      </seglistitem>
+
     <seglistitem>
       <seg>-d</seg>
       <seg>--drop-key</seg><seg> don't put citation key in the
@@ -210,6 +250,18 @@
 	file containing a list of corporation names to be placed in
 	&lt;name type="corporate"&gt;&lt;/name&gt; instead of
 	type="personal" and eliminate name mangling
+      </seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>-a</seg>
+      <seg>--asis</seg><seg> with argument specifying a
+        file containing a list of names to be treated verbatim
+      </seg>
+    </seglistitem>
+    <seglistitem>
+      <seg>-nt</seg>
+      <seg>--nosplit-title</seg><seg>
+      don't split titles into TITLE/SUBTITLE pairs
       </seg>
     </seglistitem>
     <seglistitem>
@@ -235,6 +287,15 @@
       standard input.</para>
       <programlisting>bib2xml bibtex_file.bib &gt; output_file.xml</programlisting>
     </refsect2>
+    <refsect2 id="biblatex2xml" xreflabel="biblatex2xml">
+      <title>biblatex2xml</title>
+      <para>
+      <emphasis role="bold">biblatex2xml</emphasis> converts a biblatex
+      (not to be confused with bibtex) formatted reference file to an
+      MODS XML-intermediate bibliography file.
+      </param>
+      <programlisting>biblatex2xml biblatex_file.bib &gt; outputfile.xml</programlisting>
+    </refsect2>
     <refsect2 id="copac2xml" xreflabel="copac2xml">
       <title>copac2xml</title>
       <para>
@@ -259,6 +320,12 @@
       <emphasis role="bold">end2xml</emphasis> is the same as 
       <emphasis role="bold">bib2xml</emphasis>.</para>
       <programlisting>end2xml endnote_file.end &gt; output_file.xml</programlisting>
+    </refsect2>
+    <refsect2 id="ebi2xml" xreflabel="ebi2xml">
+      <title>ebi2xml</title>
+      <para>
+      <emphasis role="bold">ebi2xml</emphasis> converts a EBI XML
+      file to a MODS XML-intermediate bibliography file.</para>
     </refsect2>
     <refsect2 id="endx2xml" xreflabel="endx2xml">
       <title>endx2xml</title>
@@ -291,6 +358,13 @@
       <emphasis role="bold">end2xml</emphasis> and 
       <emphasis role="bold">bib2xml</emphasis></para>
       <programlisting>ris2xml ris_file.ris &gt;	output_file.xml</programlisting>
+    </refsect2>
+    <refsect2 id="wordbib2xml" xreflabel="wordbib2xml">
+      <title>wordbib2xml</title>
+      <para>
+      <emphasis role="bold">wordbib2xml</emphasis> convert a 
+      Word2007-formatted reference file to an XML-intermediate
+      bibliogrpahy file.</para>
     </refsect2>
     </refsect1>
     <refsect1>
@@ -364,6 +438,10 @@
 	    put one reference per file
             name by the reference number</seg>
 	</seglistitem>
+        <seglistitem>
+           <seg>-nb</seg><seg>--no-bom</seg><seg>
+        do not write Byte Order Mark if writing UTF8</seg>
+        </seglistitem>
 	</segmentedlist>
       </refsect2>
     <refsect2 id="xml2bib" xreflabel="xml2bib">
@@ -615,7 +693,7 @@ enhancers",
 	change, then I'd like to see what you're adding or
 	fixing.)</para>
       <para>
-	<ulink url="http://www.scripps.edu/~cdputnam/" >
+	<ulink url="http://www.sourceforge.net/p/bibutils/home/Bibutils">
 	Chris Putnam, Ludwig Institute for Cancer Research
 	</ulink>
       </para>

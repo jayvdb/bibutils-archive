@@ -1,6 +1,39 @@
 
 BIBUTILS
 
+4.13
+8/28/12
+
+BUILD
++ Fix build problem with test subdirectory (patch by David Bremner)
++ Avoid hard-coded dynamic library to help out Debian (path by David Bremner)
++ Add patch to bibutils.dbk (patch by David Bremner)
+
+CHARSETS
++ Add more latex character <-> Unicode conversions
+
+FIELDS
++ Update internals, add vplist component, and convert to new interface
+
+BIBTEXIN
++ Fix chapter in @inbook, @inproceedings, and @incollection from overwriting
+  the title of the section being cited (reported by Brian Keese)
++ Cleanly handle "illegal" @inbook entries that have both "title" and "booktitle"
+  fields and really want to be @incollection entries (reported by Brian Keese)
++ Remove mbox commands from input
+
+RISIN
++ Add recognition of more RIS fields (reported by Nelson Hart)
+
+RISOUT
++ Use 'AB' instead of 'N2' tag for abstracts (reported by Nelson Hart)
++ Use 'DO' tag instead of building a complete URL for DOI's (reported by Nelson Hart)
++ Use 'ET' tag for edition output (reported by Nelson Hart)
++ Use 'LA' tag for language
++ Add recognition of non-official genres "book chapter" and "journal article"
+  (reported by Nelson Hart)
+
+
 4.12
 10/10/10
 
@@ -29,7 +62,7 @@ BUILD
 
 TEST
 + Fix some signedness issues (bit rot) in the test programs (from Mandriva
-  packager, Stéphane Téletchéa
+  packager, Stéphane Téletchéa)
 
 XML2BIB
 + Add command-line option  -at or --abbreviatedtitles to force xml2bib to

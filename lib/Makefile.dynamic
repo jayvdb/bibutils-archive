@@ -4,7 +4,7 @@ SIMPLE_OBJS   = is_ws.o strsearch.o charsets.o
 
 NEWSTR_OBJS   = newstr.o newstr_conv.o entities.o latex.o utf8.o gb18030.o
 
-CONTAIN_OBJS  = fields.o list.o xml.o xml_encoding.o
+CONTAIN_OBJS  = fields.o list.o xml.o xml_encoding.o vplist.o
 
 BIBL_OBJS     = name.o title.o doi.o bibl.o serialno.o marc.o reftypes.o bibl.o
 
@@ -27,27 +27,31 @@ BIBCORE_OBJS = $(SIMPLE_OBJS) $(NEWSTR_OBJS) $(CONTAIN_OBJS) $(BIBL_OBJS) \
 
 BIBUTILS_OBJS = $(INPUT_OBJS) $(OUTPUT_OBJS) bibutils.o
 
-
 all: libbibutils.so
+
+SONAME=libbibutils.so.4
+SOMINOR=13
+SOFULL=$(SONAME).$(SOMINOR)
 
 .c.o:
 	$(CC) -fPIC -c $(CFLAGS) -o $@ $<
 
 libbibutils.so: $(BIBCORE_OBJS) $(BIBUTILS_OBJS)
-	$(CC) -shared -Wl,-soname,libbibutils.so.4 -o libbibutils.so.4.12 $^
-	ln -s libbibutils.so.4.12 libbibutils.so.4
-	ln -s libbibutils.so.4.12 libbibutils.so
+	$(CC) -shared -Wl,-soname,$(SONAME) -o $(SOFULL) $^
+	ln -sf $(SOFULL) $(SONAME)
+	ln -sf $(SOFULL) libbibutils.so
 
 install:
 	echo INSTALLING LIBRARIES TO $(LIBINSTALLDIR)
-	cp libbibutils.so.4.12 $(LIBINSTALLDIR)
-	ln -sf $(LIBINSTALLDIR)/libbibutils.so.4.12 $(LIBINSTALLDIR)/libbibutils.so
-	ln -sf $(LIBINSTALLDIR)/libbibutils.so.4.12 $(LIBINSTALLDIR)/libbibutils.so.4
+	mkdir -p $(LIBINSTALLDIR)
+	cp $(SOFULL) $(LIBINSTALLDIR)
+	ln -sf $(LIBINSTALLDIR)/$(SOFULL) $(LIBINSTALLDIR)/libbibutils.so
+	ln -sf $(LIBINSTALLDIR)/$(SOFULL) $(LIBINSTALLDIR)/$(SONAME)
 
 clean: 
 	/bin/rm -f *.o core
 
 realclean:
-	/bin/rm -f *.o *.so *.so.4 *.so.4.12 core
+	/bin/rm -f *.o *.a *.so $(SONAME) $(SOFULL) core
 
 test:

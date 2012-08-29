@@ -1,7 +1,7 @@
 /*
  * bibprogs.h
  *
- * Copyright (c) 2008
+ * Copyright (c) 2008-2012
  *
  * Program and source code released under the GPL
  *

@@ -1,7 +1,7 @@
 /*
  * bibtypes.c
  *
- * Copyright (c) Chris Putnam 2003-2010
+ * Copyright (c) Chris Putnam 2003-2012
  *
  * Program and source code released under the GPL
  *
@@ -184,7 +184,7 @@ static lookups inbook[] = {
 	{ "author",    "AUTHOR",    PERSON, LEVEL_MAIN },
 	{ "translator",   "TRANSLATOR",PERSON, LEVEL_MAIN },
 	{ "editor",    "EDITOR",    PERSON, LEVEL_HOST },
-	{ "chapter",   "TITLE",     TITLE,  LEVEL_MAIN },
+	{ "chapter",   "CHAPTER",   SIMPLE, LEVEL_MAIN },
 	{ "title",     "TITLE",     TITLE,  LEVEL_HOST },
 	{ "booktitle", "TITLE",     TITLE,  LEVEL_HOST },
 	{ "series",    "TITLE",     TITLE,  LEVEL_SERIES },
@@ -232,6 +232,7 @@ static lookups inproceedings[] = {
 	{ "title",     "TITLE",     TITLE,  LEVEL_MAIN },
 	{ "booktitle", "TITLE",     TITLE,  LEVEL_HOST },
 	{ "series",    "TITLE",     TITLE,  LEVEL_SERIES },
+	{ "chapter",   "CHAPTER",   SIMPLE, LEVEL_MAIN },
 	{ "publisher", "PUBLISHER", SIMPLE, LEVEL_HOST },
 	{ "organization", "AUTHOR:CORP", SIMPLE, LEVEL_HOST },
 	{ "address",   "ADDRESS",   SIMPLE, LEVEL_HOST },
@@ -274,7 +275,7 @@ static lookups incollection[] = {
 	{ "translator",   "TRANSLATOR",PERSON, LEVEL_MAIN },
 	{ "editor",    "EDITOR",    PERSON, LEVEL_HOST },
 	{ "title",     "TITLE",     TITLE,  LEVEL_MAIN },
-	{ "chapter",   "TITLE",     TITLE,  LEVEL_MAIN },
+	{ "chapter",   "CHAPTER",   SIMPLE, LEVEL_MAIN },
 	{ "booktitle", "TITLE",     TITLE,  LEVEL_HOST },
 	{ "series",    "TITLE",     TITLE,  LEVEL_SERIES },
 	{ "publisher", "PUBLISHER", SIMPLE, LEVEL_HOST },

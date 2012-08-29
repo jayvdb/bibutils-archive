@@ -1,7 +1,7 @@
 /*
  * wordbib2xml.c
  * 
- * Copyright (c) Chris Putnam 2009-2010
+ * Copyright (c) Chris Putnam 2009-2012
  *
  * Source code and program released under the GPL
  *

@@ -1,7 +1,7 @@
 /*
  * xml2bib.c
  *
- * Copyright (c) Chris Putnam 2003-2010
+ * Copyright (c) Chris Putnam 2003-2012
  *
  * Program and source code released under the GPL
  *
@@ -37,6 +37,7 @@ help( char *progname )
 	fprintf(stderr,"                     (overly strict, but may be useful for other bibtex readers\n");
 	fprintf(stderr,"  -nl, --no-latex    do not use latex encodings, but put characters in directly\n");
 	fprintf(stderr,"  -nb, --no-bom      do not write Byte Order Mark in UTF8 output\n");
+	fprintf(stderr,"  -U, --uppercase    write bibtex tags/types in upper case\n" );
 	fprintf(stderr,"  -s, --single-refperfile\n");
 	fprintf(stderr,"                     one reference per output file\n");
 	fprintf(stderr,"  --verbose          for verbose\n" );

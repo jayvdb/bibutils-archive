@@ -1,6 +1,10 @@
 /*
  * modsclean.c
  *
+ * Copyright (c) 2004-2012
+ *
+ * Program and source code released under the GPL
+ *
  */
 #include <stdio.h>
 #include <stdlib.h>

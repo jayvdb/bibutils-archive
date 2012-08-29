@@ -1,7 +1,7 @@
 /*
  * bibcore.c
  *
- * Copyright (c) Chris Putnam 2005-2010
+ * Copyright (c) Chris Putnam 2005-2012
  *
  * Source code released under the GPL
  *
@@ -170,7 +170,7 @@ bibl_verbose2( fields *info, char *filename, long nrefs )
 {
 	int i;
 	fprintf( stderr, "======== %s %ld : converted\n", filename, nrefs );
-	for ( i=0; i<info->nfields; ++i ) {
+	for ( i=0; i<info->n; ++i ) {
 		fprintf( stderr, "'%s'='%s' level=%d\n", info->tag[i].data,
 				info->data[i].data , info->level[i]);
 	}
@@ -183,7 +183,7 @@ bibl_verbose1( fields *info, fields *orig, char *filename, long nrefs )
 {
 	int i;
 	fprintf( stderr, "======== %s %ld : processed\n", filename, nrefs );
-	for ( i=0; i<orig->nfields; ++i ) {
+	for ( i=0; i<orig->n; ++i ) {
 		fprintf( stderr, "'%s'='%s' level=%d\n", orig->tag[i].data,
 				orig->data[i].data , orig->level[i]);
 	}
@@ -273,7 +273,7 @@ bibl_fixcharsets( bibl *b, param *p )
 	int latexin  = p->latexin;
 	for ( i=0; i<b->nrefs; ++i ) {
 		ref = b->ref[i];
-		for ( j=0; j<ref->nfields; ++j ) {
+		for ( j=0; j<ref->n; ++j ) {
 			if ( latexin || latexout ) {
 				/* don't texify/detexify URL's and the like */
 				if ( !strcasecmp( ref->tag[j].data, "DOI" ) ||

@@ -1,7 +1,7 @@
 /*
  * args.c
  *
- * Copyright (c) 2004-2010
+ * Copyright (c) 2004-2012
  *
  * Program and source code released under the GPL
  *
@@ -30,32 +30,7 @@ args_match( char *check, char *shortarg, char *longarg )
 	return 0;
 }
 
-void
-args_encoding( int argc, char *argv[], int i, int *charset, 
-	unsigned char *utf8, char *progname, int inout )
-{
-	char *shortver[] = { "-i", "-o" };
-	char *longver[] = { "--input-encoding", "--output-encoding" };
-	if ( i+1 >= argc ) {
-		fprintf( stderr, "%s: error %s (%s) takes "
-				"the argument of the character set type\n",
-				progname, shortver[inout], longver[inout] );
-		fprintf( stderr, "UNICODE UTF-8: unicode OR utf8\n" );
-		fprintf( stderr, "CHINESE: gb18030\n" );
-		fprintf( stderr, "OTHERS:\n" );
-		list_charsets( stderr );
-		fprintf( stderr, "SPECIFY AS: -o CHARSETNAME\n" );
-		exit( EXIT_FAILURE );
-	} else {
-		if ( !args_charset( argv[i+1], charset, utf8 ) ) {
-			fprintf( stderr, "%s: character encoding lookup "
-					"failed.\n", progname );
-			list_charsets( stderr );
-		}
-	}
-}
-
-int
+static int
 args_charset( char *charset_name, int *charset, unsigned char *utf8 )
 {
 	if ( !strcasecmp( charset_name, "unicode" ) || 
@@ -73,6 +48,31 @@ args_charset( char *charset_name, int *charset, unsigned char *utf8 )
 	else return 1;
 }
 
+static void
+args_encoding( int argc, char *argv[], int i, int *charset, 
+	unsigned char *utf8, char *progname, int inout )
+{
+	char *shortver[] = { "-i", "-o" };
+	char *longver[] = { "--input-encoding", "--output-encoding" };
+	if ( i+1 >= argc ) {
+		fprintf( stderr, "%s: error %s (%s) takes "
+				"the argument of the character set type\n",
+				progname, shortver[inout], longver[inout] );
+		fprintf( stderr, "UNICODE UTF-8: unicode OR utf8\n" );
+		fprintf( stderr, "CHINESE: gb18030\n" );
+		fprintf( stderr, "OTHERS:\n" );
+		list_charsets( stderr );
+		fprintf( stderr, "SPECIFY AS: -i CHARSETNAME or -o CHARSETNAME\n" );
+		exit( EXIT_FAILURE );
+	} else {
+		if ( !args_charset( argv[i+1], charset, utf8 ) ) {
+			fprintf( stderr, "%s: character encoding lookup "
+					"failed.\n", progname );
+			list_charsets( stderr );
+		}
+	}
+}
+
 /* Must process charset info first so switches are order independent */
 void
 process_charsets( int *argc, char *argv[], param *p,
@@ -85,15 +85,22 @@ process_charsets( int *argc, char *argv[], param *p,
 		if ( use_input && args_match( argv[i], "-i", "--input-encoding" ) ) {
 			args_encoding( *argc, argv, i, &(p->charsetin), 
 					&(p->utf8in), p->progname, 0 );
+			if ( p->charsetin!=BIBL_CHARSET_UNICODE )
+				p->utf8in = 0;
 			p->charsetin_src = BIBL_SRC_USER;
 			subtract = 2;
 		} else if ( use_output && args_match( argv[i], "-o", "--output-encoding" ) ) {
 			args_encoding( *argc, argv, i, &(p->charsetout),
 					&(p->utf8out), p->progname, 1 );
-			if ( p->charsetout==BIBL_CHARSET_UNICODE )
+			if ( p->charsetout==BIBL_CHARSET_UNICODE ) {
+				p->utf8out = 1;
 				p->utf8bom = 1;
-			if ( p->charsetout==BIBL_CHARSET_GB18030 )
+			} else if ( p->charsetout==BIBL_CHARSET_GB18030 ) {
 				p->latexout = 0;
+			} else {
+				p->utf8out = 0;
+				p->utf8bom = 0;
+			}
 			p->charsetout_src = BIBL_SRC_USER;
 			subtract = 2;
 		}
