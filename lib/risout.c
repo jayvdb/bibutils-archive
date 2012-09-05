@@ -298,8 +298,10 @@ output_date( FILE *fp, fields *f )
 			"MONTH", "PARTMONTH", NULL );
 	char *day   = fields_findv_firstof( f, LEVEL_ANY, FIELDS_CHRP,
 			"DAY", "PARTDAY", NULL );
-	if ( year || month || day ) {
+	if ( year )
 		fprintf( fp, "PY  - " );
+	if ( year || month || day ) {
+		fprintf( fp, "DA  - " );
 		if ( year ) fprintf( fp, "%s", year );
 		fprintf( fp, "/" );
 		if ( month ) fprintf( fp, "%s", month );
@@ -315,16 +317,17 @@ output_titlecore( FILE *fp, fields *f, char *ristag, int level,
 {
 	newstr *mainttl = fields_findv( f, level, FIELDS_STRP, maintag );
 	newstr *subttl  = fields_findv( f, level, FIELDS_STRP, subtag );
-	if ( mainttl ) {
-		fprintf( fp, "%s  - %s", ristag, mainttl->data );
-		if ( subttl ) {
-			if ( mainttl->data[ mainttl->len - 1 ]!='?' )
-				fprintf( fp, ": " );
-			else fprintf( fp, " " );
-			fprintf( fp, "%s", subttl->data );
-		}
-		fprintf( fp, "\n" );
+
+	if ( !mainttl ) return;
+
+	fprintf( fp, "%s  - %s", ristag, mainttl->data );
+	if ( subttl ) {
+		if ( mainttl->len > 0 &&
+		     mainttl->data[ mainttl->len - 1 ]!='?' )
+			fprintf( fp, ":" );
+		fprintf( fp, " %s", subttl->data );
 	}
+	fprintf( fp, "\n" );
 }
 
 static void
@@ -427,6 +430,37 @@ output_thesishint( FILE *fp, int type )
 		fprintf( fp, "%s  - %s\n", "U1", "Habilitation thesis" );
 }
 
+static int
+is_uri_scheme( char *p )
+{
+	char *scheme[] = { "http:", "file:", "ftp:", "git:", "gopher:" };
+	int i, len, nschemes = sizeof( scheme ) / sizeof( scheme[0] );
+	for ( i=0; i<nschemes; ++i ) {
+		len = strlen( scheme[i] );
+		if ( !strncmp( p, scheme[i], len ) ) return len;
+	}
+	return 0;
+}
+
+
+static void
+output_file( FILE *fp, fields *f, char *tag, char *ristag, int level )
+{
+	vplist a;
+	char *fl;
+	int i;
+	vplist_init( &a );
+	fields_findv_each( f, level, FIELDS_CHRP, &a, tag );
+	for ( i=0; i<a.n; ++i ) {
+		fprintf( fp, "%s  - ", ristag );
+		fl = ( char * ) vplist_get( &a, i );
+		if ( !is_uri_scheme( fl ) )
+			fprintf( fp, "file:" );
+		fprintf( fp, "%s\n", fl );
+	}
+	vplist_free( &a );
+}
+
 static void
 output_easy( FILE *fp, fields *f, char *tag, char *ristag, int level )
 {
@@ -491,8 +525,8 @@ risout_write( fields *f, FILE *fp, param *p, unsigned long refnum )
 	output_easy( fp, f, "ISBN",               "SN", LEVEL_ANY );
 	output_easyall( fp, f, "URL",             "UR", LEVEL_ANY );
 	output_easyall( fp, f, "DOI",             "DO", LEVEL_ANY );
-	output_easyall( fp, f, "FILEATTACH",      "L1", LEVEL_ANY );
-	output_easyall( fp, f, "FIGATTACH",       "L4", LEVEL_ANY );
+	output_file(    fp, f, "FILEATTACH",      "L1", LEVEL_ANY );
+	output_file(    fp, f, "FIGATTACH",       "L4", LEVEL_ANY );
 	output_easy( fp, f, "CAPTION",            "CA", LEVEL_ANY );
 	output_pmid( fp, f );
 	output_arxiv( fp, f );

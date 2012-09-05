@@ -1,6 +1,22 @@
 
 BIBUTILS
 
+4.14
+9/04/12
+
+BIBTEXIN
++ Split individual keywords in the keywords field separated by semi-colons
+
+RISIN
++ Handle URL schemes from L1 and L4 fields (reported by Martin Kucej)
+
+RISOUT
++ PY outputs only year, DA outputs year/month/day combination (reported by Nelson Hart)
++ L1 and L4 fields need to be URL's (reported by Martin Kucej)
+
+WORD2007OUT
++ Replace b:PeriodicalName with b:PeriodicalTitle
+
 4.13
 8/28/12
 

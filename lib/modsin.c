@@ -84,10 +84,6 @@ modsin_detail( xml *node, fields *info, int level )
 			fields_add( info, "PAGESTART", value.data, level );
 		} else fields_add( info, type.data, value.data, level );
 		newstrs_free( &type, &value, NULL );
-/*
-		newstr_free( &type );
-		newstr_free( &value );
-*/
 	}
 }
 

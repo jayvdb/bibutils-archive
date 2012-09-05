@@ -348,7 +348,7 @@ output_people( FILE *fp, fields *info, unsigned long refnum, char *tag,
 static void
 output_title( FILE *fp, fields *info, unsigned long refnum, char *bibtag, int level, int format_opts )
 {
-	newstr title;
+	newstr title, *mainttl, *subttl;
 	int n1 = -1, n2 = -1;
 	/* Option is for short titles of journals */
 	if ( ( format_opts & BIBOUT_SHORTTITLE ) && level==1 ) {
@@ -361,13 +361,16 @@ output_title( FILE *fp, fields *info, unsigned long refnum, char *bibtag, int le
 	}
 	if ( n1!=-1 ) {
 		newstr_init( &title );
-		newstr_newstrcpy( &title, &(info->data[n1]) );
+		mainttl = fields_value( info, n1, FIELDS_STRP );
+		newstr_newstrcpy( &title, mainttl );
 		fields_setused( info, n1 );
 		if ( n2!=-1 ) {
-			if ( info->data[n1].data[info->data[n1].len]!='?' )
+			subttl = fields_value( info, n2, FIELDS_STRP );
+			if ( mainttl->len > 0 &&
+			     mainttl->data[mainttl->len-1]!='?' )
 				newstr_strcat( &title, ": " );
 			else newstr_addchar( &title, ' ' );
-			newstr_strcat( &title, info->data[n2].data );
+			newstr_newstrcat( &title, subttl );
 			fields_setused( info, n2 );
 		}
 		output_element( fp, bibtag, title.data, format_opts );

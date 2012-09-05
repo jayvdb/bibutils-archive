@@ -322,16 +322,17 @@ output_title( FILE *fp, fields *info, char *full, char *sub, char *endtag,
 {
 	newstr *mainttl = fields_findv( info, level, FIELDS_STRP, full );
 	newstr *subttl  = fields_findv( info, level, FIELDS_STRP, sub );
-	if ( mainttl ) {
-		fprintf( fp, "%s %s", endtag, mainttl->data );
-		if ( subttl ) {
-			if ( mainttl->data[ mainttl->len-1 ]!='?' )
-				fprintf( fp, ": " );
-			else fprintf( fp, " " );
-			fprintf( fp, "%s", subttl->data );
-		}
-		fprintf( fp, "\n" );
+
+	if ( !mainttl ) return;
+
+	fprintf( fp, "%s %s", endtag, mainttl->data );
+	if ( subttl ) {
+		if ( mainttl->len > 0 &&
+		     mainttl->data[ mainttl->len-1 ]!='?' )
+				fprintf( fp, ":" );
+		fprintf( fp, " %s", subttl->data );
 	}
+	fprintf( fp, "\n" );
 }
 
 static void

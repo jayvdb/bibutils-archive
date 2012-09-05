@@ -22,10 +22,10 @@
 #define HOWPUBLISHED  (10)
 #define BIBTEX_URL    (11)
 #define BIBTEX_SENTE  (12)
-#define BIBTEX_FILE   (13)
+#define LINKEDFILE    (13)
 #define BIBTEX_GENRE  (14)
 #define BIBTEX_EPRINT (15)
-#define ISI_KEYWORD   (16)
+#define KEYWORD       (16)
 
 typedef struct {
 	char *oldstr;

@@ -282,7 +282,7 @@ isiin_convertf( fields *isiin, fields *info, int reftype, param *p, variants *al
 			title_process( info, newtag, d->data, level, p->nosplittitle );
 			break;
 
-		case ISI_KEYWORD:
+		case KEYWORD:
 			keyword_process( info, newtag, d->data, level );
 			break;
 

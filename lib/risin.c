@@ -199,6 +199,51 @@ risin_addnotes( fields *f, char *tag, newstr *s, int level )
 		fields_add( f, tag, s->data, level );
 }
 
+static int
+is_uri_file_scheme( char *p )
+{
+	if ( !strncmp( p, "file:", 5 ) ) return 5;
+	return 0;
+}
+
+static int
+is_uri_remote_scheme( char *p )
+{
+	char *scheme[] = { "http:", "ftp:", "git:", "gopher:" };
+	int i, len, nschemes = sizeof( scheme ) / sizeof( scheme[0] );
+	for ( i=0; i<nschemes; ++i ) {
+		len = strlen( scheme[i] );
+		if ( !strncmp( p, scheme[i], len ) ) return len;
+	}
+	return 0;
+}
+
+static void
+risin_addfile( fields *f, char *tag, newstr *s, int level )
+{
+	char *p;
+	int n;
+
+	/* if URL is file:///path/to/xyz.pdf, only store "///path/to/xyz.pdf" */
+	n = is_uri_file_scheme( s->data );
+	if ( n ) {
+		/* skip past "file:" and store only actual path */
+		p = s->data + n;
+		fields_add( f, tag, p, level );
+		return;
+	}
+
+	/* if URL is http:, ftp:, etc. store as a URL */
+	n = is_uri_remote_scheme( s->data );
+	if ( n ) {
+		fields_add( f, "URL", s->data, level );
+		return;
+	}
+
+	/* badly formed, RIS wants URI, but store value anyway */
+	fields_add( f, tag, s->data, level );
+}
+
 /* scopus puts DOI in the DO or DI tag, but it needs cleaning */
 static void
 risin_adddoi( fields *f, char *tag, newstr *s, int level )
@@ -324,6 +369,10 @@ risin_convertf( fields *risin, fields *f, int reftype, param *p, variants *all, 
 
 		case DOI:
 			risin_adddoi( f, outtag, d, level );
+			break;
+
+		case LINKEDFILE:
+			risin_addfile( f, outtag, d, level );
 			break;
 
 		case ALWAYS:

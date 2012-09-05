@@ -586,6 +586,35 @@ process_url( fields *info, newstr *d, int level )
 	process_urlcore( info, d, level, "URL" );
 }
 
+/* Split keywords="" with semicolons.
+ * Commas are also frequently used, but will break
+ * entries like:
+ *       keywords="Microscopy, Confocal"
+ */
+static void
+process_keywords( fields *info, newstr *d, int level )
+{
+	newstr keyword;
+	char *p;
+
+	if ( !d || d->len==0 ) return;
+
+	p = d->data;
+	newstr_init( &keyword );
+
+	while ( *p ) {
+		p = skip_ws( p );
+		while ( *p && *p!=';' ) newstr_addchar( &keyword, *p++ );
+		newstr_trimendingws( &keyword );
+		if ( keyword.len ) {
+			fields_add( info, "KEYWORD", keyword.data, level );
+			newstr_empty( &keyword );
+		}
+		if ( *p==';' ) p++;
+	}
+	newstr_free( &keyword );
+}
+
 static void
 process_howpublished( fields *info, newstr *d, int level )
 {
@@ -615,22 +644,61 @@ process_sente( fields *info, newstr *d, int level )
 	newstr_free( &link );
 }
 
+static int
+count_colons( char *p )
+{
+	int n = 0;
+	while ( *p ) {
+		if ( *p==':' ) n++;
+		p++;
+	}
+	return n;
+}
+
+static int
+first_colon( char *p )
+{
+	int n = 0;
+	while ( p[n] && p[n]!=':' ) n++;
+	return n;
+}
+
+static int
+last_colon( char *p )
+{
+	int n = strlen( p ) - 1;
+	while ( n>0 && p[n]!=':' ) n--;
+	return n;
+}
+
 /*
  * file={Description:/full/path/to/file.pdf:PDF}
  */
 static void
 process_file( fields *info, newstr *d, int level )
 {
-	newstr link;
 	char *p = d->data;
-	newstr_init( &link );
-	while ( *p && *p!=':' ) p++;
-	if ( *p==':' ) p++;
-	while ( *p && *p!=':' ) newstr_addchar( &link, *p++ );
-	newstr_trimstartingws( &link );
-	newstr_trimendingws( &link );
-	if ( link.len ) fields_add( info, "FILEATTACH", link.data, level );
-	newstr_free( &link );
+	newstr link;
+	int i, n, n1, n2;
+
+	n = count_colons( p );
+	if ( n > 1 ) {
+		/* A DOS file can contain a colon ":C:/....pdf:PDF" */
+		/* Extract after 1st and up to last colons */
+		n1 = first_colon( p ) + 1;
+		n2 = last_colon( p );
+		newstr_init( &link );
+		for ( i=n1; i<n2; ++i ) {
+			newstr_addchar( &link, p[i] );
+		}
+		newstr_trimstartingws( &link );
+		newstr_trimendingws( &link );
+		if ( link.len ) fields_add( info, "FILEATTACH", link.data, level );
+		newstr_free( &link );
+	} else {
+		/* This field isn't formatted properly, so just copy directly */
+		fields_add( info, "FILEATTACH", p, level );
+	}
 }
 
 int
@@ -776,6 +844,10 @@ bibtexin_convertf( fields *bibin, fields *info, int reftype, param *p,
 			process_pages( info, d, level );
 			break;
 
+		case KEYWORD:
+			process_keywords( info, d, level );
+			break;
+
 		case HOWPUBLISHED:
 			process_howpublished( info, d, level );
 			break;
@@ -784,7 +856,7 @@ bibtexin_convertf( fields *bibin, fields *info, int reftype, param *p,
 			process_url( info, d, level );
 			break;
 
-		case BIBTEX_FILE:
+		case LINKEDFILE:
 			process_file( info, d, level );
 			break;
 

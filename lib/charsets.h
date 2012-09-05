@@ -6,6 +6,8 @@
  * Source code released under the GPL
  *
  */
+#ifndef CHARSETS_H
+#define CHARSETS_H
 
 #define CHARSET_UNKNOWN (-1)
 #define CHARSET_UNICODE (-2)
@@ -22,4 +24,4 @@ typedef struct allcharconvert_t {
 extern allcharconvert_t allcharconvert[];
 extern int nallcharconvert;
 
-
+#endif

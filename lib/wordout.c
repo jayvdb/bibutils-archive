@@ -269,7 +269,8 @@ output_titleinfo( fields *info, FILE *outptr, char *tag, int level )
 		if ( mainttl ) fprintf( outptr, "%s", mainttl->data );
 		if ( subttl ) {
 			if ( mainttl ) {
-				if ( mainttl->data[mainttl->len-1]!='?' )
+				if ( mainttl->len > 0 &&
+				     mainttl->data[mainttl->len-1]!='?' )
 					fprintf( outptr, ": " );
 				else fprintf( outptr, " " );
 			}
@@ -443,7 +444,7 @@ output_includedin( fields *info, FILE *outptr, int type )
 	if ( type==TYPE_JOURNALARTICLE ) {
 		output_titleinfo( info, outptr, "b:JournalName", 1 );
 	} else if ( type==TYPE_ARTICLEINAPERIODICAL ) {
-		output_titleinfo( info, outptr, "b:PeriodicalName", 1 );
+		output_titleinfo( info, outptr, "b:PeriodicalTitle", 1 );
 	} else if ( type==TYPE_BOOKSECTION ) {
 		output_titleinfo( info, outptr, "b:ConferenceName", 1 ); /*??*/
 	} else if ( type==TYPE_PROCEEDINGS ) {

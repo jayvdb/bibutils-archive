@@ -91,16 +91,17 @@ output_titlecore( FILE *fp, fields *f, char *isitag, int level,
 {
 	newstr *mainttl = fields_findv( f, level, FIELDS_STRP, maintag );
 	newstr *subttl  = fields_findv( f, level, FIELDS_STRP, subtag );
-	if ( mainttl ) {
-		fprintf( fp, "%s %s", isitag, mainttl->data );
-		if ( subttl ) {
-			if ( mainttl->data[ mainttl->len - 1 ]!='?' )
-				fprintf( fp, ": " );
-			else fprintf( fp, " " );
-			fprintf( fp, "%s", subttl->data );
-		}
-		fprintf( fp, "\n" );
+
+	if ( !mainttl ) return;
+
+	fprintf( fp, "%s %s", isitag, mainttl->data );
+	if ( subttl ) {
+		if ( mainttl->len > 0 &&
+		     mainttl->data[ mainttl->len - 1 ]!='?' )
+				fprintf( fp, ":" );
+		fprintf( fp, " %s", subttl->data );
 	}
+	fprintf( fp, "\n" );
 }
 
 static void

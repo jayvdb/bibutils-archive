@@ -51,8 +51,8 @@ static lookups generic[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachments (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE, LEVEL_MAIN },   /* File Attachments (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },   /* Misc or Number? */
@@ -125,8 +125,8 @@ static lookups article[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },   /* Misc or Number? */
@@ -206,8 +206,8 @@ static lookups magarticle[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },   /* Misc or Number? */
@@ -284,8 +284,8 @@ static lookups newsarticle[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },   /* Misc or Number? */
@@ -363,8 +363,8 @@ static lookups book[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },   /* Misc or Number? */
@@ -441,8 +441,8 @@ static lookups inbook[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },   /* Misc or Number? */
@@ -520,8 +520,8 @@ static lookups conference[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },   /* Misc or Number? */
@@ -598,8 +598,8 @@ static lookups statute[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },   /* Misc or Number? */
@@ -676,8 +676,8 @@ static lookups hearing[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },   /* Misc or Number? */
@@ -753,8 +753,8 @@ static lookups cases[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },   /* Misc or Number? */
@@ -830,8 +830,8 @@ static lookups communication[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "GENRE",        SIMPLE,  LEVEL_MAIN },   /* Misc or Number? */
@@ -907,8 +907,8 @@ static lookups thesis[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN },   /* Misc or Number? */
@@ -985,8 +985,8 @@ static lookups report[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN },   /* Misc or Number? */
@@ -1063,8 +1063,8 @@ static lookups abstract[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN },   /* Misc or Number? */
@@ -1139,8 +1139,8 @@ static lookups program[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        SIMPLE,  LEVEL_MAIN },   /* Misc or Number? */
@@ -1215,8 +1215,8 @@ static lookups patent[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },   /* Misc or Deprecated? */
@@ -1292,8 +1292,8 @@ static lookups electric[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },   /* Misc or Deprecated? */
@@ -1369,8 +1369,8 @@ static lookups pamphlet[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },   /* Misc or Deprecated? */
@@ -1446,8 +1446,8 @@ static lookups unpublished[] = {
 	{ "JF", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "JO", "TITLE",        SIMPLE,  LEVEL_HOST },   /* Deprecated? */
 	{ "KW", "KEYWORD",      SIMPLE,  LEVEL_MAIN },   /* Keywords */
-	{ "L1", "FILEATTACH",   SIMPLE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
-	{ "L4", "FIGATTACH",    SIMPLE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
+	{ "L1", "FILEATTACH",   LINKEDFILE,  LEVEL_MAIN },   /* File Attachment (local, not URL) */
+	{ "L4", "FIGATTACH",    LINKEDFILE,  LEVEL_MAIN },   /* Figure Attachment (local, not URL) */
 	{ "LA", "LANGUAGE",     SIMPLE,  LEVEL_MAIN },   /* Language */
 	{ "LB", "LABEL",        SIMPLE,  LEVEL_MAIN },   /* Label */
 	{ "M1", "NOTES",        NOTES,   LEVEL_MAIN },   /* Misc or Deprecated? */
