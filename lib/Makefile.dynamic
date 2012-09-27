@@ -30,7 +30,7 @@ BIBUTILS_OBJS = $(INPUT_OBJS) $(OUTPUT_OBJS) bibutils.o
 all: libbibutils.so
 
 SONAME=libbibutils.so.4
-SOMINOR=14
+SOMINOR=15
 SOFULL=$(SONAME).$(SOMINOR)
 
 .c.o:
