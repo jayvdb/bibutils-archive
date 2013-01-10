@@ -1,87 +1,99 @@
-#!/bin/csh -f
+#!/bin/sh
 
-set INPUT_FILE = Makefile_start
-set OUTPUT_FILE = Makefile
+#
+# Defaults
+#
+INPUT_FILE=Makefile_start
+OUTPUT_FILE=Makefile
+LIBTYPE=static
+INSTALLDIR=/usr/local/bin
+LIBINSTALLDIR=/usr/local/lib
 
-set LIBTYPE = static
-set INSTALLDIR = /usr/local/bin
-set LIBINSTALLDIR = /usr/local/lib
-
-while ( ${#argv} > 0 )
-	if ( $1 == "--install-dir" ) then
-		if ( ${#argv} < 2 ) then
+while [ $# -gt 0 ] ; do
+	if [ "$1" = "--install-dir" ] ; then
+		if [ $# -lt 2 ] ; then
 			echo "--install-dir requires a directory"
 			exit
 		else
 			shift
-			set INSTALLDIR = $1
+			INSTALLDIR="$1"
 			shift
-		endif
-	else if ( $1 == "--install-lib" ) then
-		if ( ${#argv} < 2 ) then
+		fi
+	elif [ "$1" = "--install-lib" ] ; then
+		if [ $# -lt 2 ] ; then
 			echo "--install-lib requires a directory"
 			exit
 		else
 			shift
-			set LIBINSTALLDIR = $1
+			LIBINSTALLDIR="$1"
 			shift
-		endif
-	else if ( $1 == "--dynamic" ) then
-		set LIBTYPE = dynamic
+		fi
+	elif [ "$1" = "--dynamic" ] ; then
+		LIBTYPE="dynamic"
 		shift
-	else if ( $1 == "--static" ) then
-		set LIBTYPE = static
+	elif [ "$1" = "--static" ] ; then
+		LIBTYPE="static"
 		shift
 	else
 		echo "Unidentified argument $1"
 		exit
-	endif
-end
+	fi
+done
 
-if ( "$LIBTYPE" == "dynamic" ) then
+if [ "$LIBTYPE" == "dynamic" ] ; then
 	cp lib/Makefile.dynamic lib/Makefile
 	cp bin/Makefile.dynamic bin/Makefile
 else
 	cp lib/Makefile.static lib/Makefile
 	cp bin/Makefile.static bin/Makefile
-endif
+fi
 
-set type = "Unknown"
-set universal_binary = "FALSE"
-set UNAME = `uname -a`
-if ( ` echo $UNAME | grep Linux | wc | awk '{print $1;}' ` == 1 ) then
-	if ( ` echo $UNAME | grep 'i[3456]86' | wc | awk '{print $1};'` == 1 ) then
-		set type = "Linux_x86"
-	else if ( ` echo $UNAME | grep 'x86_64' | wc | awk '{print $1};'` == 1 ) then
-		set type = "Linux_x86_64"
+type="Unknown"
+universal_binary="FALSE"
+UNAME=$(uname -a)
+
+if [ $( echo $UNAME | grep Linux | wc | awk '{print $1;}' ) -eq 1 ] ; then
+	if [ $( echo $UNAME | grep 'i[3456]86' | wc | awk '{print $1};') -eq 1 ] ; then
+		type="Linux_x86"
+	elif [ $( echo $UNAME | grep 'x86_64' | wc | awk '{print $1};') -eq 1 ] ; then
+		type="Linux_x86_64"
 	else
-		set type = "Linux_Unknown"
-	endif
-endif
-if ( ` echo $UNAME | grep Darwin | wc | awk '{print $1;}' ` == 1 ) then
-	set type = "MacOSX_Unknown"
-	if ( ` echo $UNAME | grep -E 'powerpc|Power Macintosh' | wc | awk '{print $1};'` == 1 ) then
-		set type = "MacOSX_ppc"
-	endif
-	if ( ` echo $UNAME | grep 'i386' | wc | awk '{print $1}'` == 1 ) then
-		set type = "MacOSX_intel"
-	endif
-endif
-if ( ` echo $UNAME | grep SunOS | wc | awk '{print $1;}' ` == 1 ) then
-	set type = "SunOS5"
-endif
-if ( ` echo $UNAME | grep IRIX | wc | awk '{print $1;}' ` == 1 ) then
-	set type = "IRIX"
-endif
-if ( ` echo $UNAME | grep NetBSD | wc | awk '{print $1;}' ` == 1 ) then
-	set type = "NetBSD"
-endif
-if ( ` echo $UNAME | grep FreeBSD | wc | awk '{print $1;}' ` == 1 ) then
-	set type = "FreeBSD"
-endif
-if ( ` echo $UNAME | grep Cygwin | wc | awk '{print $1;}' ` == 1 ) then
-	set type = "Cygwin"
-endif
+		type="Linux_Unknown"
+	fi
+fi
+if [ $( echo $UNAME | grep Darwin | wc | awk '{print $1;}' ) -eq 1 ] ; then
+	type="MacOSX_Unknown"
+	if [ $( echo $UNAME | grep -E 'powerpc|Power Macintosh' | wc | awk '{print $1};') -eq 1 ] ; then
+		type="MacOSX_ppc"
+	fi
+	if [ $( echo $UNAME | grep 'i386' | wc | awk '{print $1}') -eq 1 ] ; then
+		type="MacOSX_intel"
+	fi
+	if [ $( echo $UNAME | grep 'x86_64' | wc | awk '{print $1}') -eq 1 ] ; then
+		type="MacOSX_intel"
+	fi
+fi
+if [ $( echo $UNAME | grep SunOS | wc | awk '{print $1;}' ) -eq 1 ] ; then
+	type="SunOS5"
+fi
+if [ $( echo $UNAME | grep IRIX | wc | awk '{print $1;}' ) -eq 1 ] ; then
+	type="IRIX"
+fi
+if [ $( echo $UNAME | grep NetBSD | wc | awk '{print $1;}' ) -eq 1 ] ; then
+	type="NetBSD"
+fi
+if [ $( echo $UNAME | grep FreeBSD | wc | awk '{print $1;}' ) -eq 1 ] ; then
+	type="FreeBSD"
+fi
+if [ $( echo $UNAME | grep OpenBSD | wc | awk '{print $1;}' ) -eq 1 ] ; then
+	type="OpenBSD"
+fi
+if [ $( echo $UNAME | grep Cygwin | wc | awk '{print $1;}' ) -eq 1 ] ; then
+	type="Cygwin"
+fi
+if [ $( echo $UNAME | grep Msys | wc | awk '{print $1;}' ) -eq 1 ] ; then
+	type="MinGW"
+fi
 
 #
 # Support universal binaries for MacOSX's (gcc version 4 and higher)
@@ -89,75 +101,94 @@ endif
 # restrict to intel Mac's only because ppc Mac's I have access to
 # just don't have the i386 libraries...
 #
-#if ( $type == "MacOSX_ppc" || $type == "MacOSX_intel" ) then
-if ( $type == "MacOSX_intel" ) then
+#if [ "$type" == "MacOSX_ppc" -o "$type" == "MacOSX_intel" ] ; then
+if [ "$type" == "MacOSX_intel" ] ; then
 	gcc -v >& tmp.$$
-	set gcc_version = ` grep version tmp.$$ | awk '{print $3;}' `
-	set gcc_major = ` echo $gcc_version | awk -v FS="." '{print $1;}' `
-	if ( $gcc_major > 3 ) then
-		set universal_binary = "TRUE"
-	endif
-	/bin/rm -f tmp.$$
-endif
+	gcc_version=$( grep version tmp.$$ | awk '{print $3;}' )
+	gcc_major=$( echo $gcc_version | awk -v FS="." '{print $1;}' )
+	if [ $gcc_major -gt 3 ] ; then
+		universal_binary="TRUE"
+	fi
+	rm -f tmp.$$
+fi
 
-if ( $type == "Linux_x86" ) then
-	set CC = '"cc -Wall"'
-	set RANLIB = '"ranlib"'
-	set POSTFIX = '"_i386"'
-else if ( $type == "Linux_x86_64" ) then
-	set CC = '"cc -Wall"'
-	set RANLIB = '"ranlib"'
-	set POSTFIX = '"_amd64"'
-else if ( $type == "Linux_Unknown" ) then
-	set CC = '"cc -Wall"'
-	set RANLIB = '"ranlib"'
-	set POSTFIX = '""'
-else if ( $type == "MacOSX_ppc" && $universal_binary == "TRUE" ) then
-	set CC = '"cc -arch i386 -arch ppc -Wall"'
-	set RANLIB = '"ranlib -s"'
-	set POSTFIX = '"_osx_universal"'
-else if ( $type == "MacOSX_intel" && $universal_binary == "TRUE" ) then
-	set CC = '"cc -arch i386 -arch ppc -Wall"'
-	set RANLIB = '"ranlib -s"'
-	set POSTFIX = '"_osx_universal"'
-else if ( $type == "MacOSX_ppc" || $type == "MacOSX_intel" || \
-                $type == "MacOSX_Unknown" ) then
-	set CC = '"cc -Wall"'
-	set RANLIB = '"ranlib -s"'
-	set POSTFIX = '"_osx"'
-else if ( $type == "SunOS5" ) then
-	set CC = '"gcc -Wall"'
-	set RANLIB = '"echo Skipping ranlib"'
-	set POSTFIX = '"_sunos5"'
-else if ( $type == "IRIX" ) then
-	set CC = '"gcc -Wall"'
-	set RANLIB = '"echo Skipping ranlib"'
-	echo POSTFIX = '"_irix"'
-else if ( $type == "NetBSD" ) then
-	set CC = '"cc -Wall"'
-	set RANLIB = '"ranlib"'
-	set POSTFIX = '"_netbsd"'
-else if ( $type == "FreeBSD" ) then
-	set CC = '"cc -Wall"'
-	set RANLIB = '"ranlib"'
-	set POSTFIX = '"_freebsd"'
-else if ( $type == "Cygwin" ) then
-	set CC = '"cc -Wall"'
-	set RANLIB = '"echo Skipping ranlib"'
-	set POSTFIX = '"_cygwin"'
+if [ "$type" == "Linux_x86" ] ; then
+	CC='"cc -Wall"'
+	RANLIB='"ranlib"'
+	POSTFIX='"_i386"'
+elif [ "$type" == "Linux_x86_64" ] ; then
+	CC='"cc -Wall"'
+	RANLIB='"ranlib"'
+	POSTFIX='"_amd64"'
+elif [ "$type" == "Linux_Unknown" ] ; then
+	CC='"cc -Wall"'
+	RANLIB='"ranlib"'
+	POSTFIX='""'
+elif [ "$type" == "MacOSX_ppc" -a "$universal_binary" = "TRUE" ] ; then
+	CC='"cc -arch i386 -arch ppc -Wall"'
+	RANLIB='"ranlib -s"'
+	POSTFIX='"_osx_universal"'
+elif [ "$type" == "MacOSX_intel" -a "$universal_binary" = "TRUE" ] ; then
+	CC='"cc -arch i386 -arch ppc -Wall"'
+	RANLIB='"ranlib -s"'
+	POSTFIX='"_osx_universal"'
+elif [ "$type" == "MacOSX_ppc" -o "$type" == "MacOSX_intel" -o "$type" == "MacOSX_Unknown" ] ; then
+	CC='"cc -Wall"'
+	RANLIB='"ranlib -s"'
+	POSTFIX='"_osx"'
+elif [ "$type" == "SunOS5" ] ; then
+	CC='"gcc -Wall"'
+	RANLIB='"echo Skipping ranlib"'
+	POSTFIX='"_sunos5"'
+elif [ "$type" == "IRIX" ] ; then
+	CC='"gcc -Wall"'
+	RANLIB='"echo Skipping ranlib"'
+	POSTFIX='"_irix"'
+elif [ "$type" == "NetBSD" ] ; then
+	CC='"gcc -Wall"'
+	RANLIB='"ranlib"'
+	POSTFIX='"_netbsd"'
+elif [ "$type" == "FreeBSD" ] ; then
+	CC='"gcc -Wall"'
+	RANLIB='"ranlib"'
+	POSTFIX='"_freebsd"'
+elif [ "$type" == "OpenBSD" ] ; then
+	CC='"gcc -Wall"'
+	RANLIB='"ranlib"'
+	POSTFIX='"_openbsd"'
+elif [ "$type" == "Cygwin" ] ; then
+	CC='"cc -Wall"'
+	RANLIB='"echo Skipping ranlib"'
+	POSTFIX='"_cygwin"'
+elif [ "$type" == "MinGW" ] ; then
+	CC='"gcc -Wall"'
+	RANLIB='"echo Skipping ranlib"'
+	POSTFIX='"_mingw"'
 else
 	# Unknown operating system
-	set CC = '"cc"'
-	set RANLIB = '"echo Skipping ranlib"'
-	set POSTFIX = '""'
-endif
+	CC='"cc"'
+	RANLIB='"echo Skipping ranlib"'
+	POSTFIX='""'
+fi
 
-cat $INPUT_FILE | \
-sed "s/REPLACE_CC/CC=${CC}/" | \
-sed "s/REPLACE_RANLIB/RANLIB=${RANLIB}/" | \
-sed "s|REPLACE_INSTALLDIR|${INSTALLDIR}|" | \
-sed "s|REPLACE_LIBINSTALLDIR|${LIBINSTALLDIR}|" | \
-sed "s/REPLACE_POSTFIX/${POSTFIX}/" > $OUTPUT_FILE
+if [ "$type" != "MinGW" ] ; then
+  cat $INPUT_FILE | \
+  sed "s/REPLACE_CC/CC=${CC}/" | \
+  sed "s/REPLACE_RANLIB/RANLIB=${RANLIB}/" | \
+  sed "s|REPLACE_INSTALLDIR|${INSTALLDIR}|" | \
+  sed "s|REPLACE_LIBINSTALLDIR|${LIBINSTALLDIR}|" | \
+  sed "s/REPLACE_POSTFIX/${POSTFIX}/" > $OUTPUT_FILE
+else
+  cat $INPUT_FILE | \
+  sed "s/REPLACE_CC/CC=${CC}/" | \
+  sed "s/REPLACE_RANLIB/RANLIB=${RANLIB}/" | \
+  sed "s|REPLACE_INSTALLDIR|${INSTALLDIR}|" | \
+  sed "s|REPLACE_LIBINSTALLDIR|${LIBINSTALLDIR}|" | \
+  sed "s/REPLACE_POSTFIX/${POSTFIX}/" | \
+	sed -r -e 's/(make realclean)/\1\; rm -f *.exe/' | \
+	sed -r -e 's/^([[:blank:]]+)(cd bin    ; make test; cd ..)$/\1\2\n\1cd test\; make -k $(CC) all test\; cd ../' | \
+	sed -r -e 's/[[:blank:]]+\;/\;/g' > $OUTPUT_FILE
+fi
 
 echo
 echo
@@ -180,7 +211,7 @@ echo
 echo " - Set library installation directory with: --install-lib DIR"
 echo
 echo
-if ( $OUTPUT_FILE == "Makefile" ) then
+if [ $OUTPUT_FILE = "Makefile" ] ; then
   echo "To compile,                  type: make"
   echo "To install,                  type: make install"
   echo "To make tgz package,         type: make package"
@@ -196,6 +227,6 @@ else
   echo
   echo "To clean up temporary files, type: make -f $OUTPUT_FILE clean"
   echo "To clean up all files,       type: make -f $OUTPUT_FILE realclean"
-endif
+fi
 echo
 echo

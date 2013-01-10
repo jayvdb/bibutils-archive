@@ -1,9 +1,9 @@
 /*
  * xml2bib.c
  *
- * Copyright (c) Chris Putnam 2003-2012
+ * Copyright (c) Chris Putnam 2003-2013
  *
- * Program and source code released under the GPL
+ * Program and source code released under the GPL version 2
  *
  */
 #include <stdio.h>
@@ -26,26 +26,29 @@ help( char *progname )
 	fprintf(stderr,"usage: %s xml_file > bibtex_file\n\n",progname);
         fprintf(stderr,"  xml_file can be replaced with file list or omitted to use as a filter\n\n");
 
-	fprintf(stderr,"  -h, --help         display this help\n");
-	fprintf(stderr,"  -v, --version      display version\n");
+	fprintf(stderr,"  -h,  --help               display this help\n");
+	fprintf(stderr,"  -v,  --version            display version\n");
 	fprintf(stderr,"  -at, --abbreviatedtitles  use abbreviated titles, if available\n");
-	fprintf(stderr,"  -fc, --finalcomma  add final comman to bibtex output\n");
-	fprintf(stderr,"  -sd, --singledash  use only one dash '-' instead of two '--' for page range\n" );
-	fprintf(stderr,"  -b, -brackets      use brackets, not quotation marks surrounding data\n");
-	fprintf(stderr,"  -w, --whitespace   use beautifying whitespace to output\n");
-	fprintf(stderr,"  -sk, --strictkey   use only alphanumeric characters for bibtex key\n");
-	fprintf(stderr,"                     (overly strict, but may be useful for other bibtex readers\n");
-	fprintf(stderr,"  -nl, --no-latex    do not use latex encodings, but put characters in directly\n");
-	fprintf(stderr,"  -nb, --no-bom      do not write Byte Order Mark in UTF8 output\n");
-	fprintf(stderr,"  -U, --uppercase    write bibtex tags/types in upper case\n" );
-	fprintf(stderr,"  -s, --single-refperfile\n");
-	fprintf(stderr,"                     one reference per output file\n");
-	fprintf(stderr,"  --verbose          for verbose\n" );
-	fprintf(stderr,"  --debug            for debug output\n" );
+	fprintf(stderr,"  -fc, --finalcomma         add final comman to bibtex output\n");
+	fprintf(stderr,"  -sd, --singledash         use one dash '-', not two '--', in page ranges\n" );
+	fprintf(stderr,"  -b,  --brackets           use brackets, not quotation marks surrounding data\n");
+	fprintf(stderr,"  -w,  --whitespace         use beautifying whitespace to output\n");
+	fprintf(stderr,"  -sk, --strictkey          use only alphanumeric characters for bibtex key\n");
+	fprintf(stderr,"                            (overly strict, but useful for other programs)\n");
+	fprintf(stderr,"  -nl, --no-latex           no latex encodings; put characters in directly\n");
+	fprintf(stderr,"  -nb, --no-bom             do not write Byte Order Mark in UTF8 output\n");
+	fprintf(stderr,"  -U,  --uppercase          write bibtex tags/types in upper case\n" );
+	fprintf(stderr,"  -s,  --single-refperfile  one reference per output file\n");
+	fprintf(stderr,"  -i, --input-encoding      interpret input file with requested character set\n" );
+	fprintf(stderr,"                            (use argument for current list)\n");
+	fprintf(stderr,"  -o, --output-encoding     write output file with requested character set\n" );
+	fprintf(stderr,"                            (use argument for current list)\n");
+	fprintf(stderr,"  --verbose                 for verbose\n" );
+	fprintf(stderr,"  --debug                   for debug output\n" );
 	fprintf(stderr,"\n");
 
 	fprintf(stderr,"Citation codes generated from <REFNUM> tag.   See \n");
-	fprintf(stderr,"http://www.scripps.edu/~cdputnam/software/bibutils for more details\n\n");
+	fprintf(stderr,"http://sourceforge.net/p/bibutils/home/Bibutils for more details\n\n");
 }
 
 void

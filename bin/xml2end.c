@@ -1,9 +1,9 @@
 /*
  * xml2end.c
  *
- * Copyright (c) Chris Putnam 2004-2012
+ * Copyright (c) Chris Putnam 2004-2013
  *
- * Program and source code released under the GPL
+ * Program and source code released under the GPL version 2
  *
  */
 #include <stdio.h>
@@ -25,14 +25,17 @@ help( char *progname )
 	fprintf(stderr,"usage: %s xml_file > endnote_file\n\n",progname);
         fprintf(stderr,"  xml_file can be replaced with file list or omitted to use as a filter\n\n");
 
+	fprintf(stderr,"  -h, --help     display this help\n");
+	fprintf(stderr,"  -v, --version  display version\n\n");
 	fprintf(stderr,"  -nb, --no-bom   do not write Byte Order Mark in UTF8 output\n");
 	fprintf(stderr,"  -s, --single-refperfile one reference per output file\n");
-	fprintf(stderr,"  -h, --help     display this help\n");
+	fprintf(stderr,"  -i, --input-encoding interpret input file with requested character set (use\n" );
+	fprintf(stderr,"                       argument for current list)\n");
+	fprintf(stderr,"  -o, --output-encoding interprest output file with requested character set\n" );
 	fprintf(stderr,"  --verbose      for verbose output\n");
 	fprintf(stderr,"  --debug        for debug output\n");
-	fprintf(stderr,"  -v, --version  display version\n\n");
 
-	fprintf(stderr,"http://www.scripps.edu/~cdputnam/software/bibutils for more details\n\n");
+	fprintf(stderr,"http://sourceforge.net/p/bibutils/home/Bibutils for more details\n\n");
 }
 
 void

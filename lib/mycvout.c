@@ -1,9 +1,9 @@
 /*
  * bibtexout.c
  *
- * Copyright (c) Chris Putnam 2003-2012
+ * Copyright (c) Chris Putnam 2003-2013
  *
- * Program and source code released under the GPL
+ * Source code released under the GPL version 2
  *
  */
 #include <stdio.h>
@@ -70,7 +70,7 @@ output_citekey( FILE *fp, fields *info, unsigned long refnum, int format_opts )
 		p = info->data[n].data;
 		while ( p && *p && *p!='|' ) {
 			if ( format_opts & BIBOUT_STRICTKEY ) {
-				if ( isdigit(*p) || (*p>='A' && *p<='Z') ||
+				if ( isdigit((unsigned char)*p) || (*p>='A' && *p<='Z') ||
 				     (*p>='a' && *p<='z' ) )
 					fprintf( fp, "%c", *p );
 			}
@@ -191,7 +191,7 @@ output_type( FILE *fp, int type, int format_opts )
 		len = strlen( s );
 		fprintf( fp, "@" );
 		for ( i=0; i<len; ++i )
-			fprintf( fp, "%c", toupper(s[i]) );
+			fprintf( fp, "%c", toupper((unsigned char)s[i]) );
 		fprintf( fp, "{" );
 	}
 }
@@ -207,7 +207,7 @@ output_element( FILE *fp, char *tag, char *data, int format_opts )
 	else {
 		len = strlen( tag );
 		for ( i=0; i<len; ++i )
-			fprintf( fp, "%c", toupper(tag[i]) );
+			fprintf( fp, "%c", toupper((unsigned char)tag[i]) );
 	}
 	if ( format_opts & BIBOUT_WHITESPACE ) fprintf( fp, " = \t" );
 	else fprintf( fp, "=" );

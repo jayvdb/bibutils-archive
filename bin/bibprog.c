@@ -1,9 +1,9 @@
 /*
  * bibprog.c
  *
- * Copyright (c) 2004-2012
+ * Copyright (c) Chris Putnam 2004-2013
  *
- * Program and source code released under the GPL
+ * Source code released under the GPL version 2
  *
  */
 #include <stdio.h>

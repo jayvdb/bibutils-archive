@@ -1,6 +1,93 @@
 
 BIBUTILS
 
+4.16
+01/09/13
+
+BUILD
++ Add version to GPL for Fedora/Redhat
++ Add recognition of x86_64 MacOSX as Intel Macintoshes to configure
++ Add recognition of OpenBSD to configure
++ Add recognition of MINGW32 architecture to configure
++ Remove explicit use of 'make' in Makefiles and use $(MAKE) instead
++ Switch to sh version of configure script (thanks to Adrian Devries)
++ Switch to sh version of maketgz script (thanks to Adrian Devries)
++ Switch to sh version of makedeb script
+
+GLOBAL
++ Improve propagation of memory errors in libraries to calling programs
++ Update help messages
++ Rewrite name parsing/mangling code
++ Do cast for ctype.h functions to handle MINGW32 architecture (reported by Adrian Devries)
+
+ADSOUT
++ Fix bug where partial matches for journal titles identified journals
++ Add Windows-specific format string for MINGW32 architecture (reported by Adrian Devries)
++ Update list of journal abbreviations
+
+BIBTEXIN
++ Fix bug where spaces following an escaped quotation mark (as with the -nl, no latex, flag) are lost (reported by Raoul Blankertz)
++ Fix bug where pages had to be completely numeric (reported by Nick Bart)
++ Import series information for @Techreport
++ Rewrite name parsing
++ Improve recognition of urls put in inappropriate fields
++ Improve handling of tilde/sticky space
++ Add latex recognition of alternative ways to express the (Polish) capital and lowercase slashed L
++ Improve recognition of URL identifiers in note fields
++ Map 'howpublished' to publisher (reported by Nick Bart)
+
+BIBLATEXIN
++ Add 'date' field to every reference type, regardless if it's in the reference documentation or not (reported by Nick Bart)
++ Fix bug where pages had to be completely numeric (reported by Nick Bart)
++ Add support for 'institution' and 'type' for report references (reported by Nick Bart)
++ Add strings support (reported by Nick Bart)
++ Handle editor types, including bibtex-chicago variants (reported by Nick Bart)
++ Map 'introduction', 'foreward', 'afterward' to "author of introduction/foreward/afterward" (reported by Nick Bart)
++ Ignore 'school' in biblatexin reference if 'institution' is available like biblatex(reported by Nick Bart)
++ Improve biblatex thesis type recognition
++ Rewrite name parsing
++ Improve handlning of tilde/sticky space
++ Map 'howpublished' to publisher (reported by Nick Bart)
++ Handle 'titleaddon' field (reported by Nick Bart)
++ Output number field differently for type report (reported by Nick Bart)
+
+BIBTEXOUT
++ Output series information for @Techreport
++ Output all keywords in single entry as semi-colon deliminated list
+
+COPACIN
++ Fix pre-name mangling that prevents recognition by asis/corporation lists
+
+ENDIN
++ Add better support for series information
+
+ENDOUT
++ Add better support for series information
+
+MODSIN
++ Add support for common MARC role codes (role abbreviations)
+
+RISIN
++ Add recognition of map type
++ Improve support for series information (reported by Mattheis Steffens)
+
+RISOUT
++ Add recognition of map type (reported by Mattheis Steffens)
++ Fix bug in date output (reported by Mattheis Steffens)
++ Improve support for series information (reported by Mattheis Steffens)
+
+4.15
+9/26/12
+
+BIBTEXIN
++ @article 'number' -> MODS 'issue'
++ @conference = @inproceedings
++ 'organization' -> publisher if publisher not available, otherwise output
+  as <name><namePart>xx</namePart><role><roleTerm>organizer of meeting</roleTerm></role></name>
+
+BIBLATEXIN
++ Add missing month parsing
+
 4.14
 9/04/12
 
@@ -271,11 +358,11 @@ XML2BIB
 
 XML2END
 + Add export of DOI as %U http://dx.doi.org/.... Thanks to Mattheis
-  Stevens for the report
+  Steffens for the report
 
 XML2RIS
 + Add export of DOI as UR  - http://dx.doi.org/....  Thanks to Mattheis
-  Stevens for the report
+  Steffens for the report
 
 XML2WORD
 + Add support for more types of sources.

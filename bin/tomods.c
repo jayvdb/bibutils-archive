@@ -1,9 +1,9 @@
 /*
  * tomods.c
  *
- * Copyright (c) 2004-2012
+ * Copyright (c) Chris Putnam 2004-2013
  *
- * Program and source code released under the GPL
+ * Source code released under the GPL version 2
  *
  */
 #include <stdio.h>
@@ -27,23 +27,23 @@ args_tomods_help( char *progname, char *help1, char *help2 )
         fprintf(stderr,"  %s can be replaced with file list or "
 			"omitted to use as a filter\n\n", help2 );
 
-	fprintf(stderr,"  -i, --input-encoding      map character encoding\n");
-	fprintf(stderr,"  -u, --unicode-characters  DEFAULT: directly write unicode (and not xml entities)\n");
-	fprintf(stderr,"  -x, --xml-characters      write xml entities and not direclty unicode\n");
-	fprintf(stderr,"  -un,--unicode-no-bom      as -u, but don't write byte order mark\n");
-	fprintf(stderr,"  -nl,--no-latex            do not convert latex-style character combinations\n");
-	fprintf(stderr,"  -s, --single-refperfile   one reference per output file\n");
-	fprintf(stderr,"  -d, --drop-key            don't put key in MODS ID field\n");
-	fprintf(stderr,"  -c, --corporation-file    specify file of corporation names\n");
-	fprintf(stderr,"  -a, --asis                specify file of names that shouldn't be mangled\n");
-	fprintf(stderr,"  -nt, --nosplit-title      don't split titles into TITLE/SUBTITLE pairs\n");
 	fprintf(stderr,"  -h, --help                display this help\n");
 	fprintf(stderr,"  -v, --version             display version\n");
+	fprintf(stderr,"  -a, --add-refcount        add \"_#\", where # is reference count to reference\n");
+	fprintf(stderr,"  -s, --single-refperfile   one reference per output file\n");
+	fprintf(stderr,"  -i, --input-encoding      map character encoding\n");
+	fprintf(stderr,"  -u, --unicode-characters  DEFAULT: write unicode (not xml entities)\n");
+	fprintf(stderr,"  -un,--unicode-no-bom      as -u, but don't write byte order mark\n");
+	fprintf(stderr,"  -x, --xml-entities        write xml entities and not direclty unicode\n");
+	fprintf(stderr,"  -nl,--no-latex            do not convert latex-style character combinations\n");
+	fprintf(stderr,"  -d, --drop-key            don't put key in MODS ID field\n");
+	fprintf(stderr,"  -c, --corporation-file    specify file of corporation names\n");
+	fprintf(stderr,"  -as, --asis               specify file of names that shouldn't be mangled\n");
+	fprintf(stderr,"  -nt, --nosplit-title      don't split titles into TITLE/SUBTITLE pairs\n");
 	fprintf(stderr,"  --verbose                 report all warnings\n");
 	fprintf(stderr,"  --debug                   very verbose output\n\n");
 
-	fprintf(stderr,"http://www.scripps.edu/~cdputnam/software/bibutils "
-			"for more details\n\n");
+	fprintf(stderr,"http://sourceforge.net/p/bibutils/home/Bibutils for more details\n\n");
 }
 
 static void

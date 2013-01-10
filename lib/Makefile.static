@@ -3,9 +3,9 @@ RANLIB = echo
 
 SIMPLE_OBJS   = is_ws.o strsearch.o charsets.o
 
-NEWSTR_OBJS   = newstr.o newstr_conv.o entities.o latex.o utf8.o gb18030.o
+NEWSTR_OBJS   = newstr.o newstr_conv.o entities.o latex.o unicode.o utf8.o gb18030.o
 
-CONTAIN_OBJS  = fields.o list.o xml.o xml_encoding.o vplist.o
+CONTAIN_OBJS  = fields.o list.o xml.o xml_encoding.o vplist.o intlist.o
 
 BIBL_OBJS     = name.o title.o doi.o bibl.o serialno.o marc.o reftypes.o bibl.o
 
