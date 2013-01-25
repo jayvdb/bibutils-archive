@@ -2,10 +2,9 @@
 # bibutils converters MAKEFILE
 #
 
-CFLAGS     = -I ../lib
-LIBDIR     = -L../lib
+CFLAGS     = -I ../lib $(CFLAGSIN)
 
-TOMODS     = bibprog.o tomods.o args.o ../lib/modsout.o
+TOMODS     = args.o bibprog.o tomods.o ../lib/modsout.o
 
 BIBTEXIN   = bib2xml.o ../lib/bibtexin.o ../lib/bibtextypes.o
 BIBLATEXIN = biblatex2xml.o ../lib/biblatexin.o ../lib/bltypes.o
@@ -28,14 +27,12 @@ ISIOUT     = xml2isi.o ../lib/isiout.o
 RISOUT     = xml2ris.o ../lib/risout.o
 WORDOUT    = xml2wordbib.o ../lib/wordout.o
 
-PROGS      = bib2xml biblatex2xml copac2xml end2xml endx2xml isi2xml med2xml \
-             ris2xml ebi2xml wordbib2xml \
-             xml2ads xml2bib xml2end xml2isi xml2ris xml2wordbib modsclean
+PROGS      = $(PROGSIN)
 
 all: $(PROGS)
 
 args.o : args.c
-	$(CC) $^ -DCURR_VERSION="\"$(VERSION)\"" -DCURR_DATE="\"$(DATE)\"" $(CFLAGS) -c -o $@
+	$(CC) $(CFLAGS) -DCURR_VERSION="\"$(VERSION)\"" -DCURR_DATE="\"$(DATE)\"" -c -o $@ $^
 
 bib2xml : $(TOMODS) $(BIBTEXIN) ../lib/libbibcore.a
 	$(CC) $(LDFLAGS) $^ $(LOADLIBES) $(LDLIBS) -o $@
@@ -90,8 +87,16 @@ modsclean : $(TOMODS) $(MODSCLEAN) ../lib/libbibcore.a
 
 test:
 
+install:
+	@for p in $(PROGS); \
+                do ( cp $$p$(EXEEXT) $(INSTALLDIR)/ ); \
+        done
+
 clean:
 	rm -f *.o core 
 
 realclean:
-	rm -f *.o core $(PROGS)
+	rm -f *.o core
+	@for p in $(PROGS); \
+                do ( rm -f $$p$(EXEEXT) ); \
+        done

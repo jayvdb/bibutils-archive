@@ -4,7 +4,7 @@
 # dynamic linkage version
 #
 
-CFLAGS     = -I ../lib
+CFLAGS     = -I ../lib $(CFLAGSIN)
 LDFLAGS    = -L ../lib
 LDLIBS     = -lbibutils
 
@@ -93,8 +93,17 @@ modsclean : $(TOMODS) $(MODSCLEAN)
 
 test:
 
+install:
+	@for p in $(PROGS); \
+		do ( cp $$p$(EXEEXT) $(INSTALLDIR)/ ); \
+	done
+
 clean:
-	rm -f *.o core 
+	rm -f *.o core
 
 realclean:
-	rm -f *.o core $(PROGS)
+	rm -f *.o core
+	@for p in $(PROGS); \
+		do ( rm -f $$p$(EXEEXT) ); \
+	done
+

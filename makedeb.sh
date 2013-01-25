@@ -66,14 +66,14 @@ echo "             COPAC, and Medline XML using a MODS v3.0 XML intermediate." >
 #
 POSTINST="${PKGDIR}/postinst.bibutils"
 
-echo "#!/bin/sh" > ${POSTINST}
+echo '#!/bin/sh' > ${POSTINST}
 
 #
 # Build un-install script
 #
 POSTRM="${PKGDIR}/postrm.bibutils"
 
-echo "#!/bin/sh" > ${POSTRM}
+echo '#!/bin/sh' > ${POSTRM}
 
 #
 # Build binaries directory

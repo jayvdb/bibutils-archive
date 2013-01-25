@@ -1,6 +1,31 @@
 
 BIBUTILS
 
+4.17
+01/24/13
+
+BUILD
++ Large changes to build process; more changes for MINGW32/Cygwin
++ Remove attempt to build powerpc-supporting binaries for MacOSX
+
+GLOBAL
++ Attempt to include iso639-2b codes for languages when possible
++ Make output consistent with MODS version 3.4 by adding language/languageTerm (reported by Nick Bart)
++ Fix accidental duplication of roles in MODS output (reported by Nick Bart)
+
+BIBLATEXIN
++ Map 'hyphenation' to recordInfo/languageOfCataloging (reported by Nick Bart)
++ Map biblatex 'version' to edition (reported by Nick Bart)
++ Fix series fields in @inbook (reported by Nick Bart)
++ Fix issues with @periodical (reported by Nick Bart)
++ Handle entrysubtypes for @article (reported by Nick Bart)
++ Handle origdate (reported by Nick Bart)
++ Fix corporate editors (reported by Nick Bart)
++ Process report 'isrn' field (reported by Nick Bart)
+
+MEDIN
++ Handle iso639-2b language input and output as full language name
+
 4.16
 01/09/13
 

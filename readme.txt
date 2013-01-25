@@ -22,7 +22,7 @@ To configure the makefile, simply run:
 
 or alternatively
 
-% csh -f configure
+% sh -f configure
 
 The output should look something like:
 
