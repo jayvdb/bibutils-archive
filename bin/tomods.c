@@ -31,7 +31,8 @@ args_tomods_help( char *progname, char *help1, char *help2 )
 	fprintf(stderr,"  -v, --version             display version\n");
 	fprintf(stderr,"  -a, --add-refcount        add \"_#\", where # is reference count to reference\n");
 	fprintf(stderr,"  -s, --single-refperfile   one reference per output file\n");
-	fprintf(stderr,"  -i, --input-encoding      map character encoding\n");
+	fprintf(stderr,"  -i, --input-encoding      input character encoding\n");
+	fprintf(stderr,"  -o, --output-encoding     output character encoding\n");
 	fprintf(stderr,"  -u, --unicode-characters  DEFAULT: write unicode (not xml entities)\n");
 	fprintf(stderr,"  -un,--unicode-no-bom      as -u, but don't write byte order mark\n");
 	fprintf(stderr,"  -x, --xml-entities        write xml entities and not direclty unicode\n");
@@ -62,7 +63,7 @@ tomods_processargs( int *argc, char *argv[], param *p,
 	char *help1, char *help2 )
 {
 	int i, j, subtract;
-	process_charsets( argc, argv, p, 1, 0 );
+	process_charsets( argc, argv, p );
 	i = 0;
 	while ( i<*argc ) {
 		subtract = 0;

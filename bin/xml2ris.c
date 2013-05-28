@@ -83,7 +83,7 @@ main(int argc, char *argv[])
 	param p;
 	modsin_initparams( &p, progname );
 	risout_initparams( &p, progname );
-	process_charsets( &argc, argv, &p, 1, 1 );
+	process_charsets( &argc, argv, &p );
 	process_args( &argc, argv, &p );
 	bibprog( argc, argv, &p );
 	bibl_freeparams( &p );

@@ -94,6 +94,7 @@ modsclean : $(TOMODS) $(MODSCLEAN)
 test:
 
 install:
+	mkdir -p $(INSTALLDIR)
 	@for p in $(PROGS); \
 		do ( cp $$p$(EXEEXT) $(INSTALLDIR)/ ); \
 	done

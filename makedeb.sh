@@ -20,11 +20,11 @@ programs="biblatex2xml bib2xml copac2xml ebi2xml end2xml endx2xml isi2xml med2xm
 VERSION=$1
 POSTFIX=$2
 
-if [ "$2" == "_i386" ] ; then
+if [ "$2" = "_i386" ] ; then
 	ARCH="i386"
-elif [ "$2" == "_amd64" ] ; then
+elif [ "$2" = "_amd64" ] ; then
 	ARCH="i386"
-elif [ "$2" == "_osx" ] ; then
+elif [ "$2" = "_osx" ] ; then
 	ARCH="darwin-powerpc"
 else
 	echo "Can only accept _i386 _amd64 and _osx as postfixes."
@@ -80,11 +80,11 @@ echo '#!/bin/sh' > ${POSTRM}
 #
 # Fink installs on MacOSX install to /sw/bin
 #
-if [ "${POSTFIX}" == "_i386" ] ; then
+if [ "${POSTFIX}" = "_i386" ] ; then
 	BINARYDIR="${OUTDIR}/usr/local/bin"
-elif [ "${POSTFIX}" == "_amd64" ] ; then
+elif [ "${POSTFIX}" = "_amd64" ] ; then
 	BINARYDIR="${OUTDIR}/usr/local/bin"
-elif [ "${POSTFIX}" == "_osx" ] ; then
+elif [ "${POSTFIX}" = "_osx" ] ; then
 	BINARYDIR="${OUTDIR}/sw/bin"
 fi
 

@@ -46,7 +46,7 @@ done
 #
 # Use the correct makefiles for dynamic/static option
 #
-if [ "$LIBTYPE" == "dynamic" ] ; then
+if [ "$LIBTYPE" = "dynamic" ] ; then
 	cp lib/Makefile.dynamic  lib/Makefile
 	cp bin/Makefile.dynamic  bin/Makefile
 	cp test/Makefile.dynamic test/Makefile
@@ -106,13 +106,13 @@ if [ $( echo $UNAME | grep Msys | wc | awk '{print $1;}' ) -eq 1 ] ; then
 	type="MinGW"
 fi
 
-if [ "$type" == "Linux_x86" ] ; then
+if [ "$type" = "Linux_x86" ] ; then
 	CC='cc'
-	CFLAGS='"-Wall"'
-	if [ "$LIBTYPE" == "dynamic" ] ; then
-		CLIBFLAGS='"-Wall -fPIC"'
+	CFLAGS='-Wall'
+	if [ "$LIBTYPE" = "dynamic" ] ; then
+		CLIBFLAGS='-Wall -fPIC'
 	else
-		CLIBFLAGS='"-Wall"'
+		CLIBFLAGS='-Wall'
 	fi
 	EXEEXT=''
 	LIBBASE='libbibutils'
@@ -120,13 +120,13 @@ if [ "$type" == "Linux_x86" ] ; then
 	DYNAMICLIBEXT='.so'
 	RANLIB='ranlib'
 	POSTFIX='_i386'
-elif [ "$type" == "Linux_x86_64" ] ; then
+elif [ "$type" = "Linux_x86_64" ] ; then
 	CC='cc'
-	CFLAGS='"-Wall"'
-	if [ "$LIBTYPE" == "dynamic" ] ; then
-		CLIBFLAGS='"-Wall -fPIC"'
+	CFLAGS='-Wall'
+	if [ "$LIBTYPE" = "dynamic" ] ; then
+		CLIBFLAGS='-Wall -fPIC'
 	else
-		CLIBFLAGS='"-Wall"'
+		CLIBFLAGS='-Wall'
 	fi
 	EXEEXT=''
 	LIBBASE='libbibutils'
@@ -134,13 +134,13 @@ elif [ "$type" == "Linux_x86_64" ] ; then
 	DYNAMICLIBEXT='.so'
 	RANLIB='ranlib'
 	POSTFIX='_amd64'
-elif [ "$type" == "Linux_Unknown" ] ; then
+elif [ "$type" = "Linux_Unknown" ] ; then
 	CC='cc'
-	CFLAGS='"-Wall"'
-	if [ "$LIBTYPE" == "dynamic" ] ; then
-		CLIBFLAGS='"-Wall -fPIC"'
+	CFLAGS='-Wall'
+	if [ "$LIBTYPE" = "dynamic" ] ; then
+		CLIBFLAGS='-Wall -fPIC'
 	else
-		CLIBFLAGS='"-Wall"'
+		CLIBFLAGS='-Wall'
 	fi
 	EXEEXT=''
 	LIBBASE='libbibutils'
@@ -148,13 +148,13 @@ elif [ "$type" == "Linux_Unknown" ] ; then
 	DYNAMICLIBEXT='.so'
 	RANLIB='ranlib'
 	POSTFIX=''
-elif [ "$type" == "MacOSX_ppc" ] ; then
+elif [ "$type" = "MacOSX_ppc" ] ; then
 	CC='cc'
 	CFLAGS='-Wall'
-	if [ "$LIBTYPE" == "dynamic" ] ; then
-		CLIBFLAGS='"-Wall -fPIC"'
+	if [ "$LIBTYPE" = "dynamic" ] ; then
+		CLIBFLAGS='-Wall -fPIC'
 	else
-		CLIBFLAGS='"-Wall"'
+		CLIBFLAGS='-Wall'
 	fi
 	EXEEXT=''
 	LIBBASE='libbibutils'
@@ -162,13 +162,13 @@ elif [ "$type" == "MacOSX_ppc" ] ; then
 	DYNAMICLIBEXT='.so'
 	RANLIB='ranlib -s'
 	POSTFIX='_osx_ppc'
-elif [ "$type" == "MacOSX_i386" ] ; then
+elif [ "$type" = "MacOSX_i386" ] ; then
 	CC='cc'
 	CFLAGS='-Wall'
-	if [ "$LIBTYPE" == "dynamic" ] ; then
-		CLIBFLAGS='"-Wall -fPIC"'
+	if [ "$LIBTYPE" = "dynamic" ] ; then
+		CLIBFLAGS='-Wall -fPIC'
 	else
-		CLIBFLAGS='"-Wall"'
+		CLIBFLAGS='-Wall'
 	fi
 	EXEEXT=''
 	LIBBASE='libbibutils'
@@ -176,13 +176,13 @@ elif [ "$type" == "MacOSX_i386" ] ; then
 	DYNAMICLIBEXT='.so'
 	RANLIB='ranlib -s'
 	POSTFIX='_osx_i386'
-elif [ "$type" == "MacOSX_x86_64" ] ; then
+elif [ "$type" = "MacOSX_x86_64" ] ; then
 	CC='cc'
 	CFLAGS='-Wall'
-	if [ "$LIBTYPE" == "dynamic" ] ; then
-		CLIBFLAGS='"-Wall -fPIC"'
+	if [ "$LIBTYPE" = "dynamic" ] ; then
+		CLIBFLAGS='-Wall -fPIC'
 	else
-		CLIBFLAGS='"-Wall"'
+		CLIBFLAGS='-Wall'
 	fi
 	EXEEXT=''
 	LIBBASE='libbibutils'
@@ -190,13 +190,13 @@ elif [ "$type" == "MacOSX_x86_64" ] ; then
 	DYNAMICLIBEXT='.so'
 	RANLIB='ranlib -s'
 	POSTFIX='_osx_x86_64'
-elif [ "$type" == "MacOSX_Unknown" ] ; then
+elif [ "$type" = "MacOSX_Unknown" ] ; then
 	CC='cc'
 	CFLAGS='-Wall'
-	if [ "$LIBTYPE" == "dynamic" ] ; then
-		CLIBFLAGS='"-Wall -fPIC"'
+	if [ "$LIBTYPE" = "dynamic" ] ; then
+		CLIBFLAGS='-Wall -fPIC'
 	else
-		CLIBFLAGS='"-Wall"'
+		CLIBFLAGS='-Wall'
 	fi
 	EXEEXT=''
 	LIBBASE='libbibutils'
@@ -204,13 +204,13 @@ elif [ "$type" == "MacOSX_Unknown" ] ; then
 	DYNAMICLIBEXT='.so'
 	RANLIB='ranlib -s'
 	POSTFIX='_osx'
-elif [ "$type" == "SunOS5" ] ; then
+elif [ "$type" = "SunOS5" ] ; then
 	CC='gcc'
 	CFLAGS='-Wall'
-	if [ "$LIBTYPE" == "dynamic" ] ; then
-		CLIBFLAGS='"-Wall -fPIC"'
+	if [ "$LIBTYPE" = "dynamic" ] ; then
+		CLIBFLAGS='-Wall -fPIC'
 	else
-		CLIBFLAGS='"-Wall"'
+		CLIBFLAGS='-Wall'
 	fi
 	EXEEXT=''
 	LIBBASE='libbibutils'
@@ -218,13 +218,13 @@ elif [ "$type" == "SunOS5" ] ; then
 	DYNAMICLIBEXT='.so'
 	RANLIB='echo Skipping ranlib'
 	POSTFIX='_sunos5'
-elif [ "$type" == "IRIX" ] ; then
+elif [ "$type" = "IRIX" ] ; then
 	CC='gcc'
 	CFLAGS='-Wall'
-	if [ "$LIBTYPE" == "dynamic" ] ; then
-		CLIBFLAGS='"-Wall -fPIC"'
+	if [ "$LIBTYPE" = "dynamic" ] ; then
+		CLIBFLAGS='-Wall -fPIC'
 	else
-		CLIBFLAGS='"-Wall"'
+		CLIBFLAGS='-Wall'
 	fi
 	EXEEXT=''
 	LIBBASE='libbibutils'
@@ -232,13 +232,13 @@ elif [ "$type" == "IRIX" ] ; then
 	DYNAMICLIBEXT='.so'
 	RANLIB='echo Skipping ranlib'
 	POSTFIX='_irix'
-elif [ "$type" == "NetBSD" ] ; then
+elif [ "$type" = "NetBSD" ] ; then
 	CC='gcc'
 	CFLAGS='-Wall'
-	if [ "$LIBTYPE" == "dynamic" ] ; then
-		CLIBFLAGS='"-Wall -fPIC"'
+	if [ "$LIBTYPE" = "dynamic" ] ; then
+		CLIBFLAGS='-Wall -fPIC'
 	else
-		CLIBFLAGS='"-Wall"'
+		CLIBFLAGS='-Wall'
 	fi
 	EXEEXT=''
 	LIBBASE='libbibutils'
@@ -246,13 +246,13 @@ elif [ "$type" == "NetBSD" ] ; then
 	DYNAMICLIBEXT='.so'
 	RANLIB='ranlib'
 	POSTFIX='_netbsd'
-elif [ "$type" == "FreeBSD" ] ; then
+elif [ "$type" = "FreeBSD" ] ; then
 	CC='gcc'
 	CFLAGS='-Wall'
-	if [ "$LIBTYPE" == "dynamic" ] ; then
-		CLIBFLAGS='"-Wall -fPIC"'
+	if [ "$LIBTYPE" = "dynamic" ] ; then
+		CLIBFLAGS='-Wall -fPIC'
 	else
-		CLIBFLAGS='"-Wall"'
+		CLIBFLAGS='-Wall'
 	fi
 	EXEEXT=''
 	LIBBASE='libbibutils'
@@ -260,13 +260,13 @@ elif [ "$type" == "FreeBSD" ] ; then
 	DYNAMICLIBEXT='.so'
 	RANLIB='ranlib'
 	POSTFIX='_freebsd'
-elif [ "$type" == "OpenBSD" ] ; then
+elif [ "$type" = "OpenBSD" ] ; then
 	CC='gcc'
 	CFLAGS='-Wall'
-	if [ "$LIBTYPE" == "dynamic" ] ; then
-		CLIBFLAGS='"-Wall -fPIC"'
+	if [ "$LIBTYPE" = "dynamic" ] ; then
+		CLIBFLAGS='-Wall -fPIC'
 	else
-		CLIBFLAGS='"-Wall"'
+		CLIBFLAGS='-Wall'
 	fi
 	EXEEXT=''
 	LIBBASE='libbibutils'
@@ -274,10 +274,10 @@ elif [ "$type" == "OpenBSD" ] ; then
 	DYNAMICLIBEXT='.so'
 	RANLIB='ranlib'
 	POSTFIX='_openbsd'
-elif [ "$type" == "Cygwin" ] ; then
+elif [ "$type" = "Cygwin" ] ; then
 	CC='cc'
-	CFLAGS='"-Wall"'
-	CLIBFLAGS='"-Wall"'
+	CFLAGS='-Wall'
+	CLIBFLAGS='-Wall'
 	EXEEXT='.exe'
 	LIBBASE='bibutils'
 	STATICLIBEXT='.a'
@@ -285,10 +285,10 @@ elif [ "$type" == "Cygwin" ] ; then
 	RANLIB='echo Skipping ranlib'
 	POSTFIX='_cygwin'
 	LIBINSTALLDIR=${INSTALLDIR}
-elif [ "$type" == "MinGW" ] ; then
+elif [ "$type" = "MinGW" ] ; then
 	CC='gcc'
-	CFLAGS='"-Wall"'
-	CLIBFLAGS='"-Wall"'
+	CFLAGS='-Wall'
+	CLIBFLAGS='-Wall'
 	EXEEXT='.exe'
 	LIBBASE='bibutils'
 	STATICLIBEXT='.a'
@@ -301,10 +301,10 @@ else
 	CC='cc'
 	CFLAGS=''
 	CLIBFLAGS=''
-	if [ "$LIBTYPE" == "dynamic" ] ; then
-		CLIBFLAGS='"-Wall -fPIC"'
+	if [ "$LIBTYPE" = "dynamic" ] ; then
+		CLIBFLAGS='-Wall -fPIC'
 	else
-		CLIBFLAGS='"-Wall"'
+		CLIBFLAGS='-Wall'
 	fi
 	EXEEXT=''
 	LIBBASE='libbibutils'
@@ -317,7 +317,7 @@ fi
 #
 # Set up for dynamic or static libraries
 #
-if [ "$LIBTYPE" == "dynamic" ] ; then
+if [ "$LIBTYPE" = "dynamic" ] ; then
 	cp lib/Makefile.dynamic  lib/Makefile
 	cp bin/Makefile.dynamic  bin/Makefile
 	cp test/Makefile.dynamic test/Makefile

@@ -80,9 +80,7 @@ bibutils.dll: $(BIBCORE_OBJS) $(BIBUTILS_OBJS)
 install:
 	echo INSTALLING LIBRARIES TO $(LIBINSTALLDIR)
 	mkdir -p $(LIBINSTALLDIR)
-	cp $(SOFULL) $(LIBINSTALLDIR)
-	ln -sf $(LIBINSTALLDIR)/$(SOFULL) $(LIBINSTALLDIR)/libbibutils.so
-	ln -sf $(LIBINSTALLDIR)/$(SOFULL) $(LIBINSTALLDIR)/$(SONAME)
+	cp -P $(SOFULL) $(SONAME) $(LIBTARGET) $(LIBINSTALLDIR)
 
 clean: 
 	rm -f *.o core

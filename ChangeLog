@@ -1,6 +1,39 @@
 
 BIBUTILS
 
+5.0
+05/27/13
+
+USER VISIBLE CHANGES
++ Make default character set unicode
++ Enable -o --output-encoding for the xxx2xml converters
+
+BUILD
++ Ensure binary directory target exists (reported by Thomas Fischer)
++ Tell cp to preserve symbolic links when copying dynamic library (reported by Thomas Fischer)
++ Remove bashisms from sh script (reported by JeffH)
+
+BIBLATEXIN
++ Handle 'shorttitle' tag (reported by Nick Bart)
++ Make asis/corp file work again (reported by JeffH)
++ Map 'pubstate' tag to note type="publication status" similar to http://ufdc.ufl.edu/help/pubstatus (suggested by Nick Bart)
++ Handle 'series' tag in @report (reported by Nick Bart)
++ Map 'series' in @article to partName of journal title (reported by Nick Bart)
++ Write 'annotation' as special type of note (reported by Nick Bart)
+
+BIBTEXIN
++ Make asis/corp file work again (reported by JeffH)
+
+RISOUT
++ Ensure that BT fields are written for conference publications (reported by Matthias Stevens)
++ Ensure that ED fields are used for editors of conference publications (reported by Matthias Stevens)
+
+MODS
++ Fix inappropriate "language" tags under languageOfCataloging (reported by Nick Bart)
+
+NAME MANGLING
++ Improve handling of prefixes to given names, e.g. "van der" in "van der Sande"
+
 4.17
 01/24/13
 

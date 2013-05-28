@@ -88,6 +88,7 @@ modsclean : $(TOMODS) $(MODSCLEAN) ../lib/libbibcore.a
 test:
 
 install:
+	mkdir -p $(INSTALLDIR)
 	@for p in $(PROGS); \
                 do ( cp $$p$(EXEEXT) $(INSTALLDIR)/ ); \
         done

@@ -9,10 +9,10 @@ POSTFIX       = REPLACE_POSTFIX
 INSTALLDIR    = REPLACE_INSTALLDIR
 LIBINSTALLDIR = REPLACE_LIBINSTALLDIR
 
-MAJORVERSION  = 4
-MINORVERSION  = 17
+MAJORVERSION  = 5
+MINORVERSION  = 0
 VERSION       = $(MAJORVERSION).$(MINORVERSION)
-DATE          = 2013-01-24
+DATE          = 2013-05-27
 
 PROGRAMS      = bib2xml \
                 biblatex2xml \
@@ -35,14 +35,14 @@ PROGRAMS      = bib2xml \
 all : FORCE
 	$(MAKE) -C lib -k \
                 CC=$(CC) \
-                CFLAGSIN=$(CLIBFLAGS) \
+                CFLAGSIN="$(CLIBFLAGS) $(DISTRO_CFLAGS)"\
                 LIBTARGETIN=$(LIBTARGET) \
                 MAJORVERSION=$(MAJORVERSION) \
                 MINORVERSION=$(MINORVERSION) \
                 RANLIB=$(RANLIB)
 	$(MAKE) -C bin -k \
                 CC=$(CC) \
-                CFLAGSIN=$(CFLAGS) \
+                CFLAGSIN="$(CFLAGS) $(DISTRO_CFLAGS)"\
                 EXEEXT=$(EXEEXT) \
                 VERSION="$(VERSION)" \
                 DATE="$(DATE)" \
@@ -63,7 +63,7 @@ test: all FORCE
 	$(MAKE) -C lib
 	$(MAKE) -C bin test
 	$(MAKE) -C test \
-                CFLAGSIN=$(CFLAGS) \
+                CFLAGSIN="$(CFLAGS) $(DISTRO_CFLAGS)"\
                 test
 
 install: all FORCE
