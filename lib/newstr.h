@@ -1,7 +1,7 @@
 /*
  * newstr.h
  *
- * Version: 04/21/13
+ * Version: 05/29/13
  *
  * Copyright (c) Chris Putnam 1999-2013
  *

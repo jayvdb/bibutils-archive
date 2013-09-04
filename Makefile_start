@@ -10,9 +10,9 @@ INSTALLDIR    = REPLACE_INSTALLDIR
 LIBINSTALLDIR = REPLACE_LIBINSTALLDIR
 
 MAJORVERSION  = 5
-MINORVERSION  = 0
+MINORVERSION  = 1
 VERSION       = $(MAJORVERSION).$(MINORVERSION)
-DATE          = 2013-05-27
+DATE          = 2013-09-03
 
 PROGRAMS      = bib2xml \
                 biblatex2xml \
@@ -68,6 +68,7 @@ test: all FORCE
 
 install: all FORCE
 	$(MAKE) -C lib \
+                LIBTARGETIN=$(LIBTARGET) \
                 MAJORVERSION=$(MAJORVERSION) \
                 MINORVERSION=$(MINORVERSION) \
                 LIBINSTALLDIR=$(LIBINSTALLDIR) \

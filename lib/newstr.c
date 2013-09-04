@@ -1,7 +1,7 @@
 /*
  * newstr.c
  *
- * Version: 04/21/13
+ * Version: 05/29/13
  *
  * Copyright (c) Chris Putnam 1999-2013
  *
@@ -208,6 +208,7 @@ void
 newstr_addchar( newstr *s, char newchar )
 {
 	assert( s );
+	if ( newchar=='\0' ) return; /* appending '\0' is a null operation */
 	if ( !s->data || s->dim==0 ) 
 		newstr_initalloc( s, newstr_initlen );
 	if ( s->len + 2 > s->dim ) 

@@ -1,7 +1,7 @@
 /*
  * list.c
  *
- * version: 2013-04-02
+ * version: 2013-08-29
  *
  * Copyright (c) Chris Putnam 2004-2013
  *
@@ -63,6 +63,14 @@ static inline int
 list_valid_num( list *a, int n )
 {
 	if ( n < 0 || n >= a->n ) return 0;
+	return 1;
+}
+
+int
+list_set( list *a, int n, char *s )
+{
+	if ( !list_valid_num( a, n ) ) return 0;
+	newstr_strcpy( &(a->str[n]), s );
 	return 1;
 }
 
@@ -432,7 +440,7 @@ list_trimend( list *a, int n )
 }
 
 void
-list_tokenize( list *tokens, newstr *in, char delim, int merge_delim )
+list_tokenize( list *tokens, newstr *in, const char *delim, int merge_delim )
 {
 	newstr s;
 	char *p;
@@ -440,11 +448,11 @@ list_tokenize( list *tokens, newstr *in, char delim, int merge_delim )
 	p = in->data;
 	newstr_init( &s );
 	while ( p && *p ) {
-		while ( *p && *p!=delim ) newstr_addchar( &s, *p++ );
+		while ( *p && !strchr( delim, *p ) ) newstr_addchar( &s, *p++ );
 		if ( s.len ) list_add( tokens, s.data );
 		else if ( !merge_delim ) list_add( tokens, "" );
 		newstr_empty( &s );
-		if ( *p==delim ) p++;
+		if ( *p && strchr( delim, *p ) ) p++;
 	}
 	newstr_free( &s );
 }

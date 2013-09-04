@@ -428,7 +428,7 @@ name_parse( newstr *outname, newstr *inname, list *asis, list *corps )
 	}
 
 	newstr_findreplace( inname, ",", ", " );
-	list_tokenize( &tokens, inname, ' ', 1 );
+	list_tokenize( &tokens, inname, " ", 1 );
 
 	if ( tokens.n==1 ) {
 		newstr_newstrcpy( outname, inname );

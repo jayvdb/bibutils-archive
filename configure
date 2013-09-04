@@ -216,7 +216,7 @@ elif [ "$type" = "SunOS5" ] ; then
 	LIBBASE='libbibutils'
 	STATICLIBEXT='.a'
 	DYNAMICLIBEXT='.so'
-	RANLIB='echo Skipping ranlib'
+	RANLIB='"echo Skipping ranlib"'
 	POSTFIX='_sunos5'
 elif [ "$type" = "IRIX" ] ; then
 	CC='gcc'
@@ -230,7 +230,7 @@ elif [ "$type" = "IRIX" ] ; then
 	LIBBASE='libbibutils'
 	STATICLIBEXT='.a'
 	DYNAMICLIBEXT='.so'
-	RANLIB='echo Skipping ranlib'
+	RANLIB='"echo Skipping ranlib"'
 	POSTFIX='_irix'
 elif [ "$type" = "NetBSD" ] ; then
 	CC='gcc'
@@ -282,7 +282,7 @@ elif [ "$type" = "Cygwin" ] ; then
 	LIBBASE='bibutils'
 	STATICLIBEXT='.a'
 	DYNAMICLIBEXT='.dll'
-	RANLIB='echo Skipping ranlib'
+	RANLIB='"echo Skipping ranlib"'
 	POSTFIX='_cygwin'
 	LIBINSTALLDIR=${INSTALLDIR}
 elif [ "$type" = "MinGW" ] ; then
@@ -293,7 +293,7 @@ elif [ "$type" = "MinGW" ] ; then
 	LIBBASE='bibutils'
 	STATICLIBEXT='.a'
 	DYNAMICLIBEXT='.dll'
-	RANLIB='echo Skipping ranlib'
+	RANLIB='"echo Skipping ranlib"'
 	POSTFIX='_mingw'
 	LIBINSTALLDIR=${INSTALLDIR}
 else
@@ -310,7 +310,7 @@ else
 	LIBBASE='libbibutils'
 	STATICLIBEXT='.a'
 	DYNAMICLIBEXT='.so'
-	RANLIB='echo Skipping ranlib'
+	RANLIB='"echo Skipping ranlib"'
 	POSTFIX=''
 fi
 

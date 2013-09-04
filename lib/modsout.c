@@ -571,9 +571,10 @@ output_partdate( fields *f, FILE *outptr, int level, int wrote_header )
 static int
 output_partpages( fields *f, FILE *outptr, int level, int wrote_header )
 {
-	convert parts[3] = {
+	convert parts[4] = {
 		{ "",  "PAGESTART",                -1 },
 		{ "",  "PAGEEND",                  -1 },
+		{ "",  "PAGES",                    -1 },
 		{ "",  "TOTALPAGES",               -1 }
 	};
 	int nparts = sizeof(parts)/sizeof(parts[0]);
@@ -591,13 +592,16 @@ output_partpages( fields *f, FILE *outptr, int level, int wrote_header )
 			mods_output_detail( f, outptr, parts[1].code,
 				"page", level );
 		if ( parts[2].code!=-1 )
+			mods_output_detail( f, outptr, parts[2].code,
+				"page", level );
+		if ( parts[3].code!=-1 )
 			mods_output_extents( f, outptr, -1, -1,
-					parts[2].code, "page", level ); 
+					parts[3].code, "page", level );
 	}
 	/* If both PAGESTART and PAGEEND are defined */
 	else {
 		mods_output_extents( f, outptr, parts[0].code, 
-			parts[1].code, parts[2].code, "page", level ); 
+			parts[1].code, parts[3].code, "page", level );
 	}
 
 	return 1;

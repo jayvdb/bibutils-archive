@@ -1,7 +1,7 @@
 /*
  * list.h
  *
- * version: 2013-04-02
+ * version: 2013-08-29
  *
  * Copyright (c) Chris Putnam 2004-2013
  *
@@ -63,6 +63,8 @@ extern newstr* list_getstr( list *a, int n );
 extern char*   list_getc( list *a, int n );
 extern char*   list_getstr_char( list *a, int n );
 
+extern int     list_set( list *a, int n, char *s );
+
 extern void    list_sort( list *a );
 
 extern int     list_find( list *a, char *searchstr );
@@ -73,7 +75,7 @@ extern void    list_trimend( list *a, int n );
 
 extern int     list_fill( list *a, char *filename );
 extern void    list_fillfp( list *a, FILE *fp );
-extern void    list_tokenize( list *tokens, newstr *in, char delim, int merge_delim );
+extern void    list_tokenize( list *tokens, newstr *in, const char *delim, int merge_delim );
 extern void    list_newstrtok( list *t, newstr *s, char *sep );
 
 

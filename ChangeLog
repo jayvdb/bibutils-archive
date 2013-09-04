@@ -1,6 +1,20 @@
 
 BIBUTILS
 
+5.1
+09/03/13
+
+BUILD
++ Fix make install (reported by Jens Petersen)
++ Fix cygwin skipping of ranlib (reported by Doug McIlroy)
+
+BIBTEXIN
++ Fix string concatenation and string variable usage
+
+BIBLATEXIN
++ Fix string concatenation and string variable usage
++ Add additional recognized reference types (reported by Nick Bart)
+
 5.0
 05/27/13
 

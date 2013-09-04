@@ -512,6 +512,8 @@ latex2char( char *s, unsigned int *pos, int *unicode )
 	if ( value=='{' || value=='\\' || value=='~' || 
 	     value=='$' || value=='\'' || value=='`' || 
 	     value=='-' || value=='^' ) {
+		if ( *p=='\\' && ( *p=='{' || *p=='}' ) ) {
+		} else {
 		for ( i=0; i<nlatex_chars; ++i ) {
 			q[0] = latex_chars[i].bib1;
 			l[0] = strlen( q[0] );
@@ -526,6 +528,7 @@ latex2char( char *s, unsigned int *pos, int *unicode )
 					return latex_chars[i].unicode;
 				}
 			}
+		}
 		}
 	}
 	*unicode = 0;

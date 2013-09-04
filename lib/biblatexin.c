@@ -21,8 +21,14 @@
 #include "reftypes.h"
 #include "biblatexin.h"
 
+extern const char progname[];
+
 static list find    = { 0, 0, 0, NULL };
 static list replace = { 0, 0, 0, NULL };
+
+/*****************************************************
+ PUBLIC: void biblatexin_initparams()
+*****************************************************/
 
 void
 biblatexin_initparams( param *p, const char *progname )
@@ -52,6 +58,10 @@ biblatexin_initparams( param *p, const char *progname )
 	if ( !progname ) p->progname = NULL;
 	else p->progname = strdup( progname );
 }
+
+/*****************************************************
+ PUBLIC: int biblatexin_readf()
+*****************************************************/
 
 /*
  * readf can "read too far", so we store this information in line, thus
@@ -99,63 +109,373 @@ biblatexin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, n
 	return haveref;
 }
 
+/*****************************************************
+ PUBLIC: int biblatexin_processf()
+*****************************************************/
+
+/* extract_to_terminator()
+ *     term      = string of characters to be used as terminators
+ *     finalstep = set to non-zero to position return value past the
+ *                 terminating character
+ */
 static char *
-biblatex_item( char *p, newstr *s )
+extract_to_terminator( newstr *s, char *p, const char *term, uchar finalstep )
 {
-	int surrounding_quotes = 0;
-	int nbrackets = 0;
-	int nquotes = 0;
-	while ( *p ) {
-		if ( !nquotes && !nbrackets ) {
+	while ( *p && !strchr( term, *p ) )
+		newstr_addchar( s, *p++ );
+	if ( finalstep && *p && strchr( term, *p ) ) p++;
+	return p;
+}
+
+static char *
+process_biblatextype( char *p, newstr *type )
+{
+	newstr tmp;
+	newstr_init( &tmp );
+
+	if ( *p=='@' ) p++;
+	p = extract_to_terminator( &tmp, p, "{( \t\r\n", 0 );
+	p = skip_ws( p );
+	if ( *p=='{' || *p=='(' ) p++;
+	p = skip_ws( p );
+
+	if ( tmp.len ) newstr_strcpy( type, tmp.data );
+	else newstr_empty( type );
+
+	newstr_free( &tmp );
+	return p;
+}
+
+static char *
+process_biblatexid( char *p, newstr *id )
+{
+	char *start_p = p;
+	newstr tmp;
+
+	newstr_init( &tmp );
+	p = extract_to_terminator( &tmp, p, ",", 1 );
+
+	if ( tmp.len ) {
+		if ( strchr( tmp.data, '=' ) ) {
+			/* Endnote writes biblatex files w/o fields, try to
+			 * distinguish via presence of an equal sign.... if
+			 * it's there, assume that it's a tag/data pair instead
+			 * and roll back.
+			 */
+			p = start_p;
+			newstr_empty( id );
+		} else {
+			newstr_strcpy( id, tmp.data );
+		}
+	} else {
+		newstr_empty( id );
+	}
+
+	newstr_free( &tmp );
+	return skip_ws( p );
+}
+
+static char *
+biblatex_tag( char *p, newstr *tag )
+{
+	newstr_empty( tag );
+	p = extract_to_terminator( tag, skip_ws( p ), "= \t\r\n", 0 );
+	return skip_ws( p );
+}
+
+static char *
+biblatex_data( char *p, fields *bibin, list *tokens )
+{
+	uint nbracket = 0, nquotes = 0;
+	char *startp = p;
+	newstr tok;
+
+	newstr_init( &tok );
+	while ( p && *p ) {
+		if ( !nquotes && !nbracket ) {
 			if ( *p==',' || *p=='=' || *p=='}' || *p==')' )
 				goto out;
 		}
-		if ( *p=='\"' && *(p-1)!='\\' && nbrackets==0 ) {
-			if ( s->len == 0 ) surrounding_quotes = 1;
-			else {
-				if ( !surrounding_quotes ) newstr_addchar( s, *p );
-				if ( nquotes ) surrounding_quotes = 0;
+		if ( *p=='\"' && nbracket==0 && ( p==startp || *(p-1)!='\\' ) ) {
+			nquotes = !nquotes;
+			newstr_addchar( &tok, *p );
+			if ( !nquotes ) {
+				list_add( tokens, tok.data );
+				newstr_empty( &tok );
 			}
-			nquotes = ( nquotes==0 );
-		} else if ( *p=='{' ) {
-			if ( nbrackets>0 || nquotes ) newstr_addchar( s, *p );
-			nbrackets++;
-		} else if ( *p=='}' ) {
-			nbrackets--;
-			if ( nbrackets>0 || nquotes ) newstr_addchar( s, *p );
-		} else {
-			if ( !is_ws( *p ) ) newstr_addchar( s, *p );
+		} else if ( *p=='#' && !nquotes && !nbracket ) {
+			if ( tok.len ) list_add( tokens, tok.data );
+			newstr_strcpy( &tok, "#" );
+			list_add( tokens, tok.data );
+			newstr_empty( &tok );
+		} else if ( *p=='{' && !nquotes && ( p==startp || *(p-1)!='\\' ) ) {
+			nbracket++;
+			newstr_addchar( &tok, *p );
+		} else if ( *p=='}' && !nquotes && ( p==startp || *(p-1)!='\\' ) ) {
+			nbracket--;
+			newstr_addchar( &tok, *p );
+			if ( nbracket==0 ) {
+				list_add( tokens, tok.data );
+				newstr_empty( &tok );
+			}
+		} else if ( !is_ws( *p ) || nquotes || nbracket ) {
+			if ( !is_ws( *p ) ) newstr_addchar( &tok, *p );
 			else {
-				if ( s->len!=0 && *p!='\n' && *p!='\r' )
-					newstr_addchar( s, *p );
-				else if ( s->len!=0 && (*p=='\n' || *p=='\r')) {
-					newstr_addchar( s, ' ' );
+				if ( tok.len!=0 && *p!='\n' && *p!='\r' )
+					newstr_addchar( &tok, *p );
+				else if ( tok.len!=0 && (*p=='\n' || *p=='\r')) {
+					newstr_addchar( &tok, ' ' );
 					while ( is_ws( *(p+1) ) ) p++;
 				}
+			}
+		} else if ( is_ws( *p ) ) {
+			if ( tok.len ) {
+				list_add( tokens, tok.data );
+				newstr_empty( &tok );
 			}
 		}
 		p++;
 	}
 out:
-	newstr_trimendingws( s );
+	if ( nbracket!=0 ) {
+		fprintf( stderr, "%s: Mismatch in number of brackets in reference.\n", progname );
+	}
+	if ( nquotes!=0 ) {
+		fprintf( stderr, "%s: Mismatch in number of quotes in reference.\n", progname );
+	}
+	if ( tok.len ) list_add( tokens, tok.data );
+	newstr_free( &tok );
 	return p;
 }
 
-static char *
-process_biblatexline( char *p, newstr *tag, newstr *data )
+/* replace_strings()
+ *
+ * do string replacement -- only if unprotected by quotation marks or curly brackets
+ */
+static void
+replace_strings( list *tokens, fields *bibin )
 {
-	p = skip_ws( p );
-	p = biblatex_item( p, tag );
-	p = skip_ws( p );
-	if ( *p=='=' ) {
-		p++;
-		p = skip_ws( p );
-		p = biblatex_item( p, data );
-		p = skip_ws( p );
+	int i, n, ok;
+	newstr *s;
+	char *q;
+	i = 0;
+	while ( i < tokens->n ) {
+		s = list_get( tokens, i );
+		if ( !strcmp( s->data, "#" ) ) {
+		} else if ( s->data[0]!='\"' && s->data[0]!='{' ) {
+			n = list_find( &find, s->data );
+			if ( n!=-1 ) {
+				newstr_newstrcpy( s, list_get( &replace, n ) );
+			} else {
+				q = s->data;
+				ok = 1;
+				while ( *q && ok ) {
+					if ( !isdigit( *q ) ) ok = 0;
+					q++;
+				}
+				if ( !ok ) {
+					fprintf( stderr, "%s: Warning: Non-numeric "
+					   "BibTeX elements should be in quotations or "
+					   "curly brackets in reference.\n", progname );
+				}
+			}
+		}
+		i++;
 	}
-	if ( *p==',' || *p=='}' || *p==')' ) p++;
-	p = skip_ws( p );
+}
+
+static void
+string_concatenate( list *tokens, fields *bibin )
+{
+	newstr *s, *t;
+	int i;
+	i = 0;
+	while ( i < tokens->n ) {
+		s = list_get( tokens, i );
+		if ( !strcmp( s->data, "#" ) ) {
+			if ( i==0 || i==tokens->n-1 ) {
+				fprintf( stderr, "%s: Warning: Stray string concatenation "
+					"('#' character) in reference\n", progname );
+				list_remove( tokens, i );
+				continue;
+			}
+			s = list_get( tokens, i-1 );
+			if ( s->data[0]!='\"' && s->data[s->len-1]!='\"' )
+				fprintf( stderr, "%s: Warning: String concentation should "
+					"be used in context of quotations marks.\n", progname );
+			t = list_get( tokens, i+1 );
+			if ( t->data[0]!='\"' && t->data[s->len-1]!='\"' )
+				fprintf( stderr, "%s: Warning: String concentation should "
+					"be used in context of quotations marks.\n", progname );
+			if ( ( s->data[s->len-1]=='\"' && t->data[0]=='\"') || (s->data[s->len-1]=='}' && t->data[0]=='{') ) {
+				newstr_trimend( s, 1 );
+				newstr_trimbegin( t, 1 );
+				newstr_newstrcat( s, t );
+			} else {
+				newstr_newstrcat( s, t );
+			}
+			list_remove( tokens, i );
+			list_remove( tokens, i );
+		} else i++;
+	}
+}
+
+static char *
+process_biblatexline( char *p, newstr *tag, newstr *data, uchar stripquotes )
+{
+	list tokens;
+	newstr *s;
+	int i;
+
+	list_init( &tokens );
+	newstr_empty( data );
+
+	p = biblatex_tag( p, tag );
+	if ( tag->len==0 ) return p;
+
+	if ( *p=='=' ) p = biblatex_data( p+1, NULL, &tokens );
+
+	replace_strings( &tokens, NULL );
+
+	string_concatenate( &tokens, NULL );
+
+	for ( i=0; i<tokens.n; i++ ) {
+		s = list_get( &tokens, i );
+		if ( ( stripquotes && s->data[0]=='\"' && s->data[s->len-1]=='\"' ) ||
+		     ( s->data[0]=='{' && s->data[s->len-1]=='}' ) ) {
+			newstr_trimbegin( s, 1 );
+			newstr_trimend( s, 1 );
+		}
+		newstr_newstrcat( data, list_get( &tokens, i ) );
+	}
+
+	list_free( &tokens );
 	return p;
+}
+
+static void
+process_cite( fields *bibin, char *p, char *filename, long nref )
+{
+	newstr tag, data;
+	newstrs_init( &tag, &data, NULL );
+	p = process_biblatextype( p, &data );
+	if ( data.len ) fields_add( bibin, "INTERNAL_TYPE", data.data, 0 );
+	if ( *p ) {
+		p = process_biblatexid ( p, &data );
+		if ( data.len ) fields_add( bibin, "REFNUM", data.data, 0 );
+	}
+	while ( *p ) {
+		p = process_biblatexline( p, &tag, &data, 1 );
+		/* no anonymous or empty fields allowed */
+		if ( tag.len && data.len )
+			fields_add( bibin, tag.data, data.data, 0 );
+		newstrs_empty( &tag, &data, NULL );
+	}
+	newstrs_free( &tag, &data, NULL );
+}
+
+/* process_string()
+ *
+ * Handle lines like:
+ *
+ * '@STRING{TL = {Tetrahedron Lett.}}'
+ *
+ * p should point to just after '@STRING'
+ *
+ * In BibTeX, if a string is defined several times, the last one is kept.
+ *
+ */
+static void
+process_string( char *p )
+{
+	newstr s1, s2;
+	int n;
+	newstrs_init( &s1, &s2, NULL );
+	while ( *p && *p!='{' && *p!='(' ) p++;
+	if ( *p=='{' || *p=='(' ) p++;
+	p = process_biblatexline( skip_ws( p ), &s1, &s2, 0 );
+	if ( s2.data ) {
+		newstr_findreplace( &s2, "\\ ", " " );
+	}
+	if ( s1.data ) {
+		n = list_find( &find, s1.data );
+		if ( n==-1 ) {
+			list_add( &find, s1.data );
+			if ( s2.data ) list_add( &replace, s2.data );
+			else list_add( &replace, "" );
+		} else {
+			if ( s2.data ) list_set( &replace, n, s2.data );
+			else list_set( &replace, n, "" );
+		}
+	}
+	newstrs_free( &s1, &s2, NULL );
+}
+
+int
+biblatexin_processf( fields *bibin, char *data, char *filename, long nref )
+{
+	if ( !strncasecmp( data, "@STRING", 7 ) ) {
+		process_string( data+7 );
+		return 0;
+        } else {
+		process_cite( bibin, data, filename, nref );
+		return 1;
+	}
+}
+
+/*****************************************************
+ PUBLIC: void biblatexin_cleanf()
+*****************************************************/
+
+static void
+biblatex_process_tilde( newstr *s )
+{
+	char *p, *q;
+	int n = 0;
+
+	p = q = s->data;
+	if ( !p ) return;
+	while ( *p ) {
+		if ( *p=='~' ) {
+			*q = ' ';
+		} else if ( *p=='\\' && *(p+1)=='~' ) {
+			n++;
+			p++;
+			*q = '~';
+		} else {
+			*q = *p;
+		}
+		p++;
+		q++;
+	}
+	*q = '\0';
+	s->len -= n;
+}
+
+static void
+biblatex_process_bracket( newstr *s )
+{
+	char *p, *q;
+	int n = 0;
+
+	p = q = s->data;
+	if ( !p ) return;
+	while ( *p ) {
+		if ( *p=='\\' && ( *(p+1)=='{' || *(p+1)=='}' ) ) {
+			n++;
+			p++;
+			*q = *p;
+			q++;
+		} else if ( *p=='{' || *p=='}' ) {
+			n++;
+		} else {
+			*q = *p;
+			q++;
+		}
+		p++;
+	}
+	*q = '\0';
+	s->len -= n;
 }
 
 static void
@@ -179,173 +499,46 @@ biblatex_cleantoken( newstr *s )
 
 	newstr_findreplace( s, "\\%", "%" );
 	newstr_findreplace( s, "\\$", "$" );
-	newstr_findreplace( s, "{", "" );
-	newstr_findreplace( s, "}", "" );
 	while ( newstr_findreplace( s, "  ", " " ) ) {}
 
 	/* 'textcomp' annotations that we don't want to substitute on output*/
 	newstr_findreplace( s, "\\textdollar", "$" );
 	newstr_findreplace( s, "\\textunderscore", "_" );
+
+	biblatex_process_bracket( s );
+	biblatex_process_tilde( s );
 }
 
 static void
 biblatex_split( list *tokens, newstr *s )
 {
 	int i, n = s->len, nbrackets = 0;
-	newstr currtok;
+	newstr tok;
 
-	newstr_init( &currtok );
+	newstr_init( &tok );
 
 	for ( i=0; i<n; ++i ) {
-		if ( s->data[i]=='{' ) {
+		if ( s->data[i]=='{' && ( i==0 || s->data[i-1]!='\\' ) ) {
 			nbrackets++;
-			newstr_addchar( &currtok, '{' );
-		} else if ( s->data[i]=='}' ) {
+			newstr_addchar( &tok, '{' );
+		} else if ( s->data[i]=='}' && ( i==0 || s->data[i-1]!='\\' ) ) {
 			nbrackets--;
-			newstr_addchar( &currtok, '}' );
-		} else if ( s->data[i]=='#' && !nbrackets ) {
-			if ( currtok.len ) list_add( tokens, currtok.data );
-			newstr_empty( &currtok );
+			newstr_addchar( &tok, '}' );
 		} else if ( !is_ws( s->data[i] ) || nbrackets ) {
-			newstr_addchar( &currtok, s->data[i] );
+			newstr_addchar( &tok, s->data[i] );
 		} else if ( is_ws( s->data[i] ) ) {
-			if ( currtok.len ) list_add( tokens, currtok.data );
-			newstr_empty( &currtok );
+			if ( tok.len ) list_add( tokens, tok.data );
+			newstr_empty( &tok );
 		}
 	}
-	if ( currtok.len ) list_add( tokens, currtok.data );
+	if ( tok.len ) list_add( tokens, tok.data );
+
 	for ( i=0; i<tokens->n; ++i ) {
 		newstr_trimstartingws( list_get( tokens, i ) );
 		newstr_trimendingws( list_get( tokens, i ) );
 	}
-	newstr_free( &currtok );
-}
 
-/* get reference type */
-static char*
-process_biblatextype( char *p, newstr *data )
-{
-	newstr tmp;
-	newstr_init( &tmp );
-
-	newstr_empty( data );
-
-	if ( *p=='@' ) p++; /* skip '@' character */
-	while ( *p && *p!='{' && *p!='(' ) newstr_addchar( &tmp, *p++ );
-	if ( *p=='{' || *p=='(' ) p++;
-	p = skip_ws( p );
-
-	if ( tmp.len ) {
-		/* add '{' and '}' to protect from string expansion */
-		newstr_addchar( data, '{' );
-		newstr_strcat( data, tmp.data );
-		newstr_addchar( data, '}' );
-	}
-	newstr_free( &tmp );
-	return p;
-}
-/* get reference name */
-static char*
-process_biblatexid( char *p, newstr *data )
-{
-	newstr tmp;
-	char *start_p = p;
-	newstr_init( &tmp );
-	newstr_empty( data );
-
-	while ( *p && *p!=',' ) newstr_addchar( &tmp, *p++ );
-	if ( *p==',' ) p++;
-	p = skip_ws( p ); /* skip ending newline/carriage return */
-
-	if ( tmp.len ) {
-		if ( strchr( tmp.data, '=' ) ) {
-			/* Endnote writes biblatex files w/o fields, try to
-			 * distinguish via presence of an equal sign.... if
-			 * it's there, assume that it's a tag/data pair instead
-			 * and roll back.
-			 */
-			p = start_p;
-		} else {
-			/* add '{' and '}' to protect from string expansion */
-			newstr_addchar( data, '{' );
-			newstr_strcat( data, tmp.data );
-			newstr_addchar( data, '}' );
-		}
-	}
-
-	newstr_free( &tmp );
-	return p;
-}
-
-static void
-process_cite( fields *bibin, char *p, char *filename, long nref )
-{
-	newstr tag, data;
-	newstrs_init( &tag, &data, NULL );
-	p = process_biblatextype( p, &data );
-	if ( data.len ) fields_add( bibin, "INTERNAL_TYPE", data.data, 0 );
-	if ( *p ) p = process_biblatexid ( p, &data );
-	if ( data.len ) fields_add( bibin, "REFNUM", data.data, 0 );
-	newstr_empty( &data );
-	while ( *p ) {
-		p = process_biblatexline( p, &tag, &data );
-		/* no anonymous or empty fields allowed */
-		if ( tag.len && data.len )
-			fields_add( bibin, tag.data, data.data, 0 );
-		newstrs_empty( &tag, &data, NULL );
-	}
-	newstrs_free( &tag, &data, NULL );
-}
-
-static void
-biblatex_addstring( char *p )
-{
-	newstr s1, s2;
-	newstrs_init( &s1, &s2, NULL );
-	p = skip_ws( p );
-	if ( *p=='(' || *p=='{' ) p++;
-	p = process_biblatexline( p, &s1, &s2 );
-	newstr_findreplace( &s2, "\\ ", " " );
-	biblatex_cleantoken( &s2 );
-	if ( s1.data ) {
-		list_add( &find, s1.data );
-		if ( s2.data ) list_add( &replace, s2.data );
-		else list_add( &replace, "" );
-	}
-	newstrs_free( &s1, &s2, NULL );
-}
-
-static int
-biblatex_usestrings( newstr *s )
-{
-	int i;
-	for ( i=0; i<find.n; ++i ) {
-		if ( !strcasecmp( s->data, (find.str[i]).data ) ) {
-			newstr_findreplace( s, (find.str[i]).data, 
-					(replace.str[i]).data );
-			return 1;
-		}
-	}
-	return 0;
-}
-
-static void
-process_string( char *p )
-{
-	while ( *p && *p!='{' && *p!='(' ) p++;
-	biblatex_addstring( p );
-}
-
-int
-biblatexin_processf( fields *bibin, char *data, char *filename, long nref )
-{
-	if ( !strncasecmp( data, "@STRING", 7 ) ) {
-		process_string( data );
-		return 0;
-        } else {
-		process_cite( bibin, data, filename, nref );
-		return 1;
-	}
+	newstr_free( &tok );
 }
 
 static void
@@ -400,7 +593,6 @@ biblatex_cleandata( newstr *tag, newstr *s, fields *info, param *p )
 	list_init( &tokens );
 	biblatex_split( &tokens, s );
 	for ( i=0; i<tokens.n; ++i ) {
-		biblatex_usestrings( &(tokens.str[i]) );
 		if (!strncasecmp(tokens.str[i].data,"\\href{", 6)) {
 			biblatex_addtitleurl( info, &(tokens.str[i]) );
 		}
@@ -454,21 +646,11 @@ biblatexin_crossref( bibl *bin, param *p )
 		ncross = biblatexin_findref( bin, bin->ref[i]->data[n].data );
 		if ( ncross==-1 ) {
 			biblatexin_nocrossref( bin, i, n, p );
-#if 0
-			int n1 = fields_find( bin->ref[i], "REFNUM", -1 );
-			fprintf( stderr, "%s: Cannot find cross-reference '%s'",
-				progname, bin->ref[i]->data[n].data);
-			if ( n1!=-1 )
-				fprintf( stderr, " for reference '%s'\n",
-					bin->ref[i]->data[n1].data );
-			fprintf( stderr, "\n" );
-#endif			
 			continue;
 		}
 		ntype = fields_find( bin->ref[i], "INTERNAL_TYPE", -1 );
 		type = bin->ref[i]->data[ntype].data;
 		fields_setused( bin->ref[i], n );
-/*		bin->ref[i]->used[n] = 1; */
 		for ( j=0; j<bin->ref[ncross]->n; ++j ) {
 			nt = bin->ref[ncross]->tag[j].data;
 			if ( !strcasecmp( nt, "INTERNAL_TYPE" ) ) continue;
@@ -481,7 +663,6 @@ biblatexin_crossref( bibl *bin, param *p )
 			nd = bin->ref[ncross]->data[j].data;
 			nl = bin->ref[ncross]->level[j] + 1;
 			fields_add( bin->ref[i], nt, nd, nl );
-
 		}
 	}
 }
@@ -517,6 +698,33 @@ biblatexin_cleanf( bibl *bin, param *p )
 		biblatexin_cleanref( bin->ref[i], p );
 	biblatexin_crossref( bin, p );
 }
+
+/*****************************************************
+ PUBLIC: void biblatexin_typef()
+*****************************************************/
+
+int
+biblatexin_typef( fields *bibin, char *filename, int nrefs, param *p,
+                variants *all, int nall )
+{
+        char *refnum = "";
+        int reftype, n, nrefnum;
+        n = fields_find( bibin, "INTERNAL_TYPE", 0 );
+        nrefnum = fields_find( bibin, "REFNUM", 0 );
+        if ( nrefnum!=-1 ) refnum = (bibin->data[nrefnum]).data;
+        if ( n!=-1 )
+                /* figure out type */
+                reftype = get_reftype( (bibin->data[n]).data, nrefs,
+                        p->progname, all, nall, refnum );
+        else
+                /* no type info, go for default */
+                reftype = get_reftype( "", nrefs, p->progname, all, nall, refnum );
+        return reftype;
+}
+
+/*****************************************************
+ PUBLIC: int biblatexin_convertf()
+*****************************************************/
 
 /* is_utf8_emdash()
  *
@@ -708,25 +916,6 @@ process_eprint( fields *bibin, fields *info, int level )
 		fields_setused( bibin, netype );
 	}
 	return 1;
-}
-
-int
-biblatexin_typef( fields *bibin, char *filename, int nrefs, param *p,
-		variants *all, int nall )
-{
-	char *refnum = "";
-	int reftype, n, nrefnum;
-	n = fields_find( bibin, "INTERNAL_TYPE", 0 );
-	nrefnum = fields_find( bibin, "REFNUM", 0 );
-	if ( nrefnum!=-1 ) refnum = (bibin->data[nrefnum]).data;
-	if ( n!=-1 )
-		/* figure out type */
-		reftype = get_reftype( (bibin->data[n]).data, nrefs,
-			p->progname, all, nall, refnum );
-	else
-		/* no type info, go for default */
-		reftype = get_reftype( "", nrefs, p->progname, all, nall, refnum );
-	return reftype;
 }
 
 static void
