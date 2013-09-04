@@ -1,6 +1,12 @@
 
 BIBUTILS
 
+5.2
+09/03/13
+
+BIBLATEXIN
++ Protect conversion of tilde in URLs
+
 5.1
 09/03/13
 

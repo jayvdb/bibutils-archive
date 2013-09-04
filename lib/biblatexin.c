@@ -583,6 +583,15 @@ is_name_tag( newstr *tag )
 	return 0;
 }
 
+static int
+is_url_tag( newstr *tag )
+{
+	if ( tag->len ) {
+		if ( !strcasecmp( tag->data, "url" ) ) return 1;
+	}
+	return 0;
+}
+
 static void
 biblatex_cleandata( newstr *tag, newstr *s, fields *info, param *p )
 {
@@ -590,6 +599,8 @@ biblatex_cleandata( newstr *tag, newstr *s, fields *info, param *p )
 	newstr *tok;
 	int i;
 	if ( !s->len ) return;
+	/* protect url from undergoing any parsing */
+	if ( is_url_tag( tag ) ) return;
 	list_init( &tokens );
 	biblatex_split( &tokens, s );
 	for ( i=0; i<tokens.n; ++i ) {
