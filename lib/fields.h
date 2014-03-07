@@ -1,7 +1,7 @@
 /*
  * fields.h
  *
- * Copyright (c) Chris Putnam 2003-2013
+ * Copyright (c) Chris Putnam 2003-2014
  *
  * Source code released under the GPL version 2
  *
@@ -45,7 +45,6 @@ extern int  fields_replace_or_add( fields *f, char *tag, char *data, int level )
 extern inline int fields_num( fields *f );
 extern inline int fields_used( fields *f, int n );
 extern inline int fields_nodata( fields *f, int n );
-extern inline int fields_get_level( fields *f, int n );
 
 extern inline int fields_match_level( fields *f, int n, int level );
 extern inline int fields_match_tag( fields *f, int n, char *tag );

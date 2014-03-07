@@ -1,7 +1,7 @@
 /*
  * bibutils.h
  *
- * Copyright (c) Chris Putnam 2005-2013
+ * Copyright (c) Chris Putnam 2005-2014
  *
  * Source code released under GPL version 2
  *

@@ -3,7 +3,7 @@
  *
  * convert between latex special chars and unicode
  *
- * Copyright (c) Chris Putnam 2004-2013
+ * Copyright (c) Chris Putnam 2004-2014
  *
  * Source code released under the GPL version 2
  *
@@ -63,14 +63,14 @@ static struct latex_chars latex_chars[] = {
    { 230, "{\\ae}",  "\\ae",    ""      }, /* Latin Small ae */
 
                                            /* Latin Capital C */
-   { 199, "{\\c{C}}","\\c{C}",  ""      }, /*               with cedilla */
+   { 199, "{\\c{C}}","\\c{C}",  "\\c c" }, /*               with cedilla */
    { 262, "{\\'{C}}","\\'{C}",  "\\'C"  }, /*               with acute */
    { 264, "{\\^{C}}","\\^{C}",  "\\^C"  }, /*               with circumflex */
    { 266, "{\\.{C}}","\\.{C}",  "\\.C"  }, /*               with dot above */
    { 268, "{\\v{C}}","\\v{C}",  "\\v C" }, /*               with caron (hacek) */
 
                                            /* Latin Small c */
-   { 231, "{\\c{c}}","\\c{c}",  ""      }, /*               with cedilla*/
+   { 231, "{\\c{c}}","\\c{c}",  "\\c C" }, /*               with cedilla*/
    { 263, "{\\'{c}}","\\'{c}",  "\\'c"  }, /*               with acute */
    { 265, "{\\^{c}}","\\^{c}",  "\\^c"  }, /*               with circumflex */
    { 267, "{\\.{c}}","\\.{c}",  "\\.c"  }, /*               with dot above */

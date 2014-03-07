@@ -1,7 +1,7 @@
 /*
  * bibtexin.c
  *
- * Copyright (c) Chris Putnam 2003-2013
+ * Copyright (c) Chris Putnam 2003-2014
  *
  * Program and source code released under the GPL version 2
  *
@@ -193,7 +193,7 @@ bibtex_tag( char *p, newstr *tag )
 static char *
 bibtex_data( char *p, fields *bibin, list *tokens )
 {
-	uint nbracket = 0, nquotes = 0;
+	unsigned int nbracket = 0, nquotes = 0;
 	char *startp = p;
 	newstr tok;
 

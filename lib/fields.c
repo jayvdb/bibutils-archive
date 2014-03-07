@@ -1,7 +1,7 @@
 /*
  * fields.c
  *
- * Copyright (c) Chris Putnam 2003-2013
+ * Copyright (c) Chris Putnam 2003-2014
  *
  * Source code released under the GPL version 2
  *
@@ -160,32 +160,17 @@ fields_add_tagsuffix( fields *f, char *tag, char *suffix,
 	return ret;
 }
 
-/* fields_get_level()
- *
- */
-inline int
-fields_get_level( fields *f, int n )
-{
-	assert( f );
-	assert( n>=0 );
-	assert( n<f->n );
-
-	return f->level[n];
-}
-
 /* fields_match_level()
  *
  * returns 1 if level matched, 0 if not
  *
- * level==-1 is a special flag meaning any level can match
+ * level==LEVEL_ANY is a special flag meaning any level can match
  */
 inline int
 fields_match_level( fields *f, int n, int level )
 {
-	assert( f );
-
 	if ( level==LEVEL_ANY ) return 1;
-	if ( fields_get_level( f, n )==level ) return 1;
+	if ( fields_level( f, n )==level ) return 1;
 	return 0;
 }
 
@@ -256,9 +241,12 @@ fields_maxlevel( fields *f )
 
 	assert( f );
 
-	for ( i=0; i<f->n; ++i ) {
-		if ( f->level[i] > max )
-			max = f->level[i];
+	if ( f->n ) {
+		max = f->level[0];
+		for ( i=1; i<f->n; ++i ) {
+			if ( f->level[i] > max )
+				max = f->level[i];
+		}
 	}
 
 	return max;
@@ -280,7 +268,7 @@ fields_setused( fields *f, int n )
 {
 	assert( f );
 
-	if ( n < f->n )
+	if ( n >= 0 && n < f->n )
 		f->used[n] = 1;
 }
 
@@ -304,7 +292,7 @@ char *fields_null_value = "\0";
 inline int
 fields_used( fields *f, int n )
 {
-	if ( n < f->n ) return f->used[n];
+	if ( n >= 0 && n < f->n ) return f->used[n];
 	else return 0;
 }
 
@@ -312,7 +300,7 @@ inline int
 fields_nodata( fields *f, int n )
 {
 	newstr *d;
-	if ( n < f->n ) {
+	if ( n >= 0 && n < f->n ) {
 		d = &( f->data[n] );
 		if ( d->len > 0 ) return 0;
 		return 1;

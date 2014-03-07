@@ -3,7 +3,7 @@
  *
  * Version: 05/29/13
  *
- * Copyright (c) Chris Putnam 1999-2013
+ * Copyright (c) Chris Putnam 1999-2014
  *
  * Source code released under the GPL version 2
  *
@@ -777,6 +777,6 @@ newstr_char( newstr *s, unsigned long n )
 char
 newstr_revchar( newstr *s, unsigned long n )
 {
-	if ( s->len==0 || n >= s->len ) return '\0';
+	if ( s->len==0 || n > s->len ) return '\0';
 	return s->data[ s->len - n ];
 }

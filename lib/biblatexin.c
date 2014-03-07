@@ -1,8 +1,8 @@
 /*
  * biblatexin.c
  *
- * Copyright (c) Chris Putnam 2008-2013
- * Copyright (c) Johannes Wilm 2010-2013
+ * Copyright (c) Chris Putnam 2008-2014
+ * Copyright (c) Johannes Wilm 2010-2014
  *
  * Program and source code released under the GPL version 2
  *
@@ -186,7 +186,7 @@ biblatex_tag( char *p, newstr *tag )
 static char *
 biblatex_data( char *p, fields *bibin, list *tokens )
 {
-	uint nbracket = 0, nquotes = 0;
+	unsigned int nbracket = 0, nquotes = 0;
 	char *startp = p;
 	newstr tok;
 
