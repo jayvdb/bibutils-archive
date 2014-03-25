@@ -575,6 +575,7 @@ output_citeparts( fields *info, FILE *outptr, int level, int max, int type )
 		{ "NUMBER",          "b:Issue",   LEVEL_ANY },
 		{ "PUBLICLAWNUMBER", "b:Volume",  LEVEL_ANY },
 		{ "SESSION",         "b:Issue",   LEVEL_ANY },
+		{ "URL",             "b:Url",     LEVEL_ANY },
 	};
 	int nparts=sizeof(parts)/sizeof(convert);
 	

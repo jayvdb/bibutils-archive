@@ -1,6 +1,21 @@
 
 BIBUTILS
 
+5.4
+03/24/14
+BIB2XML/BIBLATEX2XML
++ Do not use latex in references to external files (reported by JVilhena)
+
+WORDOUT
++ Output url information (reported by danieldedo)
+
+5.3
+03/06/14
+
+BUILD
++ Remove type 'uint' from lib/bibtexin.c and lib/biblatexin.c
++ Handle additional latex forms of C with cedilla
+
 5.2
 09/03/13
 
