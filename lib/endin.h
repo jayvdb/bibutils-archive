@@ -18,7 +18,7 @@ extern int endin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *l
 extern int endin_processf( fields *endin, char *p, char *filename, long nref );
 extern int endin_typef( fields *endin, char *filename, int nrefs, param *p, variants *all, int nall );
 extern int endin_convertf( fields *endin, fields *info, int reftype, param *p, variants *all, int nall );
-extern void endin_cleanf( bibl *bin, param *p );
+extern int endin_cleanf( bibl *bin, param *p );
 
 extern void endin_initparams( param *p, const char *progname );
 

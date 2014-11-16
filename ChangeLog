@@ -1,6 +1,22 @@
 
 BIBUTILS
 
+5.5
+11/15/14
+
+GLOBAL
++ Improve error propagation in library
+
+MODSIN
++ Improve handling of language information and handle iso639-1, iso639-2, and iso639-3 codes
+
+XML2END
++ Output DOI as '%R' in addition to url in '%U'
++ Improve recognition of reference types in MODS records
+
+XML2RIS
++ Improve recognition of reference types in MODS records
+
 5.4
 03/24/14
 BIB2XML/BIBLATEX2XML

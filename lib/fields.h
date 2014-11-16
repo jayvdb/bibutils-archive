@@ -9,6 +9,9 @@
 #ifndef FIELDS_H
 #define FIELDS_H
 
+#define FIELDS_OK     (1)
+#define FIELDS_ERR    (0)
+
 #define LEVEL_ANY    (-1)
 #define LEVEL_MAIN    (0)
 #define LEVEL_HOST    (1)

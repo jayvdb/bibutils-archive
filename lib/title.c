@@ -22,7 +22,7 @@ title_process( fields *info, char *tag, char *data, int level,
 {
 	newstr title, subtitle;
 	char *p, *q;
-	int ok;
+	int status;
 
 	newstr_init( &title );
 	newstr_init( &subtitle );
@@ -45,17 +45,17 @@ title_process( fields *info, char *tag, char *data, int level,
 
 	if ( strncasecmp( "SHORT", tag, 5 ) ) {
 		if ( title.len>0 ) {
-			ok = fields_add( info, "TITLE", title.data, level );
-			if ( !ok ) return 0;
+			status = fields_add( info, "TITLE", title.data, level );
+			if ( status!=FIELDS_OK ) return 0;
 		}
 		if ( subtitle.len>0 ) {
-			ok = fields_add( info, "SUBTITLE", subtitle.data, level );
-			if ( !ok ) return 0;
+			status = fields_add( info, "SUBTITLE", subtitle.data, level );
+			if ( status!=FIELDS_OK ) return 0;
 		}
 	} else {
 		if ( title.len>0 ) {
-			ok = fields_add( info, "SHORTTITLE", title.data, level );
-			if ( !ok ) return 0;
+			status = fields_add( info, "SHORTTITLE", title.data, level );
+			if ( status!=FIELDS_OK ) return 0;
 		}
 		/* no SHORT-SUBTITLE! */
 	}

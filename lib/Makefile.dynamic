@@ -22,7 +22,9 @@ CONTAIN_OBJS  = fields.o \
 
 BIBL_OBJS     = bibl.o \
                 doi.o \
+                iso639_1.o \
                 iso639_2.o \
+                iso639_3.o \
                 marc.o \
                 name.o \
                 reftypes.o \

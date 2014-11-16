@@ -9,6 +9,10 @@
 #ifndef NEWSTR_CONV_H
 #define NEWSTR_CONV_H
 
+#define NEWSTR_CONV_XMLOUT_FALSE    (0)
+#define NEWSTR_CONV_XMLOUT_TRUE     (1)
+#define NEWSTR_CONV_XMLOUT_ENTITIES (3)
+
 #include "newstr.h"
 
 extern int newstr_convert( newstr *s,

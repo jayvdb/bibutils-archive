@@ -1,7 +1,7 @@
 /*
  * tomods.c
  *
- * Copyright (c) Chris Putnam 2004-2014
+ * Copyright (c) Chris Putnam 2004-2013
  *
  * Source code released under the GPL version 2
  *
@@ -62,7 +62,7 @@ void
 tomods_processargs( int *argc, char *argv[], param *p,
 	char *help1, char *help2 )
 {
-	int i, j, subtract;
+	int i, j, subtract, status;
 	process_charsets( argc, argv, p );
 	i = 0;
 	while ( i<*argc ) {
@@ -119,12 +119,28 @@ tomods_processargs( int *argc, char *argv[], param *p,
 		} else if ( args_match( argv[i], "-c", "--corporation-file")){
 			args_namelist( *argc, argv, i, p->progname,
 				"-c", "--corporation-file" );
-			bibl_readcorps( p, argv[i+1] );
+			status = bibl_readcorps( p, argv[i+1] );
+			if ( status == BIBL_ERR_MEMERR ) {
+				fprintf( stderr, "%s: Memory error when reading --corporation-file '%s'\n",
+					p->progname, argv[i+1] );
+				exit( EXIT_FAILURE );
+			} else if ( status == BIBL_ERR_CANTOPEN ) {
+				fprintf( stderr, "%s: Cannot read --corporation-file '%s'\n",
+					p->progname, argv[i+1] );
+			}
 			subtract = 2;
 		} else if ( args_match( argv[i], "-as", "--asis")) {
 			args_namelist( *argc, argv, i, p->progname,
 				"-as", "--asis" );
-			bibl_readasis( p, argv[i+1] );
+			status = bibl_readasis( p, argv[i+1] );
+			if ( status == BIBL_ERR_MEMERR ) {
+				fprintf( stderr, "%s: Memory error when reading --asis file '%s'\n",
+					p->progname, argv[i+1] );
+				exit( EXIT_FAILURE );
+			} else if ( status == BIBL_ERR_CANTOPEN ) {
+				fprintf( stderr, "%s: Cannot read --asis file '%s'\n",
+					p->progname, argv[i+1] );
+			}
 			subtract = 2;
 		}
 		if ( subtract ) {

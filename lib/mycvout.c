@@ -1,7 +1,7 @@
 /*
  * bibtexout.c
  *
- * Copyright (c) Chris Putnam 2003-2014
+ * Copyright (c) Chris Putnam 2003-2013
  *
  * Source code released under the GPL version 2
  *
@@ -29,7 +29,7 @@ bibtexout_initparams( param *p, const char *progname )
 	p->latexout         = 1;
 	p->utf8out          = 0;
 	p->utf8bom          = 0;
-	p->xmlout           = 0;
+	p->xmlout           = BIBL_XMLOUT_FALSE;
 	p->nosplittitle     = 0;
 	p->verbose          = 0;
 	p->addcount         = 0;

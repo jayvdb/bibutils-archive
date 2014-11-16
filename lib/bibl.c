@@ -80,7 +80,7 @@ int
 bibl_copy( bibl *bout, bibl *bin )
 {
 	fields *refin, *refout;
-	int i, j, n, ok, level;
+	int i, j, n, status, ok, level;
 	char *tag, *value;
 	for ( i=0; i<bin->nrefs; ++i ) {
 		refin = bin->ref[i];
@@ -92,8 +92,8 @@ bibl_copy( bibl *bout, bibl *bin )
 			value = fields_value( refin, j, FIELDS_CHRP );
 			level = fields_level( refin, j );
 			if ( tag && value ) {
-				ok = fields_add( refout, tag, value, level );
-				if ( !ok ) return 0;
+				status = fields_add( refout, tag, value, level );
+				if ( status!=FIELDS_OK ) return 0;
 			}
 		}
 		ok = bibl_addref( bout, refout );

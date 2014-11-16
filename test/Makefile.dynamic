@@ -7,6 +7,7 @@ LDFLAGS  = -L ../lib
 LDLIBS   = -lbibutils
 
 PROGS    = entities_test \
+           list_test \
            newstr_test \
            utf8_test
 
@@ -21,10 +22,14 @@ utf8_test : utf8_test.o
 newstr_test : newstr_test.o
 	$(CC) $(LDFLAGS) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
+list_test : list_test.o
+	$(CC) $(LDFLAGS) $^ $(LOADLIBES) $(LDLIBS) -o $@
+
 test: $(PROGS) FORCE
 	( LD_LIBRARY_PATH="../lib"; \
 	export LD_LIBRARY_PATH ; \
 	./newstr_test; \
+	./list_test; \
 	./entities_test; \
 	./utf8_test )
 

@@ -18,7 +18,7 @@
 
 extern int  biblatexin_convertf( fields *bibin, fields *info, int reftype, param *p, variants *all, int nall );
 extern int  biblatexin_processf( fields *bibin, char *data, char *filename, long nref );
-extern void biblatexin_cleanf( bibl *bin, param *p );
+extern int  biblatexin_cleanf( bibl *bin, param *p );
 extern int  biblatexin_readf( FILE *fp, char *buf, int bufsize, int *bufpos, newstr *line, newstr *reference, int *fcharset );
 extern int  biblatexin_typef( fields *bibin, char *filename, int nrefs,
         param *p, variants *all, int nall );

@@ -1,7 +1,7 @@
 /*
  * intlist.c
  *
- * Copyright (c) Chris Putnam 2007-2014
+ * Copyright (c) Chris Putnam 2007-2013
  *
  * Version 9/5/2013
  *
@@ -10,7 +10,6 @@
  * Implements a simple managed array of ints
  *
  */
-#include <assert.h>
 #include "intlist.h"
 
 static int
@@ -340,8 +339,6 @@ intlist_median( intlist *il )
 	float median;
 	int m1, m2;
 
-	assert( il );
-
 	if ( il->n==0 ) return 0.0;
 
 	tmp = intlist_dup( il );
@@ -367,8 +364,6 @@ intlist_mean( intlist *il )
 {
 	float sum = 0.0;
 	int i;
-
-	assert( il );
 
 	if ( il->n==0 ) return 0.0;
 

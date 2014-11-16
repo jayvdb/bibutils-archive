@@ -30,7 +30,7 @@ modsout_initparams( param *p, const char *progname )
 	p->latexout         = 0;
 	p->utf8out          = 1;
 	p->utf8bom          = 1;
-	p->xmlout           = 1;
+	p->xmlout           = BIBL_XMLOUT_TRUE;
 	p->nosplittitle     = 0;
 	p->verbose          = 0;
 	p->addcount         = 0;
@@ -386,6 +386,7 @@ output_origin( fields *f, FILE *outptr, int level )
 		{ "issuance",	  "ISSUANCE",	0 },
 		{ "publisher",	  "PUBLISHER",	0 },
 		{ "place",	  "ADDRESS",	1 },
+		{ "place",	  "AUTHORADDRESS",	0 },
 		{ "edition",	  "EDITION",	0 },
 		{ "dateCaptured", "URLDATE",    0 }
 	};
@@ -767,6 +768,7 @@ output_sn( fields *f, FILE *outptr, int level )
 {
 	convert sn_types[] = {
 		{ "isbn",      "ISBN",      0 },
+		{ "isbn",      "ISBN13",    0 },
 		{ "lccn",      "LCCN",      0 },
 		{ "issn",      "ISSN",      0 },
 		{ "citekey",   "REFNUM",    0 },

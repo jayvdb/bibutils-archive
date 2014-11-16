@@ -1,7 +1,7 @@
 /*
  * isiin.h
  * 
- * Copyright (c) Chris Putnam 2004-2014
+ * Copyright (c) Chris Putnam 2004-2013
  *
  * Source code released under the GPL version 2
  *
