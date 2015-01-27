@@ -3,7 +3,7 @@
  *
  * convert between latex special chars and unicode
  *
- * Copyright (c) Chris Putnam 2004-2013
+ * Copyright (c) Chris Putnam 2004-2015
  *
  * Source code released under the GPL version 2
  *

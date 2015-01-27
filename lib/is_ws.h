@@ -1,7 +1,7 @@
 /*
  * is_ws.h
  *
- * Copyright (c) Chris Putnam 2003-2013
+ * Copyright (c) Chris Putnam 2003-2015
  *
  * Source code released under the GPL version 2
  *

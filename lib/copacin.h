@@ -1,7 +1,7 @@
 /*
  * copacin.h
  *
- * Copyright (c) Chris Putnam 2004-2014
+ * Copyright (c) Chris Putnam 2004-2015
  *
  * Source code released under the GPL
  *
