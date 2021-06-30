@@ -7,30 +7,31 @@ SIMPLE_OBJS   = charsets.o \
 NEWSTR_OBJS   = entities.o \
                 gb18030.o \
                 latex.o \
-                newstr.o \
-                newstr_conv.o \
+                str.o \
+                str_conv.o \
                 unicode.o \
                 utf8.o
 
 CONTAIN_OBJS  = fields.o \
                 intlist.o \
-                list.o \
+                slist.o \
                 vplist.o \
                 xml.o \
                 xml_encoding.o
 
 BIBL_OBJS     = bibl.o \
-                doi.o \
+                bu_auth.o \
                 iso639_1.o \
                 iso639_2.o \
                 iso639_3.o \
-                marc.o \
+                marc_auth.o \
                 name.o \
                 notes.o \
                 pages.o \
                 reftypes.o \
                 serialno.o \
-                title.o
+                title.o \
+                url.o
 
 INPUT_OBJS    = bibtexin.o \
                 bibtextypes.o \
@@ -42,12 +43,15 @@ INPUT_OBJS    = bibtexin.o \
 		endin.o \
                 endtypes.o \
 		endxmlin.o \
+		generic.o \
 		isiin.o \
                 isitypes.o \
-                marc.o \
+                marc_auth.o \
 		medin.o \
 		modsin.o \
                 modstypes.o \
+		nbibin.o \
+		nbibtypes.o \
 		risin.o \
                 ristypes.o \
 		wordin.o
